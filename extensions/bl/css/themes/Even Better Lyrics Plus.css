@@ -1,0 +1,83 @@
+
+:root {
+  --yt-album-size: 600px;
+  --blyrics-hover-scale: 1.02;
+  --blyrics-background-color: rgba(0,0,0,0.25);
+  --blyrics-font-family: "SF Pro", var(--noto-sans-universal), system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --blyrics-font-weight: 600;
+}
+
+ytmusic-player-page:not([video-mode]):not([player-fullscreened]):not([blyrics-dfs]):not([player-ui-state="MINIPLAYER"]) #player.ytmusic-player-page {
+  max-width: var(--yt-album-size) !important;
+  overflow: hidden;
+}
+
+.blyrics-container {
+  overflow: hidden;
+  padding: 10px;
+}
+
+.blyrics-container:has(.blyrics--active):not(.blyrics-user-scrolling) > div:not(.blyrics--active):not(.blyrics--active ~ div) {
+  opacity: 0.33;
+  filter: blur(2.5px);
+}
+
+.blyrics-container > div.blyrics--active {
+  opacity: 1;
+  filter: blur(0px);
+}
+
+.blyrics-container > div.blyrics--active ~ div {
+  opacity: 0.66;
+  filter: blur(0px);
+}
+
+.blyrics-container > div {
+  transition: filter calc(var(--blyrics-duration) / 3) 0.4s,
+    opacity calc(var(--blyrics-duration) / 2) 0.4s, transform 0.166s var(--blyrics-anim-delay, 0s) !important;
+  padding: 5px 0;
+  transform-origin: left center;
+}
+
+/* Refined hover effect for lyrics */
+.blyrics-container > div:hover {
+  opacity: 1 !important;
+  filter: blur(0px) !important;
+  transform: scale(var(--blyrics-hover-scale));
+  transition: all 0.3s ease;
+}
+
+@keyframes scalePulse {
+  0% { transform: scale(1.2); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1.2); }
+}
+
+@keyframes slowRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+ytmusic-player-page:before {
+  background: var(--blyrics-background-img);
+  background-position: 50% !important;
+  background-repeat: no-repeat;
+  background-size: cover;
+  bottom: 0;
+  content: "";
+  filter: blur(var(--blyrics-background-blur)) saturate(var(--blyrics-background-saturate));
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: scale(1.2);
+  transform-origin: center center;
+  z-index: -100;
+  opacity: 0.5;
+
+animation:
+    scalePulse 8s ease-in-out infinite,
+    slowRotate 30s linear infinite;
+  animation-composition: add;
+  will-change: transform;
+}

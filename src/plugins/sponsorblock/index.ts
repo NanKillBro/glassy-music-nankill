@@ -29,7 +29,7 @@ export default createPlugin({
   description: () => t('plugins.sponsorblock.description'),
   restartNeeded: true,
   config: {
-    enabled: false,
+    enabled: true,
     apiURL: 'https://sponsor.ajay.app',
     categories: [
       'sponsor',

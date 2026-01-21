@@ -46,7 +46,7 @@ export default createPlugin({
   description: () => t('plugins.discord.description'),
   restartNeeded: false,
   config: {
-    'enabled': false,
+    'enabled': true,
     'autoReconnect': true,
     'activityTimeoutEnabled': true,
     'activityTimeoutTime': 10 * 60 * 1000,

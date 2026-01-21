@@ -1,0 +1,415 @@
+// Dán CSS theme "cucu" của bạn vào giữa 2 dấu huyền (`) ở dưới
+const MY_CUSTOM_CSS = `
+
+/* =================================================================================================================*/
+/* MERGED THEME V14: UPGRADE DYNAMIC BACKGROUND ALGORITHM, HOW IT LOOK AND FEEL                                     */
+/* Adds: Update Chaos algorithm, add a bit more details in dynamic background                                       */
+/* Fixes: Reduce a bit color banding (maybe?)                                                                       */
+/* Based on: Dynamic Background (by chengg), Big Blurry Slow Lyrics for TV (by zobiron), Luxurious Glass (by SKMJi) */
+/* Made by: Gemini 3 Pro and NanKill                                                                                */
+/* ================================================================================================================ */
+/* NOTE: TURN OFF Album Color Theme, Synced Lyric, Ambient Mode, PERFORMANCE IMPROVEMENT (unsure?) TO AVOID BUGS    */
+
+:root {
+  /* -- [ Cấu hình chung ] -- */
+  --blyrics-lyric-active-color: white;
+  --blyrics-lyric-inactive-color: rgba(255, 255, 255, 0.4);
+  --blyrics-font-family: "Verdana", var(--noto-sans-universal), sans-serif;
+  
+  /* Font size & Line height */
+  --blyrics-font-size: 4.5rem; 
+  --blyrics-font-weight: 700;
+  --blyrics-line-height: 1.4;
+
+  /* -- [ Layout Variables ] -- */
+  --yt-cover-size: 650px;
+  --side-panel-width: 55%;
+  --blyrics-bottom-spacing: 50px;
+
+  /* -- [ Glassmorphism Variables ] -- */
+  --blyrics-bg-color: rgba(0, 0, 0, 0.25);
+  --blyrics-border-radius: 18px;
+  
+  /* Shadow: Toạ độ 0 0 để đều 4 cạnh */
+  --blyrics-box-shadow: 0 0 60px rgba(0, 0, 0, 0.4), 0 0 25px rgba(255, 255, 255, 0.12) inset;
+  
+  --blyrics-background-filter: blur(70px) saturate(2.5) brightness(70%);
+}
+
+/* 1. LỚP ĐỘNG (Chaos Animation)*/
+ytmusic-player-page::after {
+  content: '';
+  position: fixed; /* Cũng dùng fixed để đồng bộ toạ độ */
+  top: 0; left: 0; 
+  width: 100vw;
+  height: 100vh;
+
+  background-image: var(--blyrics-background-img); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  /* Giữ nguyên filter cũ */
+  filter: var(--blyrics-background-filter);
+  
+  /* Animation cũ */
+  animation: slowRotate 25s linear infinite, scalePulse 8s ease-in-out infinite, appleChaos 60s ease-in-out infinite;
+  animation-composition: add;
+  
+  /* Scale gốc của animation */
+  transform: scale(1.3);
+  
+  /* Nằm trên lớp tĩnh (before) */
+  z-index: -1; 
+  pointer-events: none;
+}
+
+/* Các Keyframes giữ nguyên như cũ */
+@keyframes slowRotate {
+  from { transform: scale(1.7) rotate(0deg); }
+  to { transform: scale(1.7) rotate(360deg); }
+}
+@keyframes scalePulse {
+  0% { transform: scale(1.2); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1.2); }
+}
+@keyframes appleChaos {
+  0% { transform: translate(0, 0); }
+  15% { transform: translate(-12%, -7%); }
+  27% { transform: translate(-5%, -3%); }
+  38% { transform: translate(8%, 12%); }
+  45% { transform: translate(3%, 5%); }
+  58% { transform: translate(-7%, -10%); }
+  65% { transform: translate(3%, 5%); }
+  73% { transform: translate(12%, 8%); }
+  84% { transform: translate(-9%, 6%); }
+  93% { transform: translate(5%, -7%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ĐÃ FIX: Tắt hoàn toàn Glass Effect của các bar mặc định */
+#layout[player-ui-state="PLAYER_PAGE_OPEN"] #player-bar-background,
+#layout[player-ui-state="PLAYER_PAGE_OPEN"] #mini-guide-background,
+#layout[player-ui-state="PLAYER_PAGE_OPEN"] #nav-bar-background,
+#layout[player-ui-state="PLAYER_PAGE_OPEN"] #guide-wrapper {
+  backdrop-filter: none !important; 
+  background: transparent !important;
+  border: none !important;
+}
+
+ytmusic-player-bar,
+#layout[player-ui-state="PLAYER_PAGE_OPEN"] ytmusic-player-bar {
+  backdrop-filter: none !important;
+  background-color: transparent !important;
+  border: none !important;
+}
+
+/* Side Panel - Khung Lyric Kính */
+#side-panel {
+  background-color: var(--blyrics-bg-color) !important;
+  border-radius: var(--blyrics-border-radius) !important;
+  box-shadow: var(--blyrics-box-shadow) !important;
+  min-width: var(--side-panel-width) !important;
+  z-index: 1; 
+  
+  margin-bottom: var(--blyrics-bottom-spacing) !important;
+  height: auto !important;
+  max-height: calc(100vh - 120px) !important; 
+}
+
+/* Xóa hiệu ứng fade đen */
+#song-media-window,
+.song-media-controls,
+.ytp-gradient-top, 
+.ytp-gradient-bottom {
+    background: none !important;       
+    background-image: none !important; 
+    box-shadow: none !important;       
+}
+
+/* Album Cover Size */
+ytmusic-player-page:not([video-mode]):not([player-fullscreened]):not([blyrics-dfs]):not([player-ui-state="MINIPLAYER"]) #player.ytmusic-player-page, 
+ytmusic-player[player-ui-state=FULLSCREEN], 
+ytmusic-player, 
+ytmusic-player[player-ui-state=FULLSCREEN] {
+  max-width: var(--yt-cover-size) !important;
+  border-radius: var(--blyrics-border-radius) !important;
+  box-shadow: var(--blyrics-box-shadow) !important;
+  overflow: hidden; 
+  margin: 0 auto !important; 
+  background: transparent !important;
+}
+
+/* Fix nút chuyển Song/Video */
+ytmusic-av-toggle,
+.song-video-switching-controller {
+  z-index: 9999 !important; 
+  position: absolute !important;
+  overflow: visible !important;
+}
+
+#player.ytmusic-player-page .song-video-switching-controller {
+    display: flex !important;
+    visibility: visible !important;
+}
+
+/* ============================================== */
+/* PHẦN 2: STYLE LYRIC (NO LAG EDITION)           */
+/* ============================================== */
+
+.blyrics-container {
+  padding: 20px;
+  position: relative;
+  z-index: 2;
+  text-align: left;
+  overflow-y: auto; 
+  overflow-x: hidden;
+}
+
+.blyrics-container > div {
+  opacity: 0.2;
+  filter: blur(6px);
+  margin-bottom: 20px;
+  transition: opacity 0.7s ease-out, 
+              filter 0.7s ease-out,
+              transform 1.66s ease-out;
+  white-space: pre-wrap; 
+  word-break: break-word; 
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.blyrics-container > div > span {
+  display: inline;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+}
+
+/* Active Lyric Animation */
+.blyrics-container > div.blyrics--animating:not(:empty):not(.blyrics--translated):not(.blyrics--romanized) {
+  opacity: 1;
+  filter: blur(0px);
+  transform: scale(1.02);
+  
+  transition: opacity 0.7s ease calc(var(--blyrics-anim-delay) - 0.3s), 
+              filter 0.7s ease calc(var(--blyrics-anim-delay) - 0.3s),
+              transform 1.666s ease calc(var(--blyrics-anim-delay) - 0.3s);
+}
+
+/* Hover to see Static Lyrics */
+.blyrics-container:hover > div {
+  opacity: 1 !important;
+  filter: blur(0px) !important;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+/* Translated & Romanized */
+.blyrics-container > div > span.blyrics--translated,
+.blyrics-container > div > span.blyrics--romanized {
+  display: block;
+  margin-top: 10px;
+  color: #ddd;
+}
+
+.blyrics-container > div > span.blyrics--translated {
+  font-size: 1.8rem;
+  font-weight: 400;
+}
+
+.blyrics-container > div > span.blyrics--romanized {
+  font-size: 1.5rem;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* ============================================== */
+/* PHẦN 3: FULLSCREEN MODE FIXES (NEW)            */
+/* ============================================== */
+
+/* Khi vào Fullscreen (F11) */
+ytmusic-player-page[player-fullscreened] #side-panel {
+  /* 1. Xóa bỏ hiệu ứng kính, viền, bóng đổ */
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  
+  /* 2. Căn giữa tuyệt đối cho mọi tỉ lệ video (16:9 hay 1:1) */
+  margin: auto !important; 
+  align-self: center !important;
+  
+  /* Reset chiều cao để không bị giới hạn */
+  max-height: 100vh !important;
+  padding-bottom: 0 !important;
+}
+
+/* ============================================== */
+/* PHẦN 4: RESPONSIVE                             */
+/* ============================================== */
+
+.blyrics-user-scrolling > div:not(.blyrics--animating) {
+  opacity: 1 !important;
+  filter: blur(0px) !important; 
+  transition: opacity 0.4s ease, filter 0.4s ease;
+}
+
+@media (max-width: 1000px) {
+  :root {
+    --blyrics-font-size: 3.5rem;
+    --side-panel-width: 45%;
+  }
+}
+
+@media (max-width: 615px) {
+  .blyrics-container {
+    font-size: 2rem;
+  }
+  .blyrics-container > div > span.blyrics--translated {
+    font-size: 1.5rem;
+  }
+}
+/* ============================================== */
+/* PHẦN 5: ADD-ON TỪ CHENGG THEME (SAFE MODE)     */
+/* Chỉ lấy background và hiệu ứng kính cho Home   */
+/* ============================================== */
+
+:root {
+  /* Cấu hình độ mờ và sáng cho hình nền trang chủ */
+  --home-bg-blur: 70px;       /* Độ nhòe nền */
+  --home-bg-brightness: 0.7;  /* Độ tối nền (0.5 là tối, 1 là sáng gốc) */
+  --home-bg-scale: 1.2;       /* Độ phóng to ảnh nền */
+  
+  /* Cấu hình độ trong suốt của thanh công cụ */
+  --glass-ui-bg: rgba(0, 0, 0, 0.3); /* Màu nền các thanh (đen mờ) */
+  --glass-ui-blur: 15px;             /* Độ mờ đục của kính */
+  --glass-ui-border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 1. Tạo hình nền động cho Trang Chủ (Browse) và Tìm Kiếm (Search) */
+/* Chỉ hiện khi KHÔNG mở Player toàn màn hình */
+#browse-page::before,
+#search-page::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  height: 120vh; /* Dư ra một chút để khi xoay không bị hở */
+  
+  /* Lấy ảnh từ bài hát đang phát (Extension cung cấp) */
+  background-image: var(--blyrics-background-img, none); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  /* Các hiệu ứng Filter */
+  filter: blur(var(--home-bg-blur)) brightness(var(--home-bg-brightness)) saturate(1.2);
+  opacity: 1;
+  z-index: -50; /* Nằm dưới cùng */
+}
+
+/* 2. Làm trong suốt các thành phần UI để thấy nền */
+
+/* Thanh điều hướng trên cùng (Top Bar) */
+#nav-bar-background,
+ytmusic-app-layout #nav-bar-background {
+  background: var(--glass-ui-bg) !important;
+  backdrop-filter: blur(var(--glass-ui-blur)) !important;
+  border-bottom: var(--glass-ui-border) !important;
+}
+
+/* Thanh bên trái (Sidebar / Mini Guide) */
+#guide-wrapper,
+#mini-guide-background {
+  background: var(--glass-ui-bg) !important;
+  backdrop-filter: blur(var(--glass-ui-blur)) !important;
+  border-right: var(--glass-ui-border) !important;
+}
+
+/* Xóa nền xám mặc định của Youtube Music ở trang chủ */
+ytmusic-browse-response[has-background] .background-gradient.ytmusic-browse-response {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Fix: Ẩn thanh cuộn trang chủ cho đẹp (giống Chengg) */
+html {
+  scrollbar-width: none;
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* ============================================== */
+/* FIX: XÓA NỀN GỐC (IMMERSIVE BACKGROUND)        */
+/* ============================================== */
+
+div#background.immersive-background {
+  display: none !important;      /* Xóa hoàn toàn khỏi layout */
+  visibility: hidden !important; /* Đảm bảo không nhìn thấy */
+  opacity: 0 !important;         /* Độ trong suốt về 0 */
+  background: transparent !important;
+}
+
+/* Ẩn luôn cả thẻ con bên trong cho chắc chắn */
+ytmusic-fullbleed-thumbnail-renderer[is-background] {
+  display: none !important;
+}
+
+/* ============================================== */
+/* KẾT THÚC PHẦN ADD-ON                           */
+/* ============================================== */
+
+/* ============================================== */
+/* FINAL FIX: DIỆT TẬN GỐC SCROLLBAR (V3)         */
+/* ============================================== */
+
+/* 1. Ẩn thanh cuộn của TẤT CẢ phần tử con khi đang Fullscreen */
+ytmusic-player-page[player-fullscreened] *::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+ytmusic-player-page[player-fullscreened] * {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+/* 2. Chặn trang web (body) bị cuộn nếu nội dung bị tràn ra ngoài màn hình */
+/* Dùng :has để check nếu đang fullscreen thì khóa body lại */
+body:has(ytmusic-player-page[player-fullscreened]) {
+  overflow: hidden !important;
+}
+
+/* 3. Đảm bảo khung lyric vẫn cuộn được (nhưng không hiện thanh) */
+ytmusic-player-page[player-fullscreened] .blyrics-container {
+  overflow-y: auto !important;
+}
+`;
+
+function injectStyles() {
+    console.log("[NanKill's Skibidi Theme] Injecting MERGED THEME V13...");
+    console.log("[NanKill's Skibidi Theme] Blowing ur YT Music Client...");
+    
+    // Tạo thẻ <style>
+    const style = document.createElement('style');
+    style.id = 'force-nankill-skibidi-theme';
+    style.type = 'text/css';
+    
+    // Thêm CSS vào
+    if (style.styleSheet){
+      style.styleSheet.cssText = MY_CUSTOM_CSS;
+    } else {
+      style.appendChild(document.createTextNode(MY_CUSTOM_CSS));
+    }
+
+    // Chèn vào đầu trang (hoặc cuối body để ghi đè mạnh hơn)
+    (document.head || document.documentElement).appendChild(style);
+}
+
+// Chèn ngay lập tức
+injectStyles();
+
+// Chèn lại lần nữa khi trang load xong (đề phòng bị extension ghi đè)
+window.addEventListener('DOMContentLoaded', injectStyles);
+window.addEventListener('load', injectStyles);

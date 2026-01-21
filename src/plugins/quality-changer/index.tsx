@@ -14,7 +14,7 @@ export default createPlugin({
   description: () => t('plugins.quality-changer.description'),
   restartNeeded: false,
   config: {
-    enabled: false,
+    enabled: true,
   },
 
   backend({ ipc, window }) {

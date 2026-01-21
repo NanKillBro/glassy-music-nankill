@@ -23,7 +23,7 @@ export default createPlugin({
   restartNeeded: true,
   platform: Platform.Windows,
   config: {
-    enabled: false,
+    enabled: true,
   },
 
   async backend({ window }) {

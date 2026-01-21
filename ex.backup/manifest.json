@@ -1,0 +1,57 @@
+{
+   "action": {
+      "default_popup": "action/default_popup.html"
+   },
+   "background": {
+      "service_worker": "background/service_worker.js",
+      "type": "module"
+   },
+   "browser_specific_settings": {
+      "gecko": {
+         "id": "betterlyrics@boidu.dev",
+         "strict_min_version": "100.0"
+      }
+   },
+   "content_scripts": [ {
+      "css": [  ],
+      "js": [ "content_scripts/content-0.js" ],
+      "matches": [ "*://music.youtube.com/*" ],
+      "run_at": "document_start",
+      "world": "ISOLATED"
+   }, {
+      "css": [  ],
+      "js": [ "earlyInject.js", "fix_config.js" ],
+      "matches": [ "*://music.youtube.com/*" ],
+      "run_at": "document_start",
+      "world": "MAIN"
+   }, {
+      "css": [  ],
+      "js": [ "script.js" ],
+      "matches": [ "*://music.youtube.com/*" ],
+      "run_at": "document_end",
+      "world": "MAIN"
+   } ],
+   "description": "Enhance YouTube Music with beautiful time-synced lyrics, multilingual support, real-time translations and more",
+   "homepage_url": "https://better-lyrics.boidu.dev",
+   "host_permissions": [ "*://music.youtube.com/*" ],
+   "icons": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "512": "icons/icon-512.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmNspBNCi4WHoRlH/rRPneLNqtWHzsEsK+Z4a7qmose6afikym7/5A/7I/OuXeJFqJXLc7YfWVUtdBWfHRSjT9Earq0wdOfElHyWnHQ1/cn55xbCdMJRSsVKEg3NRHWKbwpBFlt6XUog5sl48Gf+v6aZrv069MWEnXA13BEWqRX9hALG6WswyxaZXKokwH2AvnDDaWHrBghti6kmSNuXWCJj4c02YwZ5LgOJ3m5cI7bq/Mi7RtVuK+Odsj2/iESXAwNvLcMiOTW8vrioj/KfySjXpi16HCZIm0e6EvTq08CQUvIEpxV7Gaiq5w2j2TFKPMQ4aaHTiEgWMSZ0DeihLNQIDAQAB",
+   "manifest_version": 3,
+   "name": "Better Lyrics (Lyrics for Youtube Music)",
+   "options_ui": {
+      "open_in_tab": false,
+      "page": "options_ui/page.html"
+   },
+   "permissions": [ "storage" ],
+   "update_url": "https://edge.microsoft.com/extensionwebstorebase/v1/crx",
+   "version": "2.1.3",
+   "version_name": "2.1.3",
+   "web_accessible_resources": [ {
+      "matches": [ "*://music.youtube.com/*" ],
+      "resources": [ "*.js.map", "css/blyrics.css", "css/disablestylizedanimations.css", "css/themes/*.css", "css/themesong.css", "css/ytmusic.css", "pages/standalone-editor.html" ]
+   } ]
+}

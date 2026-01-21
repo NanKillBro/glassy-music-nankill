@@ -20,7 +20,7 @@ import {
 } from '@jellybrick/electron-better-web-request';
 import is from 'electron-is';
 import unhandled from 'electron-unhandled';
-import { autoUpdater } from 'electron-updater';
+// import { autoUpdater } from 'electron-updater';
 import electronDebug from 'electron-debug';
 import { parse } from 'node-html-parser';
 import { deepmerge } from 'deepmerge-ts';
@@ -70,7 +70,7 @@ unhandled({
 
 // Prevent window being garbage collected
 let mainWindow: Electron.BrowserWindow | null;
-autoUpdater.autoDownload = false;
+// autoUpdater.autoDownload = false;
 
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
@@ -128,7 +128,7 @@ if (config.get('options.disableHardwareAcceleration')) {
 if (is.linux()) {
   // Overrides WM_CLASS for X11 to correspond to icon filename
   app.setName(
-    'com.github.th_ch.\u0079\u006f\u0075\u0074\u0075\u0062\u0065\u005f\u006d\u0075\u0073\u0069\u0063',
+    'nankill.xyz.youtube.music',
   );
 
   // Stops chromium from launching its own MPRIS service
@@ -662,7 +662,7 @@ app.whenReady().then(async () => {
   // Register appID on windows
   if (is.windows()) {
     const appID =
-      'com.github.th-ch.\u0079\u006f\u0075\u0074\u0075\u0062\u0065\u002d\u006d\u0075\u0073\u0069\u0063';
+      'youtube-music-nankill';
     app.setAppUserModelId(appID);
     const appLocation = process.execPath;
     const appData = app.getPath('appData');
@@ -697,7 +697,7 @@ app.whenReady().then(async () => {
           {
             target: appLocation,
             cwd: path.dirname(appLocation),
-            description: `${APPLICATION_NAME} Desktop App - including custom plugins`,
+            description: `${APPLICATION_NAME} - Custom mod by NanKill`,
             appUserModelId: appID,
           },
         );
@@ -799,56 +799,56 @@ app.whenReady().then(async () => {
     openAtLogin: config.get('options.startAtLogin'),
   });
 
-  if (!is.dev() && config.get('options.autoUpdates')) {
-    const updateTimeout = setTimeout(() => {
-      autoUpdater.checkForUpdatesAndNotify();
-      clearTimeout(updateTimeout);
-    }, 2000);
-    autoUpdater.on('update-available', () => {
-      const downloadLink =
-        'https://github.com/pear-devs/pear-desktop/releases/latest';
-      const dialogOptions: Electron.MessageBoxOptions = {
-        type: 'info',
-        buttons: [
-          t('main.dialog.update-available.buttons.ok'),
-          t('main.dialog.update-available.buttons.download'),
-          t('main.dialog.update-available.buttons.disable'),
-        ],
-        title: t('main.dialog.update-available.title'),
-        message: t('main.dialog.update-available.message'),
-        detail: t('main.dialog.update-available.detail', { downloadLink }),
-        defaultId: 1,
-        cancelId: 0,
-      };
+  // if (!is.dev() && config.get('options.autoUpdates')) {
+  //   const updateTimeout = setTimeout(() => {
+  //     autoUpdater.checkForUpdatesAndNotify();
+  //     clearTimeout(updateTimeout);
+  //   }, 2000);
+  //   autoUpdater.on('update-available', () => {
+  //     const downloadLink =
+  //       'https://github.com/pear-devs/pear-desktop/releases/latest';
+  //     const dialogOptions: Electron.MessageBoxOptions = {
+  //       type: 'info',
+  //       buttons: [
+  //         t('main.dialog.update-available.buttons.ok'),
+  //         t('main.dialog.update-available.buttons.download'),
+  //         t('main.dialog.update-available.buttons.disable'),
+  //       ],
+  //       title: t('main.dialog.update-available.title'),
+  //       message: t('main.dialog.update-available.message'),
+  //       detail: t('main.dialog.update-available.detail', { downloadLink }),
+  //       defaultId: 1,
+  //       cancelId: 0,
+  //     };
 
-      let dialogPromise: Promise<Electron.MessageBoxReturnValue>;
-      if (mainWindow) {
-        dialogPromise = dialog.showMessageBox(mainWindow, dialogOptions);
-      } else {
-        dialogPromise = dialog.showMessageBox(dialogOptions);
-      }
+  //     let dialogPromise: Promise<Electron.MessageBoxReturnValue>;
+  //     if (mainWindow) {
+  //       dialogPromise = dialog.showMessageBox(mainWindow, dialogOptions);
+  //     } else {
+  //       dialogPromise = dialog.showMessageBox(dialogOptions);
+  //     }
 
-      dialogPromise.then((dialogOutput) => {
-        switch (dialogOutput.response) {
-          // Download
-          case 1: {
-            shell.openExternal(downloadLink);
-            break;
-          }
+  //     dialogPromise.then((dialogOutput) => {
+  //       switch (dialogOutput.response) {
+  //         // Download
+  //         case 1: {
+  //           shell.openExternal(downloadLink);
+  //           break;
+  //         }
 
-          // Disable updates
-          case 2: {
-            config.set('options.autoUpdates', false);
-            break;
-          }
+  //         // Disable updates
+  //         case 2: {
+  //           config.set('options.autoUpdates', false);
+  //           break;
+  //         }
 
-          case 0: {
-            break;
-          }
-        }
-      });
-    });
-  }
+  //         case 0: {
+  //           break;
+  //         }
+  //       }
+  //     });
+  //   });
+  // }
 
   if (config.get('options.hideMenu') && !config.get('options.hideMenuWarned')) {
     dialog.showMessageBox(mainWindow, {

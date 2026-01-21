@@ -1,5 +1,5 @@
-appId: "com.github.th-ch.\u0079\u006f\u0075\u0074\u0075\u0062\u0065\u002d\u006d\u0075\u0073\u0069\u0063"
-productName: "\u0059\u006f\u0075\u0054\u0075\u0062\u0065\u0020\u004d\u0075\u0073\u0069\u0063"
+appId: "youtube-music-nankill"
+productName: "YouTube Music (NanKill Modded)"
 files:
   - '!*'
   - dist
@@ -43,7 +43,7 @@ linux:
   category: AudioVideo
   desktop:
     entry:
-      StartupWMClass: "com.github.th_ch.\u0079\u006f\u0075\u0074\u0075\u0062\u0065\u005f\u006d\u0075\u0073\u0069\u0063"
+      StartupWMClass: "nankill.xyz.youtube.music"
   target:
     - target: AppImage
       arch:
@@ -76,10 +76,10 @@ linux:
         - arm64
         - armv7l
 appImage:
-  description: "\u0059\u006f\u0075\u0054\u0075\u0062\u0065\u0020\u004d\u0075\u0073\u0069\u0063 Desktop App bundled with custom plugins"
+  description: "YouTube Music - Custom mod by NanKill"
   category: AudioVideo
 flatpak:
-  description: "\u0059\u006f\u0075\u0054\u0075\u0062\u0065\u0020\u004d\u0075\u0073\u0069\u0063 Desktop App bundled with custom plugins"
+  description: "YouTube Music - Custom mod by NanKill"
   category: AudioVideo
   runtimeVersion: '24.08'
   baseVersion: '24.08'
@@ -119,3 +119,6 @@ snap:
         interface: mpris
 directories:
   output: ./pack/
+extraResources:
+  - from: "extensions"
+    to: "extensions"

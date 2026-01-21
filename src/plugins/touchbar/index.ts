@@ -14,7 +14,7 @@ export default createPlugin({
   restartNeeded: true,
   platform: Platform.macOS,
   config: {
-    enabled: false,
+    enabled: true,
   },
   backend({ window }) {
     const {

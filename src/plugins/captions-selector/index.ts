@@ -27,7 +27,7 @@ export default createPlugin<
       applicationName: APPLICATION_NAME,
     }),
   config: {
-    enabled: false,
+    enabled: true,
     disableCaptions: false,
     autoload: false,
     lastCaptionsCode: '',
