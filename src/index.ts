@@ -128,7 +128,7 @@ if (config.get('options.disableHardwareAcceleration')) {
 if (is.linux()) {
   // Overrides WM_CLASS for X11 to correspond to icon filename
   app.setName(
-    'nankill.xyz.youtube.music',
+    'nankill.xyz.youtube.music.mod',
   );
 
   // Stops chromium from launching its own MPRIS service
@@ -662,7 +662,7 @@ app.whenReady().then(async () => {
   // Register appID on windows
   if (is.windows()) {
     const appID =
-      'youtube-music-nankill';
+      'youtube-music-nankill-mod';
     app.setAppUserModelId(appID);
     const appLocation = process.execPath;
     const appData = app.getPath('appData');

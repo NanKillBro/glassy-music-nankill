@@ -1644,8 +1644,28 @@ var e, t;
                 t.drawArrays(t.TRIANGLES, 0, 6));
             }
             resize() {
+              // --- [FIX CHO MÁY YẾU - BLS LOW] ---
+              
+              // 1. Lấy tỷ lệ khung hình thật của màn hình (Ví dụ 16:9)
+              const aspectRatio = this.canvas.clientWidth / this.canvas.clientHeight;
+              
+              // 2. Set chiều cao cố định là 128px (hoặc thấp hơn nếu muốn siêu nhẹ)
+              // Chiều rộng sẽ tự tính theo tỷ lệ để hình không bị méo
+              const targetHeight = 128; 
+              const targetWidth = targetHeight * aspectRatio;
+
+              // 3. Gán kích thước render nội bộ (Render Resolution)
+              this.canvas.width = targetWidth;
+              this.canvas.height = targetHeight;
+
+              // Lưu ý: CSS width/height vẫn là 100% (do file css quản lý) 
+              // nên trình duyệt sẽ tự phóng to cái hình 128px này ra full màn hình.
+              // ------------------------------------
+
               let e = this.canvas.width,
                 t = this.canvas.height;
+              
+              // Hủy FBO cũ nếu có và tạo cái mới bé tí teo
               (this.warpFBO && this.deleteFramebuffer(this.warpFBO),
                 (this.warpFBO = this.createFramebuffer(e, t, !0)));
             }
@@ -1692,13 +1712,26 @@ var e, t;
             }
             renderLoop = (e) => {
               if (!this.isPlaying) return;
+
+              // --- [EDIT FOR LOW PC] KHÓA 30 FPS ---
+              // Nếu chưa đủ 33ms (tương đương 30fps) kể từ khung hình trước thì bỏ qua
+              if (e - this.lastFrameTime < 33) { 
+                  this.animationId = requestAnimationFrame(this.renderLoop);
+                  return; 
+              }
+              // -------------------------------------
+
               let t = (e - this.lastFrameTime) / 1e3;
-              ((this.lastFrameTime = e),
-                (this._animationSpeed +=
-                  (this._targetAnimationSpeed - this._animationSpeed) * 0.05),
-                (this.accumulatedTime += t * this._animationSpeed),
-                this.render(this.accumulatedTime, e),
-                (this.animationId = requestAnimationFrame(this.renderLoop)));
+              
+              // Reset lastFrameTime về hiện tại
+              this.lastFrameTime = e;
+
+              // Tính toán logic cũ
+              this._animationSpeed += (this._targetAnimationSpeed - this._animationSpeed) * 0.05;
+              this.accumulatedTime += t * this._animationSpeed;
+              
+              this.render(this.accumulatedTime, e);
+              this.animationId = requestAnimationFrame(this.renderLoop);
             };
             render(e, t = performance.now()) {
               let r;

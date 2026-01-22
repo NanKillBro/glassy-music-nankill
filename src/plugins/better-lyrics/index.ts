@@ -20,7 +20,7 @@ export default createPlugin({
         click: () => {
           // Tạo một cửa sổ popup mới
           const settingsWin = new BrowserWindow({
-            width: 800,
+            width: 700,
             height: 700,
             autoHideMenuBar: true,
             webPreferences: {

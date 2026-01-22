@@ -1,22 +1,8315 @@
-(()=>{"use strict";let e,t,i;var r={},n={};function s(e){var t=n[e];if(void 0!==t)return t.exports;var i=n[e]={exports:{}};return r[e](i,i.exports,s),i.exports}s.rv=()=>"1.6.8",s.ruid="bundler=rspack@1.6.8";let a="tab-header style-scope ytmusic-player-page",l="blyrics-container",o="blyrics--active",u="blyrics-rtl",c="blyrics--word",d="blyrics-background-lyric",h="blyrics--animating",p="blyrics--paused",m="blyrics--pre-animating",f="blyrics-user-scrolling",g="blyrics--translated",y="blyrics--romanized",b="blyrics-footer",M="#song-image>#thumbnail>#img",v="#tab-renderer",w="#tab-renderer > ytmusic-message-renderer > yt-formatted-string.text.style-scope.ytmusic-message-renderer",N="blyrics-loader",E="blyrics-wrapper",S="blyrics-spacing-element",x="blyrics-dfs",I="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNCIgaGVpZ2h0PSIxMDI0IiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8ZyBjbGlwLXBhdGg9InVybCgjY2xpcDBfMTU4XzUpIj4KPHBhdGggZD0iTTEwMjYgNTEyQzEwMjYgNzk0Ljc3IDc5Ni43NyAxMDI0IDUxNCAxMDI0QzIzMS4yMyAxMDI0IDIgNzk0Ljc3IDIgNTEyQzIgMjI5LjIzIDIzMS4yMyAwIDUxNCAwQzc5Ni43NyAwIDEwMjYgMjI5LjIzIDEwMjYgNTEyWiIgZmlsbD0iI0Y2RjA2OSIvPgo8cGF0aCBkPSJNNzcyLjE1MiA0NjkuMzI3Qzc3MS45MTkgNDU2LjAxOCA3NzAuNTE5IDQ0Mi44NjMgNzY4LjM0MyA0MjkuNzg2Qzc1OS44NjkgMzgwLjQxNyA3MzkuMDM1IDMzNi44NTEgNzA2LjYxOCAyOTguNzAyQzcwMy4yNzYgMjk0Ljc1NiA2OTkuNzc3IDI5MC45NjQgNjk2LjEyNCAyODcuMjVDNjkzLjg2OSAyODQuOTI5IDY5MC45OTMgMjg0LjY5NiA2ODguNzM5IDI4Ni4yNDRDNjg2LjU2MiAyODcuNzE0IDY4NS45NCAyODkuOTU4IDY4Ni44NzMgMjkzLjEzMUM2ODcuMTA2IDI5My45MDUgNjg3LjQxNyAyOTQuNjAxIDY4Ny42NSAyOTUuMjk4QzcwMC4wODggMzI4LjMzOSA3MDYuNDYzIDM2Mi40NjQgNzA2LjY5NiAzOTcuNzVDNzA2LjM4NSA0MDQuMTczIDcwNi4wNzQgNDEwLjU5NSA3MDUuNzYzIDQxNy4wMThDNzA0LjgzIDQzNC41ODMgNzAyLjAzMiA0NTEuODM5IDY5Ny42MDEgNDY4Ljc4NkM2ODMuMzc1IDUyMy4zMzkgNjU1Ljg1NSA1NzAuMjMyIDYxNC4zNDMgNjA4LjUzNkM1NjAuMjM3IDY1OC40NDYgNDk1Ljk0NyA2ODQuMTM3IDQyMi4yNTEgNjg2LjIyNkM0MDMuNjcxIDY4Ni43NjggMzg1LjI0NyA2ODUuMjIgMzY2Ljk3OSA2ODIuMDQ4QzM0OC4zMjIgNjc4Ljg3NSAzMzAuMDUzIDY3My45MjMgMzEyLjQwNiA2NjcuMTEzQzMwOC41MTkgNjY1LjY0MyAzMDUuNzk5IDY2Ni4zMzkgMzA0LjI0NCA2NjkuMDQ4QzMwMi42ODkgNjcxLjYwMSAzMDMuMzExIDY3NCAzMDYuMzQzIDY3Ni44NjNDMzA4LjkwOCA2NzkuMjYyIDMxMS40NzMgNjgxLjU4MyAzMTQuMTE3IDY4My45MDVDMzY0LjgwMiA3MjcuNjI1IDQyMy44MDYgNzUwLjE0MyA0OTAuNzM5IDc1Mi4wNzdDNTA2LjkwOCA3NTIuNTQyIDUyMy4wNzggNzUxLjMwNCA1MzkuMDkyIDc0OC42NzNDNTk2Ljc3NCA3MzkuMzg3IDY0Ny4xNDggNzE0Ljg1NyA2ODguNzM5IDY3NEM3NDUuNzk5IDYxNy45NzYgNzczLjcwNyA1NDkuNDk0IDc3Mi4xNTIgNDY5LjMyN1oiIGZpbGw9ImJsYWNrIi8+CjxwYXRoIGQ9Ik0zMjguMjY1IDU0NC41NDJDMzMwLjUxOSA1NDIuODM5IDMzMC45MDggNTQwLjU5NSAzMjkuNjY0IDUzNi44MDRDMzI5LjUwOSA1MzYuNDE3IDMyOS40MzEgNTM2LjEwNyAzMjkuMjc2IDUzNS43MkMzMTkuNjM2IDUwOC42MzcgMzE2LjkxNSA0ODAuNzggMzIxLjAzNSA0NTIuMzgxQzMyNi40NzcgNDE1LjAwNiAzNDIuNDEzIDM4Mi42NjEgMzY4LjM3OCAzNTUuMjY4QzM3MC40NzcgMzUzLjAyNCAzNzEuNDg4IDM1MC43OCAzNzEuNDg4IDM0Ny42ODVDMzcxLjQxIDMzOC4wMTIgMzcxLjQxIDMyOC4zMzkgMzcxLjQxIDMxOC42NjdDMzcxLjQxIDMwOS4xNDkgMzcxLjQxIDI5OS41NTQgMzcxLjQxIDI5MC4wMzZDMzcxLjQxIDI4My44NDUgMzY5LjU0NCAyODEuOTExIDM2My4zMjUgMjgxLjkxMUMzNDQuMTI0IDI4MS45MTEgMzI1IDI4MS45MTEgMzA1Ljc5OSAyODEuODMzQzMwMi42MTEgMjgxLjgzMyAzMDAuMDQ2IDI4Mi43NjIgMjk3Ljc5MiAyODQuOTI5QzI2NS45MTkgMzE1LjgwNCAyNDguOTcyIDM1My40ODggMjQ2LjMyOSAzOTcuNTE4QzI0NS4zMTggNDE0LjMxIDI0Ny4yNjEgNDMwLjk0NiAyNTEuNjE1IDQ0Ny4yNzRDMjYyLjQ5OCA0ODcuOTc2IDI4NS41MDkgNTIwLjA4OSAzMjAuNDEzIDU0My43NjhDMzIzLjkxMiA1NDYuMTY3IDMyNS45MzMgNTQ2LjMyMSAzMjguMjY1IDU0NC41NDJaIiBmaWxsPSJibGFjayIvPgo8cGF0aCBkPSJNNDM0LjUzNCA0MjMuMjA4QzQzOS4yNzYgNDU4LjQ5NCA0NzIuNzgxIDQ4My40MTEgNTA4LjA3NCA0NzcuNzYyQzUzOS40MDMgNDcyLjczMiA1NjIuMTggNDQ2LjE5IDU2Mi4xOCA0MTQuNTQyQzU2Mi4xOCA0MDguMTk2IDU2Mi4xOCA0MDEuOTI5IDU2Mi4xOCAzOTUuNTgzQzU2Mi4xOCAzODcuMzA0IDU2Mi4xOCAzNzkuMTAxIDU2Mi4xOCAzNzAuODIxQzU2Mi4xOCAzNjUuNTYgNTYzLjU4IDM2NC4yNDQgNTY4Ljg2NiAzNjQuMTY3QzU3My43NjMgMzY0LjA4OSA1NzguNzM5IDM2NC4yNDQgNTgzLjYzNiAzNjQuMDg5QzU4OC4xNDUgMzYzLjkzNSA1OTAuMTY2IDM2MS4yMjYgNTg5LjM4OSAzNTYuODkzQzU4OS4yMzMgMzU2LjExOSA1ODkuMTU1IDM1NS4zNDUgNTg5IDM1NC42NDlDNTgzLjA5MiAzMjkuODEgNTcyLjM2NCAzMDcuMzY5IDU1Ni44MTYgMjg3LjA5NUM1NTMuOTQgMjgzLjM4MSA1NTAuNzUzIDI4MS45ODggNTQ2LjI0NCAyODIuMDY1QzUzMy4xODQgMjgyLjIyIDUyMC4xMjQgMjgyLjA2NSA1MDYuOTg2IDI4Mi4xNDNDNTA1LjU4NyAyODIuMTQzIDUwNC4xMSAyODIuMjIgNTAyLjcxIDI4Mi40NTJDNDk5LjQ0NSAyODIuOTk0IDQ5Ny45NjggMjg0LjU0MiA0OTcuNTAyIDI4Ny43OTJDNDk3LjM0NiAyODkuMDMgNDk3LjQyNCAyOTAuMzQ1IDQ5Ny40MjQgMjkxLjY2MUM0OTcuNDI0IDMxMS45MzUgNDk3LjQyNCAzMzIuMTMxIDQ5Ny40MjQgMzUyLjQwNUM0OTcuNDI0IDM2MC43NjIgNDk1Ljc5MiAzNjguODEgNDkyLjM3MSAzNzYuNDdDNDgyLjI2NSAzOTguNjAxIDQ2NC43NzQgNDEwLjkwNSA0NDAuNjc1IDQxNC4xNTVDNDM1LjYyMiA0MTQuODUxIDQzNC4xNDUgNDE2LjQ3NiA0MzQuMzc4IDQyMS40MjlDNDM0LjQ1NiA0MjEuODkzIDQzNC40NTYgNDIyLjU4OSA0MzQuNTM0IDQyMy4yMDhaIiBmaWxsPSJibGFjayIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzE1OF81Ij4KPHJlY3Qgd2lkdGg9IjEwMjQiIGhlaWdodD0iMTAyNCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4=",L="https://lrclibup.boidu.dev/",k="https://lyrics.api.dacubeking.com/",T=["ja","ru","ko","zh-CN","zh-TW","zh","bn","th","el","he","ar","ta","te","ml","kn","gu","pa","mr","ur","si","my","ka","km","lo","fa"],A="[BetterLyrics]",C="[BetterLyrics:Content]",D="[BetterLyrics] Error:",j="[BetterLyrics] (Safe to ignore) Lyrics wrapper is not visible, unable to inject lyrics",z="[BetterLyrics] Unable to translate lyrics due to error",O="[BetterLyrics] Server Error:",R="No lyrics found for this song",P="ytmusic-player-bar",V="is-advertisement",U="blyrics-ad-overlay",$=[{key:"bLyrics-richsynced",displayName:"Better Lyrics",syncType:"syllable",priority:0},{key:"musixmatch-richsync",displayName:"Musixmatch",syncType:"word",priority:1},{key:"yt-captions",displayName:"Youtube Captions",syncType:"line",priority:2},{key:"bLyrics-synced",displayName:"Better Lyrics",syncType:"line",priority:3},{key:"lrclib-synced",displayName:"LRCLib",syncType:"line",priority:4},{key:"legato-synced",displayName:"Legato",syncType:"line",priority:5},{key:"musixmatch-synced",displayName:"Musixmatch",syncType:"line",priority:6},{key:"yt-lyrics",displayName:"Youtube",syncType:"unsynced",priority:7},{key:"lrclib-plain",displayName:"LRCLib",syncType:"unsynced",priority:8}],B=$.map(e=>e.key),_=(e,t,i=2,r=!1)=>{if(r||(e=e.toLowerCase(),t=t.toLowerCase()),e.length<i||t.length<i)return 0;let n=new Map;for(let t=0;t<e.length-(i-1);t++){let r=e.substring(t,t+i);n.set(r,n.has(r)?n.get(r)+1:1)}let s=0;for(let e=0;e<t.length-(i-1);e++){let r=t.substring(e,e+i),a=n.has(r)?n.get(r):0;a>0&&(n.set(r,a-1),s++)}return 2*s/(e.length+t.length-(i-1)*2)},F=/[^\p{Script_Extensions=Latin}\p{Script_Extensions=Common}]/u;function W(e){return F.test(e)}let Y=(...e)=>{tC({isLogsEnabled:!0},t=>{t.isLogsEnabled&&console.log(e)})};function Q(){tC({isLogsEnabled:!0},e=>{Y=e.isLogsEnabled?console.log.bind(window.console):function(){}})}function q(e){return e.length<=500?e:e.slice(0,500)+`... (${e.length} chars total)`}var G=((t=G||{}).SYNTAX_ERROR="SYNTAX_ERROR",t.UNEXPECTED_TOKEN="UNEXPECTED_TOKEN",t.UNCLOSED_BLOCK="UNCLOSED_BLOCK",t.UNCLOSED_STRING="UNCLOSED_STRING",t.UNDEFINED_VARIABLE="UNDEFINED_VARIABLE",t.INVALID_VARIABLE_NAME="INVALID_VARIABLE_NAME",t.UNDEFINED_FUNCTION="UNDEFINED_FUNCTION",t.UNDEFINED_MIXIN="UNDEFINED_MIXIN",t.WRONG_ARG_COUNT="WRONG_ARG_COUNT",t.MISSING_RETURN="MISSING_RETURN",t.INVALID_LOOP_RANGE="INVALID_LOOP_RANGE",t.MAX_ITERATIONS="MAX_ITERATIONS",t.MAX_OUTPUT_RULES="MAX_OUTPUT_RULES",t.MAX_NESTING_DEPTH="MAX_NESTING_DEPTH",t.MAX_INPUT_SIZE="MAX_INPUT_SIZE",t.TIMEOUT="TIMEOUT",t.TYPE_ERROR="TYPE_ERROR",t.INVALID_UNIT="INVALID_UNIT",t.DIVISION_BY_ZERO="DIVISION_BY_ZERO",t),H=[1,10,100,1e3],Z=Math.PI/180,X=180/Math.PI,K=1/2.4,J=/^oklch\s*\(\s*([\d.]+)(%?)\s+([\d.]+)\s+([\d.]+)(?:deg)?\s*(?:\/\s*([\d.]+)(%?))?\s*\)$/,ee=/^#([0-9a-f]{3,8})$/i,et=/^rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+))?\s*\)$/,ei={black:[0,0,0],white:[255,255,255],red:[255,0,0],green:[0,128,0],blue:[0,0,255],yellow:[255,255,0],cyan:[0,255,255],magenta:[255,0,255],gray:[128,128,128],grey:[128,128,128],silver:[192,192,192],maroon:[128,0,0],olive:[128,128,0],lime:[0,255,0],aqua:[0,255,255],teal:[0,128,128],navy:[0,0,128],fuchsia:[255,0,255],purple:[128,0,128],orange:[255,165,0],pink:[255,192,203],brown:[165,42,42],transparent:[0,0,0]};function er(e){let t=Math.round(Math.max(0,Math.min(255,e))).toString(16);return 1===t.length?"0"+t:t}function en(e,t){let i=H[t];return Math.round(e*i)/i}function es(e){return(e/=255)<=.04045?e/12.92:Math.pow((e+.055)/1.055,2.4)}function ea(e){return e<=0?0:e>=1?255:Math.round((e<=.0031308?12.92*e:1.055*Math.pow(e,K)-.055)*255)}function el(e){switch(e.type){case"number":if(Number.isInteger(e.value))return`${e.value}${e.unit}`;let t=Math.round(1e6*e.value)/1e6,i=t.toString();return i.includes("e")||i.includes("E")?`${t.toFixed(10).replace(/\.?0+$/,"")}${e.unit}`:`${t}${e.unit}`;case"string":return e.quoted?`"${e.value}"`:e.value;case"color":return function(e){let{r:t,g:i,b:r,a:n,format:s,original:a}=e;if(a)return a;switch(s){case"oklch":{let e,s,a,l,o,u,c,d,h,p,[m,f,g]=(e=es(t),h=Math.sqrt((c=1.9779984951*(l=Math.cbrt(.4122214708*e+.5363325363*(s=es(i))+.0514459929*(a=es(r))))-2.428592205*(o=Math.cbrt(.2119034982*e+.6806995451*s+.1073969566*a))+.4505937099*(u=Math.cbrt(.0883024619*e+.2817188376*s+.6299787005*a)))*c+(d=.0259040371*l+.7827717662*o-.808675766*u)*d),(p=Math.atan2(d,c)*X)<0&&(p+=360),[.2104542553*l+.793617785*o-.0040720468*u,h,p]);return 1===n?`oklch(${en(100*m,1)}% ${en(f,3)} ${en(g,3)})`:`oklch(${en(100*m,1)}% ${en(f,3)} ${en(g,3)} / ${en(n,2)})`}case"hsl":{let[e,s,a]=function(e,t,i){e/=255;let r=Math.max(e,t/=255,i/=255),n=Math.min(e,t,i),s=(r+n)/2,a=0,l=0;if(r!==n){let o=r-n;switch(l=s>.5?o/(2-r-n):o/(r+n),r){case e:a=((t-i)/o+6*(t<i))*60;break;case t:a=((i-e)/o+2)*60;break;case i:a=((e-t)/o+4)*60}}return[a,100*l,100*s]}(t,i,r);return 1===n?`hsl(${en(e,1)}, ${en(s,1)}%, ${en(a,1)}%)`:`hsla(${en(e,1)}, ${en(s,1)}%, ${en(a,1)}%, ${en(n,2)})`}case"rgb":return 1===n?`rgb(${Math.round(t)}, ${Math.round(i)}, ${Math.round(r)})`:`rgba(${Math.round(t)}, ${Math.round(i)}, ${Math.round(r)}, ${en(n,2)})`;default:return 1===n?`#${er(t)}${er(i)}${er(r)}`:`rgba(${Math.round(t)}, ${Math.round(i)}, ${Math.round(r)}, ${en(n,2)})`}}(e);case"boolean":return e.value?"true":"false";case"list":return e.values.map(el).join(","===e.separator?", ":" ");case"map":let r=[];return e.entries.forEach((e,t)=>{r.push(`${t}: ${el(e)}`)}),`(${r.join(", ")})`;case"null":return"null"}}function eo(e){let t=e.trim().toLowerCase(),i=ei[t];if(i)return{type:"color",r:i[0],g:i[1],b:i[2],a:+("transparent"!==t),format:"hex",original:t};let r=t.match(ee);if(r){let e=r[1],t,i,n,s=1;if(3===e.length)t=parseInt(e[0]+e[0],16),i=parseInt(e[1]+e[1],16),n=parseInt(e[2]+e[2],16);else if(4===e.length)t=parseInt(e[0]+e[0],16),i=parseInt(e[1]+e[1],16),n=parseInt(e[2]+e[2],16),s=parseInt(e[3]+e[3],16)/255;else if(6===e.length)t=parseInt(e.slice(0,2),16),i=parseInt(e.slice(2,4),16),n=parseInt(e.slice(4,6),16);else{if(8!==e.length)return null;t=parseInt(e.slice(0,2),16),i=parseInt(e.slice(2,4),16),n=parseInt(e.slice(4,6),16),s=parseInt(e.slice(6,8),16)/255}return{type:"color",r:t,g:i,b:n,a:s,format:"hex"}}let n=t.match(et);if(n)return{type:"color",r:parseInt(n[1],10),g:parseInt(n[2],10),b:parseInt(n[3],10),a:n[4]?parseFloat(n[4]):1,format:"rgb"};let s=t.match(J);if(s){var a;let e,t,i,r,n,l,o,u,c,d=parseFloat(s[1]);"%"===s[2]&&(d/=100);let h=parseFloat(s[3]),p=parseFloat(s[4]),m=1;s[5]&&(m=parseFloat(s[5]),"%"===s[6]&&(m/=100));let[f,g,y]=(r=(a=d)+.3963377774*(t=h*Math.cos(e=p*Z))+.2158037573*(i=h*Math.sin(e)),n=a-.1055613458*t-.0638541728*i,l=a-.0894841775*t-1.291485548*i,[ea(4.0767416621*(o=r*r*r)-3.3077115913*(u=n*n*n)+.2309699292*(c=l*l*l)),ea(-1.2684380046*o+2.6097574011*u-.3413193965*c),ea(-.0041960863*o-.7034186147*u+1.707614701*c)]);return{type:"color",r:f,g:g,b:y,a:m,format:"oklch"}}return null}function eu(e,t=0){if("number"===e.type)return e.value;if("string"===e.type){let i=parseFloat(e.value);return isNaN(i)?t:i}return t}function ec(e){return"color"===e.type?e:"string"===e.type?eo(e.value):null}function ed(e){return el(e).replace(/^["']|["']$/g,"")}function eh(e,t,i){e=(e%360+360)%360,t=Math.max(0,Math.min(100,t))/100;let r=(1-Math.abs(2*(i=Math.max(0,Math.min(100,i))/100)-1))*t,n=r*(1-Math.abs(e/60%2-1)),s=i-r/2,a=0,l=0,o=0;return e<60?(a=r,l=n,o=0):e<120?(a=n,l=r,o=0):e<180?(a=0,l=r,o=n):e<240?(a=0,l=n,o=r):e<300?(a=n,l=0,o=r):(a=r,l=0,o=n),[Math.round((a+s)*255),Math.round((l+s)*255),Math.round((o+s)*255)]}function ep(e,t,i){e/=255;let r=Math.max(e,t/=255,i/=255),n=Math.min(e,t,i),s=(r+n)/2,a=0,l=0;if(r!==n){let o=r-n;switch(l=s>.5?o/(2-r-n):o/(r+n),r){case e:a=((t-i)/o+6*(t<i))*60;break;case t:a=((i-e)/o+2)*60;break;case i:a=((e-t)/o+4)*60}}return[a,100*l,100*s]}function em(e,t,i=!1){let[r,n,s]=ep(e.r,e.g,e.b),[a,l,o]=eh(r,n,i?Math.max(0,s-t):Math.min(100,s+t));return{type:"color",r:a,g:l,b:o,a:e.a,format:e.format}}function ef(e,t,i=!1){let[r,n,s]=ep(e.r,e.g,e.b),[a,l,o]=eh(r,i?Math.max(0,n-t):Math.min(100,n+t),s);return{type:"color",r:a,g:l,b:o,a:e.a,format:e.format}}var eg={lighten(e){let t=ec(e[0]),i=eu(e[1],10);return t?em(t,i):e[0]},darken(e){let t=ec(e[0]),i=eu(e[1],10);return t?em(t,i,!0):e[0]},saturate(e){let t=ec(e[0]),i=eu(e[1],10);return t?ef(t,i):e[0]},desaturate(e){let t=ec(e[0]),i=eu(e[1],10);return t?ef(t,i,!0):e[0]},"adjust-hue"(e){let t=ec(e[0]),i=eu(e[1],0);if(!t)return e[0];let[r,n,s]=ep(t.r,t.g,t.b),[a,l,o]=eh(r+i,n,s);return{type:"color",r:a,g:l,b:o,a:t.a,format:t.format}},rgba(e){if(2===e.length){let t=ec(e[0]),i=eu(e[1],1);return t?{type:"color",r:t.r,g:t.g,b:t.b,a:i,format:t.format}:e[0]}return{type:"color",r:Math.round(eu(e[0],0)),g:Math.round(eu(e[1],0)),b:Math.round(eu(e[2],0)),a:e[3]?eu(e[3],1):1,format:"rgb"}},rgb:e=>({type:"color",r:Math.round(eu(e[0],0)),g:Math.round(eu(e[1],0)),b:Math.round(eu(e[2],0)),a:1,format:"rgb"}),hsl(e){let[t,i,r]=eh(eu(e[0],0),eu(e[1],0),eu(e[2],0));return{type:"color",r:t,g:i,b:r,a:1,format:"hsl"}},hsla(e){let t=eu(e[0],0),i=eu(e[1],0),r=eu(e[2],0),n=e[3]?eu(e[3],1):1,[s,a,l]=eh(t,i,r);return{type:"color",r:s,g:a,b:l,a:n,format:"hsl"}},mix(e){let t=ec(e[0]),i=ec(e[1]),r=e[2]?eu(e[2],50)/100:.5;if(!t||!i)return e[0];let n=2*r-1,s=t.a-i.a,a=((n*s==-1?n:(n+s)/(1+n*s))+1)/2,l=1-a;return{type:"color",r:Math.round(t.r*a+i.r*l),g:Math.round(t.g*a+i.g*l),b:Math.round(t.b*a+i.b*l),a:t.a*r+i.a*(1-r),format:t.format}},red:e=>({type:"number",value:ec(e[0])?.r??0,unit:""}),green:e=>({type:"number",value:ec(e[0])?.g??0,unit:""}),blue:e=>({type:"number",value:ec(e[0])?.b??0,unit:""}),alpha:e=>({type:"number",value:ec(e[0])?.a??1,unit:""}),opacity:e=>({type:"number",value:ec(e[0])?.a??1,unit:""}),hue(e){let t=ec(e[0]);if(!t)return{type:"number",value:0,unit:"deg"};let[i]=ep(t.r,t.g,t.b);return{type:"number",value:i,unit:"deg"}},saturation(e){let t=ec(e[0]);if(!t)return{type:"number",value:0,unit:"%"};let[,i]=ep(t.r,t.g,t.b);return{type:"number",value:i,unit:"%"}},lightness(e){let t=ec(e[0]);if(!t)return{type:"number",value:0,unit:"%"};let[,,i]=ep(t.r,t.g,t.b);return{type:"number",value:i,unit:"%"}},complement(e){let t=ec(e[0]);if(!t)return e[0];let[i,r,n]=ep(t.r,t.g,t.b),[s,a,l]=eh(i+180,r,n);return{type:"color",r:s,g:a,b:l,a:t.a,format:t.format}},invert(e){let t=ec(e[0]);return t?{type:"color",r:255-t.r,g:255-t.g,b:255-t.b,a:t.a,format:t.format}:e[0]},grayscale(e){let t=ec(e[0]);return t?ef(t,100,!0):e[0]},percentage:e=>({type:"number",value:100*eu(e[0],0),unit:"%"}),round:e=>({type:"number",value:Math.round(eu(e[0],0)),unit:"number"===e[0].type?e[0].unit:""}),ceil:e=>({type:"number",value:Math.ceil(eu(e[0],0)),unit:"number"===e[0].type?e[0].unit:""}),floor:e=>({type:"number",value:Math.floor(eu(e[0],0)),unit:"number"===e[0].type?e[0].unit:""}),abs:e=>({type:"number",value:Math.abs(eu(e[0],0)),unit:"number"===e[0].type?e[0].unit:""}),min(e){let t=e.map(e=>eu(e,1/0)),i=t.indexOf(Math.min(...t));return{type:"number",value:Math.min(...t),unit:e[i]?.type==="number"?e[i].unit:""}},max(e){let t=e.map(e=>eu(e,-1/0)),i=t.indexOf(Math.max(...t));return{type:"number",value:Math.max(...t),unit:e[i]?.type==="number"?e[i].unit:""}},random(e){let t=e.length>0?eu(e[0],1):1;return t<=1?{type:"number",value:Math.random(),unit:""}:{type:"number",value:Math.floor(Math.random()*t)+1,unit:""}},unit:e=>"number"===e[0].type?{type:"string",value:e[0].unit,quoted:!0}:{type:"string",value:"",quoted:!0},unitless:e=>"number"===e[0].type?{type:"boolean",value:""===e[0].unit}:{type:"boolean",value:!0},"str-length":e=>({type:"number",value:ed(e[0]).length,unit:""}),"str-slice"(e){let t=ed(e[0]),i=Math.floor(eu(e[1],1))-1,r=e[2]?Math.floor(eu(e[2],t.length)):t.length;return{type:"string",value:t.slice(i,r),quoted:!1}},"str-index"(e){let t=ed(e[0]),i=ed(e[1]),r=t.indexOf(i);return{type:"number",value:-1===r?0:r+1,unit:""}},"str-insert"(e){let t=ed(e[0]),i=ed(e[1]),r=Math.floor(eu(e[2],1))-1;return{type:"string",value:t.slice(0,r)+i+t.slice(r),quoted:!1}},"to-upper-case":e=>({type:"string",value:ed(e[0]).toUpperCase(),quoted:!1}),"to-lower-case":e=>({type:"string",value:ed(e[0]).toLowerCase(),quoted:!1}),quote:e=>({type:"string",value:ed(e[0]),quoted:!0}),unquote:e=>({type:"string",value:ed(e[0]),quoted:!1}),length(e){let t=e[0];return"list"===t.type?{type:"number",value:t.values.length,unit:""}:"map"===t.type?{type:"number",value:t.entries.size,unit:""}:{type:"number",value:1,unit:""}},nth(e){let t=e[0],i=Math.floor(eu(e[1],1));return"list"===t.type&&(i<0&&(i=t.values.length+i+1),i>=1&&i<=t.values.length)?t.values[i-1]:{type:"null"}},join(e){let t=e[0],i=e[1],r=e[2]?ed(e[2]):",";return{type:"list",values:[..."list"===t.type?t.values:[t],..."list"===i.type?i.values:[i]],separator:" "===r?" ":","}},append(e){let t=e[0],i=e[1],r=e[2]?ed(e[2]):",",n="list"===t.type?[...t.values]:[t];return n.push(i),{type:"list",values:n,separator:" "===r?" ":","}},index(e){let t=e[0],i=e[1];if("list"!==t.type)return{type:"null"};let r=el(i),n=t.values.findIndex(e=>el(e)===r);return{type:"number",value:-1===n?0:n+1,unit:""}},"map-get"(e){let t=e[0],i=ed(e[1]);return"map"===t.type&&t.entries.get(i)||{type:"null"}},"map-keys"(e){let t=e[0];if("map"===t.type){let e=[];return t.entries.forEach((t,i)=>{e.push({type:"string",value:i,quoted:!1})}),{type:"list",values:e,separator:","}}return{type:"list",values:[],separator:","}},"map-values"(e){let t=e[0];if("map"===t.type){let e=[];return t.entries.forEach(t=>{e.push(t)}),{type:"list",values:e,separator:","}}return{type:"list",values:[],separator:","}},"map-has-key"(e){let t=e[0],i=ed(e[1]);return"map"===t.type?{type:"boolean",value:t.entries.has(i)}:{type:"boolean",value:!1}},"type-of":e=>({type:"string",value:e[0].type,quoted:!1}),inspect:e=>({type:"string",value:el(e[0]),quoted:!0}),if(e){let t=e[0],i=e[1],r=e[2]||{type:"null"};return("boolean"===t.type?t.value:"null"!==t.type)?i:r}};function ey(e,t){let i=null;for(let r=0;r<e.length;r++){let n=e[r];if(i){n===i&&"\\"!==e[r-1]&&(i=null);continue}if('"'===n||"'"===n){i=n;continue}if(n===t)return r}return -1}var eb={px:{px:1,em:1/16,rem:1/16,pt:.75,pc:9,in:96,cm:37.8,mm:3.78},em:{px:16,em:1,rem:1},rem:{px:16,rem:1,em:1},pt:{px:4/3,pt:1},pc:{px:1/9,pc:1},in:{px:1/96,in:1,cm:2.54,mm:25.4},cm:{px:1/37.8,cm:1,mm:10,in:1/2.54},mm:{px:1/3.78,mm:1,cm:.1},"%":{"%":1},deg:{deg:1,rad:Math.PI/180,turn:1/360,grad:.9},rad:{rad:1,deg:180/Math.PI,turn:1/(2*Math.PI)},turn:{turn:1,deg:360,rad:2*Math.PI},s:{s:1,ms:1e3},ms:{ms:1,s:.001}};function eM(e=null){return{variables:new Map,parent:e}}function ev(e,t){let i=t.startsWith("$")?t:`$${t}`,r=e;for(;r;){if(r.variables.has(i))return r.variables.get(i);r=r.parent}}function ew(e,t,i){let r=t.startsWith("$")?t:`$${t}`,n=e;for(;n;){if(n.variables.has(r))return void n.variables.set(r,i);n=n.parent}e.variables.set(r,i)}function eN(e){let t=e.trim();if(""===t||"null"===t)return{type:"null"};if("true"===t)return{type:"boolean",value:!0};if("false"===t)return{type:"boolean",value:!1};let i=eo(t);if(i)return i;let r=t.match(/^(-?\d*\.?\d+(?:e[+-]?\d+)?)([\w%]*)$/i);return r?{type:"number",value:parseFloat(r[1]),unit:r[2]||""}:t.startsWith('"')&&t.endsWith('"')||t.startsWith("'")&&t.endsWith("'")?{type:"string",value:t.slice(1,-1),quoted:!0}:t.startsWith("(")&&t.endsWith(")")?ey(t.slice(1,-1).trim(),":")>0?eT(t):eL(t):!function(e){let t=0,i=null;for(let r=0;r<e.length;r++){let n=e[r];if(i){n===i&&"\\"!==e[r-1]&&(i=null);continue}if('"'===n||"'"===n){i=n;continue}if("("===n||"["===n||"{"===n){t++;continue}if(")"===n||"]"===n||"}"===n){t--;continue}if(0===t&&","===n)return!0}return!1}(t)?{type:"string",value:t,quoted:!1}:eL(t)}function eE(e){switch(e.type){case"null":return!1;case"boolean":return e.value;case"string":return""!==e.value;case"number":return 0!==e.value;case"list":return e.values.length>0;case"map":return e.entries.size>0;case"color":return!0}}function eS(e){return"string"===e.type?e.value:el(e)}function ex(e,t,i){if("+"===i&&("string"===e.type||"string"===t.type))return{type:"string",value:eS(e)+eS(t),quoted:!1};if("number"===e.type&&"number"===t.type){let r,n=t.value,s=e.unit||t.unit;if(e.unit&&t.unit&&e.unit!==t.unit){let i=eI(t.value,t.unit,e.unit);null!==i&&(n=i),s=e.unit}switch(i){case"+":r=e.value+n;break;case"-":r=e.value-n;break;case"*":r=e.value*n,e.unit&&t.unit&&(s=e.unit);break;case"/":if(0===n)return{error:"DIVISION_BY_ZERO",message:"Division by zero"};r=e.value/n,e.unit===t.unit&&(s="");break;case"%":if(0===n)return{error:"DIVISION_BY_ZERO",message:"Modulo by zero"};r=e.value%n;break;default:return{error:"TYPE_ERROR",message:`Unknown operator: ${i}`}}return{type:"number",value:r,unit:s}}return"color"===e.type&&"number"===t.type&&"*"===i?{type:"color",r:Math.round(e.r*t.value),g:Math.round(e.g*t.value),b:Math.round(e.b*t.value),a:e.a}:{error:"TYPE_ERROR",message:`Cannot perform ${i} on ${e.type} and ${t.type}`}}function eI(e,t,i){if(t===i||!t||!i)return e;let r=eb[t];return r&&void 0!==r[i]?e*r[i]:null}function eL(e){let t=e.trim();return t.startsWith("(")&&t.endsWith(")")?ek(t.slice(1,-1).trim()):ek(t)}function ek(e){let t=e.includes(",")?",":" ";return{type:"list",values:eA(e,t).map(e=>eN(e.trim())),separator:t}}function eT(e){let t=e.trim();if(!t.startsWith("(")||!t.endsWith(")"))return{type:"map",entries:new Map};let i=t.slice(1,-1).trim(),r=new Map;for(let e of eA(i,",")){let t=ey(e,":");if(-1===t)continue;let i=e.slice(0,t).trim(),n=e.slice(t+1).trim();r.set(i,eN(n))}return{type:"map",entries:r}}function eA(e,t){let i=[],r="",n=0,s=null;for(let a=0;a<e.length;a++){let l=e[a];if(s){r+=l,l===s&&"\\"!==e[a-1]&&(s=null);continue}if('"'===l||"'"===l){s=l,r+=l;continue}if("("===l||"["===l||"{"===l){n++,r+=l;continue}if(")"===l||"]"===l||"}"===l){n--,r+=l;continue}if(0===n&&l===t[0]){" "===t&&r.trim()||","===t?(i.push(r),r=""):r+=l;continue}r+=l}return r.trim()&&i.push(r),i}function eC(e,t){let i=[],r="",n=0,s=null,a=0;for(;a<e.length;){let l=e[a];if(s){r+=l,l===s&&"\\"!==e[a-1]&&(s=null),a++;continue}if('"'===l||"'"===l){s=l,r+=l,a++;continue}if("("===l||"["===l||"{"===l){n++,r+=l,a++;continue}if(")"===l||"]"===l||"}"===l){n--,r+=l,a++;continue}if(0===n&&e.slice(a,a+t.length)===t){i.push(r),r="",a+=t.length;continue}r+=l,a++}return r&&i.push(r),i}var eD={maxIterations:1e4,maxOutputRules:5e4,maxNestingDepth:64,maxInputSize:1048576,timeout:5e3,strictMode:!1,minify:!1,preserveBangComments:!0},ej=class{constructor(e={}){this.input="",this.pos=0,this.valueStartPos=0,this.evaluator=function(e){function t(i,r,n){let s=i.trim();if(!s)return{type:"null"};if(s.startsWith("$")){let e=s.split(/[^$\w-]/)[0],t=ev(r,e);if(!t)return{type:"string",value:s,quoted:!1};if(e===s)return t}let a=s.match(/^([\w-]+)\s*\(/);if(a){let e=a[1],i=e.length,l=function(e,t){let i=0,r=null;for(let n=t;n<e.length;n++){let t=e[n];if(r){t===r&&"\\"!==e[n-1]&&(r=null);continue}if('"'===t||"'"===t){r=t;continue}if("("===t)i++;else if(")"===t&&0==--i)return n}return -1}(s,i);if(-1!==l){if(/^(url|var|calc|clamp|attr|env|linear-gradient|radial-gradient|conic-gradient|repeating-linear-gradient|repeating-radial-gradient|color|hwb|lab|lch|oklab|oklch)$/i.test(e)&&!n?.has(e)&&!eg[e])return{type:"string",value:s,quoted:!1};let a=function(e,i,r){let n=[];for(let s of eA(e,","))n.push(t(s.trim(),i,r));return n}(s.slice(i+1,l),r,n);if(n?.has(e)){let t=n.get(e)(...a);return"string"==typeof t?eN(t):t}if(eg[e]){let t=eg[e](a);return"string"==typeof t?eN(t):t}return{type:"string",value:s,quoted:!1}}}let l=eC(s," or ");if(l.length>1){for(let e of l)if(eE(t(e,r,n)))return{type:"boolean",value:!0};return{type:"boolean",value:!1}}let o=eC(s," and ");if(o.length>1){for(let e of o)if(!eE(t(e,r,n)))return{type:"boolean",value:!1};return{type:"boolean",value:!0}}for(let e of["==","!=",">=","<=",">","<"]){let i=eC(s,e);if(2===i.length)return{type:"boolean",value:function(e,t,i){if("=="===i||"!="===i){let r=function e(t,i){if(t.type!==i.type)return!1;switch(t.type){case"number":return t.value===i.value&&t.unit===i.unit;case"string":case"boolean":return t.value===i.value;case"color":return t.r===i.r&&t.g===i.g&&t.b===i.b&&t.a===i.a;case"null":return!0;case"list":return t.values.length===i.values.length&&t.values.every((t,r)=>e(t,i.values[r]));case"map":if(t.entries.size!==i.entries.size)return!1;for(let[r,n]of t.entries){let t=i.entries.get(r);if(!t||!e(n,t))return!1}return!0}}(e,t);return"=="===i?r:!r}if("number"===e.type&&"number"===t.type){let r=e.value,n=eI(t.value,t.unit,e.unit)??t.value;switch(i){case"<":return r<n;case">":return r>n;case"<=":return r<=n;case">=":return r>=n}}if("string"===e.type&&"string"===t.type)switch(i){case"<":return e.value<t.value;case">":return e.value>t.value;case"<=":return e.value<=t.value;case">=":return e.value>=t.value}return!1}(t(i[0],r,n),t(i[1],r,n),e)}}if(s.startsWith("not ")||s.startsWith("not("))return{type:"boolean",value:!eE(t((s.startsWith("not("),s.slice(4)),r,n))};let u=function(i,r,n){let s=0,a=null;for(let l=i.length-1;l>=0;l--){let o=i[l];if(a){o===a&&"\\"!==i[l-1]&&(a=null);continue}if('"'===o||"'"===o){a=o;continue}if(")"===o||"]"===o||"}"===o){s++;continue}if("("===o||"["===o||"{"===o){s--;continue}if(0===s&&("+"===o||"-"===o)){if(0===l)continue;let s=i[l-1];if("e"===s||"E"===s)continue;if("-"===o){if(!/\s/.test(s)&&")"!==s&&"]"!==s&&"}"!==s)continue;let e=i[l+1];if(e&&/[a-zA-Z]/.test(e))continue}let a=i.slice(0,l).trim(),u=i.slice(l+1).trim();if(a&&u){let i=ex(t(a,r,n),t(u,r,n),o);return"error"in i?(e({type:"error",code:i.error,message:i.message}),{type:"null"}):i}}}return function(i,r,n){let s=0,a=null;for(let l=i.length-1;l>=0;l--){let o=i[l];if(a){o===a&&"\\"!==i[l-1]&&(a=null);continue}if('"'===o||"'"===o){a=o;continue}if(")"===o||"]"===o||"}"===o){s++;continue}if("("===o||"["===o||"{"===o){s--;continue}if(0===s&&("*"===o||"/"===o||"%"===o)){let s=i.slice(0,l).trim(),a=i.slice(l+1).trim();if(s&&a){let i=ex(t(s,r,n),t(a,r,n),o);return"error"in i?(e({type:"error",code:i.error,message:i.message}),{type:"null"}):i}}}if(i.startsWith("(")&&i.endsWith(")")){let e=i.slice(1,-1).trim();return e?-1!==ey(e,",")||ey(e,":")>0?eN(i):t(e,r,n):{type:"list",values:[],separator:" "}}return null}(i,r,n)}(s,r,n);if(u)return u;if(s.includes(" ")&&s.includes("$")){let e=eA(s," ");if(e.length>1)return{type:"list",values:e.map(e=>t(e.trim(),r,n)),separator:" "}}return eN(s)}return{evaluate:t,evaluateCondition:function(e,i){return eE(t(e,i))}}}(e=>this.addError(e)),this.inMixinContext=!1,this.inRulesetContext=!1,this.config={...eD,...e}}compile(e){if(this.config.maxInputSize>0&&e.length>this.config.maxInputSize)return{css:"",errors:[{type:"error",code:"MAX_INPUT_SIZE",message:`Input exceeds maximum size of ${this.config.maxInputSize} bytes`}],warnings:[],stats:{iterations:0,rules:0,duration:0,inputSize:e.length,outputSize:0}};this.input=e,this.pos=0,this.state={config:this.config,scope:eM(),mixins:new Map,functions:new Map,iterations:0,rules:0,startTime:Date.now(),errors:[],warnings:[],output:[],selectorStack:[],atRuleStack:[]};try{this.parseStylesheet()}catch(e){e instanceof ez?this.addError({type:"error",code:e.code,message:e.message,start:e.location}):this.addError({type:"error",code:"SYNTAX_ERROR",message:String(e)})}let t=this.formatOutput();return{css:t,errors:this.state.errors,warnings:this.state.warnings,stats:{iterations:this.state.iterations,rules:this.state.rules,duration:Date.now()-this.state.startTime,inputSize:e.length,outputSize:t.length}}}checkLimits(){if(this.config.maxIterations>0&&this.state.iterations>=this.config.maxIterations)throw new ez("MAX_ITERATIONS","Maximum iterations exceeded",this.location());if(this.config.timeout>0&&Date.now()-this.state.startTime>=this.config.timeout)throw new ez("TIMEOUT","Compilation timeout",this.location());if(this.config.maxOutputRules>0&&this.state.rules>=this.config.maxOutputRules)throw new ez("MAX_OUTPUT_RULES","Maximum output rules exceeded",this.location())}addError(e){if(this.state.errors.push({type:"error",...e}),this.config.strictMode)throw new ez(e.code,e.message,e.start)}addWarning(e){this.state.warnings.push({type:"warning",...e})}location(){return this.locationAt(this.pos)}locationAt(e){let t=1,i=0;for(let r=0;r<e&&r<this.input.length;r++)this.input[r]===`
-`?(t++,i=0):i++;return{line:t,column:i,offset:e}}peek(e=0){return this.input[this.pos+e]||""}advance(e=1){let t=this.input.slice(this.pos,this.pos+e);return this.pos+=e,t}skipWhitespace(){for(;this.pos<this.input.length;){let e=this.peek();if(" "===e||"	"===e||e===`
-`||"\r"===e)this.advance();else if("/"===e&&"/"===this.peek(1))this.skipSingleLineComment();else{"/"===e&&this.peek(1);break}}}skipSingleLineComment(){for(;this.pos<this.input.length&&this.peek()!==`
-`;)this.advance();this.peek()===`
-`&&this.advance()}readMultiLineComment(){let e=this.pos,t="!"===this.peek(2);for(this.advance(2);this.pos<this.input.length;){if("*"===this.peek()&&"/"===this.peek(1)){this.advance(2);break}this.advance()}let i=this.input.slice(e,this.pos);return t||!this.config.minify?i:""}parseStylesheet(){for(;this.pos<this.input.length&&(this.checkLimits(),this.skipWhitespace(),!(this.pos>=this.input.length));){let e=this.peek();if("@"===e)this.parseAtRule();else if("$"===e)this.parseVariableDeclaration();else if("/"===e&&"*"===this.peek(1)){let e=this.readMultiLineComment();e&&this.state.output.push(e)}else{if("}"===e)break;";"===e?this.advance():this.parseRuleset()}}}parseVariableDeclaration(){let e=this.readVariable();if(this.skipWhitespace(),":"!==this.peek())return void this.addError({code:"SYNTAX_ERROR",message:`Expected ':' after variable name ${e}`,start:this.location()});this.advance(),this.skipWhitespace();let t=this.readUntil(";",!0).trim();";"===this.peek()&&this.advance();let i=this.evaluateExpression(t);ew(this.state.scope,e,i)}readVariable(){let e=this.advance();for(;this.pos<this.input.length&&this.isIdentChar(this.peek());)e+=this.advance();return e}parseAtRule(){let e=this.readAtKeyword();switch(e){case"@mixin":this.parseMixin();break;case"@function":this.parseFunction();break;case"@include":this.parseInclude();break;case"@if":this.parseIf();break;case"@for":this.parseFor();break;case"@each":this.parseEach();break;case"@return":break;default:this.parseNativeAtRule(e)}}readAtKeyword(){let e=this.advance();for(;this.pos<this.input.length&&this.isIdentChar(this.peek());)e+=this.advance();return e}parseMixin(){this.skipWhitespace();let e=this.readIdent();this.skipWhitespace();let t=this.parseParamDefinitions();if(this.skipWhitespace(),"{"!==this.peek())return void this.addError({code:"SYNTAX_ERROR",message:"Expected '{' after mixin definition",start:this.location()});let i=this.readBlock();this.state.mixins.set(e,{name:e,params:t,body:i,start:this.location()})}parseFunction(){this.skipWhitespace();let e=this.readIdent();this.skipWhitespace();let t=this.parseParamDefinitions();if(this.skipWhitespace(),"{"!==this.peek())return void this.addError({code:"SYNTAX_ERROR",message:"Expected '{' after function definition",start:this.location()});let i=this.readBlock();this.state.functions.set(e,{name:e,params:t,body:i,start:this.location()})}parseParamDefinitions(){let e=[];if("("!==this.peek())return e;for(this.advance();this.pos<this.input.length&&")"!==this.peek()&&(this.skipWhitespace(),")"!==this.peek());){let t;if("$"!==this.peek()){this.advance();continue}let i=this.readVariable();this.skipWhitespace();let r=!1;"."===this.peek()&&"."===this.peek(1)&&"."===this.peek(2)&&(r=!0,this.advance(3),this.skipWhitespace()),":"===this.peek()&&(this.advance(),this.skipWhitespace(),t=this.readParamDefault()),e.push({name:i,defaultValue:t,variadic:r}),this.skipWhitespace(),","===this.peek()&&this.advance()}return")"===this.peek()&&this.advance(),e}readParamDefault(){let e="",t=0;for(;this.pos<this.input.length;){let i=this.peek();if(0===t&&(","===i||")"===i))break;("("===i||"["===i||"{"===i)&&t++,(")"===i||"]"===i||"}"===i)&&t--,e+=this.advance()}return e.trim()}parseInclude(){this.skipWhitespace();let e=this.readIdent();this.skipWhitespace();let t=[],i=new Map;if("("===this.peek()){for(this.advance();this.pos<this.input.length&&")"!==this.peek()&&(this.skipWhitespace(),")"!==this.peek());){let e=this.readArgument(),r=e.trim().match(/^(\$[\w-]+)\s*:\s*(.+)$/s);r?i.set(r[1],r[2]):t.push(e),this.skipWhitespace(),","===this.peek()&&this.advance()}")"===this.peek()&&this.advance()}this.skipWhitespace(),";"===this.peek()&&this.advance();let r=this.state.mixins.get(e);r?this.executeMixin(r,t,i):this.addError({code:"UNDEFINED_MIXIN",message:`Undefined mixin: ${e}`,start:this.location()})}executeMixin(e,t,i=new Map){let r=eM(this.state.scope),n=0;for(let s=0;s<e.params.length;s++){let a=e.params[s];if(a.variadic){let e=t.slice(n).map(e=>this.evaluateExpression(e));ew(r,a.name,{type:"list",values:e,separator:","});break}if(i.has(a.name)){let e=this.evaluateExpression(i.get(a.name));ew(r,a.name,e);continue}let l=t[n++]||a.defaultValue||"",o=this.evaluateExpression(l);ew(r,a.name,o)}let s=this.state.scope,a=this.pos,l=this.input,o=this.inMixinContext;this.state.scope=r,this.input=e.body,this.pos=0,this.inMixinContext=!0,this.parseMixinBody(),this.state.scope=s,this.pos=a,this.input=l,this.inMixinContext=o}parseMixinBody(){for(;this.pos<this.input.length&&(this.checkLimits(),this.skipWhitespace(),!(this.pos>=this.input.length));){let e=this.peek();if("@"===e){let e=this.peekAtKeyword();"@include"===e?(this.advance(8),this.parseInclude()):"@if"===e?(this.advance(3),this.parseIf()):"@for"===e?(this.advance(4),this.parseFor()):"@each"===e?(this.advance(5),this.parseEach()):this.parseAtRule()}else if("$"===e)this.parseVariableDeclaration();else if("/"===e&&"*"===this.peek(1)){let e=this.readMultiLineComment();e&&this.state.output.push(e)}else{if("}"===e)break;if("&"===e||"."===e||"["===e||"*"===e||"#"===e||":"===e&&this.looksLikeSelector())this.parseRuleset();else{let e=this.parseDeclaration();e?this.state.output.push(e):"}"!==this.peek()&&this.advance()}}}}parseIf(){this.skipWhitespace();let e=[],t=this.readUntil("{",!1).trim(),i=this.readBlock();for(e.push({condition:t,block:i});this.skipWhitespace(),"@else"===this.input.slice(this.pos,this.pos+5);)if(this.advance(5),this.skipWhitespace(),"if"===this.input.slice(this.pos,this.pos+2)){this.advance(2),this.skipWhitespace();let t=this.readUntil("{",!1).trim(),i=this.readBlock();e.push({condition:t,block:i})}else if("{"===this.peek()){let t=this.readBlock();e.push({condition:null,block:t});break}else break;for(let t of e)if(null===t.condition){this.executeBlock(t.block);break}else if(this.evaluateCondition(t.condition)){this.executeBlock(t.block);break}}parseFor(){if(this.skipWhitespace(),this.state.iterations++,this.checkLimits(),"$"!==this.peek())return void this.addError({code:"SYNTAX_ERROR",message:"Expected variable in @for",start:this.location()});let e=this.readVariable();this.skipWhitespace();let t=this.readUntil("{",!1).trim(),i=this.readBlock(),r=t.match(/from\s+(.+?)\s+(through|to)\s+(.+?)(?:\s+by\s+(.+))?$/i);if(!r)return void this.addError({code:"SYNTAX_ERROR",message:"Invalid @for syntax",start:this.location()});let n=this.evaluateExpression(r[1]),s=this.evaluateExpression(r[3]),a=r[4]?this.evaluateExpression(r[4]):{type:"number",value:1},l="through"===r[2].toLowerCase();if("number"!==n.type||"number"!==s.type||"number"!==a.type)return void this.addError({code:"TYPE_ERROR",message:"@for requires numeric values",start:this.location()});let o=n.value,u=s.value,c=Math.abs(a.value)||1,d=u>=o?1:-1,h=eM(this.state.scope),p=this.state.scope,m=o;for(;d>0?l?m<=u:m<u:l?m>=u:m>u;)this.state.iterations++,this.checkLimits(),ew(h,e,{type:"number",value:m,unit:""}),this.state.scope=h,this.executeBlock(i),m+=c*d;this.state.scope=p}parseEach(){this.skipWhitespace(),this.state.iterations++,this.checkLimits();let e=[];for(;"$"===this.peek();)e.push(this.readVariable()),this.skipWhitespace(),","===this.peek()&&(this.advance(),this.skipWhitespace());let t=this.readUntil("{",!1).trim(),i=this.readBlock(),r=t.match(/^in\s+(.+)$/i);if(!r)return void this.addError({code:"SYNTAX_ERROR",message:"Invalid @each syntax, expected 'in'",start:this.location()});let n=r[1].trim(),s;s=n.startsWith("(")&&ey(n.slice(1),":")>0?eT(n):n.startsWith("$")?this.evaluateExpression(n):eL(n);let a=eM(this.state.scope),l=this.state.scope;if("map"===s.type)s.entries.forEach((t,r)=>{this.state.iterations++,this.checkLimits(),e.length>=1&&ew(a,e[0],{type:"string",value:r,quoted:!1}),e.length>=2&&ew(a,e[1],t),this.state.scope=a,this.executeBlock(i)});else if("list"===s.type)for(let t of s.values){if(this.state.iterations++,this.checkLimits(),1===e.length)ew(a,e[0],t);else if("list"===t.type&&e.length>1)for(let i=0;i<e.length&&i<t.values.length;i++)ew(a,e[i],t.values[i]);this.state.scope=a,this.executeBlock(i)}else this.state.iterations++,this.checkLimits(),ew(a,e[0],s),this.state.scope=a,this.executeBlock(i);this.state.scope=l}parseNativeAtRule(e){this.skipWhitespace();let t=this.readUntil("{;",!1);if(this.skipWhitespace(),"{"===this.peek()){let i=this.interpolate(e),r=this.substituteVariables(this.interpolate(t.trim()));this.state.atRuleStack.push(`${i} ${r}`);let n=this.location();this.advance();let s=this.state.output;this.state.output=[],["@font-face","@page","@counter-style","@font-feature-values","@property"].includes(e)?this.parseDeclarationBlock():this.parseStylesheet(),"}"===this.peek()?this.advance():this.addError({code:"UNCLOSED_BLOCK",message:`Unclosed block: missing closing brace for "${i} ${r}"`,start:n,end:this.location()});let a=this.state.output.join(this.config.minify?"":`
-`);this.state.output=s,a.trim()&&this.state.output.push(`${i} ${r} {${this.config.minify?"":`
-`}${a}${this.config.minify?"":`
-`}}`),this.state.atRuleStack.pop()}else";"===this.peek()&&this.advance(),this.state.output.push(`${this.interpolate(e)} ${this.substituteVariables(this.interpolate(t.trim()))};`)}parseDeclarationBlock(){for(;this.pos<this.input.length&&(this.skipWhitespace(),"}"!==this.peek());){if("/"===this.peek()&&"*"===this.peek(1)){let e=this.readMultiLineComment();e&&this.state.output.push(e);continue}let e=this.parseDeclaration();e?this.state.output.push("  "+e+";"):"}"!==this.peek()&&this.advance()}}parseRuleset(){let e=this.pos,t=this.readUntil("{",!1);if(this.skipWhitespace(),"{"!==this.peek()){this.pos=e,this.readUntil(";}",!0),";"===this.peek()&&this.advance();return}let i=this.location();this.advance(),this.state.rules++,this.checkLimits();let r=this.parseSelectors(t),n=this.resolveSelectors(r);this.state.selectorStack.push(n.join(", "));let s=[],a=[],l=this.inRulesetContext;this.inRulesetContext=!0;let o=!1;for(;this.pos<this.input.length;){if(this.skipWhitespace(),"}"===this.peek()){this.advance(),o=!0;break}let e=this.peek();if("/"===e&&"*"===this.peek(1)){this.readMultiLineComment();continue}if("@"===e){let e=this.peekAtKeyword();if("@include"===e){this.advance(8);let e=this.state.output;for(let e of(this.state.output=[],this.parseInclude(),this.state.output))e.includes("{")?a.push(e):s.push(e);this.state.output=e}else if("@if"===e){this.advance(3);let e=this.state.output;for(let e of(this.state.output=[],this.parseIf(),this.state.output))e.includes("{")?a.push(e):s.push(e);this.state.output=e}else if("@for"===e){this.advance(4);let e=this.state.output;for(let e of(this.state.output=[],this.parseFor(),this.state.output))e.includes("{")?a.push(e):s.push(e);this.state.output=e}else if("@each"===e){this.advance(5);let e=this.state.output;for(let e of(this.state.output=[],this.parseEach(),this.state.output))e.includes("{")?a.push(e):s.push(e);this.state.output=e}else if("@media"===e||"@supports"===e||"@container"===e){let e=this.state.output;this.state.output=[],this.parseAtRule(),a.push(...this.state.output),this.state.output=e}else this.parseAtRule();continue}if("$"===e){this.parseVariableDeclaration();continue}if("&"===e||"."===e||"["===e||":"===e||"*"===e||"#"===e&&"{"!==this.peek(1)||this.isIdentStart(e)&&this.looksLikeSelector()||("+"===e||">"===e||"~"===e)&&this.looksLikeSelector()){let e=this.state.output;this.state.output=[],this.parseRuleset(),a.push(...this.state.output),this.state.output=e;continue}let t=this.parseDeclaration();t?s.push(t):"}"!==this.peek()&&this.advance()}if(o||this.addError({code:"UNCLOSED_BLOCK",message:`Unclosed block: missing closing brace for "${t.trim()}"`,start:i,end:this.location()}),this.inRulesetContext=l,this.state.selectorStack.pop(),s.length>0){let e=s.join(this.config.minify?";":`;
-  `),t=n.join(this.config.minify?",":", ");this.config.minify?this.state.output.push(`${t}{${e}}`):this.state.output.push(`${t} {
+(() => {
+  'use strict';
+  let e, t, i;
+  var r = {},
+    n = {};
+  function s(e) {
+    var t = n[e];
+    if (void 0 !== t) return t.exports;
+    var i = (n[e] = { exports: {} });
+    return (r[e](i, i.exports, s), i.exports);
+  }
+  ((s.rv = () => '1.6.8'), (s.ruid = 'bundler=rspack@1.6.8'));
+  let a = 'tab-header style-scope ytmusic-player-page',
+    l = 'blyrics-container',
+    o = 'blyrics--active',
+    u = 'blyrics-rtl',
+    c = 'blyrics--word',
+    d = 'blyrics-background-lyric',
+    h = 'blyrics--animating',
+    p = 'blyrics--paused',
+    m = 'blyrics--pre-animating',
+    f = 'blyrics-user-scrolling',
+    g = 'blyrics--translated',
+    y = 'blyrics--romanized',
+    b = 'blyrics-footer',
+    M = '#song-image>#thumbnail>#img',
+    v = '#tab-renderer',
+    w =
+      '#tab-renderer > ytmusic-message-renderer > yt-formatted-string.text.style-scope.ytmusic-message-renderer',
+    N = 'blyrics-loader',
+    E = 'blyrics-wrapper',
+    S = 'blyrics-spacing-element',
+    x = 'blyrics-dfs',
+    I =
+      'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNCIgaGVpZ2h0PSIxMDI0IiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8ZyBjbGlwLXBhdGg9InVybCgjY2xpcDBfMTU4XzUpIj4KPHBhdGggZD0iTTEwMjYgNTEyQzEwMjYgNzk0Ljc3IDc5Ni43NyAxMDI0IDUxNCAxMDI0QzIzMS4yMyAxMDI0IDIgNzk0Ljc3IDIgNTEyQzIgMjI5LjIzIDIzMS4yMyAwIDUxNCAwQzc5Ni43NyAwIDEwMjYgMjI5LjIzIDEwMjYgNTEyWiIgZmlsbD0iI0Y2RjA2OSIvPgo8cGF0aCBkPSJNNzcyLjE1MiA0NjkuMzI3Qzc3MS45MTkgNDU2LjAxOCA3NzAuNTE5IDQ0Mi44NjMgNzY4LjM0MyA0MjkuNzg2Qzc1OS44NjkgMzgwLjQxNyA3MzkuMDM1IDMzNi44NTEgNzA2LjYxOCAyOTguNzAyQzcwMy4yNzYgMjk0Ljc1NiA2OTkuNzc3IDI5MC45NjQgNjk2LjEyNCAyODcuMjVDNjkzLjg2OSAyODQuOTI5IDY5MC45OTMgMjg0LjY5NiA2ODguNzM5IDI4Ni4yNDRDNjg2LjU2MiAyODcuNzE0IDY4NS45NCAyODkuOTU4IDY4Ni44NzMgMjkzLjEzMUM2ODcuMTA2IDI5My45MDUgNjg3LjQxNyAyOTQuNjAxIDY4Ny42NSAyOTUuMjk4QzcwMC4wODggMzI4LjMzOSA3MDYuNDYzIDM2Mi40NjQgNzA2LjY5NiAzOTcuNzVDNzA2LjM4NSA0MDQuMTczIDcwNi4wNzQgNDEwLjU5NSA3MDUuNzYzIDQxNy4wMThDNzA0LjgzIDQzNC41ODMgNzAyLjAzMiA0NTEuODM5IDY5Ny42MDEgNDY4Ljc4NkM2ODMuMzc1IDUyMy4zMzkgNjU1Ljg1NSA1NzAuMjMyIDYxNC4zNDMgNjA4LjUzNkM1NjAuMjM3IDY1OC40NDYgNDk1Ljk0NyA2ODQuMTM3IDQyMi4yNTEgNjg2LjIyNkM0MDMuNjcxIDY4Ni43NjggMzg1LjI0NyA2ODUuMjIgMzY2Ljk3OSA2ODIuMDQ4QzM0OC4zMjIgNjc4Ljg3NSAzMzAuMDUzIDY3My45MjMgMzEyLjQwNiA2NjcuMTEzQzMwOC41MTkgNjY1LjY0MyAzMDUuNzk5IDY2Ni4zMzkgMzA0LjI0NCA2NjkuMDQ4QzMwMi42ODkgNjcxLjYwMSAzMDMuMzExIDY3NCAzMDYuMzQzIDY3Ni44NjNDMzA4LjkwOCA2NzkuMjYyIDMxMS40NzMgNjgxLjU4MyAzMTQuMTE3IDY4My45MDVDMzY0LjgwMiA3MjcuNjI1IDQyMy44MDYgNzUwLjE0MyA0OTAuNzM5IDc1Mi4wNzdDNTA2LjkwOCA3NTIuNTQyIDUyMy4wNzggNzUxLjMwNCA1MzkuMDkyIDc0OC42NzNDNTk2Ljc3NCA3MzkuMzg3IDY0Ny4xNDggNzE0Ljg1NyA2ODguNzM5IDY3NEM3NDUuNzk5IDYxNy45NzYgNzczLjcwNyA1NDkuNDk0IDc3Mi4xNTIgNDY5LjMyN1oiIGZpbGw9ImJsYWNrIi8+CjxwYXRoIGQ9Ik0zMjguMjY1IDU0NC41NDJDMzMwLjUxOSA1NDIuODM5IDMzMC45MDggNTQwLjU5NSAzMjkuNjY0IDUzNi44MDRDMzI5LjUwOSA1MzYuNDE3IDMyOS40MzEgNTM2LjEwNyAzMjkuMjc2IDUzNS43MkMzMTkuNjM2IDUwOC42MzcgMzE2LjkxNSA0ODAuNzggMzIxLjAzNSA0NTIuMzgxQzMyNi40NzcgNDE1LjAwNiAzNDIuNDEzIDM4Mi42NjEgMzY4LjM3OCAzNTUuMjY4QzM3MC40NzcgMzUzLjAyNCAzNzEuNDg4IDM1MC43OCAzNzEuNDg4IDM0Ny42ODVDMzcxLjQxIDMzOC4wMTIgMzcxLjQxIDMyOC4zMzkgMzcxLjQxIDMxOC42NjdDMzcxLjQxIDMwOS4xNDkgMzcxLjQxIDI5OS41NTQgMzcxLjQxIDI5MC4wMzZDMzcxLjQxIDI4My44NDUgMzY5LjU0NCAyODEuOTExIDM2My4zMjUgMjgxLjkxMUMzNDQuMTI0IDI4MS45MTEgMzI1IDI4MS45MTEgMzA1Ljc5OSAyODEuODMzQzMwMi42MTEgMjgxLjgzMyAzMDAuMDQ2IDI4Mi43NjIgMjk3Ljc5MiAyODQuOTI5QzI2NS45MTkgMzE1LjgwNCAyNDguOTcyIDM1My40ODggMjQ2LjMyOSAzOTcuNTE4QzI0NS4zMTggNDE0LjMxIDI0Ny4yNjEgNDMwLjk0NiAyNTEuNjE1IDQ0Ny4yNzRDMjYyLjQ5OCA0ODcuOTc2IDI4NS41MDkgNTIwLjA4OSAzMjAuNDEzIDU0My43NjhDMzIzLjkxMiA1NDYuMTY3IDMyNS45MzMgNTQ2LjMyMSAzMjguMjY1IDU0NC41NDJaIiBmaWxsPSJibGFjayIvPgo8cGF0aCBkPSJNNDM0LjUzNCA0MjMuMjA4QzQzOS4yNzYgNDU4LjQ5NCA0NzIuNzgxIDQ4My40MTEgNTA4LjA3NCA0NzcuNzYyQzUzOS40MDMgNDcyLjczMiA1NjIuMTggNDQ2LjE5IDU2Mi4xOCA0MTQuNTQyQzU2Mi4xOCA0MDguMTk2IDU2Mi4xOCA0MDEuOTI5IDU2Mi4xOCAzOTUuNTgzQzU2Mi4xOCAzODcuMzA0IDU2Mi4xOCAzNzkuMTAxIDU2Mi4xOCAzNzAuODIxQzU2Mi4xOCAzNjUuNTYgNTYzLjU4IDM2NC4yNDQgNTY4Ljg2NiAzNjQuMTY3QzU3My43NjMgMzY0LjA4OSA1NzguNzM5IDM2NC4yNDQgNTgzLjYzNiAzNjQuMDg5QzU4OC4xNDUgMzYzLjkzNSA1OTAuMTY2IDM2MS4yMjYgNTg5LjM4OSAzNTYuODkzQzU4OS4yMzMgMzU2LjExOSA1ODkuMTU1IDM1NS4zNDUgNTg5IDM1NC42NDlDNTgzLjA5MiAzMjkuODEgNTcyLjM2NCAzMDcuMzY5IDU1Ni44MTYgMjg3LjA5NUM1NTMuOTQgMjgzLjM4MSA1NTAuNzUzIDI4MS45ODggNTQ2LjI0NCAyODIuMDY1QzUzMy4xODQgMjgyLjIyIDUyMC4xMjQgMjgyLjA2NSA1MDYuOTg2IDI4Mi4xNDNDNTA1LjU4NyAyODIuMTQzIDUwNC4xMSAyODIuMjIgNTAyLjcxIDI4Mi40NTJDNDk5LjQ0NSAyODIuOTk0IDQ5Ny45NjggMjg0LjU0MiA0OTcuNTAyIDI4Ny43OTJDNDk3LjM0NiAyODkuMDMgNDk3LjQyNCAyOTAuMzQ1IDQ5Ny40MjQgMjkxLjY2MUM0OTcuNDI0IDMxMS45MzUgNDk3LjQyNCAzMzIuMTMxIDQ5Ny40MjQgMzUyLjQwNUM0OTcuNDI0IDM2MC43NjIgNDk1Ljc5MiAzNjguODEgNDkyLjM3MSAzNzYuNDdDNDgyLjI2NSAzOTguNjAxIDQ2NC43NzQgNDEwLjkwNSA0NDAuNjc1IDQxNC4xNTVDNDM1LjYyMiA0MTQuODUxIDQzNC4xNDUgNDE2LjQ3NiA0MzQuMzc4IDQyMS40MjlDNDM0LjQ1NiA0MjEuODkzIDQzNC40NTYgNDIyLjU4OSA0MzQuNTM0IDQyMy4yMDhaIiBmaWxsPSJibGFjayIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzE1OF81Ij4KPHJlY3Qgd2lkdGg9IjEwMjQiIGhlaWdodD0iMTAyNCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4=',
+    L = 'https://lrclibup.boidu.dev/',
+    k = 'https://lyrics.api.dacubeking.com/',
+    T = [
+      'ja',
+      'ru',
+      'ko',
+      'zh-CN',
+      'zh-TW',
+      'zh',
+      'bn',
+      'th',
+      'el',
+      'he',
+      'ar',
+      'ta',
+      'te',
+      'ml',
+      'kn',
+      'gu',
+      'pa',
+      'mr',
+      'ur',
+      'si',
+      'my',
+      'ka',
+      'km',
+      'lo',
+      'fa',
+    ],
+    A = '[BetterLyrics]',
+    C = '[BetterLyrics:Content]',
+    D = '[BetterLyrics] Error:',
+    j =
+      '[BetterLyrics] (Safe to ignore) Lyrics wrapper is not visible, unable to inject lyrics',
+    z = '[BetterLyrics] Unable to translate lyrics due to error',
+    O = '[BetterLyrics] Server Error:',
+    R = 'No lyrics found for this song',
+    P = 'ytmusic-player-bar',
+    V = 'is-advertisement',
+    U = 'blyrics-ad-overlay',
+    $ = [
+      {
+        key: 'bLyrics-richsynced',
+        displayName: 'Better Lyrics',
+        syncType: 'syllable',
+        priority: 0,
+      },
+      {
+        key: 'musixmatch-richsync',
+        displayName: 'Musixmatch',
+        syncType: 'word',
+        priority: 1,
+      },
+      {
+        key: 'yt-captions',
+        displayName: 'Youtube Captions',
+        syncType: 'line',
+        priority: 2,
+      },
+      {
+        key: 'bLyrics-synced',
+        displayName: 'Better Lyrics',
+        syncType: 'line',
+        priority: 3,
+      },
+      {
+        key: 'lrclib-synced',
+        displayName: 'LRCLib',
+        syncType: 'line',
+        priority: 4,
+      },
+      {
+        key: 'legato-synced',
+        displayName: 'Legato',
+        syncType: 'line',
+        priority: 5,
+      },
+      {
+        key: 'musixmatch-synced',
+        displayName: 'Musixmatch',
+        syncType: 'line',
+        priority: 6,
+      },
+      {
+        key: 'yt-lyrics',
+        displayName: 'Youtube',
+        syncType: 'unsynced',
+        priority: 7,
+      },
+      {
+        key: 'lrclib-plain',
+        displayName: 'LRCLib',
+        syncType: 'unsynced',
+        priority: 8,
+      },
+    ],
+    B = $.map((e) => e.key),
+    _ = (e, t, i = 2, r = !1) => {
+      if (
+        (r || ((e = e.toLowerCase()), (t = t.toLowerCase())),
+        e.length < i || t.length < i)
+      )
+        return 0;
+      let n = new Map();
+      for (let t = 0; t < e.length - (i - 1); t++) {
+        let r = e.substring(t, t + i);
+        n.set(r, n.has(r) ? n.get(r) + 1 : 1);
+      }
+      let s = 0;
+      for (let e = 0; e < t.length - (i - 1); e++) {
+        let r = t.substring(e, e + i),
+          a = n.has(r) ? n.get(r) : 0;
+        a > 0 && (n.set(r, a - 1), s++);
+      }
+      return (2 * s) / (e.length + t.length - (i - 1) * 2);
+    },
+    F = /[^\p{Script_Extensions=Latin}\p{Script_Extensions=Common}]/u;
+  function W(e) {
+    return F.test(e);
+  }
+  let Y = (...e) => {
+    tC({ isLogsEnabled: !0 }, (t) => {
+      t.isLogsEnabled && console.log(e);
+    });
+  };
+  function Q() {
+    tC({ isLogsEnabled: !0 }, (e) => {
+      Y = e.isLogsEnabled ? console.log.bind(window.console) : function () {};
+    });
+  }
+  function q(e) {
+    return e.length <= 500
+      ? e
+      : e.slice(0, 500) + `... (${e.length} chars total)`;
+  }
+  var G =
+      (((t = G || {}).SYNTAX_ERROR = 'SYNTAX_ERROR'),
+      (t.UNEXPECTED_TOKEN = 'UNEXPECTED_TOKEN'),
+      (t.UNCLOSED_BLOCK = 'UNCLOSED_BLOCK'),
+      (t.UNCLOSED_STRING = 'UNCLOSED_STRING'),
+      (t.UNDEFINED_VARIABLE = 'UNDEFINED_VARIABLE'),
+      (t.INVALID_VARIABLE_NAME = 'INVALID_VARIABLE_NAME'),
+      (t.UNDEFINED_FUNCTION = 'UNDEFINED_FUNCTION'),
+      (t.UNDEFINED_MIXIN = 'UNDEFINED_MIXIN'),
+      (t.WRONG_ARG_COUNT = 'WRONG_ARG_COUNT'),
+      (t.MISSING_RETURN = 'MISSING_RETURN'),
+      (t.INVALID_LOOP_RANGE = 'INVALID_LOOP_RANGE'),
+      (t.MAX_ITERATIONS = 'MAX_ITERATIONS'),
+      (t.MAX_OUTPUT_RULES = 'MAX_OUTPUT_RULES'),
+      (t.MAX_NESTING_DEPTH = 'MAX_NESTING_DEPTH'),
+      (t.MAX_INPUT_SIZE = 'MAX_INPUT_SIZE'),
+      (t.TIMEOUT = 'TIMEOUT'),
+      (t.TYPE_ERROR = 'TYPE_ERROR'),
+      (t.INVALID_UNIT = 'INVALID_UNIT'),
+      (t.DIVISION_BY_ZERO = 'DIVISION_BY_ZERO'),
+      t),
+    H = [1, 10, 100, 1e3],
+    Z = Math.PI / 180,
+    X = 180 / Math.PI,
+    K = 1 / 2.4,
+    J =
+      /^oklch\s*\(\s*([\d.]+)(%?)\s+([\d.]+)\s+([\d.]+)(?:deg)?\s*(?:\/\s*([\d.]+)(%?))?\s*\)$/,
+    ee = /^#([0-9a-f]{3,8})$/i,
+    et =
+      /^rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+))?\s*\)$/,
+    ei = {
+      black: [0, 0, 0],
+      white: [255, 255, 255],
+      red: [255, 0, 0],
+      green: [0, 128, 0],
+      blue: [0, 0, 255],
+      yellow: [255, 255, 0],
+      cyan: [0, 255, 255],
+      magenta: [255, 0, 255],
+      gray: [128, 128, 128],
+      grey: [128, 128, 128],
+      silver: [192, 192, 192],
+      maroon: [128, 0, 0],
+      olive: [128, 128, 0],
+      lime: [0, 255, 0],
+      aqua: [0, 255, 255],
+      teal: [0, 128, 128],
+      navy: [0, 0, 128],
+      fuchsia: [255, 0, 255],
+      purple: [128, 0, 128],
+      orange: [255, 165, 0],
+      pink: [255, 192, 203],
+      brown: [165, 42, 42],
+      transparent: [0, 0, 0],
+    };
+  function er(e) {
+    let t = Math.round(Math.max(0, Math.min(255, e))).toString(16);
+    return 1 === t.length ? '0' + t : t;
+  }
+  function en(e, t) {
+    let i = H[t];
+    return Math.round(e * i) / i;
+  }
+  function es(e) {
+    return (e /= 255) <= 0.04045
+      ? e / 12.92
+      : Math.pow((e + 0.055) / 1.055, 2.4);
+  }
+  function ea(e) {
+    return e <= 0
+      ? 0
+      : e >= 1
+        ? 255
+        : Math.round(
+            (e <= 0.0031308 ? 12.92 * e : 1.055 * Math.pow(e, K) - 0.055) * 255,
+          );
+  }
+  function el(e) {
+    switch (e.type) {
+      case 'number':
+        if (Number.isInteger(e.value)) return `${e.value}${e.unit}`;
+        let t = Math.round(1e6 * e.value) / 1e6,
+          i = t.toString();
+        return i.includes('e') || i.includes('E')
+          ? `${t.toFixed(10).replace(/\.?0+$/, '')}${e.unit}`
+          : `${t}${e.unit}`;
+      case 'string':
+        return e.quoted ? `"${e.value}"` : e.value;
+      case 'color':
+        return (function (e) {
+          let { r: t, g: i, b: r, a: n, format: s, original: a } = e;
+          if (a) return a;
+          switch (s) {
+            case 'oklch': {
+              let e,
+                s,
+                a,
+                l,
+                o,
+                u,
+                c,
+                d,
+                h,
+                p,
+                [m, f, g] =
+                  ((e = es(t)),
+                  (h = Math.sqrt(
+                    (c =
+                      1.9779984951 *
+                        (l = Math.cbrt(
+                          0.4122214708 * e +
+                            0.5363325363 * (s = es(i)) +
+                            0.0514459929 * (a = es(r)),
+                        )) -
+                      2.428592205 *
+                        (o = Math.cbrt(
+                          0.2119034982 * e +
+                            0.6806995451 * s +
+                            0.1073969566 * a,
+                        )) +
+                      0.4505937099 *
+                        (u = Math.cbrt(
+                          0.0883024619 * e +
+                            0.2817188376 * s +
+                            0.6299787005 * a,
+                        ))) *
+                      c +
+                      (d =
+                        0.0259040371 * l + 0.7827717662 * o - 0.808675766 * u) *
+                        d,
+                  )),
+                  (p = Math.atan2(d, c) * X) < 0 && (p += 360),
+                  [
+                    0.2104542553 * l + 0.793617785 * o - 0.0040720468 * u,
+                    h,
+                    p,
+                  ]);
+              return 1 === n
+                ? `oklch(${en(100 * m, 1)}% ${en(f, 3)} ${en(g, 3)})`
+                : `oklch(${en(100 * m, 1)}% ${en(f, 3)} ${en(g, 3)} / ${en(n, 2)})`;
+            }
+            case 'hsl': {
+              let [e, s, a] = (function (e, t, i) {
+                e /= 255;
+                let r = Math.max(e, (t /= 255), (i /= 255)),
+                  n = Math.min(e, t, i),
+                  s = (r + n) / 2,
+                  a = 0,
+                  l = 0;
+                if (r !== n) {
+                  let o = r - n;
+                  switch (((l = s > 0.5 ? o / (2 - r - n) : o / (r + n)), r)) {
+                    case e:
+                      a = ((t - i) / o + 6 * (t < i)) * 60;
+                      break;
+                    case t:
+                      a = ((i - e) / o + 2) * 60;
+                      break;
+                    case i:
+                      a = ((e - t) / o + 4) * 60;
+                  }
+                }
+                return [a, 100 * l, 100 * s];
+              })(t, i, r);
+              return 1 === n
+                ? `hsl(${en(e, 1)}, ${en(s, 1)}%, ${en(a, 1)}%)`
+                : `hsla(${en(e, 1)}, ${en(s, 1)}%, ${en(a, 1)}%, ${en(n, 2)})`;
+            }
+            case 'rgb':
+              return 1 === n
+                ? `rgb(${Math.round(t)}, ${Math.round(i)}, ${Math.round(r)})`
+                : `rgba(${Math.round(t)}, ${Math.round(i)}, ${Math.round(r)}, ${en(n, 2)})`;
+            default:
+              return 1 === n
+                ? `#${er(t)}${er(i)}${er(r)}`
+                : `rgba(${Math.round(t)}, ${Math.round(i)}, ${Math.round(r)}, ${en(n, 2)})`;
+          }
+        })(e);
+      case 'boolean':
+        return e.value ? 'true' : 'false';
+      case 'list':
+        return e.values.map(el).join(',' === e.separator ? ', ' : ' ');
+      case 'map':
+        let r = [];
+        return (
+          e.entries.forEach((e, t) => {
+            r.push(`${t}: ${el(e)}`);
+          }),
+          `(${r.join(', ')})`
+        );
+      case 'null':
+        return 'null';
+    }
+  }
+  function eo(e) {
+    let t = e.trim().toLowerCase(),
+      i = ei[t];
+    if (i)
+      return {
+        type: 'color',
+        r: i[0],
+        g: i[1],
+        b: i[2],
+        a: +('transparent' !== t),
+        format: 'hex',
+        original: t,
+      };
+    let r = t.match(ee);
+    if (r) {
+      let e = r[1],
+        t,
+        i,
+        n,
+        s = 1;
+      if (3 === e.length)
+        ((t = parseInt(e[0] + e[0], 16)),
+          (i = parseInt(e[1] + e[1], 16)),
+          (n = parseInt(e[2] + e[2], 16)));
+      else if (4 === e.length)
+        ((t = parseInt(e[0] + e[0], 16)),
+          (i = parseInt(e[1] + e[1], 16)),
+          (n = parseInt(e[2] + e[2], 16)),
+          (s = parseInt(e[3] + e[3], 16) / 255));
+      else if (6 === e.length)
+        ((t = parseInt(e.slice(0, 2), 16)),
+          (i = parseInt(e.slice(2, 4), 16)),
+          (n = parseInt(e.slice(4, 6), 16)));
+      else {
+        if (8 !== e.length) return null;
+        ((t = parseInt(e.slice(0, 2), 16)),
+          (i = parseInt(e.slice(2, 4), 16)),
+          (n = parseInt(e.slice(4, 6), 16)),
+          (s = parseInt(e.slice(6, 8), 16) / 255));
+      }
+      return { type: 'color', r: t, g: i, b: n, a: s, format: 'hex' };
+    }
+    let n = t.match(et);
+    if (n)
+      return {
+        type: 'color',
+        r: parseInt(n[1], 10),
+        g: parseInt(n[2], 10),
+        b: parseInt(n[3], 10),
+        a: n[4] ? parseFloat(n[4]) : 1,
+        format: 'rgb',
+      };
+    let s = t.match(J);
+    if (s) {
+      var a;
+      let e,
+        t,
+        i,
+        r,
+        n,
+        l,
+        o,
+        u,
+        c,
+        d = parseFloat(s[1]);
+      '%' === s[2] && (d /= 100);
+      let h = parseFloat(s[3]),
+        p = parseFloat(s[4]),
+        m = 1;
+      s[5] && ((m = parseFloat(s[5])), '%' === s[6] && (m /= 100));
+      let [f, g, y] =
+        ((r =
+          (a = d) +
+          0.3963377774 * (t = h * Math.cos((e = p * Z))) +
+          0.2158037573 * (i = h * Math.sin(e))),
+        (n = a - 0.1055613458 * t - 0.0638541728 * i),
+        (l = a - 0.0894841775 * t - 1.291485548 * i),
+        [
+          ea(
+            4.0767416621 * (o = r * r * r) -
+              3.3077115913 * (u = n * n * n) +
+              0.2309699292 * (c = l * l * l),
+          ),
+          ea(-1.2684380046 * o + 2.6097574011 * u - 0.3413193965 * c),
+          ea(-0.0041960863 * o - 0.7034186147 * u + 1.707614701 * c),
+        ]);
+      return { type: 'color', r: f, g: g, b: y, a: m, format: 'oklch' };
+    }
+    return null;
+  }
+  function eu(e, t = 0) {
+    if ('number' === e.type) return e.value;
+    if ('string' === e.type) {
+      let i = parseFloat(e.value);
+      return isNaN(i) ? t : i;
+    }
+    return t;
+  }
+  function ec(e) {
+    return 'color' === e.type ? e : 'string' === e.type ? eo(e.value) : null;
+  }
+  function ed(e) {
+    return el(e).replace(/^["']|["']$/g, '');
+  }
+  function eh(e, t, i) {
+    ((e = ((e % 360) + 360) % 360), (t = Math.max(0, Math.min(100, t)) / 100));
+    let r =
+        (1 - Math.abs(2 * (i = Math.max(0, Math.min(100, i)) / 100) - 1)) * t,
+      n = r * (1 - Math.abs(((e / 60) % 2) - 1)),
+      s = i - r / 2,
+      a = 0,
+      l = 0,
+      o = 0;
+    return (
+      e < 60
+        ? ((a = r), (l = n), (o = 0))
+        : e < 120
+          ? ((a = n), (l = r), (o = 0))
+          : e < 180
+            ? ((a = 0), (l = r), (o = n))
+            : e < 240
+              ? ((a = 0), (l = n), (o = r))
+              : e < 300
+                ? ((a = n), (l = 0), (o = r))
+                : ((a = r), (l = 0), (o = n)),
+      [
+        Math.round((a + s) * 255),
+        Math.round((l + s) * 255),
+        Math.round((o + s) * 255),
+      ]
+    );
+  }
+  function ep(e, t, i) {
+    e /= 255;
+    let r = Math.max(e, (t /= 255), (i /= 255)),
+      n = Math.min(e, t, i),
+      s = (r + n) / 2,
+      a = 0,
+      l = 0;
+    if (r !== n) {
+      let o = r - n;
+      switch (((l = s > 0.5 ? o / (2 - r - n) : o / (r + n)), r)) {
+        case e:
+          a = ((t - i) / o + 6 * (t < i)) * 60;
+          break;
+        case t:
+          a = ((i - e) / o + 2) * 60;
+          break;
+        case i:
+          a = ((e - t) / o + 4) * 60;
+      }
+    }
+    return [a, 100 * l, 100 * s];
+  }
+  function em(e, t, i = !1) {
+    let [r, n, s] = ep(e.r, e.g, e.b),
+      [a, l, o] = eh(r, n, i ? Math.max(0, s - t) : Math.min(100, s + t));
+    return { type: 'color', r: a, g: l, b: o, a: e.a, format: e.format };
+  }
+  function ef(e, t, i = !1) {
+    let [r, n, s] = ep(e.r, e.g, e.b),
+      [a, l, o] = eh(r, i ? Math.max(0, n - t) : Math.min(100, n + t), s);
+    return { type: 'color', r: a, g: l, b: o, a: e.a, format: e.format };
+  }
+  var eg = {
+    'lighten'(e) {
+      let t = ec(e[0]),
+        i = eu(e[1], 10);
+      return t ? em(t, i) : e[0];
+    },
+    'darken'(e) {
+      let t = ec(e[0]),
+        i = eu(e[1], 10);
+      return t ? em(t, i, !0) : e[0];
+    },
+    'saturate'(e) {
+      let t = ec(e[0]),
+        i = eu(e[1], 10);
+      return t ? ef(t, i) : e[0];
+    },
+    'desaturate'(e) {
+      let t = ec(e[0]),
+        i = eu(e[1], 10);
+      return t ? ef(t, i, !0) : e[0];
+    },
+    'adjust-hue'(e) {
+      let t = ec(e[0]),
+        i = eu(e[1], 0);
+      if (!t) return e[0];
+      let [r, n, s] = ep(t.r, t.g, t.b),
+        [a, l, o] = eh(r + i, n, s);
+      return { type: 'color', r: a, g: l, b: o, a: t.a, format: t.format };
+    },
+    'rgba'(e) {
+      if (2 === e.length) {
+        let t = ec(e[0]),
+          i = eu(e[1], 1);
+        return t
+          ? { type: 'color', r: t.r, g: t.g, b: t.b, a: i, format: t.format }
+          : e[0];
+      }
+      return {
+        type: 'color',
+        r: Math.round(eu(e[0], 0)),
+        g: Math.round(eu(e[1], 0)),
+        b: Math.round(eu(e[2], 0)),
+        a: e[3] ? eu(e[3], 1) : 1,
+        format: 'rgb',
+      };
+    },
+    'rgb': (e) => ({
+      type: 'color',
+      r: Math.round(eu(e[0], 0)),
+      g: Math.round(eu(e[1], 0)),
+      b: Math.round(eu(e[2], 0)),
+      a: 1,
+      format: 'rgb',
+    }),
+    'hsl'(e) {
+      let [t, i, r] = eh(eu(e[0], 0), eu(e[1], 0), eu(e[2], 0));
+      return { type: 'color', r: t, g: i, b: r, a: 1, format: 'hsl' };
+    },
+    'hsla'(e) {
+      let t = eu(e[0], 0),
+        i = eu(e[1], 0),
+        r = eu(e[2], 0),
+        n = e[3] ? eu(e[3], 1) : 1,
+        [s, a, l] = eh(t, i, r);
+      return { type: 'color', r: s, g: a, b: l, a: n, format: 'hsl' };
+    },
+    'mix'(e) {
+      let t = ec(e[0]),
+        i = ec(e[1]),
+        r = e[2] ? eu(e[2], 50) / 100 : 0.5;
+      if (!t || !i) return e[0];
+      let n = 2 * r - 1,
+        s = t.a - i.a,
+        a = ((n * s == -1 ? n : (n + s) / (1 + n * s)) + 1) / 2,
+        l = 1 - a;
+      return {
+        type: 'color',
+        r: Math.round(t.r * a + i.r * l),
+        g: Math.round(t.g * a + i.g * l),
+        b: Math.round(t.b * a + i.b * l),
+        a: t.a * r + i.a * (1 - r),
+        format: t.format,
+      };
+    },
+    'red': (e) => ({ type: 'number', value: ec(e[0])?.r ?? 0, unit: '' }),
+    'green': (e) => ({ type: 'number', value: ec(e[0])?.g ?? 0, unit: '' }),
+    'blue': (e) => ({ type: 'number', value: ec(e[0])?.b ?? 0, unit: '' }),
+    'alpha': (e) => ({ type: 'number', value: ec(e[0])?.a ?? 1, unit: '' }),
+    'opacity': (e) => ({ type: 'number', value: ec(e[0])?.a ?? 1, unit: '' }),
+    'hue'(e) {
+      let t = ec(e[0]);
+      if (!t) return { type: 'number', value: 0, unit: 'deg' };
+      let [i] = ep(t.r, t.g, t.b);
+      return { type: 'number', value: i, unit: 'deg' };
+    },
+    'saturation'(e) {
+      let t = ec(e[0]);
+      if (!t) return { type: 'number', value: 0, unit: '%' };
+      let [, i] = ep(t.r, t.g, t.b);
+      return { type: 'number', value: i, unit: '%' };
+    },
+    'lightness'(e) {
+      let t = ec(e[0]);
+      if (!t) return { type: 'number', value: 0, unit: '%' };
+      let [, , i] = ep(t.r, t.g, t.b);
+      return { type: 'number', value: i, unit: '%' };
+    },
+    'complement'(e) {
+      let t = ec(e[0]);
+      if (!t) return e[0];
+      let [i, r, n] = ep(t.r, t.g, t.b),
+        [s, a, l] = eh(i + 180, r, n);
+      return { type: 'color', r: s, g: a, b: l, a: t.a, format: t.format };
+    },
+    'invert'(e) {
+      let t = ec(e[0]);
+      return t
+        ? {
+            type: 'color',
+            r: 255 - t.r,
+            g: 255 - t.g,
+            b: 255 - t.b,
+            a: t.a,
+            format: t.format,
+          }
+        : e[0];
+    },
+    'grayscale'(e) {
+      let t = ec(e[0]);
+      return t ? ef(t, 100, !0) : e[0];
+    },
+    'percentage': (e) => ({
+      type: 'number',
+      value: 100 * eu(e[0], 0),
+      unit: '%',
+    }),
+    'round': (e) => ({
+      type: 'number',
+      value: Math.round(eu(e[0], 0)),
+      unit: 'number' === e[0].type ? e[0].unit : '',
+    }),
+    'ceil': (e) => ({
+      type: 'number',
+      value: Math.ceil(eu(e[0], 0)),
+      unit: 'number' === e[0].type ? e[0].unit : '',
+    }),
+    'floor': (e) => ({
+      type: 'number',
+      value: Math.floor(eu(e[0], 0)),
+      unit: 'number' === e[0].type ? e[0].unit : '',
+    }),
+    'abs': (e) => ({
+      type: 'number',
+      value: Math.abs(eu(e[0], 0)),
+      unit: 'number' === e[0].type ? e[0].unit : '',
+    }),
+    'min'(e) {
+      let t = e.map((e) => eu(e, 1 / 0)),
+        i = t.indexOf(Math.min(...t));
+      return {
+        type: 'number',
+        value: Math.min(...t),
+        unit: e[i]?.type === 'number' ? e[i].unit : '',
+      };
+    },
+    'max'(e) {
+      let t = e.map((e) => eu(e, -1 / 0)),
+        i = t.indexOf(Math.max(...t));
+      return {
+        type: 'number',
+        value: Math.max(...t),
+        unit: e[i]?.type === 'number' ? e[i].unit : '',
+      };
+    },
+    'random'(e) {
+      let t = e.length > 0 ? eu(e[0], 1) : 1;
+      return t <= 1
+        ? { type: 'number', value: Math.random(), unit: '' }
+        : {
+            type: 'number',
+            value: Math.floor(Math.random() * t) + 1,
+            unit: '',
+          };
+    },
+    'unit': (e) =>
+      'number' === e[0].type
+        ? { type: 'string', value: e[0].unit, quoted: !0 }
+        : { type: 'string', value: '', quoted: !0 },
+    'unitless': (e) =>
+      'number' === e[0].type
+        ? { type: 'boolean', value: '' === e[0].unit }
+        : { type: 'boolean', value: !0 },
+    'str-length': (e) => ({ type: 'number', value: ed(e[0]).length, unit: '' }),
+    'str-slice'(e) {
+      let t = ed(e[0]),
+        i = Math.floor(eu(e[1], 1)) - 1,
+        r = e[2] ? Math.floor(eu(e[2], t.length)) : t.length;
+      return { type: 'string', value: t.slice(i, r), quoted: !1 };
+    },
+    'str-index'(e) {
+      let t = ed(e[0]),
+        i = ed(e[1]),
+        r = t.indexOf(i);
+      return { type: 'number', value: -1 === r ? 0 : r + 1, unit: '' };
+    },
+    'str-insert'(e) {
+      let t = ed(e[0]),
+        i = ed(e[1]),
+        r = Math.floor(eu(e[2], 1)) - 1;
+      return {
+        type: 'string',
+        value: t.slice(0, r) + i + t.slice(r),
+        quoted: !1,
+      };
+    },
+    'to-upper-case': (e) => ({
+      type: 'string',
+      value: ed(e[0]).toUpperCase(),
+      quoted: !1,
+    }),
+    'to-lower-case': (e) => ({
+      type: 'string',
+      value: ed(e[0]).toLowerCase(),
+      quoted: !1,
+    }),
+    'quote': (e) => ({ type: 'string', value: ed(e[0]), quoted: !0 }),
+    'unquote': (e) => ({ type: 'string', value: ed(e[0]), quoted: !1 }),
+    'length'(e) {
+      let t = e[0];
+      return 'list' === t.type
+        ? { type: 'number', value: t.values.length, unit: '' }
+        : 'map' === t.type
+          ? { type: 'number', value: t.entries.size, unit: '' }
+          : { type: 'number', value: 1, unit: '' };
+    },
+    'nth'(e) {
+      let t = e[0],
+        i = Math.floor(eu(e[1], 1));
+      return 'list' === t.type &&
+        (i < 0 && (i = t.values.length + i + 1), i >= 1 && i <= t.values.length)
+        ? t.values[i - 1]
+        : { type: 'null' };
+    },
+    'join'(e) {
+      let t = e[0],
+        i = e[1],
+        r = e[2] ? ed(e[2]) : ',';
+      return {
+        type: 'list',
+        values: [
+          ...('list' === t.type ? t.values : [t]),
+          ...('list' === i.type ? i.values : [i]),
+        ],
+        separator: ' ' === r ? ' ' : ',',
+      };
+    },
+    'append'(e) {
+      let t = e[0],
+        i = e[1],
+        r = e[2] ? ed(e[2]) : ',',
+        n = 'list' === t.type ? [...t.values] : [t];
+      return (
+        n.push(i),
+        { type: 'list', values: n, separator: ' ' === r ? ' ' : ',' }
+      );
+    },
+    'index'(e) {
+      let t = e[0],
+        i = e[1];
+      if ('list' !== t.type) return { type: 'null' };
+      let r = el(i),
+        n = t.values.findIndex((e) => el(e) === r);
+      return { type: 'number', value: -1 === n ? 0 : n + 1, unit: '' };
+    },
+    'map-get'(e) {
+      let t = e[0],
+        i = ed(e[1]);
+      return ('map' === t.type && t.entries.get(i)) || { type: 'null' };
+    },
+    'map-keys'(e) {
+      let t = e[0];
+      if ('map' === t.type) {
+        let e = [];
+        return (
+          t.entries.forEach((t, i) => {
+            e.push({ type: 'string', value: i, quoted: !1 });
+          }),
+          { type: 'list', values: e, separator: ',' }
+        );
+      }
+      return { type: 'list', values: [], separator: ',' };
+    },
+    'map-values'(e) {
+      let t = e[0];
+      if ('map' === t.type) {
+        let e = [];
+        return (
+          t.entries.forEach((t) => {
+            e.push(t);
+          }),
+          { type: 'list', values: e, separator: ',' }
+        );
+      }
+      return { type: 'list', values: [], separator: ',' };
+    },
+    'map-has-key'(e) {
+      let t = e[0],
+        i = ed(e[1]);
+      return 'map' === t.type
+        ? { type: 'boolean', value: t.entries.has(i) }
+        : { type: 'boolean', value: !1 };
+    },
+    'type-of': (e) => ({ type: 'string', value: e[0].type, quoted: !1 }),
+    'inspect': (e) => ({ type: 'string', value: el(e[0]), quoted: !0 }),
+    'if'(e) {
+      let t = e[0],
+        i = e[1],
+        r = e[2] || { type: 'null' };
+      return ('boolean' === t.type ? t.value : 'null' !== t.type) ? i : r;
+    },
+  };
+  function ey(e, t) {
+    let i = null;
+    for (let r = 0; r < e.length; r++) {
+      let n = e[r];
+      if (i) {
+        n === i && '\\' !== e[r - 1] && (i = null);
+        continue;
+      }
+      if ('"' === n || "'" === n) {
+        i = n;
+        continue;
+      }
+      if (n === t) return r;
+    }
+    return -1;
+  }
+  var eb = {
+    'px': {
+      px: 1,
+      em: 1 / 16,
+      rem: 1 / 16,
+      pt: 0.75,
+      pc: 9,
+      in: 96,
+      cm: 37.8,
+      mm: 3.78,
+    },
+    'em': { px: 16, em: 1, rem: 1 },
+    'rem': { px: 16, rem: 1, em: 1 },
+    'pt': { px: 4 / 3, pt: 1 },
+    'pc': { px: 1 / 9, pc: 1 },
+    'in': { px: 1 / 96, in: 1, cm: 2.54, mm: 25.4 },
+    'cm': { px: 1 / 37.8, cm: 1, mm: 10, in: 1 / 2.54 },
+    'mm': { px: 1 / 3.78, mm: 1, cm: 0.1 },
+    '%': { '%': 1 },
+    'deg': { deg: 1, rad: Math.PI / 180, turn: 1 / 360, grad: 0.9 },
+    'rad': { rad: 1, deg: 180 / Math.PI, turn: 1 / (2 * Math.PI) },
+    'turn': { turn: 1, deg: 360, rad: 2 * Math.PI },
+    's': { s: 1, ms: 1e3 },
+    'ms': { ms: 1, s: 0.001 },
+  };
+  function eM(e = null) {
+    return { variables: new Map(), parent: e };
+  }
+  function ev(e, t) {
+    let i = t.startsWith('$') ? t : `$${t}`,
+      r = e;
+    for (; r; ) {
+      if (r.variables.has(i)) return r.variables.get(i);
+      r = r.parent;
+    }
+  }
+  function ew(e, t, i) {
+    let r = t.startsWith('$') ? t : `$${t}`,
+      n = e;
+    for (; n; ) {
+      if (n.variables.has(r)) return void n.variables.set(r, i);
+      n = n.parent;
+    }
+    e.variables.set(r, i);
+  }
+  function eN(e) {
+    let t = e.trim();
+    if ('' === t || 'null' === t) return { type: 'null' };
+    if ('true' === t) return { type: 'boolean', value: !0 };
+    if ('false' === t) return { type: 'boolean', value: !1 };
+    let i = eo(t);
+    if (i) return i;
+    let r = t.match(/^(-?\d*\.?\d+(?:e[+-]?\d+)?)([\w%]*)$/i);
+    return r
+      ? { type: 'number', value: parseFloat(r[1]), unit: r[2] || '' }
+      : (t.startsWith('"') && t.endsWith('"')) ||
+          (t.startsWith("'") && t.endsWith("'"))
+        ? { type: 'string', value: t.slice(1, -1), quoted: !0 }
+        : t.startsWith('(') && t.endsWith(')')
+          ? ey(t.slice(1, -1).trim(), ':') > 0
+            ? eT(t)
+            : eL(t)
+          : !(function (e) {
+                let t = 0,
+                  i = null;
+                for (let r = 0; r < e.length; r++) {
+                  let n = e[r];
+                  if (i) {
+                    n === i && '\\' !== e[r - 1] && (i = null);
+                    continue;
+                  }
+                  if ('"' === n || "'" === n) {
+                    i = n;
+                    continue;
+                  }
+                  if ('(' === n || '[' === n || '{' === n) {
+                    t++;
+                    continue;
+                  }
+                  if (')' === n || ']' === n || '}' === n) {
+                    t--;
+                    continue;
+                  }
+                  if (0 === t && ',' === n) return !0;
+                }
+                return !1;
+              })(t)
+            ? { type: 'string', value: t, quoted: !1 }
+            : eL(t);
+  }
+  function eE(e) {
+    switch (e.type) {
+      case 'null':
+        return !1;
+      case 'boolean':
+        return e.value;
+      case 'string':
+        return '' !== e.value;
+      case 'number':
+        return 0 !== e.value;
+      case 'list':
+        return e.values.length > 0;
+      case 'map':
+        return e.entries.size > 0;
+      case 'color':
+        return !0;
+    }
+  }
+  function eS(e) {
+    return 'string' === e.type ? e.value : el(e);
+  }
+  function ex(e, t, i) {
+    if ('+' === i && ('string' === e.type || 'string' === t.type))
+      return { type: 'string', value: eS(e) + eS(t), quoted: !1 };
+    if ('number' === e.type && 'number' === t.type) {
+      let r,
+        n = t.value,
+        s = e.unit || t.unit;
+      if (e.unit && t.unit && e.unit !== t.unit) {
+        let i = eI(t.value, t.unit, e.unit);
+        (null !== i && (n = i), (s = e.unit));
+      }
+      switch (i) {
+        case '+':
+          r = e.value + n;
+          break;
+        case '-':
+          r = e.value - n;
+          break;
+        case '*':
+          ((r = e.value * n), e.unit && t.unit && (s = e.unit));
+          break;
+        case '/':
+          if (0 === n)
+            return { error: 'DIVISION_BY_ZERO', message: 'Division by zero' };
+          ((r = e.value / n), e.unit === t.unit && (s = ''));
+          break;
+        case '%':
+          if (0 === n)
+            return { error: 'DIVISION_BY_ZERO', message: 'Modulo by zero' };
+          r = e.value % n;
+          break;
+        default:
+          return { error: 'TYPE_ERROR', message: `Unknown operator: ${i}` };
+      }
+      return { type: 'number', value: r, unit: s };
+    }
+    return 'color' === e.type && 'number' === t.type && '*' === i
+      ? {
+          type: 'color',
+          r: Math.round(e.r * t.value),
+          g: Math.round(e.g * t.value),
+          b: Math.round(e.b * t.value),
+          a: e.a,
+        }
+      : {
+          error: 'TYPE_ERROR',
+          message: `Cannot perform ${i} on ${e.type} and ${t.type}`,
+        };
+  }
+  function eI(e, t, i) {
+    if (t === i || !t || !i) return e;
+    let r = eb[t];
+    return r && void 0 !== r[i] ? e * r[i] : null;
+  }
+  function eL(e) {
+    let t = e.trim();
+    return t.startsWith('(') && t.endsWith(')')
+      ? ek(t.slice(1, -1).trim())
+      : ek(t);
+  }
+  function ek(e) {
+    let t = e.includes(',') ? ',' : ' ';
+    return {
+      type: 'list',
+      values: eA(e, t).map((e) => eN(e.trim())),
+      separator: t,
+    };
+  }
+  function eT(e) {
+    let t = e.trim();
+    if (!t.startsWith('(') || !t.endsWith(')'))
+      return { type: 'map', entries: new Map() };
+    let i = t.slice(1, -1).trim(),
+      r = new Map();
+    for (let e of eA(i, ',')) {
+      let t = ey(e, ':');
+      if (-1 === t) continue;
+      let i = e.slice(0, t).trim(),
+        n = e.slice(t + 1).trim();
+      r.set(i, eN(n));
+    }
+    return { type: 'map', entries: r };
+  }
+  function eA(e, t) {
+    let i = [],
+      r = '',
+      n = 0,
+      s = null;
+    for (let a = 0; a < e.length; a++) {
+      let l = e[a];
+      if (s) {
+        ((r += l), l === s && '\\' !== e[a - 1] && (s = null));
+        continue;
+      }
+      if ('"' === l || "'" === l) {
+        ((s = l), (r += l));
+        continue;
+      }
+      if ('(' === l || '[' === l || '{' === l) {
+        (n++, (r += l));
+        continue;
+      }
+      if (')' === l || ']' === l || '}' === l) {
+        (n--, (r += l));
+        continue;
+      }
+      if (0 === n && l === t[0]) {
+        (' ' === t && r.trim()) || ',' === t ? (i.push(r), (r = '')) : (r += l);
+        continue;
+      }
+      r += l;
+    }
+    return (r.trim() && i.push(r), i);
+  }
+  function eC(e, t) {
+    let i = [],
+      r = '',
+      n = 0,
+      s = null,
+      a = 0;
+    for (; a < e.length; ) {
+      let l = e[a];
+      if (s) {
+        ((r += l), l === s && '\\' !== e[a - 1] && (s = null), a++);
+        continue;
+      }
+      if ('"' === l || "'" === l) {
+        ((s = l), (r += l), a++);
+        continue;
+      }
+      if ('(' === l || '[' === l || '{' === l) {
+        (n++, (r += l), a++);
+        continue;
+      }
+      if (')' === l || ']' === l || '}' === l) {
+        (n--, (r += l), a++);
+        continue;
+      }
+      if (0 === n && e.slice(a, a + t.length) === t) {
+        (i.push(r), (r = ''), (a += t.length));
+        continue;
+      }
+      ((r += l), a++);
+    }
+    return (r && i.push(r), i);
+  }
+  var eD = {
+      maxIterations: 1e4,
+      maxOutputRules: 5e4,
+      maxNestingDepth: 64,
+      maxInputSize: 1048576,
+      timeout: 5e3,
+      strictMode: !1,
+      minify: !1,
+      preserveBangComments: !0,
+    },
+    ej = class {
+      constructor(e = {}) {
+        ((this.input = ''),
+          (this.pos = 0),
+          (this.valueStartPos = 0),
+          (this.evaluator = (function (e) {
+            function t(i, r, n) {
+              let s = i.trim();
+              if (!s) return { type: 'null' };
+              if (s.startsWith('$')) {
+                let e = s.split(/[^$\w-]/)[0],
+                  t = ev(r, e);
+                if (!t) return { type: 'string', value: s, quoted: !1 };
+                if (e === s) return t;
+              }
+              let a = s.match(/^([\w-]+)\s*\(/);
+              if (a) {
+                let e = a[1],
+                  i = e.length,
+                  l = (function (e, t) {
+                    let i = 0,
+                      r = null;
+                    for (let n = t; n < e.length; n++) {
+                      let t = e[n];
+                      if (r) {
+                        t === r && '\\' !== e[n - 1] && (r = null);
+                        continue;
+                      }
+                      if ('"' === t || "'" === t) {
+                        r = t;
+                        continue;
+                      }
+                      if ('(' === t) i++;
+                      else if (')' === t && 0 == --i) return n;
+                    }
+                    return -1;
+                  })(s, i);
+                if (-1 !== l) {
+                  if (
+                    /^(url|var|calc|clamp|attr|env|linear-gradient|radial-gradient|conic-gradient|repeating-linear-gradient|repeating-radial-gradient|color|hwb|lab|lch|oklab|oklch)$/i.test(
+                      e,
+                    ) &&
+                    !n?.has(e) &&
+                    !eg[e]
+                  )
+                    return { type: 'string', value: s, quoted: !1 };
+                  let a = (function (e, i, r) {
+                    let n = [];
+                    for (let s of eA(e, ',')) n.push(t(s.trim(), i, r));
+                    return n;
+                  })(s.slice(i + 1, l), r, n);
+                  if (n?.has(e)) {
+                    let t = n.get(e)(...a);
+                    return 'string' == typeof t ? eN(t) : t;
+                  }
+                  if (eg[e]) {
+                    let t = eg[e](a);
+                    return 'string' == typeof t ? eN(t) : t;
+                  }
+                  return { type: 'string', value: s, quoted: !1 };
+                }
+              }
+              let l = eC(s, ' or ');
+              if (l.length > 1) {
+                for (let e of l)
+                  if (eE(t(e, r, n))) return { type: 'boolean', value: !0 };
+                return { type: 'boolean', value: !1 };
+              }
+              let o = eC(s, ' and ');
+              if (o.length > 1) {
+                for (let e of o)
+                  if (!eE(t(e, r, n))) return { type: 'boolean', value: !1 };
+                return { type: 'boolean', value: !0 };
+              }
+              for (let e of ['==', '!=', '>=', '<=', '>', '<']) {
+                let i = eC(s, e);
+                if (2 === i.length)
+                  return {
+                    type: 'boolean',
+                    value: (function (e, t, i) {
+                      if ('==' === i || '!=' === i) {
+                        let r = (function e(t, i) {
+                          if (t.type !== i.type) return !1;
+                          switch (t.type) {
+                            case 'number':
+                              return t.value === i.value && t.unit === i.unit;
+                            case 'string':
+                            case 'boolean':
+                              return t.value === i.value;
+                            case 'color':
+                              return (
+                                t.r === i.r &&
+                                t.g === i.g &&
+                                t.b === i.b &&
+                                t.a === i.a
+                              );
+                            case 'null':
+                              return !0;
+                            case 'list':
+                              return (
+                                t.values.length === i.values.length &&
+                                t.values.every((t, r) => e(t, i.values[r]))
+                              );
+                            case 'map':
+                              if (t.entries.size !== i.entries.size) return !1;
+                              for (let [r, n] of t.entries) {
+                                let t = i.entries.get(r);
+                                if (!t || !e(n, t)) return !1;
+                              }
+                              return !0;
+                          }
+                        })(e, t);
+                        return '==' === i ? r : !r;
+                      }
+                      if ('number' === e.type && 'number' === t.type) {
+                        let r = e.value,
+                          n = eI(t.value, t.unit, e.unit) ?? t.value;
+                        switch (i) {
+                          case '<':
+                            return r < n;
+                          case '>':
+                            return r > n;
+                          case '<=':
+                            return r <= n;
+                          case '>=':
+                            return r >= n;
+                        }
+                      }
+                      if ('string' === e.type && 'string' === t.type)
+                        switch (i) {
+                          case '<':
+                            return e.value < t.value;
+                          case '>':
+                            return e.value > t.value;
+                          case '<=':
+                            return e.value <= t.value;
+                          case '>=':
+                            return e.value >= t.value;
+                        }
+                      return !1;
+                    })(t(i[0], r, n), t(i[1], r, n), e),
+                  };
+              }
+              if (s.startsWith('not ') || s.startsWith('not('))
+                return {
+                  type: 'boolean',
+                  value: !eE(t((s.startsWith('not('), s.slice(4)), r, n)),
+                };
+              let u = (function (i, r, n) {
+                let s = 0,
+                  a = null;
+                for (let l = i.length - 1; l >= 0; l--) {
+                  let o = i[l];
+                  if (a) {
+                    o === a && '\\' !== i[l - 1] && (a = null);
+                    continue;
+                  }
+                  if ('"' === o || "'" === o) {
+                    a = o;
+                    continue;
+                  }
+                  if (')' === o || ']' === o || '}' === o) {
+                    s++;
+                    continue;
+                  }
+                  if ('(' === o || '[' === o || '{' === o) {
+                    s--;
+                    continue;
+                  }
+                  if (0 === s && ('+' === o || '-' === o)) {
+                    if (0 === l) continue;
+                    let s = i[l - 1];
+                    if ('e' === s || 'E' === s) continue;
+                    if ('-' === o) {
+                      if (!/\s/.test(s) && ')' !== s && ']' !== s && '}' !== s)
+                        continue;
+                      let e = i[l + 1];
+                      if (e && /[a-zA-Z]/.test(e)) continue;
+                    }
+                    let a = i.slice(0, l).trim(),
+                      u = i.slice(l + 1).trim();
+                    if (a && u) {
+                      let i = ex(t(a, r, n), t(u, r, n), o);
+                      return 'error' in i
+                        ? (e({
+                            type: 'error',
+                            code: i.error,
+                            message: i.message,
+                          }),
+                          { type: 'null' })
+                        : i;
+                    }
+                  }
+                }
+                return (function (i, r, n) {
+                  let s = 0,
+                    a = null;
+                  for (let l = i.length - 1; l >= 0; l--) {
+                    let o = i[l];
+                    if (a) {
+                      o === a && '\\' !== i[l - 1] && (a = null);
+                      continue;
+                    }
+                    if ('"' === o || "'" === o) {
+                      a = o;
+                      continue;
+                    }
+                    if (')' === o || ']' === o || '}' === o) {
+                      s++;
+                      continue;
+                    }
+                    if ('(' === o || '[' === o || '{' === o) {
+                      s--;
+                      continue;
+                    }
+                    if (0 === s && ('*' === o || '/' === o || '%' === o)) {
+                      let s = i.slice(0, l).trim(),
+                        a = i.slice(l + 1).trim();
+                      if (s && a) {
+                        let i = ex(t(s, r, n), t(a, r, n), o);
+                        return 'error' in i
+                          ? (e({
+                              type: 'error',
+                              code: i.error,
+                              message: i.message,
+                            }),
+                            { type: 'null' })
+                          : i;
+                      }
+                    }
+                  }
+                  if (i.startsWith('(') && i.endsWith(')')) {
+                    let e = i.slice(1, -1).trim();
+                    return e
+                      ? -1 !== ey(e, ',') || ey(e, ':') > 0
+                        ? eN(i)
+                        : t(e, r, n)
+                      : { type: 'list', values: [], separator: ' ' };
+                  }
+                  return null;
+                })(i, r, n);
+              })(s, r, n);
+              if (u) return u;
+              if (s.includes(' ') && s.includes('$')) {
+                let e = eA(s, ' ');
+                if (e.length > 1)
+                  return {
+                    type: 'list',
+                    values: e.map((e) => t(e.trim(), r, n)),
+                    separator: ' ',
+                  };
+              }
+              return eN(s);
+            }
+            return {
+              evaluate: t,
+              evaluateCondition: function (e, i) {
+                return eE(t(e, i));
+              },
+            };
+          })((e) => this.addError(e))),
+          (this.inMixinContext = !1),
+          (this.inRulesetContext = !1),
+          (this.config = { ...eD, ...e }));
+      }
+      compile(e) {
+        if (this.config.maxInputSize > 0 && e.length > this.config.maxInputSize)
+          return {
+            css: '',
+            errors: [
+              {
+                type: 'error',
+                code: 'MAX_INPUT_SIZE',
+                message: `Input exceeds maximum size of ${this.config.maxInputSize} bytes`,
+              },
+            ],
+            warnings: [],
+            stats: {
+              iterations: 0,
+              rules: 0,
+              duration: 0,
+              inputSize: e.length,
+              outputSize: 0,
+            },
+          };
+        ((this.input = e),
+          (this.pos = 0),
+          (this.state = {
+            config: this.config,
+            scope: eM(),
+            mixins: new Map(),
+            functions: new Map(),
+            iterations: 0,
+            rules: 0,
+            startTime: Date.now(),
+            errors: [],
+            warnings: [],
+            output: [],
+            selectorStack: [],
+            atRuleStack: [],
+          }));
+        try {
+          this.parseStylesheet();
+        } catch (e) {
+          e instanceof ez
+            ? this.addError({
+                type: 'error',
+                code: e.code,
+                message: e.message,
+                start: e.location,
+              })
+            : this.addError({
+                type: 'error',
+                code: 'SYNTAX_ERROR',
+                message: String(e),
+              });
+        }
+        let t = this.formatOutput();
+        return {
+          css: t,
+          errors: this.state.errors,
+          warnings: this.state.warnings,
+          stats: {
+            iterations: this.state.iterations,
+            rules: this.state.rules,
+            duration: Date.now() - this.state.startTime,
+            inputSize: e.length,
+            outputSize: t.length,
+          },
+        };
+      }
+      checkLimits() {
+        if (
+          this.config.maxIterations > 0 &&
+          this.state.iterations >= this.config.maxIterations
+        )
+          throw new ez(
+            'MAX_ITERATIONS',
+            'Maximum iterations exceeded',
+            this.location(),
+          );
+        if (
+          this.config.timeout > 0 &&
+          Date.now() - this.state.startTime >= this.config.timeout
+        )
+          throw new ez('TIMEOUT', 'Compilation timeout', this.location());
+        if (
+          this.config.maxOutputRules > 0 &&
+          this.state.rules >= this.config.maxOutputRules
+        )
+          throw new ez(
+            'MAX_OUTPUT_RULES',
+            'Maximum output rules exceeded',
+            this.location(),
+          );
+      }
+      addError(e) {
+        if (
+          (this.state.errors.push({ type: 'error', ...e }),
+          this.config.strictMode)
+        )
+          throw new ez(e.code, e.message, e.start);
+      }
+      addWarning(e) {
+        this.state.warnings.push({ type: 'warning', ...e });
+      }
+      location() {
+        return this.locationAt(this.pos);
+      }
+      locationAt(e) {
+        let t = 1,
+          i = 0;
+        for (let r = 0; r < e && r < this.input.length; r++)
+          this.input[r] ===
+          `
+`
+            ? (t++, (i = 0))
+            : i++;
+        return { line: t, column: i, offset: e };
+      }
+      peek(e = 0) {
+        return this.input[this.pos + e] || '';
+      }
+      advance(e = 1) {
+        let t = this.input.slice(this.pos, this.pos + e);
+        return ((this.pos += e), t);
+      }
+      skipWhitespace() {
+        for (; this.pos < this.input.length; ) {
+          let e = this.peek();
+          if (
+            ' ' === e ||
+            '	' === e ||
+            e ===
+              `
+` ||
+            '\r' === e
+          )
+            this.advance();
+          else if ('/' === e && '/' === this.peek(1))
+            this.skipSingleLineComment();
+          else {
+            '/' === e && this.peek(1);
+            break;
+          }
+        }
+      }
+      skipSingleLineComment() {
+        for (
+          ;
+          this.pos < this.input.length &&
+          this.peek() !==
+            `
+`;
+        )
+          this.advance();
+        this.peek() ===
+          `
+` && this.advance();
+      }
+      readMultiLineComment() {
+        let e = this.pos,
+          t = '!' === this.peek(2);
+        for (this.advance(2); this.pos < this.input.length; ) {
+          if ('*' === this.peek() && '/' === this.peek(1)) {
+            this.advance(2);
+            break;
+          }
+          this.advance();
+        }
+        let i = this.input.slice(e, this.pos);
+        return t || !this.config.minify ? i : '';
+      }
+      parseStylesheet() {
+        for (
+          ;
+          this.pos < this.input.length &&
+          (this.checkLimits(),
+          this.skipWhitespace(),
+          !(this.pos >= this.input.length));
+        ) {
+          let e = this.peek();
+          if ('@' === e) this.parseAtRule();
+          else if ('$' === e) this.parseVariableDeclaration();
+          else if ('/' === e && '*' === this.peek(1)) {
+            let e = this.readMultiLineComment();
+            e && this.state.output.push(e);
+          } else {
+            if ('}' === e) break;
+            ';' === e ? this.advance() : this.parseRuleset();
+          }
+        }
+      }
+      parseVariableDeclaration() {
+        let e = this.readVariable();
+        if ((this.skipWhitespace(), ':' !== this.peek()))
+          return void this.addError({
+            code: 'SYNTAX_ERROR',
+            message: `Expected ':' after variable name ${e}`,
+            start: this.location(),
+          });
+        (this.advance(), this.skipWhitespace());
+        let t = this.readUntil(';', !0).trim();
+        ';' === this.peek() && this.advance();
+        let i = this.evaluateExpression(t);
+        ew(this.state.scope, e, i);
+      }
+      readVariable() {
+        let e = this.advance();
+        for (; this.pos < this.input.length && this.isIdentChar(this.peek()); )
+          e += this.advance();
+        return e;
+      }
+      parseAtRule() {
+        let e = this.readAtKeyword();
+        switch (e) {
+          case '@mixin':
+            this.parseMixin();
+            break;
+          case '@function':
+            this.parseFunction();
+            break;
+          case '@include':
+            this.parseInclude();
+            break;
+          case '@if':
+            this.parseIf();
+            break;
+          case '@for':
+            this.parseFor();
+            break;
+          case '@each':
+            this.parseEach();
+            break;
+          case '@return':
+            break;
+          default:
+            this.parseNativeAtRule(e);
+        }
+      }
+      readAtKeyword() {
+        let e = this.advance();
+        for (; this.pos < this.input.length && this.isIdentChar(this.peek()); )
+          e += this.advance();
+        return e;
+      }
+      parseMixin() {
+        this.skipWhitespace();
+        let e = this.readIdent();
+        this.skipWhitespace();
+        let t = this.parseParamDefinitions();
+        if ((this.skipWhitespace(), '{' !== this.peek()))
+          return void this.addError({
+            code: 'SYNTAX_ERROR',
+            message: "Expected '{' after mixin definition",
+            start: this.location(),
+          });
+        let i = this.readBlock();
+        this.state.mixins.set(e, {
+          name: e,
+          params: t,
+          body: i,
+          start: this.location(),
+        });
+      }
+      parseFunction() {
+        this.skipWhitespace();
+        let e = this.readIdent();
+        this.skipWhitespace();
+        let t = this.parseParamDefinitions();
+        if ((this.skipWhitespace(), '{' !== this.peek()))
+          return void this.addError({
+            code: 'SYNTAX_ERROR',
+            message: "Expected '{' after function definition",
+            start: this.location(),
+          });
+        let i = this.readBlock();
+        this.state.functions.set(e, {
+          name: e,
+          params: t,
+          body: i,
+          start: this.location(),
+        });
+      }
+      parseParamDefinitions() {
+        let e = [];
+        if ('(' !== this.peek()) return e;
+        for (
+          this.advance();
+          this.pos < this.input.length &&
+          ')' !== this.peek() &&
+          (this.skipWhitespace(), ')' !== this.peek());
+        ) {
+          let t;
+          if ('$' !== this.peek()) {
+            this.advance();
+            continue;
+          }
+          let i = this.readVariable();
+          this.skipWhitespace();
+          let r = !1;
+          ('.' === this.peek() &&
+            '.' === this.peek(1) &&
+            '.' === this.peek(2) &&
+            ((r = !0), this.advance(3), this.skipWhitespace()),
+            ':' === this.peek() &&
+              (this.advance(),
+              this.skipWhitespace(),
+              (t = this.readParamDefault())),
+            e.push({ name: i, defaultValue: t, variadic: r }),
+            this.skipWhitespace(),
+            ',' === this.peek() && this.advance());
+        }
+        return (')' === this.peek() && this.advance(), e);
+      }
+      readParamDefault() {
+        let e = '',
+          t = 0;
+        for (; this.pos < this.input.length; ) {
+          let i = this.peek();
+          if (0 === t && (',' === i || ')' === i)) break;
+          (('(' === i || '[' === i || '{' === i) && t++,
+            (')' === i || ']' === i || '}' === i) && t--,
+            (e += this.advance()));
+        }
+        return e.trim();
+      }
+      parseInclude() {
+        this.skipWhitespace();
+        let e = this.readIdent();
+        this.skipWhitespace();
+        let t = [],
+          i = new Map();
+        if ('(' === this.peek()) {
+          for (
+            this.advance();
+            this.pos < this.input.length &&
+            ')' !== this.peek() &&
+            (this.skipWhitespace(), ')' !== this.peek());
+          ) {
+            let e = this.readArgument(),
+              r = e.trim().match(/^(\$[\w-]+)\s*:\s*(.+)$/s);
+            (r ? i.set(r[1], r[2]) : t.push(e),
+              this.skipWhitespace(),
+              ',' === this.peek() && this.advance());
+          }
+          ')' === this.peek() && this.advance();
+        }
+        (this.skipWhitespace(), ';' === this.peek() && this.advance());
+        let r = this.state.mixins.get(e);
+        r
+          ? this.executeMixin(r, t, i)
+          : this.addError({
+              code: 'UNDEFINED_MIXIN',
+              message: `Undefined mixin: ${e}`,
+              start: this.location(),
+            });
+      }
+      executeMixin(e, t, i = new Map()) {
+        let r = eM(this.state.scope),
+          n = 0;
+        for (let s = 0; s < e.params.length; s++) {
+          let a = e.params[s];
+          if (a.variadic) {
+            let e = t.slice(n).map((e) => this.evaluateExpression(e));
+            ew(r, a.name, { type: 'list', values: e, separator: ',' });
+            break;
+          }
+          if (i.has(a.name)) {
+            let e = this.evaluateExpression(i.get(a.name));
+            ew(r, a.name, e);
+            continue;
+          }
+          let l = t[n++] || a.defaultValue || '',
+            o = this.evaluateExpression(l);
+          ew(r, a.name, o);
+        }
+        let s = this.state.scope,
+          a = this.pos,
+          l = this.input,
+          o = this.inMixinContext;
+        ((this.state.scope = r),
+          (this.input = e.body),
+          (this.pos = 0),
+          (this.inMixinContext = !0),
+          this.parseMixinBody(),
+          (this.state.scope = s),
+          (this.pos = a),
+          (this.input = l),
+          (this.inMixinContext = o));
+      }
+      parseMixinBody() {
+        for (
+          ;
+          this.pos < this.input.length &&
+          (this.checkLimits(),
+          this.skipWhitespace(),
+          !(this.pos >= this.input.length));
+        ) {
+          let e = this.peek();
+          if ('@' === e) {
+            let e = this.peekAtKeyword();
+            '@include' === e
+              ? (this.advance(8), this.parseInclude())
+              : '@if' === e
+                ? (this.advance(3), this.parseIf())
+                : '@for' === e
+                  ? (this.advance(4), this.parseFor())
+                  : '@each' === e
+                    ? (this.advance(5), this.parseEach())
+                    : this.parseAtRule();
+          } else if ('$' === e) this.parseVariableDeclaration();
+          else if ('/' === e && '*' === this.peek(1)) {
+            let e = this.readMultiLineComment();
+            e && this.state.output.push(e);
+          } else {
+            if ('}' === e) break;
+            if (
+              '&' === e ||
+              '.' === e ||
+              '[' === e ||
+              '*' === e ||
+              '#' === e ||
+              (':' === e && this.looksLikeSelector())
+            )
+              this.parseRuleset();
+            else {
+              let e = this.parseDeclaration();
+              e
+                ? this.state.output.push(e)
+                : '}' !== this.peek() && this.advance();
+            }
+          }
+        }
+      }
+      parseIf() {
+        this.skipWhitespace();
+        let e = [],
+          t = this.readUntil('{', !1).trim(),
+          i = this.readBlock();
+        for (
+          e.push({ condition: t, block: i });
+          this.skipWhitespace(),
+            '@else' === this.input.slice(this.pos, this.pos + 5);
+        )
+          if (
+            (this.advance(5),
+            this.skipWhitespace(),
+            'if' === this.input.slice(this.pos, this.pos + 2))
+          ) {
+            (this.advance(2), this.skipWhitespace());
+            let t = this.readUntil('{', !1).trim(),
+              i = this.readBlock();
+            e.push({ condition: t, block: i });
+          } else if ('{' === this.peek()) {
+            let t = this.readBlock();
+            e.push({ condition: null, block: t });
+            break;
+          } else break;
+        for (let t of e)
+          if (null === t.condition) {
+            this.executeBlock(t.block);
+            break;
+          } else if (this.evaluateCondition(t.condition)) {
+            this.executeBlock(t.block);
+            break;
+          }
+      }
+      parseFor() {
+        if (
+          (this.skipWhitespace(),
+          this.state.iterations++,
+          this.checkLimits(),
+          '$' !== this.peek())
+        )
+          return void this.addError({
+            code: 'SYNTAX_ERROR',
+            message: 'Expected variable in @for',
+            start: this.location(),
+          });
+        let e = this.readVariable();
+        this.skipWhitespace();
+        let t = this.readUntil('{', !1).trim(),
+          i = this.readBlock(),
+          r = t.match(/from\s+(.+?)\s+(through|to)\s+(.+?)(?:\s+by\s+(.+))?$/i);
+        if (!r)
+          return void this.addError({
+            code: 'SYNTAX_ERROR',
+            message: 'Invalid @for syntax',
+            start: this.location(),
+          });
+        let n = this.evaluateExpression(r[1]),
+          s = this.evaluateExpression(r[3]),
+          a = r[4]
+            ? this.evaluateExpression(r[4])
+            : { type: 'number', value: 1 },
+          l = 'through' === r[2].toLowerCase();
+        if ('number' !== n.type || 'number' !== s.type || 'number' !== a.type)
+          return void this.addError({
+            code: 'TYPE_ERROR',
+            message: '@for requires numeric values',
+            start: this.location(),
+          });
+        let o = n.value,
+          u = s.value,
+          c = Math.abs(a.value) || 1,
+          d = u >= o ? 1 : -1,
+          h = eM(this.state.scope),
+          p = this.state.scope,
+          m = o;
+        for (; d > 0 ? (l ? m <= u : m < u) : l ? m >= u : m > u; )
+          (this.state.iterations++,
+            this.checkLimits(),
+            ew(h, e, { type: 'number', value: m, unit: '' }),
+            (this.state.scope = h),
+            this.executeBlock(i),
+            (m += c * d));
+        this.state.scope = p;
+      }
+      parseEach() {
+        (this.skipWhitespace(), this.state.iterations++, this.checkLimits());
+        let e = [];
+        for (; '$' === this.peek(); )
+          (e.push(this.readVariable()),
+            this.skipWhitespace(),
+            ',' === this.peek() && (this.advance(), this.skipWhitespace()));
+        let t = this.readUntil('{', !1).trim(),
+          i = this.readBlock(),
+          r = t.match(/^in\s+(.+)$/i);
+        if (!r)
+          return void this.addError({
+            code: 'SYNTAX_ERROR',
+            message: "Invalid @each syntax, expected 'in'",
+            start: this.location(),
+          });
+        let n = r[1].trim(),
+          s;
+        s =
+          n.startsWith('(') && ey(n.slice(1), ':') > 0
+            ? eT(n)
+            : n.startsWith('$')
+              ? this.evaluateExpression(n)
+              : eL(n);
+        let a = eM(this.state.scope),
+          l = this.state.scope;
+        if ('map' === s.type)
+          s.entries.forEach((t, r) => {
+            (this.state.iterations++,
+              this.checkLimits(),
+              e.length >= 1 &&
+                ew(a, e[0], { type: 'string', value: r, quoted: !1 }),
+              e.length >= 2 && ew(a, e[1], t),
+              (this.state.scope = a),
+              this.executeBlock(i));
+          });
+        else if ('list' === s.type)
+          for (let t of s.values) {
+            if ((this.state.iterations++, this.checkLimits(), 1 === e.length))
+              ew(a, e[0], t);
+            else if ('list' === t.type && e.length > 1)
+              for (let i = 0; i < e.length && i < t.values.length; i++)
+                ew(a, e[i], t.values[i]);
+            ((this.state.scope = a), this.executeBlock(i));
+          }
+        else
+          (this.state.iterations++,
+            this.checkLimits(),
+            ew(a, e[0], s),
+            (this.state.scope = a),
+            this.executeBlock(i));
+        this.state.scope = l;
+      }
+      parseNativeAtRule(e) {
+        this.skipWhitespace();
+        let t = this.readUntil('{;', !1);
+        if ((this.skipWhitespace(), '{' === this.peek())) {
+          let i = this.interpolate(e),
+            r = this.substituteVariables(this.interpolate(t.trim()));
+          this.state.atRuleStack.push(`${i} ${r}`);
+          let n = this.location();
+          this.advance();
+          let s = this.state.output;
+          ((this.state.output = []),
+            [
+              '@font-face',
+              '@page',
+              '@counter-style',
+              '@font-feature-values',
+              '@property',
+            ].includes(e)
+              ? this.parseDeclarationBlock()
+              : this.parseStylesheet(),
+            '}' === this.peek()
+              ? this.advance()
+              : this.addError({
+                  code: 'UNCLOSED_BLOCK',
+                  message: `Unclosed block: missing closing brace for "${i} ${r}"`,
+                  start: n,
+                  end: this.location(),
+                }));
+          let a = this.state.output.join(
+            this.config.minify
+              ? ''
+              : `
+`,
+          );
+          ((this.state.output = s),
+            a.trim() &&
+              this.state.output.push(
+                `${i} ${r} {${
+                  this.config.minify
+                    ? ''
+                    : `
+`
+                }${a}${
+                  this.config.minify
+                    ? ''
+                    : `
+`
+                }}`,
+              ),
+            this.state.atRuleStack.pop());
+        } else
+          (';' === this.peek() && this.advance(),
+            this.state.output.push(
+              `${this.interpolate(e)} ${this.substituteVariables(this.interpolate(t.trim()))};`,
+            ));
+      }
+      parseDeclarationBlock() {
+        for (
+          ;
+          this.pos < this.input.length &&
+          (this.skipWhitespace(), '}' !== this.peek());
+        ) {
+          if ('/' === this.peek() && '*' === this.peek(1)) {
+            let e = this.readMultiLineComment();
+            e && this.state.output.push(e);
+            continue;
+          }
+          let e = this.parseDeclaration();
+          e
+            ? this.state.output.push('  ' + e + ';')
+            : '}' !== this.peek() && this.advance();
+        }
+      }
+      parseRuleset() {
+        let e = this.pos,
+          t = this.readUntil('{', !1);
+        if ((this.skipWhitespace(), '{' !== this.peek())) {
+          ((this.pos = e),
+            this.readUntil(';}', !0),
+            ';' === this.peek() && this.advance());
+          return;
+        }
+        let i = this.location();
+        (this.advance(), this.state.rules++, this.checkLimits());
+        let r = this.parseSelectors(t),
+          n = this.resolveSelectors(r);
+        this.state.selectorStack.push(n.join(', '));
+        let s = [],
+          a = [],
+          l = this.inRulesetContext;
+        this.inRulesetContext = !0;
+        let o = !1;
+        for (; this.pos < this.input.length; ) {
+          if ((this.skipWhitespace(), '}' === this.peek())) {
+            (this.advance(), (o = !0));
+            break;
+          }
+          let e = this.peek();
+          if ('/' === e && '*' === this.peek(1)) {
+            this.readMultiLineComment();
+            continue;
+          }
+          if ('@' === e) {
+            let e = this.peekAtKeyword();
+            if ('@include' === e) {
+              this.advance(8);
+              let e = this.state.output;
+              for (let e of ((this.state.output = []),
+              this.parseInclude(),
+              this.state.output))
+                e.includes('{') ? a.push(e) : s.push(e);
+              this.state.output = e;
+            } else if ('@if' === e) {
+              this.advance(3);
+              let e = this.state.output;
+              for (let e of ((this.state.output = []),
+              this.parseIf(),
+              this.state.output))
+                e.includes('{') ? a.push(e) : s.push(e);
+              this.state.output = e;
+            } else if ('@for' === e) {
+              this.advance(4);
+              let e = this.state.output;
+              for (let e of ((this.state.output = []),
+              this.parseFor(),
+              this.state.output))
+                e.includes('{') ? a.push(e) : s.push(e);
+              this.state.output = e;
+            } else if ('@each' === e) {
+              this.advance(5);
+              let e = this.state.output;
+              for (let e of ((this.state.output = []),
+              this.parseEach(),
+              this.state.output))
+                e.includes('{') ? a.push(e) : s.push(e);
+              this.state.output = e;
+            } else if (
+              '@media' === e ||
+              '@supports' === e ||
+              '@container' === e
+            ) {
+              let e = this.state.output;
+              ((this.state.output = []),
+                this.parseAtRule(),
+                a.push(...this.state.output),
+                (this.state.output = e));
+            } else this.parseAtRule();
+            continue;
+          }
+          if ('$' === e) {
+            this.parseVariableDeclaration();
+            continue;
+          }
+          if (
+            '&' === e ||
+            '.' === e ||
+            '[' === e ||
+            ':' === e ||
+            '*' === e ||
+            ('#' === e && '{' !== this.peek(1)) ||
+            (this.isIdentStart(e) && this.looksLikeSelector()) ||
+            (('+' === e || '>' === e || '~' === e) && this.looksLikeSelector())
+          ) {
+            let e = this.state.output;
+            ((this.state.output = []),
+              this.parseRuleset(),
+              a.push(...this.state.output),
+              (this.state.output = e));
+            continue;
+          }
+          let t = this.parseDeclaration();
+          t ? s.push(t) : '}' !== this.peek() && this.advance();
+        }
+        if (
+          (o ||
+            this.addError({
+              code: 'UNCLOSED_BLOCK',
+              message: `Unclosed block: missing closing brace for "${t.trim()}"`,
+              start: i,
+              end: this.location(),
+            }),
+          (this.inRulesetContext = l),
+          this.state.selectorStack.pop(),
+          s.length > 0)
+        ) {
+          let e = s.join(
+              this.config.minify
+                ? ';'
+                : `;
+  `,
+            ),
+            t = n.join(this.config.minify ? ',' : ', ');
+          this.config.minify
+            ? this.state.output.push(`${t}{${e}}`)
+            : this.state.output.push(`${t} {
   ${e};
-}`)}this.state.output.push(...a)}peekAtKeyword(){let e=this.pos,t="";for(;e<this.input.length&&("@"===this.input[e]||this.isIdentChar(this.input[e]));)t+=this.input[e],e++;return t}looksLikeSelector(){let e=this.pos,t=0;for(;e<this.input.length;){let i=this.input[e];if("#"===i&&"{"===this.input[e+1]){let t=1;for(e+=2;e<this.input.length&&t>0;)"{"===this.input[e]&&t++,"}"===this.input[e]&&t--,e++;continue}if("{"===i)return!0;if("}"===i&&0===t||";"===i&&0===t)break;if(":"===i){let t=this.input[e+1];if((":"===t||" "===t||/[a-z]/i.test(t))&&/^:(hover|focus|active|visited|first-child|last-child|nth-child|before|after|not|where|is|has)/i.test(this.input.slice(e)))return!0}"("===i&&t++,")"===i&&t--,e++}return!1}parseSelectors(e){let t=[],i="",r=0;for(let n=0;n<e.length;n++){let s=e[n];("("===s||"["===s)&&r++,(")"===s||"]"===s)&&r--,","===s&&0===r?(i.trim()&&t.push(i.trim()),i=""):i+=s}return i.trim()&&t.push(i.trim()),t.map(e=>this.interpolate(e))}resolveSelectors(e){if(0===this.state.selectorStack.length)return e;let t=this.state.selectorStack[this.state.selectorStack.length-1].split(/\s*,\s*/),i=[];for(let r of t)for(let t of e)t.includes("&")?i.push(t.replace(/&/g,r)):i.push(`${r} ${t}`);return i}parseDeclaration(){let e=this.pos,t="",i=!1,r=0;for(;this.pos<this.input.length;){let n=this.peek();if("#"===n&&"{"===this.peek(1)){i=!0,r=1,t+=this.advance(2);continue}if(i){"{"===n&&r++,"}"===n&&0==--r&&(i=!1),t+=this.advance();continue}if(":"===n)break;if(";"===n||"}"===n||"{"===n)return this.pos=e,null;t+=this.advance()}if(":"!==this.peek())return null;this.advance(),this.skipWhitespace(),t=this.interpolate(t.trim()),this.valueStartPos=this.pos;let n="",s=0;for(i=!1,r=0;this.pos<this.input.length;){let e=this.peek();if("#"===e&&"{"===this.peek(1)){i=!0,r=1,n+=this.advance(2);continue}if(i){"{"===e&&r++,"}"===e&&0==--r&&(i=!1),n+=this.advance();continue}if(("("===e||"["===e)&&s++,(")"===e||"]"===e)&&s--,(";"===e||"}"===e)&&0===s){";"===e&&this.advance();break}n+=this.advance()}return n=this.processValue(n.trim()),`${t}: ${n}`}processValue(e){return e=this.interpolate(e),e=this.evaluateFunctionCalls(e),e=this.substituteVariables(e),e=this.evaluateMath(e)}evaluateFunctionCalls(e){let t=/^(url|var|calc|min|max|clamp|attr|env|linear-gradient|radial-gradient|conic-gradient|repeating-linear-gradient|repeating-radial-gradient|color|hwb|lab|lch|oklab|oklch|rgb|rgba|hsl|hsla)$/i,i=/^(darken|lighten|saturate|desaturate|adjust-hue|rgba|mix|complement|invert|grayscale|red|green|blue|alpha|opacity|hue|saturation|lightness|round|ceil|floor|abs|min|max|percentage|length|nth|index|map-get|map-has-key|type-of|unit|unitless|quote|unquote|str-length|str-slice|str-index|to-upper-case|to-lower-case|if)$/i,r=e,n=!0,s=0;for(;n&&s<100;){n=!1,s++;let e=/([a-zA-Z_][\w-]*)\s*\(([^()]*(?:\([^()]*\)[^()]*)*)\)/g;r=r.replace(e,(e,r,s,a)=>{if(t.test(r)&&!i.test(r))return e;let l=this.state.functions.has(r);if(l||i.test(r))try{let t=this.evaluateExpression(e);if("null"!==t.type)return n=!0,el(t)}catch{}if(!i.test(r)&&!l){let e=this.evaluateFunctionCalls(s);if(e!==s)return n=!0,`${r}(${e})`}return e})}return r}interpolate(e){let t="",i=0;for(;i<e.length;)if("#"===e[i]&&"{"===e[i+1]){let r=1,n=i+2;for(;n<e.length&&r>0;)"{"===e[n]&&r++,"}"===e[n]&&r--,n++;let s=e.slice(i+2,n-1),a=this.evaluateExpression(s);"string"===a.type?t+=a.value:t+=el(a),i=n}else t+=e[i],i++;return t}substituteVariables(e){return e.replace(/\$[\w-]+/g,(e,t)=>{let i=ev(this.state.scope,e);if(i)return el(i);let r=this.valueStartPos+t;return this.addWarning({code:"UNDEFINED_VARIABLE",message:`Undefined variable: ${e}`,start:this.locationAt(r),end:this.locationAt(r+e.length)}),e})}evaluateMath(e){return this.looksLikeMath(e)&&!e.includes("(")?el(this.evaluateExpression(e)):e.replace(/\(([^()]+)\)/g,(t,i,r)=>{let n=e.slice(0,r);return/(?:calc|var|min|max|clamp|url|rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch|color|linear-gradient|radial-gradient|conic-gradient|attr|translateX|translateY|translateZ|translate|translate3d|rotateX|rotateY|rotateZ|rotate|rotate3d|scaleX|scaleY|scaleZ|scale|scale3d|skewX|skewY|skew|perspective|matrix|matrix3d|cubic-bezier|steps|drop-shadow|blur|brightness|contrast|grayscale|hue-rotate|invert|opacity|saturate|sepia|path|polygon|circle|ellipse|inset|rect|image-set|element|paint|cross-fade|image|symbols|counter|counters|format|local|annotation|stylistic|ornaments|styleset|character-variant|swash|leader|target-counter|target-counters|target-text)\s*$/i.test(n)?t:this.looksLikeMath(i)?el(this.evaluateExpression(i)):t})}looksLikeMath(e){if(/^(calc|var|min|max|clamp)\s*\(/i.test(e.trim()))return!1;let t=/\$/.test(e);if(e.includes("/")&&!t&&!/\s\/\s/.test(e)&&!/\s[+\-*%]\s/.test(e))return!1;let i=/\s[+\-*/%]\s/.test(e),r=t&&/[+\-*/%]/.test(e);return(i||r)&&(/\d/.test(e)||t)}evaluateExpression(e){let t=this.interpolate(e),i=new Map;return this.state.functions.forEach((e,t)=>{i.set(t,(...t)=>this.executeFunction(e,t))}),this.evaluator.evaluate(t,this.state.scope,i)}executeFunction(e,t){let i=eM(this.state.scope);for(let r=0;r<e.params.length;r++){let n=e.params[r],s=t[r]||(n.defaultValue?this.evaluateExpression(n.defaultValue):{type:"null"});ew(i,n.name,s)}let r=this.state.scope;this.state.scope=i;let n=this.executeFunctionBody(e.body);return this.state.scope=r,n}executeFunctionBody(e){let t=this.pos,i=this.input;this.input=e,this.pos=0;let r={type:"null"};for(;this.pos<this.input.length&&(this.skipWhitespace(),!(this.pos>=this.input.length));)if("@"===this.peek()){let e=this.peekAtKeyword();if("@return"===e){this.advance(7),this.skipWhitespace();let e=this.readUntil(";}",!0).trim();";"===this.peek()&&this.advance(),r=this.evaluateExpression(e);break}if("@if"===e){this.advance(3);let e=this.executeIfForReturn();if(null!==e){r=e;break}}else if("@for"===e){this.advance(4);let e=this.executeForForReturn();if(null!==e){r=e;break}}else if("@each"===e){this.advance(5);let e=this.executeEachForReturn();if(null!==e){r=e;break}}else this.readUntil(";}",!0),";"===this.peek()&&this.advance()}else"$"===this.peek()?this.parseVariableDeclaration():(this.readUntil(";}",!0),";"===this.peek()&&this.advance());return this.pos=t,this.input=i,r}executeIfForReturn(){this.skipWhitespace();let e=[],t=this.readUntil("{",!1).trim(),i=this.readBlock();for(e.push({condition:t,block:i});this.skipWhitespace(),"@else"===this.input.slice(this.pos,this.pos+5);)if(this.advance(5),this.skipWhitespace(),"if"===this.input.slice(this.pos,this.pos+2)){this.advance(2),this.skipWhitespace();let t=this.readUntil("{",!1).trim(),i=this.readBlock();e.push({condition:t,block:i})}else if("{"===this.peek()){let t=this.readBlock();e.push({condition:null,block:t});break}else break;for(let t of e)if(null===t.condition){let e=this.executeFunctionBody(t.block);if("null"!==e.type)return e;break}else if(this.evaluateCondition(t.condition)){let e=this.executeFunctionBody(t.block);if("null"!==e.type)return e;break}return null}executeForForReturn(){if(this.skipWhitespace(),this.state.iterations++,this.checkLimits(),"$"!==this.peek())return null;let e=this.readVariable();this.skipWhitespace();let t=this.readUntil("{",!1).trim(),i=this.readBlock(),r=t.match(/from\s+(.+?)\s+(through|to)\s+(.+?)(?:\s+by\s+(.+))?$/i);if(!r)return null;let n=this.evaluateExpression(r[1]),s=this.evaluateExpression(r[3]),a=r[4]?this.evaluateExpression(r[4]):{type:"number",value:1},l="through"===r[2].toLowerCase();if("number"!==n.type||"number"!==s.type||"number"!==a.type)return null;let o=n.value,u=s.value,c=Math.abs(a.value)||1,d=u>=o?1:-1,h=eM(this.state.scope),p=this.state.scope,m=o;for(;d>0?l?m<=u:m<u:l?m>=u:m>u;){this.state.iterations++,this.checkLimits(),ew(h,e,{type:"number",value:m,unit:""}),this.state.scope=h;let t=this.executeFunctionBody(i);if("null"!==t.type)return this.state.scope=p,t;m+=c*d}return this.state.scope=p,null}executeEachForReturn(){this.skipWhitespace(),this.state.iterations++,this.checkLimits();let e=[];for(;"$"===this.peek();)e.push(this.readVariable()),this.skipWhitespace(),","===this.peek()&&(this.advance(),this.skipWhitespace());let t=this.readUntil("{",!1).trim(),i=this.readBlock(),r=t.match(/^in\s+(.+)$/i);if(!r)return null;let n=r[1].trim(),s;s=n.startsWith("(")&&ey(n.slice(1),":")>0?eT(n):n.startsWith("$")?this.evaluateExpression(n):eL(n);let a=eM(this.state.scope),l=this.state.scope;if("map"===s.type)for(let[t,r]of s.entries){this.state.iterations++,this.checkLimits(),e.length>=1&&ew(a,e[0],{type:"string",value:t,quoted:!1}),e.length>=2&&ew(a,e[1],r),this.state.scope=a;let n=this.executeFunctionBody(i);if("null"!==n.type)return this.state.scope=l,n}else if("list"===s.type)for(let t of s.values){this.state.iterations++,this.checkLimits(),1===e.length&&ew(a,e[0],t),this.state.scope=a;let r=this.executeFunctionBody(i);if("null"!==r.type)return this.state.scope=l,r}return this.state.scope=l,null}evaluateCondition(e){return eE(this.evaluateExpression(e))}executeBlock(e){let t=this.pos,i=this.input;this.input=e,this.pos=0,this.inMixinContext||this.inRulesetContext?this.parseMixinBody():this.parseStylesheet(),this.pos=t,this.input=i}readBlock(){if("{"!==this.peek())return"";let e=this.location();this.advance();let t=1,i="",r=null;for(;this.pos<this.input.length&&t>0;){let e=this.peek();if(r){i+=this.advance(),e===r&&"\\"!==this.input[this.pos-2]&&(r=null);continue}if('"'===e||"'"===e){r=e,i+=this.advance();continue}if("{"===e&&t++,"}"===e&&0==--t){this.advance();break}i+=this.advance()}return t>0&&this.addError({code:"UNCLOSED_BLOCK",message:"Unclosed block: missing closing brace",start:e,end:this.location()}),i}readUntil(e,t){let i="",r=0,n=null;for(;this.pos<this.input.length;){let s=this.peek();if(n){i+=this.advance(),s===n&&"\\"!==this.input[this.pos-2]&&(n=null);continue}if('"'===s||"'"===s){n=s,i+=this.advance();continue}if("#"===s&&"{"===this.peek(1)){i+=this.advance(2);let e=1;for(;this.pos<this.input.length&&e>0;){let t=this.peek();"{"===t&&e++,"}"===t&&e--,i+=this.advance()}continue}if(t&&(("("===s||"["===s||"{"===s)&&r++,(")"===s||"]"===s||"}"===s)&&r--),0===r&&e.includes(s))break;i+=this.advance()}return i}readIdent(){let e="";for(;this.pos<this.input.length&&this.isIdentChar(this.peek());)e+=this.advance();return e}readArgument(){let e="",t=0,i=null;for(;this.pos<this.input.length;){let r=this.peek();if(i){e+=this.advance(),r===i&&"\\"!==this.input[this.pos-2]&&(i=null);continue}if('"'===r||"'"===r){i=r,e+=this.advance();continue}if("("===r&&t++,")"===r){if(0===t)break;t--}if(","===r&&0===t)break;e+=this.advance()}return e.trim()}isIdentStart(e){return e>="a"&&e<="z"||e>="A"&&e<="Z"||"_"===e||"-"===e}isIdentChar(e){return this.isIdentStart(e)||e>="0"&&e<="9"}formatOutput(){return this.config.minify?this.state.output.join(""):this.state.output.join(`
+}`);
+        }
+        this.state.output.push(...a);
+      }
+      peekAtKeyword() {
+        let e = this.pos,
+          t = '';
+        for (
+          ;
+          e < this.input.length &&
+          ('@' === this.input[e] || this.isIdentChar(this.input[e]));
+        )
+          ((t += this.input[e]), e++);
+        return t;
+      }
+      looksLikeSelector() {
+        let e = this.pos,
+          t = 0;
+        for (; e < this.input.length; ) {
+          let i = this.input[e];
+          if ('#' === i && '{' === this.input[e + 1]) {
+            let t = 1;
+            for (e += 2; e < this.input.length && t > 0; )
+              ('{' === this.input[e] && t++, '}' === this.input[e] && t--, e++);
+            continue;
+          }
+          if ('{' === i) return !0;
+          if (('}' === i && 0 === t) || (';' === i && 0 === t)) break;
+          if (':' === i) {
+            let t = this.input[e + 1];
+            if (
+              (':' === t || ' ' === t || /[a-z]/i.test(t)) &&
+              /^:(hover|focus|active|visited|first-child|last-child|nth-child|before|after|not|where|is|has)/i.test(
+                this.input.slice(e),
+              )
+            )
+              return !0;
+          }
+          ('(' === i && t++, ')' === i && t--, e++);
+        }
+        return !1;
+      }
+      parseSelectors(e) {
+        let t = [],
+          i = '',
+          r = 0;
+        for (let n = 0; n < e.length; n++) {
+          let s = e[n];
+          (('(' === s || '[' === s) && r++,
+            (')' === s || ']' === s) && r--,
+            ',' === s && 0 === r
+              ? (i.trim() && t.push(i.trim()), (i = ''))
+              : (i += s));
+        }
+        return (
+          i.trim() && t.push(i.trim()),
+          t.map((e) => this.interpolate(e))
+        );
+      }
+      resolveSelectors(e) {
+        if (0 === this.state.selectorStack.length) return e;
+        let t =
+            this.state.selectorStack[this.state.selectorStack.length - 1].split(
+              /\s*,\s*/,
+            ),
+          i = [];
+        for (let r of t)
+          for (let t of e)
+            t.includes('&') ? i.push(t.replace(/&/g, r)) : i.push(`${r} ${t}`);
+        return i;
+      }
+      parseDeclaration() {
+        let e = this.pos,
+          t = '',
+          i = !1,
+          r = 0;
+        for (; this.pos < this.input.length; ) {
+          let n = this.peek();
+          if ('#' === n && '{' === this.peek(1)) {
+            ((i = !0), (r = 1), (t += this.advance(2)));
+            continue;
+          }
+          if (i) {
+            ('{' === n && r++,
+              '}' === n && 0 == --r && (i = !1),
+              (t += this.advance()));
+            continue;
+          }
+          if (':' === n) break;
+          if (';' === n || '}' === n || '{' === n)
+            return ((this.pos = e), null);
+          t += this.advance();
+        }
+        if (':' !== this.peek()) return null;
+        (this.advance(),
+          this.skipWhitespace(),
+          (t = this.interpolate(t.trim())),
+          (this.valueStartPos = this.pos));
+        let n = '',
+          s = 0;
+        for (i = !1, r = 0; this.pos < this.input.length; ) {
+          let e = this.peek();
+          if ('#' === e && '{' === this.peek(1)) {
+            ((i = !0), (r = 1), (n += this.advance(2)));
+            continue;
+          }
+          if (i) {
+            ('{' === e && r++,
+              '}' === e && 0 == --r && (i = !1),
+              (n += this.advance()));
+            continue;
+          }
+          if (
+            (('(' === e || '[' === e) && s++,
+            (')' === e || ']' === e) && s--,
+            (';' === e || '}' === e) && 0 === s)
+          ) {
+            ';' === e && this.advance();
+            break;
+          }
+          n += this.advance();
+        }
+        return ((n = this.processValue(n.trim())), `${t}: ${n}`);
+      }
+      processValue(e) {
+        return (
+          (e = this.interpolate(e)),
+          (e = this.evaluateFunctionCalls(e)),
+          (e = this.substituteVariables(e)),
+          (e = this.evaluateMath(e))
+        );
+      }
+      evaluateFunctionCalls(e) {
+        let t =
+            /^(url|var|calc|min|max|clamp|attr|env|linear-gradient|radial-gradient|conic-gradient|repeating-linear-gradient|repeating-radial-gradient|color|hwb|lab|lch|oklab|oklch|rgb|rgba|hsl|hsla)$/i,
+          i =
+            /^(darken|lighten|saturate|desaturate|adjust-hue|rgba|mix|complement|invert|grayscale|red|green|blue|alpha|opacity|hue|saturation|lightness|round|ceil|floor|abs|min|max|percentage|length|nth|index|map-get|map-has-key|type-of|unit|unitless|quote|unquote|str-length|str-slice|str-index|to-upper-case|to-lower-case|if)$/i,
+          r = e,
+          n = !0,
+          s = 0;
+        for (; n && s < 100; ) {
+          ((n = !1), s++);
+          let e = /([a-zA-Z_][\w-]*)\s*\(([^()]*(?:\([^()]*\)[^()]*)*)\)/g;
+          r = r.replace(e, (e, r, s, a) => {
+            if (t.test(r) && !i.test(r)) return e;
+            let l = this.state.functions.has(r);
+            if (l || i.test(r))
+              try {
+                let t = this.evaluateExpression(e);
+                if ('null' !== t.type) return ((n = !0), el(t));
+              } catch {}
+            if (!i.test(r) && !l) {
+              let e = this.evaluateFunctionCalls(s);
+              if (e !== s) return ((n = !0), `${r}(${e})`);
+            }
+            return e;
+          });
+        }
+        return r;
+      }
+      interpolate(e) {
+        let t = '',
+          i = 0;
+        for (; i < e.length; )
+          if ('#' === e[i] && '{' === e[i + 1]) {
+            let r = 1,
+              n = i + 2;
+            for (; n < e.length && r > 0; )
+              ('{' === e[n] && r++, '}' === e[n] && r--, n++);
+            let s = e.slice(i + 2, n - 1),
+              a = this.evaluateExpression(s);
+            ('string' === a.type ? (t += a.value) : (t += el(a)), (i = n));
+          } else ((t += e[i]), i++);
+        return t;
+      }
+      substituteVariables(e) {
+        return e.replace(/\$[\w-]+/g, (e, t) => {
+          let i = ev(this.state.scope, e);
+          if (i) return el(i);
+          let r = this.valueStartPos + t;
+          return (
+            this.addWarning({
+              code: 'UNDEFINED_VARIABLE',
+              message: `Undefined variable: ${e}`,
+              start: this.locationAt(r),
+              end: this.locationAt(r + e.length),
+            }),
+            e
+          );
+        });
+      }
+      evaluateMath(e) {
+        return this.looksLikeMath(e) && !e.includes('(')
+          ? el(this.evaluateExpression(e))
+          : e.replace(/\(([^()]+)\)/g, (t, i, r) => {
+              let n = e.slice(0, r);
+              return /(?:calc|var|min|max|clamp|url|rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch|color|linear-gradient|radial-gradient|conic-gradient|attr|translateX|translateY|translateZ|translate|translate3d|rotateX|rotateY|rotateZ|rotate|rotate3d|scaleX|scaleY|scaleZ|scale|scale3d|skewX|skewY|skew|perspective|matrix|matrix3d|cubic-bezier|steps|drop-shadow|blur|brightness|contrast|grayscale|hue-rotate|invert|opacity|saturate|sepia|path|polygon|circle|ellipse|inset|rect|image-set|element|paint|cross-fade|image|symbols|counter|counters|format|local|annotation|stylistic|ornaments|styleset|character-variant|swash|leader|target-counter|target-counters|target-text)\s*$/i.test(
+                n,
+              )
+                ? t
+                : this.looksLikeMath(i)
+                  ? el(this.evaluateExpression(i))
+                  : t;
+            });
+      }
+      looksLikeMath(e) {
+        if (/^(calc|var|min|max|clamp)\s*\(/i.test(e.trim())) return !1;
+        let t = /\$/.test(e);
+        if (
+          e.includes('/') &&
+          !t &&
+          !/\s\/\s/.test(e) &&
+          !/\s[+\-*%]\s/.test(e)
+        )
+          return !1;
+        let i = /\s[+\-*/%]\s/.test(e),
+          r = t && /[+\-*/%]/.test(e);
+        return (i || r) && (/\d/.test(e) || t);
+      }
+      evaluateExpression(e) {
+        let t = this.interpolate(e),
+          i = new Map();
+        return (
+          this.state.functions.forEach((e, t) => {
+            i.set(t, (...t) => this.executeFunction(e, t));
+          }),
+          this.evaluator.evaluate(t, this.state.scope, i)
+        );
+      }
+      executeFunction(e, t) {
+        let i = eM(this.state.scope);
+        for (let r = 0; r < e.params.length; r++) {
+          let n = e.params[r],
+            s =
+              t[r] ||
+              (n.defaultValue
+                ? this.evaluateExpression(n.defaultValue)
+                : { type: 'null' });
+          ew(i, n.name, s);
+        }
+        let r = this.state.scope;
+        this.state.scope = i;
+        let n = this.executeFunctionBody(e.body);
+        return ((this.state.scope = r), n);
+      }
+      executeFunctionBody(e) {
+        let t = this.pos,
+          i = this.input;
+        ((this.input = e), (this.pos = 0));
+        let r = { type: 'null' };
+        for (
+          ;
+          this.pos < this.input.length &&
+          (this.skipWhitespace(), !(this.pos >= this.input.length));
+        )
+          if ('@' === this.peek()) {
+            let e = this.peekAtKeyword();
+            if ('@return' === e) {
+              (this.advance(7), this.skipWhitespace());
+              let e = this.readUntil(';}', !0).trim();
+              (';' === this.peek() && this.advance(),
+                (r = this.evaluateExpression(e)));
+              break;
+            }
+            if ('@if' === e) {
+              this.advance(3);
+              let e = this.executeIfForReturn();
+              if (null !== e) {
+                r = e;
+                break;
+              }
+            } else if ('@for' === e) {
+              this.advance(4);
+              let e = this.executeForForReturn();
+              if (null !== e) {
+                r = e;
+                break;
+              }
+            } else if ('@each' === e) {
+              this.advance(5);
+              let e = this.executeEachForReturn();
+              if (null !== e) {
+                r = e;
+                break;
+              }
+            } else
+              (this.readUntil(';}', !0), ';' === this.peek() && this.advance());
+          } else
+            '$' === this.peek()
+              ? this.parseVariableDeclaration()
+              : (this.readUntil(';}', !0),
+                ';' === this.peek() && this.advance());
+        return ((this.pos = t), (this.input = i), r);
+      }
+      executeIfForReturn() {
+        this.skipWhitespace();
+        let e = [],
+          t = this.readUntil('{', !1).trim(),
+          i = this.readBlock();
+        for (
+          e.push({ condition: t, block: i });
+          this.skipWhitespace(),
+            '@else' === this.input.slice(this.pos, this.pos + 5);
+        )
+          if (
+            (this.advance(5),
+            this.skipWhitespace(),
+            'if' === this.input.slice(this.pos, this.pos + 2))
+          ) {
+            (this.advance(2), this.skipWhitespace());
+            let t = this.readUntil('{', !1).trim(),
+              i = this.readBlock();
+            e.push({ condition: t, block: i });
+          } else if ('{' === this.peek()) {
+            let t = this.readBlock();
+            e.push({ condition: null, block: t });
+            break;
+          } else break;
+        for (let t of e)
+          if (null === t.condition) {
+            let e = this.executeFunctionBody(t.block);
+            if ('null' !== e.type) return e;
+            break;
+          } else if (this.evaluateCondition(t.condition)) {
+            let e = this.executeFunctionBody(t.block);
+            if ('null' !== e.type) return e;
+            break;
+          }
+        return null;
+      }
+      executeForForReturn() {
+        if (
+          (this.skipWhitespace(),
+          this.state.iterations++,
+          this.checkLimits(),
+          '$' !== this.peek())
+        )
+          return null;
+        let e = this.readVariable();
+        this.skipWhitespace();
+        let t = this.readUntil('{', !1).trim(),
+          i = this.readBlock(),
+          r = t.match(/from\s+(.+?)\s+(through|to)\s+(.+?)(?:\s+by\s+(.+))?$/i);
+        if (!r) return null;
+        let n = this.evaluateExpression(r[1]),
+          s = this.evaluateExpression(r[3]),
+          a = r[4]
+            ? this.evaluateExpression(r[4])
+            : { type: 'number', value: 1 },
+          l = 'through' === r[2].toLowerCase();
+        if ('number' !== n.type || 'number' !== s.type || 'number' !== a.type)
+          return null;
+        let o = n.value,
+          u = s.value,
+          c = Math.abs(a.value) || 1,
+          d = u >= o ? 1 : -1,
+          h = eM(this.state.scope),
+          p = this.state.scope,
+          m = o;
+        for (; d > 0 ? (l ? m <= u : m < u) : l ? m >= u : m > u; ) {
+          (this.state.iterations++,
+            this.checkLimits(),
+            ew(h, e, { type: 'number', value: m, unit: '' }),
+            (this.state.scope = h));
+          let t = this.executeFunctionBody(i);
+          if ('null' !== t.type) return ((this.state.scope = p), t);
+          m += c * d;
+        }
+        return ((this.state.scope = p), null);
+      }
+      executeEachForReturn() {
+        (this.skipWhitespace(), this.state.iterations++, this.checkLimits());
+        let e = [];
+        for (; '$' === this.peek(); )
+          (e.push(this.readVariable()),
+            this.skipWhitespace(),
+            ',' === this.peek() && (this.advance(), this.skipWhitespace()));
+        let t = this.readUntil('{', !1).trim(),
+          i = this.readBlock(),
+          r = t.match(/^in\s+(.+)$/i);
+        if (!r) return null;
+        let n = r[1].trim(),
+          s;
+        s =
+          n.startsWith('(') && ey(n.slice(1), ':') > 0
+            ? eT(n)
+            : n.startsWith('$')
+              ? this.evaluateExpression(n)
+              : eL(n);
+        let a = eM(this.state.scope),
+          l = this.state.scope;
+        if ('map' === s.type)
+          for (let [t, r] of s.entries) {
+            (this.state.iterations++,
+              this.checkLimits(),
+              e.length >= 1 &&
+                ew(a, e[0], { type: 'string', value: t, quoted: !1 }),
+              e.length >= 2 && ew(a, e[1], r),
+              (this.state.scope = a));
+            let n = this.executeFunctionBody(i);
+            if ('null' !== n.type) return ((this.state.scope = l), n);
+          }
+        else if ('list' === s.type)
+          for (let t of s.values) {
+            (this.state.iterations++,
+              this.checkLimits(),
+              1 === e.length && ew(a, e[0], t),
+              (this.state.scope = a));
+            let r = this.executeFunctionBody(i);
+            if ('null' !== r.type) return ((this.state.scope = l), r);
+          }
+        return ((this.state.scope = l), null);
+      }
+      evaluateCondition(e) {
+        return eE(this.evaluateExpression(e));
+      }
+      executeBlock(e) {
+        let t = this.pos,
+          i = this.input;
+        ((this.input = e),
+          (this.pos = 0),
+          this.inMixinContext || this.inRulesetContext
+            ? this.parseMixinBody()
+            : this.parseStylesheet(),
+          (this.pos = t),
+          (this.input = i));
+      }
+      readBlock() {
+        if ('{' !== this.peek()) return '';
+        let e = this.location();
+        this.advance();
+        let t = 1,
+          i = '',
+          r = null;
+        for (; this.pos < this.input.length && t > 0; ) {
+          let e = this.peek();
+          if (r) {
+            ((i += this.advance()),
+              e === r && '\\' !== this.input[this.pos - 2] && (r = null));
+            continue;
+          }
+          if ('"' === e || "'" === e) {
+            ((r = e), (i += this.advance()));
+            continue;
+          }
+          if (('{' === e && t++, '}' === e && 0 == --t)) {
+            this.advance();
+            break;
+          }
+          i += this.advance();
+        }
+        return (
+          t > 0 &&
+            this.addError({
+              code: 'UNCLOSED_BLOCK',
+              message: 'Unclosed block: missing closing brace',
+              start: e,
+              end: this.location(),
+            }),
+          i
+        );
+      }
+      readUntil(e, t) {
+        let i = '',
+          r = 0,
+          n = null;
+        for (; this.pos < this.input.length; ) {
+          let s = this.peek();
+          if (n) {
+            ((i += this.advance()),
+              s === n && '\\' !== this.input[this.pos - 2] && (n = null));
+            continue;
+          }
+          if ('"' === s || "'" === s) {
+            ((n = s), (i += this.advance()));
+            continue;
+          }
+          if ('#' === s && '{' === this.peek(1)) {
+            i += this.advance(2);
+            let e = 1;
+            for (; this.pos < this.input.length && e > 0; ) {
+              let t = this.peek();
+              ('{' === t && e++, '}' === t && e--, (i += this.advance()));
+            }
+            continue;
+          }
+          if (
+            (t &&
+              (('(' === s || '[' === s || '{' === s) && r++,
+              (')' === s || ']' === s || '}' === s) && r--),
+            0 === r && e.includes(s))
+          )
+            break;
+          i += this.advance();
+        }
+        return i;
+      }
+      readIdent() {
+        let e = '';
+        for (; this.pos < this.input.length && this.isIdentChar(this.peek()); )
+          e += this.advance();
+        return e;
+      }
+      readArgument() {
+        let e = '',
+          t = 0,
+          i = null;
+        for (; this.pos < this.input.length; ) {
+          let r = this.peek();
+          if (i) {
+            ((e += this.advance()),
+              r === i && '\\' !== this.input[this.pos - 2] && (i = null));
+            continue;
+          }
+          if ('"' === r || "'" === r) {
+            ((i = r), (e += this.advance()));
+            continue;
+          }
+          if (('(' === r && t++, ')' === r)) {
+            if (0 === t) break;
+            t--;
+          }
+          if (',' === r && 0 === t) break;
+          e += this.advance();
+        }
+        return e.trim();
+      }
+      isIdentStart(e) {
+        return (
+          (e >= 'a' && e <= 'z') ||
+          (e >= 'A' && e <= 'Z') ||
+          '_' === e ||
+          '-' === e
+        );
+      }
+      isIdentChar(e) {
+        return this.isIdentStart(e) || (e >= '0' && e <= '9');
+      }
+      formatOutput() {
+        return this.config.minify
+          ? this.state.output.join('')
+          : this.state.output.join(`
 
-`)}},ez=class extends Error{constructor(e,t,i){super(t),this.code=e,this.location=i,this.name="CompilerError"}},eO=Uint8Array,eR=Uint16Array,eP=Int32Array,eV=new eO([0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0,0,0,0]),eU=new eO([0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13,0,0]),e$=new eO([16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15]),eB=function(e,t){for(var i=new eR(31),r=0;r<31;++r)i[r]=t+=1<<e[r-1];for(var n=new eP(i[30]),r=1;r<30;++r)for(var s=i[r];s<i[r+1];++s)n[s]=s-i[r]<<5|r;return{b:i,r:n}},e_=eB(eV,2),eF=e_.b,eW=e_.r;eF[28]=258,eW[258]=28;for(var eY=eB(eU,0),eQ=eY.b,eq=eY.r,eG=new eR(32768),eH=0;eH<32768;++eH){var eZ=(43690&eH)>>1|(21845&eH)<<1;eZ=(61680&(eZ=(52428&eZ)>>2|(13107&eZ)<<2))>>4|(3855&eZ)<<4,eG[eH]=((65280&eZ)>>8|(255&eZ)<<8)>>1}for(var eX=function(e,t,i){for(var r,n=e.length,s=0,a=new eR(t);s<n;++s)e[s]&&++a[e[s]-1];var l=new eR(t);for(s=1;s<t;++s)l[s]=l[s-1]+a[s-1]<<1;if(i){r=new eR(1<<t);var o=15-t;for(s=0;s<n;++s)if(e[s])for(var u=s<<4|e[s],c=t-e[s],d=l[e[s]-1]++<<c,h=d|(1<<c)-1;d<=h;++d)r[eG[d]>>o]=u}else for(s=0,r=new eR(n);s<n;++s)e[s]&&(r[s]=eG[l[e[s]-1]++]>>15-e[s]);return r},eK=new eO(288),eH=0;eH<144;++eH)eK[eH]=8;for(var eH=144;eH<256;++eH)eK[eH]=9;for(var eH=256;eH<280;++eH)eK[eH]=7;for(var eH=280;eH<288;++eH)eK[eH]=8;for(var eJ=new eO(32),eH=0;eH<32;++eH)eJ[eH]=5;var e0=eX(eK,9,0),e1=eX(eK,9,1),e2=eX(eJ,5,0),e4=eX(eJ,5,1),e3=function(e){for(var t=e[0],i=1;i<e.length;++i)e[i]>t&&(t=e[i]);return t},e5=function(e,t,i){var r=t/8|0;return(e[r]|e[r+1]<<8)>>(7&t)&i},e7=function(e,t){var i=t/8|0;return(e[i]|e[i+1]<<8|e[i+2]<<16)>>(7&t)},e8=function(e){return(e+7)/8|0},e6=function(e,t,i){return(null==t||t<0)&&(t=0),(null==i||i>e.length)&&(i=e.length),new eO(e.subarray(t,i))},e9=["unexpected EOF","invalid block type","invalid length/literal","invalid distance","stream finished","no stream handler",,"no callback","invalid UTF-8 data","extra field too long","date not in range 1980-2099","filename too long","stream finishing","invalid zip data"],te=function(e,t,i){var r=Error(t||e9[e]);if(r.code=e,Error.captureStackTrace&&Error.captureStackTrace(r,te),!i)throw r;return r},tt=function(e,t,i,r){var n=e.length,s=r?r.length:0;if(!n||t.f&&!t.l)return i||new eO(0);var a=!i,l=a||2!=t.i,o=t.i;a&&(i=new eO(3*n));var u=function(e){var t=i.length;if(e>t){var r=new eO(Math.max(2*t,e));r.set(i),i=r}},c=t.f||0,d=t.p||0,h=t.b||0,p=t.l,m=t.d,f=t.m,g=t.n,y=8*n;do{if(!p){c=e5(e,d,1);var b=e5(e,d+1,3);if(d+=3,b)if(1==b)p=e1,m=e4,f=9,g=5;else if(2==b){var M=e5(e,d,31)+257,v=e5(e,d+10,15)+4,w=M+e5(e,d+5,31)+1;d+=14;for(var N=new eO(w),E=new eO(19),S=0;S<v;++S)E[e$[S]]=e5(e,d+3*S,7);d+=3*v;for(var x=e3(E),I=(1<<x)-1,L=eX(E,x,1),S=0;S<w;){var k=L[e5(e,d,I)];d+=15&k;var T=k>>4;if(T<16)N[S++]=T;else{var A=0,C=0;for(16==T?(C=3+e5(e,d,3),d+=2,A=N[S-1]):17==T?(C=3+e5(e,d,7),d+=3):18==T&&(C=11+e5(e,d,127),d+=7);C--;)N[S++]=A}}var D=N.subarray(0,M),j=N.subarray(M);f=e3(D),g=e3(j),p=eX(D,f,1),m=eX(j,g,1)}else te(1);else{var T=e8(d)+4,z=e[T-4]|e[T-3]<<8,O=T+z;if(O>n){o&&te(0);break}l&&u(h+z),i.set(e.subarray(T,O),h),t.b=h+=z,t.p=d=8*O,t.f=c;continue}if(d>y){o&&te(0);break}}l&&u(h+131072);for(var R=(1<<f)-1,P=(1<<g)-1,V=d;;V=d){var A=p[e7(e,d)&R],U=A>>4;if((d+=15&A)>y){o&&te(0);break}if(A||te(2),U<256)i[h++]=U;else if(256==U){V=d,p=null;break}else{var $=U-254;if(U>264){var S=U-257,B=eV[S];$=e5(e,d,(1<<B)-1)+eF[S],d+=B}var _=m[e7(e,d)&P],F=_>>4;_||te(3),d+=15&_;var j=eQ[F];if(F>3){var B=eU[F];j+=e7(e,d)&(1<<B)-1,d+=B}if(d>y){o&&te(0);break}l&&u(h+131072);var W=h+$;if(h<j){var Y=s-j,Q=Math.min(j,W);for(Y+h<0&&te(3);h<Q;++h)i[h]=r[Y+h]}for(;h<W;++h)i[h]=i[h-j]}}t.l=p,t.p=V,t.b=h,t.f=c,p&&(c=1,t.m=f,t.d=m,t.n=g)}while(!c);return h!=i.length&&a?e6(i,0,h):i.subarray(0,h)},ti=function(e,t,i){i<<=7&t;var r=t/8|0;e[r]|=i,e[r+1]|=i>>8},tr=function(e,t,i){i<<=7&t;var r=t/8|0;e[r]|=i,e[r+1]|=i>>8,e[r+2]|=i>>16},tn=function(e,t){for(var i=[],r=0;r<e.length;++r)e[r]&&i.push({s:r,f:e[r]});var n=i.length,s=i.slice();if(!n)return{t:td,l:0};if(1==n){var a=new eO(i[0].s+1);return a[i[0].s]=1,{t:a,l:1}}i.sort(function(e,t){return e.f-t.f}),i.push({s:-1,f:25001});var l=i[0],o=i[1],u=0,c=1,d=2;for(i[0]={s:-1,f:l.f+o.f,l:l,r:o};c!=n-1;)l=i[i[u].f<i[d].f?u++:d++],o=i[u!=c&&i[u].f<i[d].f?u++:d++],i[c++]={s:-1,f:l.f+o.f,l:l,r:o};for(var h=s[0].s,r=1;r<n;++r)s[r].s>h&&(h=s[r].s);var p=new eR(h+1),m=ts(i[c-1],p,0);if(m>t){var r=0,f=0,g=m-t,y=1<<g;for(s.sort(function(e,t){return p[t.s]-p[e.s]||e.f-t.f});r<n;++r){var b=s[r].s;if(p[b]>t)f+=y-(1<<m-p[b]),p[b]=t;else break}for(f>>=g;f>0;){var M=s[r].s;p[M]<t?f-=1<<t-p[M]++-1:++r}for(;r>=0&&f;--r){var v=s[r].s;p[v]==t&&(--p[v],++f)}m=t}return{t:new eO(p),l:m}},ts=function(e,t,i){return -1==e.s?Math.max(ts(e.l,t,i+1),ts(e.r,t,i+1)):t[e.s]=i},ta=function(e){for(var t=e.length;t&&!e[--t];);for(var i=new eR(++t),r=0,n=e[0],s=1,a=function(e){i[r++]=e},l=1;l<=t;++l)if(e[l]==n&&l!=t)++s;else{if(!n&&s>2){for(;s>138;s-=138)a(32754);s>2&&(a(s>10?s-11<<5|28690:s-3<<5|12305),s=0)}else if(s>3){for(a(n),--s;s>6;s-=6)a(8304);s>2&&(a(s-3<<5|8208),s=0)}for(;s--;)a(n);s=1,n=e[l]}return{c:i.subarray(0,r),n:t}},tl=function(e,t){for(var i=0,r=0;r<t.length;++r)i+=e[r]*t[r];return i},to=function(e,t,i){var r=i.length,n=e8(t+2);e[n]=255&r,e[n+1]=r>>8,e[n+2]=255^e[n],e[n+3]=255^e[n+1];for(var s=0;s<r;++s)e[n+s+4]=i[s];return(n+4+r)*8},tu=function(e,t,i,r,n,s,a,l,o,u,c){ti(t,c++,i),++n[256];for(var d,h,p,m,f=tn(n,15),g=f.t,y=f.l,b=tn(s,15),M=b.t,v=b.l,w=ta(g),N=w.c,E=w.n,S=ta(M),x=S.c,I=S.n,L=new eR(19),k=0;k<N.length;++k)++L[31&N[k]];for(var k=0;k<x.length;++k)++L[31&x[k]];for(var T=tn(L,7),A=T.t,C=T.l,D=19;D>4&&!A[e$[D-1]];--D);var j=u+5<<3,z=tl(n,eK)+tl(s,eJ)+a,O=tl(n,g)+tl(s,M)+a+14+3*D+tl(L,A)+2*L[16]+3*L[17]+7*L[18];if(o>=0&&j<=z&&j<=O)return to(t,c,e.subarray(o,o+u));if(ti(t,c,1+(O<z)),c+=2,O<z){d=eX(g,y,0),h=g,p=eX(M,v,0),m=M;var R=eX(A,C,0);ti(t,c,E-257),ti(t,c+5,I-1),ti(t,c+10,D-4),c+=14;for(var k=0;k<D;++k)ti(t,c+3*k,A[e$[k]]);c+=3*D;for(var P=[N,x],V=0;V<2;++V)for(var U=P[V],k=0;k<U.length;++k){var $=31&U[k];ti(t,c,R[$]),c+=A[$],$>15&&(ti(t,c,U[k]>>5&127),c+=U[k]>>12)}}else d=e0,h=eK,p=e2,m=eJ;for(var k=0;k<l;++k){var B=r[k];if(B>255){var $=B>>18&31;tr(t,c,d[$+257]),c+=h[$+257],$>7&&(ti(t,c,B>>23&31),c+=eV[$]);var _=31&B;tr(t,c,p[_]),c+=m[_],_>3&&(tr(t,c,B>>5&8191),c+=eU[_])}else tr(t,c,d[B]),c+=h[B]}return tr(t,c,d[256]),c+h[256]},tc=new eP([65540,131080,131088,131104,262176,1048704,1048832,2114560,2117632]),td=new eO(0),th=function(e,t,i,r,n,s){var a=s.z||e.length,l=new eO(r+a+5*(1+Math.ceil(a/7e3))+n),o=l.subarray(r,l.length-n),u=s.l,c=7&(s.r||0);if(t){c&&(o[0]=s.r>>3);for(var d=tc[t-1],h=d>>13,p=8191&d,m=(1<<i)-1,f=s.p||new eR(32768),g=s.h||new eR(m+1),y=Math.ceil(i/3),b=2*y,M=function(t){return(e[t]^e[t+1]<<y^e[t+2]<<b)&m},v=new eP(25e3),w=new eR(288),N=new eR(32),E=0,S=0,x=s.i||0,I=0,L=s.w||0,k=0;x+2<a;++x){var T=M(x),A=32767&x,C=g[T];if(f[A]=C,g[T]=A,L<=x){var D=a-x;if((E>7e3||I>24576)&&(D>423||!u)){c=tu(e,o,0,v,w,N,S,I,k,x-k,c),I=E=S=0,k=x;for(var j=0;j<286;++j)w[j]=0;for(var j=0;j<30;++j)N[j]=0}var z=2,O=0,R=p,P=A-C&32767;if(D>2&&T==M(x-P))for(var V=Math.min(h,D)-1,U=Math.min(32767,x),$=Math.min(258,D);P<=U&&--R&&A!=C;){if(e[x+z]==e[x+z-P]){for(var B=0;B<$&&e[x+B]==e[x+B-P];++B);if(B>z){if(z=B,O=P,B>V)break;for(var _=Math.min(P,B-2),F=0,j=0;j<_;++j){var W=x-P+j&32767,Y=f[W],Q=W-Y&32767;Q>F&&(F=Q,C=W)}}}C=f[A=C],P+=A-C&32767}if(O){v[I++]=0x10000000|eW[z]<<18|eq[O];var q=31&eW[z],G=31&eq[O];S+=eV[q]+eU[G],++w[257+q],++N[G],L=x+z,++E}else v[I++]=e[x],++w[e[x]]}}for(x=Math.max(x,L);x<a;++x)v[I++]=e[x],++w[e[x]];c=tu(e,o,u,v,w,N,S,I,k,x-k,c),u||(s.r=7&c|o[c/8|0]<<3,c-=7,s.h=g,s.p=f,s.i=x,s.w=L)}else{for(var x=s.w||0;x<a+u;x+=65535){var H=x+65535;H>=a&&(o[c/8|0]=u,H=a),c=to(o,c+1,e.subarray(x,H))}s.i=a}return e6(l,0,r+e8(c)+n)},tp=function(){for(var e=new Int32Array(256),t=0;t<256;++t){for(var i=t,r=9;--r;)i=(1&i&&-0x12477ce0)^i>>>1;e[t]=i}return e}(),tm=function(){var e=-1;return{p:function(t){for(var i=e,r=0;r<t.length;++r)i=tp[255&i^t[r]]^i>>>8;e=i},d:function(){return~e}}},tf=function(e,t,i,r,n){if(!n&&(n={l:1},t.dictionary)){var s=t.dictionary.subarray(-32768),a=new eO(s.length+e.length);a.set(s),a.set(e,s.length),e=a,n.w=s.length}return th(e,null==t.level?6:t.level,null==t.mem?n.l?Math.ceil(1.5*Math.max(8,Math.min(13,Math.log(e.length)))):20:12+t.mem,i,r,n)},tg=function(e,t,i){for(;i;++t)e[t]=i,i>>>=8},ty=function(e,t){var i=t.filename;if(e[0]=31,e[1]=139,e[2]=8,e[8]=t.level<2?4:2*(9==t.level),e[9]=3,0!=t.mtime&&tg(e,4,Math.floor(new Date(t.mtime||Date.now())/1e3)),i){e[3]=8;for(var r=0;r<=i.length;++r)e[r+10]=i.charCodeAt(r)}},tb=function(e){(31!=e[0]||139!=e[1]||8!=e[2])&&te(6,"invalid gzip data");var t=e[3],i=10;4&t&&(i+=(e[10]|e[11]<<8)+2);for(var r=(t>>3&1)+(t>>4&1);r>0;r-=!e[i++]);return i+(2&t)},tM=function(e){var t=e.length;return(e[t-4]|e[t-3]<<8|e[t-2]<<16|e[t-1]<<24)>>>0},tv="undefined"!=typeof TextEncoder&&new TextEncoder,tw="undefined"!=typeof TextDecoder&&new TextDecoder;try{tw.decode(td,{stream:!0})}catch(e){}var tN=function(e){for(var t="",i=0;;){var r=e[i++],n=(r>127)+(r>223)+(r>239);if(i+n>e.length)return{s:t,r:e6(e,i-1)};n?3==n?t+=String.fromCharCode(55296|(r=((15&r)<<18|(63&e[i++])<<12|(63&e[i++])<<6|63&e[i++])-65536)>>10,56320|1023&r):1&n?t+=String.fromCharCode((31&r)<<6|63&e[i++]):t+=String.fromCharCode((15&r)<<12|(63&e[i++])<<6|63&e[i++]):t+=String.fromCharCode(r)}};"function"==typeof queueMicrotask&&queueMicrotask;let tE="__COMPRESSED__";function tS(e){if(!e.startsWith(tE))return e;try{var t;let i=e.slice(tE.length),r=atob(i),n=new Uint8Array(r.length);for(let e=0;e<r.length;e++)n[e]=r.charCodeAt(e);return function(e,t){if(tw)return tw.decode(e);var i,r=tN(e),n=r.s,i=r.r;return i.length&&te(8),n}(((t=tb(n))+8>n.length&&te(6,"invalid gzip data"),tt(n.subarray(t,-8),{i:2},new eO(tM(n)),void 0)))}catch(t){return console.warn(A,"Failed to decompress:",t),e}}function tx(e){return e.startsWith(tE)}let tI=["userIdentity","identityRegistered","userThemeRatings","keyCertificate"];async function tL(e){return await chrome.storage.local.get(e)}async function tk(e){return await chrome.storage.local.get(e)}function tT(e){try{var t;let i=performance.now(),r=(t={timeout:3e3,maxIterations:1e4},new ej(t).compile(e)),n=performance.now()-i;if(n>5e3)return Y(D,`rics compilation timeout: took ${n.toFixed(0)}ms
+`);
+      }
+    },
+    ez = class extends Error {
+      constructor(e, t, i) {
+        (super(t),
+          (this.code = e),
+          (this.location = i),
+          (this.name = 'CompilerError'));
+      }
+    },
+    eO = Uint8Array,
+    eR = Uint16Array,
+    eP = Int32Array,
+    eV = new eO([
+      0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5,
+      5, 5, 5, 0, 0, 0, 0,
+    ]),
+    eU = new eO([
+      0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10,
+      11, 11, 12, 12, 13, 13, 0, 0,
+    ]),
+    e$ = new eO([
+      16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15,
+    ]),
+    eB = function (e, t) {
+      for (var i = new eR(31), r = 0; r < 31; ++r) i[r] = t += 1 << e[r - 1];
+      for (var n = new eP(i[30]), r = 1; r < 30; ++r)
+        for (var s = i[r]; s < i[r + 1]; ++s) n[s] = ((s - i[r]) << 5) | r;
+      return { b: i, r: n };
+    },
+    e_ = eB(eV, 2),
+    eF = e_.b,
+    eW = e_.r;
+  ((eF[28] = 258), (eW[258] = 28));
+  for (
+    var eY = eB(eU, 0), eQ = eY.b, eq = eY.r, eG = new eR(32768), eH = 0;
+    eH < 32768;
+    ++eH
+  ) {
+    var eZ = ((43690 & eH) >> 1) | ((21845 & eH) << 1);
+    ((eZ =
+      ((61680 & (eZ = ((52428 & eZ) >> 2) | ((13107 & eZ) << 2))) >> 4) |
+      ((3855 & eZ) << 4)),
+      (eG[eH] = (((65280 & eZ) >> 8) | ((255 & eZ) << 8)) >> 1));
+  }
+  for (
+    var eX = function (e, t, i) {
+        for (var r, n = e.length, s = 0, a = new eR(t); s < n; ++s)
+          e[s] && ++a[e[s] - 1];
+        var l = new eR(t);
+        for (s = 1; s < t; ++s) l[s] = (l[s - 1] + a[s - 1]) << 1;
+        if (i) {
+          r = new eR(1 << t);
+          var o = 15 - t;
+          for (s = 0; s < n; ++s)
+            if (e[s])
+              for (
+                var u = (s << 4) | e[s],
+                  c = t - e[s],
+                  d = l[e[s] - 1]++ << c,
+                  h = d | ((1 << c) - 1);
+                d <= h;
+                ++d
+              )
+                r[eG[d] >> o] = u;
+        } else
+          for (s = 0, r = new eR(n); s < n; ++s)
+            e[s] && (r[s] = eG[l[e[s] - 1]++] >> (15 - e[s]));
+        return r;
+      },
+      eK = new eO(288),
+      eH = 0;
+    eH < 144;
+    ++eH
+  )
+    eK[eH] = 8;
+  for (var eH = 144; eH < 256; ++eH) eK[eH] = 9;
+  for (var eH = 256; eH < 280; ++eH) eK[eH] = 7;
+  for (var eH = 280; eH < 288; ++eH) eK[eH] = 8;
+  for (var eJ = new eO(32), eH = 0; eH < 32; ++eH) eJ[eH] = 5;
+  var e0 = eX(eK, 9, 0),
+    e1 = eX(eK, 9, 1),
+    e2 = eX(eJ, 5, 0),
+    e4 = eX(eJ, 5, 1),
+    e3 = function (e) {
+      for (var t = e[0], i = 1; i < e.length; ++i) e[i] > t && (t = e[i]);
+      return t;
+    },
+    e5 = function (e, t, i) {
+      var r = (t / 8) | 0;
+      return ((e[r] | (e[r + 1] << 8)) >> (7 & t)) & i;
+    },
+    e7 = function (e, t) {
+      var i = (t / 8) | 0;
+      return (e[i] | (e[i + 1] << 8) | (e[i + 2] << 16)) >> (7 & t);
+    },
+    e8 = function (e) {
+      return ((e + 7) / 8) | 0;
+    },
+    e6 = function (e, t, i) {
+      return (
+        (null == t || t < 0) && (t = 0),
+        (null == i || i > e.length) && (i = e.length),
+        new eO(e.subarray(t, i))
+      );
+    },
+    e9 = [
+      'unexpected EOF',
+      'invalid block type',
+      'invalid length/literal',
+      'invalid distance',
+      'stream finished',
+      'no stream handler',
+      ,
+      'no callback',
+      'invalid UTF-8 data',
+      'extra field too long',
+      'date not in range 1980-2099',
+      'filename too long',
+      'stream finishing',
+      'invalid zip data',
+    ],
+    te = function (e, t, i) {
+      var r = Error(t || e9[e]);
+      if (
+        ((r.code = e),
+        Error.captureStackTrace && Error.captureStackTrace(r, te),
+        !i)
+      )
+        throw r;
+      return r;
+    },
+    tt = function (e, t, i, r) {
+      var n = e.length,
+        s = r ? r.length : 0;
+      if (!n || (t.f && !t.l)) return i || new eO(0);
+      var a = !i,
+        l = a || 2 != t.i,
+        o = t.i;
+      a && (i = new eO(3 * n));
+      var u = function (e) {
+          var t = i.length;
+          if (e > t) {
+            var r = new eO(Math.max(2 * t, e));
+            (r.set(i), (i = r));
+          }
+        },
+        c = t.f || 0,
+        d = t.p || 0,
+        h = t.b || 0,
+        p = t.l,
+        m = t.d,
+        f = t.m,
+        g = t.n,
+        y = 8 * n;
+      do {
+        if (!p) {
+          c = e5(e, d, 1);
+          var b = e5(e, d + 1, 3);
+          if (((d += 3), b))
+            if (1 == b) ((p = e1), (m = e4), (f = 9), (g = 5));
+            else if (2 == b) {
+              var M = e5(e, d, 31) + 257,
+                v = e5(e, d + 10, 15) + 4,
+                w = M + e5(e, d + 5, 31) + 1;
+              d += 14;
+              for (var N = new eO(w), E = new eO(19), S = 0; S < v; ++S)
+                E[e$[S]] = e5(e, d + 3 * S, 7);
+              d += 3 * v;
+              for (
+                var x = e3(E), I = (1 << x) - 1, L = eX(E, x, 1), S = 0;
+                S < w;
+              ) {
+                var k = L[e5(e, d, I)];
+                d += 15 & k;
+                var T = k >> 4;
+                if (T < 16) N[S++] = T;
+                else {
+                  var A = 0,
+                    C = 0;
+                  for (
+                    16 == T
+                      ? ((C = 3 + e5(e, d, 3)), (d += 2), (A = N[S - 1]))
+                      : 17 == T
+                        ? ((C = 3 + e5(e, d, 7)), (d += 3))
+                        : 18 == T && ((C = 11 + e5(e, d, 127)), (d += 7));
+                    C--;
+                  )
+                    N[S++] = A;
+                }
+              }
+              var D = N.subarray(0, M),
+                j = N.subarray(M);
+              ((f = e3(D)), (g = e3(j)), (p = eX(D, f, 1)), (m = eX(j, g, 1)));
+            } else te(1);
+          else {
+            var T = e8(d) + 4,
+              z = e[T - 4] | (e[T - 3] << 8),
+              O = T + z;
+            if (O > n) {
+              o && te(0);
+              break;
+            }
+            (l && u(h + z),
+              i.set(e.subarray(T, O), h),
+              (t.b = h += z),
+              (t.p = d = 8 * O),
+              (t.f = c));
+            continue;
+          }
+          if (d > y) {
+            o && te(0);
+            break;
+          }
+        }
+        l && u(h + 131072);
+        for (var R = (1 << f) - 1, P = (1 << g) - 1, V = d; ; V = d) {
+          var A = p[e7(e, d) & R],
+            U = A >> 4;
+          if ((d += 15 & A) > y) {
+            o && te(0);
+            break;
+          }
+          if ((A || te(2), U < 256)) i[h++] = U;
+          else if (256 == U) {
+            ((V = d), (p = null));
+            break;
+          } else {
+            var $ = U - 254;
+            if (U > 264) {
+              var S = U - 257,
+                B = eV[S];
+              (($ = e5(e, d, (1 << B) - 1) + eF[S]), (d += B));
+            }
+            var _ = m[e7(e, d) & P],
+              F = _ >> 4;
+            (_ || te(3), (d += 15 & _));
+            var j = eQ[F];
+            if (F > 3) {
+              var B = eU[F];
+              ((j += e7(e, d) & ((1 << B) - 1)), (d += B));
+            }
+            if (d > y) {
+              o && te(0);
+              break;
+            }
+            l && u(h + 131072);
+            var W = h + $;
+            if (h < j) {
+              var Y = s - j,
+                Q = Math.min(j, W);
+              for (Y + h < 0 && te(3); h < Q; ++h) i[h] = r[Y + h];
+            }
+            for (; h < W; ++h) i[h] = i[h - j];
+          }
+        }
+        ((t.l = p),
+          (t.p = V),
+          (t.b = h),
+          (t.f = c),
+          p && ((c = 1), (t.m = f), (t.d = m), (t.n = g)));
+      } while (!c);
+      return h != i.length && a ? e6(i, 0, h) : i.subarray(0, h);
+    },
+    ti = function (e, t, i) {
+      i <<= 7 & t;
+      var r = (t / 8) | 0;
+      ((e[r] |= i), (e[r + 1] |= i >> 8));
+    },
+    tr = function (e, t, i) {
+      i <<= 7 & t;
+      var r = (t / 8) | 0;
+      ((e[r] |= i), (e[r + 1] |= i >> 8), (e[r + 2] |= i >> 16));
+    },
+    tn = function (e, t) {
+      for (var i = [], r = 0; r < e.length; ++r)
+        e[r] && i.push({ s: r, f: e[r] });
+      var n = i.length,
+        s = i.slice();
+      if (!n) return { t: td, l: 0 };
+      if (1 == n) {
+        var a = new eO(i[0].s + 1);
+        return ((a[i[0].s] = 1), { t: a, l: 1 });
+      }
+      (i.sort(function (e, t) {
+        return e.f - t.f;
+      }),
+        i.push({ s: -1, f: 25001 }));
+      var l = i[0],
+        o = i[1],
+        u = 0,
+        c = 1,
+        d = 2;
+      for (i[0] = { s: -1, f: l.f + o.f, l: l, r: o }; c != n - 1; )
+        ((l = i[i[u].f < i[d].f ? u++ : d++]),
+          (o = i[u != c && i[u].f < i[d].f ? u++ : d++]),
+          (i[c++] = { s: -1, f: l.f + o.f, l: l, r: o }));
+      for (var h = s[0].s, r = 1; r < n; ++r) s[r].s > h && (h = s[r].s);
+      var p = new eR(h + 1),
+        m = ts(i[c - 1], p, 0);
+      if (m > t) {
+        var r = 0,
+          f = 0,
+          g = m - t,
+          y = 1 << g;
+        for (
+          s.sort(function (e, t) {
+            return p[t.s] - p[e.s] || e.f - t.f;
+          });
+          r < n;
+          ++r
+        ) {
+          var b = s[r].s;
+          if (p[b] > t) ((f += y - (1 << (m - p[b]))), (p[b] = t));
+          else break;
+        }
+        for (f >>= g; f > 0; ) {
+          var M = s[r].s;
+          p[M] < t ? (f -= 1 << (t - p[M]++ - 1)) : ++r;
+        }
+        for (; r >= 0 && f; --r) {
+          var v = s[r].s;
+          p[v] == t && (--p[v], ++f);
+        }
+        m = t;
+      }
+      return { t: new eO(p), l: m };
+    },
+    ts = function (e, t, i) {
+      return -1 == e.s
+        ? Math.max(ts(e.l, t, i + 1), ts(e.r, t, i + 1))
+        : (t[e.s] = i);
+    },
+    ta = function (e) {
+      for (var t = e.length; t && !e[--t]; );
+      for (
+        var i = new eR(++t),
+          r = 0,
+          n = e[0],
+          s = 1,
+          a = function (e) {
+            i[r++] = e;
+          },
+          l = 1;
+        l <= t;
+        ++l
+      )
+        if (e[l] == n && l != t) ++s;
+        else {
+          if (!n && s > 2) {
+            for (; s > 138; s -= 138) a(32754);
+            s > 2 &&
+              (a(s > 10 ? ((s - 11) << 5) | 28690 : ((s - 3) << 5) | 12305),
+              (s = 0));
+          } else if (s > 3) {
+            for (a(n), --s; s > 6; s -= 6) a(8304);
+            s > 2 && (a(((s - 3) << 5) | 8208), (s = 0));
+          }
+          for (; s--; ) a(n);
+          ((s = 1), (n = e[l]));
+        }
+      return { c: i.subarray(0, r), n: t };
+    },
+    tl = function (e, t) {
+      for (var i = 0, r = 0; r < t.length; ++r) i += e[r] * t[r];
+      return i;
+    },
+    to = function (e, t, i) {
+      var r = i.length,
+        n = e8(t + 2);
+      ((e[n] = 255 & r),
+        (e[n + 1] = r >> 8),
+        (e[n + 2] = 255 ^ e[n]),
+        (e[n + 3] = 255 ^ e[n + 1]));
+      for (var s = 0; s < r; ++s) e[n + s + 4] = i[s];
+      return (n + 4 + r) * 8;
+    },
+    tu = function (e, t, i, r, n, s, a, l, o, u, c) {
+      (ti(t, c++, i), ++n[256]);
+      for (
+        var d,
+          h,
+          p,
+          m,
+          f = tn(n, 15),
+          g = f.t,
+          y = f.l,
+          b = tn(s, 15),
+          M = b.t,
+          v = b.l,
+          w = ta(g),
+          N = w.c,
+          E = w.n,
+          S = ta(M),
+          x = S.c,
+          I = S.n,
+          L = new eR(19),
+          k = 0;
+        k < N.length;
+        ++k
+      )
+        ++L[31 & N[k]];
+      for (var k = 0; k < x.length; ++k) ++L[31 & x[k]];
+      for (
+        var T = tn(L, 7), A = T.t, C = T.l, D = 19;
+        D > 4 && !A[e$[D - 1]];
+        --D
+      );
+      var j = (u + 5) << 3,
+        z = tl(n, eK) + tl(s, eJ) + a,
+        O =
+          tl(n, g) +
+          tl(s, M) +
+          a +
+          14 +
+          3 * D +
+          tl(L, A) +
+          2 * L[16] +
+          3 * L[17] +
+          7 * L[18];
+      if (o >= 0 && j <= z && j <= O) return to(t, c, e.subarray(o, o + u));
+      if ((ti(t, c, 1 + (O < z)), (c += 2), O < z)) {
+        ((d = eX(g, y, 0)), (h = g), (p = eX(M, v, 0)), (m = M));
+        var R = eX(A, C, 0);
+        (ti(t, c, E - 257),
+          ti(t, c + 5, I - 1),
+          ti(t, c + 10, D - 4),
+          (c += 14));
+        for (var k = 0; k < D; ++k) ti(t, c + 3 * k, A[e$[k]]);
+        c += 3 * D;
+        for (var P = [N, x], V = 0; V < 2; ++V)
+          for (var U = P[V], k = 0; k < U.length; ++k) {
+            var $ = 31 & U[k];
+            (ti(t, c, R[$]),
+              (c += A[$]),
+              $ > 15 && (ti(t, c, (U[k] >> 5) & 127), (c += U[k] >> 12)));
+          }
+      } else ((d = e0), (h = eK), (p = e2), (m = eJ));
+      for (var k = 0; k < l; ++k) {
+        var B = r[k];
+        if (B > 255) {
+          var $ = (B >> 18) & 31;
+          (tr(t, c, d[$ + 257]),
+            (c += h[$ + 257]),
+            $ > 7 && (ti(t, c, (B >> 23) & 31), (c += eV[$])));
+          var _ = 31 & B;
+          (tr(t, c, p[_]),
+            (c += m[_]),
+            _ > 3 && (tr(t, c, (B >> 5) & 8191), (c += eU[_])));
+        } else (tr(t, c, d[B]), (c += h[B]));
+      }
+      return (tr(t, c, d[256]), c + h[256]);
+    },
+    tc = new eP([
+      65540, 131080, 131088, 131104, 262176, 1048704, 1048832, 2114560, 2117632,
+    ]),
+    td = new eO(0),
+    th = function (e, t, i, r, n, s) {
+      var a = s.z || e.length,
+        l = new eO(r + a + 5 * (1 + Math.ceil(a / 7e3)) + n),
+        o = l.subarray(r, l.length - n),
+        u = s.l,
+        c = 7 & (s.r || 0);
+      if (t) {
+        c && (o[0] = s.r >> 3);
+        for (
+          var d = tc[t - 1],
+            h = d >> 13,
+            p = 8191 & d,
+            m = (1 << i) - 1,
+            f = s.p || new eR(32768),
+            g = s.h || new eR(m + 1),
+            y = Math.ceil(i / 3),
+            b = 2 * y,
+            M = function (t) {
+              return (e[t] ^ (e[t + 1] << y) ^ (e[t + 2] << b)) & m;
+            },
+            v = new eP(25e3),
+            w = new eR(288),
+            N = new eR(32),
+            E = 0,
+            S = 0,
+            x = s.i || 0,
+            I = 0,
+            L = s.w || 0,
+            k = 0;
+          x + 2 < a;
+          ++x
+        ) {
+          var T = M(x),
+            A = 32767 & x,
+            C = g[T];
+          if (((f[A] = C), (g[T] = A), L <= x)) {
+            var D = a - x;
+            if ((E > 7e3 || I > 24576) && (D > 423 || !u)) {
+              ((c = tu(e, o, 0, v, w, N, S, I, k, x - k, c)),
+                (I = E = S = 0),
+                (k = x));
+              for (var j = 0; j < 286; ++j) w[j] = 0;
+              for (var j = 0; j < 30; ++j) N[j] = 0;
+            }
+            var z = 2,
+              O = 0,
+              R = p,
+              P = (A - C) & 32767;
+            if (D > 2 && T == M(x - P))
+              for (
+                var V = Math.min(h, D) - 1,
+                  U = Math.min(32767, x),
+                  $ = Math.min(258, D);
+                P <= U && --R && A != C;
+              ) {
+                if (e[x + z] == e[x + z - P]) {
+                  for (var B = 0; B < $ && e[x + B] == e[x + B - P]; ++B);
+                  if (B > z) {
+                    if (((z = B), (O = P), B > V)) break;
+                    for (var _ = Math.min(P, B - 2), F = 0, j = 0; j < _; ++j) {
+                      var W = (x - P + j) & 32767,
+                        Y = f[W],
+                        Q = (W - Y) & 32767;
+                      Q > F && ((F = Q), (C = W));
+                    }
+                  }
+                }
+                ((C = f[(A = C)]), (P += (A - C) & 32767));
+              }
+            if (O) {
+              v[I++] = 0x10000000 | (eW[z] << 18) | eq[O];
+              var q = 31 & eW[z],
+                G = 31 & eq[O];
+              ((S += eV[q] + eU[G]), ++w[257 + q], ++N[G], (L = x + z), ++E);
+            } else ((v[I++] = e[x]), ++w[e[x]]);
+          }
+        }
+        for (x = Math.max(x, L); x < a; ++x) ((v[I++] = e[x]), ++w[e[x]]);
+        ((c = tu(e, o, u, v, w, N, S, I, k, x - k, c)),
+          u ||
+            ((s.r = (7 & c) | (o[(c / 8) | 0] << 3)),
+            (c -= 7),
+            (s.h = g),
+            (s.p = f),
+            (s.i = x),
+            (s.w = L)));
+      } else {
+        for (var x = s.w || 0; x < a + u; x += 65535) {
+          var H = x + 65535;
+          (H >= a && ((o[(c / 8) | 0] = u), (H = a)),
+            (c = to(o, c + 1, e.subarray(x, H))));
+        }
+        s.i = a;
+      }
+      return e6(l, 0, r + e8(c) + n);
+    },
+    tp = (function () {
+      for (var e = new Int32Array(256), t = 0; t < 256; ++t) {
+        for (var i = t, r = 9; --r; ) i = (1 & i && -0x12477ce0) ^ (i >>> 1);
+        e[t] = i;
+      }
+      return e;
+    })(),
+    tm = function () {
+      var e = -1;
+      return {
+        p: function (t) {
+          for (var i = e, r = 0; r < t.length; ++r)
+            i = tp[(255 & i) ^ t[r]] ^ (i >>> 8);
+          e = i;
+        },
+        d: function () {
+          return ~e;
+        },
+      };
+    },
+    tf = function (e, t, i, r, n) {
+      if (!n && ((n = { l: 1 }), t.dictionary)) {
+        var s = t.dictionary.subarray(-32768),
+          a = new eO(s.length + e.length);
+        (a.set(s), a.set(e, s.length), (e = a), (n.w = s.length));
+      }
+      return th(
+        e,
+        null == t.level ? 6 : t.level,
+        null == t.mem
+          ? n.l
+            ? Math.ceil(1.5 * Math.max(8, Math.min(13, Math.log(e.length))))
+            : 20
+          : 12 + t.mem,
+        i,
+        r,
+        n,
+      );
+    },
+    tg = function (e, t, i) {
+      for (; i; ++t) ((e[t] = i), (i >>>= 8));
+    },
+    ty = function (e, t) {
+      var i = t.filename;
+      if (
+        ((e[0] = 31),
+        (e[1] = 139),
+        (e[2] = 8),
+        (e[8] = t.level < 2 ? 4 : 2 * (9 == t.level)),
+        (e[9] = 3),
+        0 != t.mtime &&
+          tg(e, 4, Math.floor(new Date(t.mtime || Date.now()) / 1e3)),
+        i)
+      ) {
+        e[3] = 8;
+        for (var r = 0; r <= i.length; ++r) e[r + 10] = i.charCodeAt(r);
+      }
+    },
+    tb = function (e) {
+      (31 != e[0] || 139 != e[1] || 8 != e[2]) && te(6, 'invalid gzip data');
+      var t = e[3],
+        i = 10;
+      4 & t && (i += (e[10] | (e[11] << 8)) + 2);
+      for (var r = ((t >> 3) & 1) + ((t >> 4) & 1); r > 0; r -= !e[i++]);
+      return i + (2 & t);
+    },
+    tM = function (e) {
+      var t = e.length;
+      return (
+        (e[t - 4] | (e[t - 3] << 8) | (e[t - 2] << 16) | (e[t - 1] << 24)) >>> 0
+      );
+    },
+    tv = 'undefined' != typeof TextEncoder && new TextEncoder(),
+    tw = 'undefined' != typeof TextDecoder && new TextDecoder();
+  try {
+    tw.decode(td, { stream: !0 });
+  } catch (e) {}
+  var tN = function (e) {
+    for (var t = '', i = 0; ; ) {
+      var r = e[i++],
+        n = (r > 127) + (r > 223) + (r > 239);
+      if (i + n > e.length) return { s: t, r: e6(e, i - 1) };
+      n
+        ? 3 == n
+          ? (t += String.fromCharCode(
+              55296 |
+                ((r =
+                  (((15 & r) << 18) |
+                    ((63 & e[i++]) << 12) |
+                    ((63 & e[i++]) << 6) |
+                    (63 & e[i++])) -
+                  65536) >>
+                  10),
+              56320 | (1023 & r),
+            ))
+          : 1 & n
+            ? (t += String.fromCharCode(((31 & r) << 6) | (63 & e[i++])))
+            : (t += String.fromCharCode(
+                ((15 & r) << 12) | ((63 & e[i++]) << 6) | (63 & e[i++]),
+              ))
+        : (t += String.fromCharCode(r));
+    }
+  };
+  'function' == typeof queueMicrotask && queueMicrotask;
+  let tE = '__COMPRESSED__';
+  function tS(e) {
+    if (!e.startsWith(tE)) return e;
+    try {
+      var t;
+      let i = e.slice(tE.length),
+        r = atob(i),
+        n = new Uint8Array(r.length);
+      for (let e = 0; e < r.length; e++) n[e] = r.charCodeAt(e);
+      return (function (e, t) {
+        if (tw) return tw.decode(e);
+        var i,
+          r = tN(e),
+          n = r.s,
+          i = r.r;
+        return (i.length && te(8), n);
+      })(
+        ((t = tb(n)) + 8 > n.length && te(6, 'invalid gzip data'),
+        tt(n.subarray(t, -8), { i: 2 }, new eO(tM(n)), void 0)),
+      );
+    } catch (t) {
+      return (console.warn(A, 'Failed to decompress:', t), e);
+    }
+  }
+  function tx(e) {
+    return e.startsWith(tE);
+  }
+  let tI = [
+    'userIdentity',
+    'identityRegistered',
+    'userThemeRatings',
+    'keyCertificate',
+  ];
+  async function tL(e) {
+    return await chrome.storage.local.get(e);
+  }
+  async function tk(e) {
+    return await chrome.storage.local.get(e);
+  }
+  function tT(e) {
+    try {
+      var t;
+      let i = performance.now(),
+        r = ((t = { timeout: 3e3, maxIterations: 1e4 }), new ej(t).compile(e)),
+        n = performance.now() - i;
+      if (n > 5e3)
+        return (
+          Y(
+            D,
+            `rics compilation timeout: took ${n.toFixed(0)}ms
 Source:
-${q(e)}`),e;if(r.errors.length>0)return Y(D,`rics compilation errors: ${JSON.stringify(r.errors)}
+${q(e)}`,
+          ),
+          e
+        );
+      if (r.errors.length > 0)
+        return (
+          Y(
+            D,
+            `rics compilation errors: ${JSON.stringify(r.errors)}
 Source:
-${q(e)}`),e;return r.css}catch(i){let t=i instanceof Error?i.message:String(i);return Y(D,`rics compilation failed: ${t}
+${q(e)}`,
+          ),
+          e
+        );
+      return r.css;
+    } catch (i) {
+      let t = i instanceof Error ? i.message : String(i);
+      return (
+        Y(
+          D,
+          `rics compilation failed: ${t}
 Source:
-${q(e)}`),e}}async function tA(){let e=await tL(["customCSS_chunked","customCSS_chunkCount"]);if(!e.customCSS_chunked||!e.customCSS_chunkCount)return null;let t=Array.from({length:e.customCSS_chunkCount},(e,t)=>`customCSS_chunk_${t}`),i=await tL(t),r=[];for(let t=0;t<e.customCSS_chunkCount;t++){let e=i[`customCSS_chunk_${t}`];if(!e)return Y(D,`Missing CSS chunk ${t}`),null;r.push(e)}return r.join("")}function tC(e,t){chrome.storage.local.get(e,t)}async function tD(e){try{let t=(await chrome.storage.local.get(e))[e];if(!t)return null;let{value:i,expiry:r}=t;if(r&&Date.now()>r)return await chrome.storage.local.remove(e),null;if("string"==typeof i&&tx(i))return tS(i);return i}catch(e){return Y(D,e),null}}async function tj(e,t,i){try{let r=Date.now()+i,n="string"==typeof t?function(e){try{var t,i,r,n,s,a,l;let o=(t=function(e,t){if(tv)return tv.encode(e);for(var i,r=e.length,n=new eO(e.length+(e.length>>1)),s=0,a=function(e){n[s++]=e},i=0;i<r;++i){if(s+5>n.length){var l=new eO(s+8+(r-i<<1));l.set(n),n=l}var o=e.charCodeAt(i);o<128?a(o):(o<2048?a(192|o>>6):(o>55295&&o<57344?(a(240|(o=65536+(1047552&o)|1023&e.charCodeAt(++i))>>18),a(128|o>>12&63)):a(224|o>>12),a(128|o>>6&63)),a(128|63&o))}return e6(n,0,s)}(e),i||(i={}),r=tm(),n=t.length,r.p(t),l=(a=tf(t,i,10+((s=i).filename?s.filename.length+1:0),8)).length,ty(a,i),tg(a,l-8,r.d()),tg(a,l-4,n),a),u="";for(let e=0;e<o.length;e++)u+=String.fromCharCode(o[e]);return`${tE}${btoa(u)}`}catch(t){return console.warn(A,"Failed to compress:",t),e}}(t):t;await chrome.storage.local.set({[e]:{type:"transient",value:n,expiry:r}}),Y("[BetterLyrics] Set transient storage for key: ",e),await tO()}catch(e){Y(D,e)}}async function tz(){try{let e=await chrome.storage.local.get(null),t=Object.keys(e).filter(e=>e.startsWith("blyrics_")),i=new Set;for(let e of t){let t=function(e){let t=e.slice(8);for(let e of B){let i=`_${e}`;if(t.endsWith(i))return t.slice(0,-i.length)}return null}(e);t&&i.add(t)}let r=t.reduce((t,i)=>{let r=e[i];return t+JSON.stringify(r).length},0);return{count:i.size,size:r}}catch(e){return Y(D,e),{count:0,size:0}}}async function tO(){let e=await tz();await chrome.storage.local.set({cacheInfo:e})}async function tR(){try{let e=await chrome.storage.local.get(null),t=Object.keys(e).filter(e=>e.startsWith("blyrics_")&&!tI.includes(e));await chrome.storage.local.remove(t),await tO()}catch(e){Y(D,e)}}async function tP(){try{let e=Date.now(),t=await chrome.storage.local.get(null),i=[];Object.keys(t).forEach(r=>{if(r.startsWith("blyrics_")){let n=t[r];n.expiry&&e>=n.expiry&&i.push(r)}}),i.length&&await chrome.storage.local.remove(i)}catch(e){Y(D,e)}}let tV={romanization:new Map,translation:new Map};async function tU(e,t){let i=`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${t}&dt=t&q=${encodeURIComponent(e)}`,r=`${t}_${e}`;return tV.translation.has(r)?tV.translation.get(r):fetch(i,{cache:"force-cache"}).then(e=>e.json()).then(t=>{let i=t[2],n="";if(t[0].forEach(e=>{n+=e[0]}),e.trim().toLowerCase()===n.trim().toLowerCase()&&""!==e.trim())return null;{let e={originalLanguage:i,translatedText:n};return tV.translation.set(r,e),e}}).catch(e=>(Y(z,e),null))}async function t$(e,t){return tV.romanization.has(t)?tV.romanization.get(t):fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${e}&tl=${e}-Latn&dt=t&dt=rm&q=${encodeURIComponent(t)}`,{cache:"force-cache"}).then(e=>e.json()).then(e=>{let i=e[0][1][3];return(void 0===i&&(i=e[0][1][2]),t.trim().toLowerCase()===i.trim().toLowerCase()&&""!==t.trim())?null:(tV.romanization.set(t,i),i)}).catch(e=>(Y(z,e),null))}function tB(e){tC({isTranslateEnabled:!1,translationLanguage:"en"},t=>{t.isTranslateEnabled&&e(t)})}function t_(){tV.romanization.clear(),tV.translation.clear()}let tF=new Map;class tW{type;value;defaultValue;requiresLyricReload;constructor(e,t,i,r){this.type=e,this.value=t,this.defaultValue=i,this.requiresLyricReload=r}getNumberValue(){return this.value}getBooleanValue(){return this.value}getStringValue(){return this.value}}function tY(e,t,i=!1){let r=typeof t;if("number"!==r&&"boolean"!==r&&"string"!==r)throw Error("Invalid type for theme setting");let n=new tW(r,t,t,i);return tF.set(e,n),n}let tQ=!1;function tq(e){var t=function(e){let t,i=new Map,r=/\/\*([\s\S]*?)\*\//g,n=/(blyrics-[\w-]+)\s*=\s*([^;]+);/g;for(;null!==(t=r.exec(e));){let e,r=t[1];for(;null!==(e=n.exec(r));){let t=e[1],r=e[2].trim();i.set(t,r)}}return i}(e);let i=!1;for(let[e,r]of(t.forEach((e,t)=>{let r=tF.get(t);if(r){let t=r.value;if("number"===r.type){let t=parseFloat(e);isNaN(t)?r.value=r.defaultValue:r.value=t}else"boolean"===r.type?r.value="true"===e.toLowerCase():r.value=e;r.requiresLyricReload&&t!==r.value&&(i=!0)}}),tF.entries()))!t.has(e)&&r.value!==r.defaultValue&&(r.value=r.defaultValue,r.requiresLyricReload&&(i=!0));i&&ns();let r=document.getElementById("blyrics-custom-style");r?r.textContent=e:((r=document.createElement("style")).id="blyrics-custom-style",r.textContent=e,document.head.appendChild(r)),i4.clear(),i5.clear()}async function tG(){var e,t,i,r;try{let t=await tk(["cssStorageType","customCSS","cssCompressed"]),i=null,r=!1;if("chunked"===t.cssStorageType)i=await tA(),r=t.cssCompressed||!1;else if("local"===t.cssStorageType){let e=await tL(["customCSS","cssCompressed"]);i=e.customCSS??null,r=e.cssCompressed||!1}else i=t.customCSS??null,r=t.cssCompressed||!1;i&&((r||tx(i))&&(e=i,i=tS(e)),tq(tT(i)))}catch(e){Y(D,e);try{let e=await tA();if(e){let i=await tk(["cssCompressed"]),r=e;(i.cssCompressed||tx(r))&&(t=r,r=tS(t)),tq(tT(r));return}let n=await tL(["customCSS","cssCompressed"]);if(n.customCSS){let e=n.customCSS;(n.cssCompressed||tx(e))&&(i=e,e=tS(i)),tq(tT(e));return}let s=await tk(["customCSS","cssCompressed"]);if(s.customCSS){let e=s.customCSS;(s.cssCompressed||tx(e))&&(r=e,e=tS(r)),tq(tT(e))}}catch(e){Y(D,e)}}}async function tH(e,t){let i=e.replace("storeTheme:",""),{activeStoreTheme:r}=await tk(["activeStoreTheme"]);if(r!==i)return;let n=t.newValue;n?.css&&(t.oldValue?.css!==n.css||t.oldValue?.version!==n.version)&&(Y(A,"Store theme updated:",n.title||i),tq(tT(n.css)))}let tZ=!1;function tX(){var e,t;tK(()=>{let e=document.getElementById("layout"),t=document.getElementById("player-page");e&&t&&(e.setAttribute(x,""),t.setAttribute(x,""))},()=>{let e=document.getElementById("layout"),t=document.getElementById("player-page");e&&t&&(e.removeAttribute(x),t.removeAttribute(x))}),e=()=>{let e=document.getElementById("blyrics-disable-effects");e&&e.remove()},t=async()=>{let e=document.getElementById("blyrics-disable-effects");e||((e=document.createElement("style")).id="blyrics-disable-effects",e.textContent=await fetch(chrome.runtime.getURL("css/disablestylizedanimations.css")).then(e=>e.text()),document.head.appendChild(e))},tC({isStylizedAnimationsEnabled:!0},i=>{i.isStylizedAnimationsEnabled?e():t()})}function tK(e,t){tC({isFullScreenDisabled:!1},i=>{i.isFullScreenDisabled?e():t()})}function tJ(e,t){tC({isAlbumArtEnabled:!0},i=>{i.isAlbumArtEnabled?e():t()})}let t0=null,t1=null;function t2(){tC({isCursorAutoHideEnabled:!0},e=>{e.isCursorAutoHideEnabled?(()=>{let e=!0;function t(){t0=null,document.getElementById("layout").setAttribute("cursor-hidden",""),e=!1}function i(){t0&&window.clearTimeout(t0),e||(document.getElementById("layout").removeAttribute("cursor-hidden"),e=!0),t0=window.setTimeout(t,3e3)}t1&&document.removeEventListener("mousemove",t1),t1=i,document.addEventListener("mousemove",i)})():(()=>{t0&&window.clearTimeout(t0),document.getElementById("layout").removeAttribute("cursor-hidden"),t1&&(document.removeEventListener("mousemove",t1),t1=null)})()})}function t4(){tC({isTranslateEnabled:!1,isRomanizationEnabled:!1,translationLanguage:"en"},e=>{nn.isTranslateEnabled=e.isTranslateEnabled,nn.isRomanizationEnabled=e.isRomanizationEnabled,nn.translationLanguage=e.translationLanguage||"en"})}let t3=!1,t5=!1;function t7(){let e=document.querySelector("ytmusic-app-layout");if(!e)return!1;let t=e.getAttribute("player-ui-state");return"PLAYER_PAGE_OPEN"===t||"FULLSCREEN"===t}let t8=["ti","ar","al","au","lr","length","by","offset","re","tool","ve","#"];function t6(e){if(!e)return 0;if("number"==typeof e)return e;let t=e.split(":"),i=0;try{if(1===t.length)i=1e3*parseFloat(t[0]);else if(2===t.length){let e=parseInt(t[0],10),r=parseFloat(t[1]);i=60*e*1e3+1e3*r}else if(3===t.length){let e=parseInt(t[0],10),r=parseInt(t[1],10),n=parseFloat(t[2]);i=3600*e*1e3+60*r*1e3+1e3*n}return Math.round(i)}catch(t){return console.error(`Error parsing time string: ${e}`,t),0}}function t9(e,t){let i=e.split("\n"),r=[],n={};if(i.forEach(e=>{let t,i=(e=e.trim()).match(/^[\[](\w+):(.*)[\]]$/);if(i&&t8.includes(i[1])){n[i[1]]=i[2];return}let s=/[\[](\d+:\d+\.\d+)[\]]/g,a=[];for(;null!==(t=s.exec(e));)a.push(t6(t[1]));if(0===a.length)return;let l=e.replace(s,"").trim(),o=[],u=null,c="";l.split(/<(\d+:\d+\.\d+)>/g).forEach((e,t)=>{if(t%2==0)e.length>0&&" "===e[0]&&(e=e.substring(1)),e.length>0&&" "===e[e.length-1]&&(e=e.substring(0,e.length-1)),c+=e,o.length>0&&o[o.length-1].startTimeMs&&(o[o.length-1].words+=e);else{let t=t6(e);null!==u&&o.length>0&&(o[o.length-1].durationMs=t-u),o.push({startTimeMs:t,words:"",durationMs:0}),u=t}});let d=Math.min(...a),h=Math.max(...a);r.push({startTimeMs:d,words:c.trim(),durationMs:h-d,parts:o.length>0?o:void 0})}),r.forEach((e,i)=>{if(i+1<r.length){let t=r[i+1];if(0===e.durationMs&&(e.durationMs=Math.max(t.startTimeMs-e.startTimeMs,0)),e.parts&&e.parts.length>0){let i=t.startTimeMs;e.parts.forEach(e=>{i=Math.max(i,e.startTimeMs)});let r=e.parts[e.parts.length-1];r.durationMs=Math.max(t.startTimeMs-r.startTimeMs,0),e.durationMs=Math.max(i-e.startTimeMs,0)}}else if(0===e.durationMs&&(e.durationMs=t-e.startTimeMs),e.parts&&e.parts.length>0){let i=e.parts[e.parts.length-1];i.durationMs=t-i.startTimeMs}}),n.offset){let e=Number(n.offset);isNaN(e)&&(e=0,Y(A,"Invalid offset in lyrics: "+n.offset)),e*=1e3,r.forEach(t=>{t.startTimeMs-=e,t.parts?.forEach(t=>{t.startTimeMs-=e})})}return r}function ie(e){let t=[];return e.split("\n").forEach(e=>{t.push({startTimeMs:0,words:e,durationMs:0})}),t}let it=new Map,ii=new Map,ir=new Map,is=new Map,ia=null;function il(e,t=250){if(ir.has(e))return Promise.resolve(ir.get(e));{let i=0;return new Promise(r=>{let n=setInterval(()=>{let s=ir.get(e);s&&(clearInterval(n),r(s)),i>t&&(clearInterval(n),Y("Failed to find Segment Map for video"),r(null)),i+=1},20)})}}async function io(e){for(let t=0;t<250;t++){if(is.has(e))return is.get(e);await new Promise(e=>setTimeout(e,20))}Y("Song album information didn't come in time for: ",e)}function iu(e,t){try{let i=new URL(e);return i&&i.pathname.startsWith(t)&&"https://music.youtube.com"===i.origin}catch(e){return!1}}let ic=null,id=null,ih=null,ip=null,im=null,ig=null,iy=!1,ib=!1,iM=!1,iv=!1;async function iw(){if(!("wakeLock"in navigator))return void Y(D,"Wake Lock API not supported in this browser.");try{(ic=await navigator.wakeLock.request("screen")).addEventListener("release",()=>{ic=null})}catch(e){Y(D,"Wake Lock request failed:",e)}}function iN(){"visible"===document.visibilityState&&null===ic&&iw()}let iE=0,iS=[0,0,0];function ix(){if("true"===document.getElementsByClassName(a)[1].getAttribute("aria-selected")&&nn.areLyricsTicking){if(i2.skipScrolls>0){i2.skipScrolls--,i2.skipScrollsDecayTimes.shift();return}!iV()&&(i2.scrollResumeTime<Date.now()&&Y("[BetterLyrics] Pausing Lyrics Autoscroll Due to User Scroll"),i2.scrollResumeTime=Date.now()+25e3,i2.wasUserScrolling||(i6().removeAttribute("autoscroll-hidden"),document.getElementsByClassName(l)[0].classList.add(f),i2.wasUserScrolling=!0))}}function iI(e){t7()||!nn.lastVideoId||(e.preventDefault(),e.stopPropagation(),e instanceof KeyboardEvent&&e.stopImmediatePropagation(),t3||new Promise(e=>{if(t3)return void e();t3=!0,t5=!0;let t=document.querySelector("ytmusic-player-bar");t&&t.click(),new Promise((e,t)=>{let i=Date.now(),r=setInterval(()=>{if(t7()){clearInterval(r),setTimeout(e,100);return}Date.now()-i>3e3&&(clearInterval(r),t(Error("Player page load timeout")))},50)}).then(()=>{t3=!1,e()}).catch(t=>{Y(D,"Player page open timeout",t),t3=!1,t5=!1,e()})}).then(()=>{let e=document.querySelector(".fullscreen-button");if(e)e.click();else{let e=new KeyboardEvent("keydown",{key:"f",code:"KeyF",keyCode:70,which:70,bubbles:!0,cancelable:!0});document.dispatchEvent(e)}}))}let iL={syllable:'<svg width="14" height="14" viewBox="0 0 1024 1024" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="636" y="239" width="389.981" height="233.271" rx="48" fill-opacity="0.5"/><path d="M0 335C0 289.745 0 267.118 14.0589 253.059C28.1177 239 50.7452 239 96 239H213C243.17 239 258.255 239 267.627 248.373C277 257.745 277 272.83 277 303V408C277 438.17 277 453.255 267.627 462.627C258.255 472 243.17 472 213 472H96C50.7452 472 28.1177 472 14.0589 457.941C0 443.882 0 421.255 0 376V335Z"/><path d="M337 304C337 273.83 337 258.745 346.373 249.373C355.745 240 370.83 240 401 240H460C505.255 240 527.882 240 541.941 254.059C556 268.118 556 290.745 556 336V377C556 422.255 556 444.882 541.941 458.941C527.882 473 505.255 473 460 473H401C370.83 473 355.745 473 346.373 463.627C337 454.255 337 439.17 337 409V304Z" fill-opacity="0.5"/><rect y="552.271" width="1024" height="233" rx="48" fill-opacity="0.5"/></svg>',word:'<svg width="14" height="14" viewBox="0 0 1024 1024" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="636" y="239" width="389.981" height="233.271" rx="48" fill-opacity="0.5"/><path d="M0 335C0 289.745 0 267.118 14.0589 253.059C28.1177 239 50.7452 239 96 239H213C243.17 239 258.255 239 267.627 248.373C277 257.745 277 272.83 277 303V408C277 438.17 277 453.255 267.627 462.627C258.255 472 243.17 472 213 472H96C50.7452 472 28.1177 472 14.0589 457.941C0 443.882 0 421.255 0 376V335Z"/><path d="M337 304C337 273.83 337 258.745 346.373 249.373C355.745 240 370.83 240 401 240H460C505.255 240 527.882 240 541.941 254.059C556 268.118 556 290.745 556 336V377C556 422.255 556 444.882 541.941 458.941C527.882 473 505.255 473 460 473H401C370.83 473 355.745 473 346.373 463.627C337 454.255 337 439.17 337 409V304Z"/><rect y="552.271" width="1024" height="233" rx="48" fill-opacity="0.5"/></svg>',line:'<svg width="14" height="14" viewBox="0 0 1024 1024" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="636" y="239" width="389.981" height="233.271" rx="48"/><path d="M0 335C0 289.745 0 267.118 14.0589 253.059C28.1177 239 50.7452 239 96 239H213C243.17 239 258.255 239 267.627 248.373C277 257.745 277 272.83 277 303V408C277 438.17 277 453.255 267.627 462.627C258.255 472 243.17 472 213 472H96C50.7452 472 28.1177 472 14.0589 457.941C0 443.882 0 421.255 0 376V335Z"/><path d="M337 304C337 273.83 337 258.745 346.373 249.373C355.745 240 370.83 240 401 240H460C505.255 240 527.882 240 541.941 254.059C556 268.118 556 290.745 556 336V377C556 422.255 556 444.882 541.941 458.941C527.882 473 505.255 473 460 473H401C370.83 473 355.745 473 346.373 463.627C337 454.255 337 439.17 337 409V304Z"/><rect y="552.271" width="1024" height="233" rx="48" fill-opacity="0.5"/></svg>',unsynced:'<svg width="14" height="14" viewBox="0 0 1024 1024" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="636" y="239" width="389.981" height="233.271" rx="48" fill-opacity="0.5"/><path d="M0 335C0 289.745 0 267.118 14.0589 253.059C28.1177 239 50.7452 239 96 239H213C243.17 239 258.255 239 267.627 248.373C277 257.745 277 272.83 277 303V408C277 438.17 277 453.255 267.627 462.627C258.255 472 243.17 472 213 472H96C50.7452 472 28.1177 472 14.0589 457.941C0 443.882 0 421.255 0 376V335Z" fill-opacity="0.5"/><path d="M337 304C337 273.83 337 258.745 346.373 249.373C355.745 240 370.83 240 401 240H460C505.255 240 527.882 240 541.941 254.059C556 268.118 556 290.745 556 336V377C556 422.255 556 444.882 541.941 458.941C527.882 473 505.255 473 460 473H401C370.83 473 355.745 473 346.373 463.627C337 454.255 337 439.17 337 409V304Z" fill-opacity="0.5"/><rect y="552.271" width="1024" height="233" rx="48" fill-opacity="0.5"/></svg>'},ik={syllable:"#fde69b",word:"#aad1ff",line:"#c9f8da",unsynced:"rgba(255, 255, 255, 0.7)"},iT=Object.fromEntries($.map(e=>[e.key,{name:e.displayName,syncType:e.syncType}]));function iA(e){let{text:t,href:i,logoSrc:r,logoAlt:n}=e,s=document.createElement("div");if(s.className=`${b}__container`,r){let e=document.createElement("img");e.src=r,e.alt=n??"",e.width=20,e.height=20,s.appendChild(e)}let a=document.createElement("a");return a.href=i,a.target="_blank",a.rel="noreferrer noopener",a.textContent=t,a.style.height="100%",s.appendChild(a),s}let iC=null,iD=null,ij=null,iz=null,iO=null,iR=!1;function iP(e=!1){if(!iU()){e||iW(),iR=!0;try{clearTimeout(nn.loaderAnimationEndTimeout);let t=document.querySelector(v),i=document.getElementById(N);i||((i=document.createElement("div")).id=N);let r=i.hasAttribute("active");i.setAttribute("active",""),i.removeAttribute("no-sync-available"),e?i.setAttribute("small-loader",""):i.removeAttribute("small-loader"),r||(t.prepend(i),i.hidden=!1,i.style.display="inline-block !important",i.scrollIntoView({behavior:"instant",block:"start",inline:"start"}))}catch(e){Y(e)}}}function iV(){try{if(!iR)return!1;let e=document.getElementById(N);if(e)return e.hasAttribute("active")||"true"===e.dataset.animatingOut}catch(e){Y(e)}return!1}function iU(){let e=document.querySelector(P);return e?.hasAttribute(V)??!1}function i$(){let e=document.querySelector(v);if(!e)return;let t=document.getElementById(N);t&&t.removeAttribute("active");let i=document.getElementById(U);i||((i=document.createElement("div")).id=U,e.prepend(i)),i.setAttribute("active","")}function iB(){let e=document.getElementById(U);e&&e.removeAttribute("active")}function i_(e){let t=new Image;t.src=e,t.onload=()=>{document.getElementById("layout").style.setProperty("--blyrics-background-img",`url('${e}')`)}}async function iF(){let e=document.createElement("link");e.rel="preload",e.as="image",e.href="https://better-lyrics.boidu.dev/icon-512.png",document.head.appendChild(e);let t=document.createElement("link");t.href="https://api.fontshare.com/v2/css?f[]=satoshi@1&display=swap",t.rel="stylesheet",document.head.appendChild(t);let i=document.createElement("link");i.href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100..900&family=Noto+Sans+Armenian:wght@100..900&family=Noto+Sans+Bengali:wght@100..900&family=Noto+Sans+Devanagari:wght@100..900&family=Noto+Sans+Georgian:wght@100..900&family=Noto+Sans+Gujarati:wght@100..900&family=Noto+Sans+HK:wght@100..900&family=Noto+Sans+Hebrew:wght@100..900&family=Noto+Sans+JP:wght@100..900&family=Noto+Sans+KR:wght@100..900&family=Noto+Sans+Kannada:wght@100..900&family=Noto+Sans+Khmer:wght@100..900&family=Noto+Sans+Lao+Looped:wght@100..900&family=Noto+Sans+Lao:wght@100..900&family=Noto+Sans+Malayalam:wght@100..900&family=Noto+Sans+Marchen&family=Noto+Sans+Meetei+Mayek:wght@100..900&family=Noto+Sans+Multani&family=Noto+Sans+NKo&family=Noto+Sans+Old+Permic&family=Noto+Sans+SC:wght@100..900&family=Noto+Sans+Shavian&family=Noto+Sans+Sinhala:wght@100..900&family=Noto+Sans+Sunuwar&family=Noto+Sans+TC:wght@100..900&family=Noto+Sans+Takri&family=Noto+Sans+Tamil:wght@100..900&family=Noto+Sans+Telugu:wght@100..900&family=Noto+Sans+Thai+Looped:wght@100..900&family=Noto+Sans+Thai:wght@100..900&family=Noto+Sans+Vithkuqi:wght@400..700&family=Noto+Sans+Warang+Citi&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap",i.rel="stylesheet",document.head.appendChild(i);let r=["css/ytmusic.css","css/blyrics.css","css/themesong.css"],n="",s=await Promise.all(r.map(e=>fetch(chrome.runtime.getURL(e),{cache:"no-store"})));for(let e=0;e<r.length;e++)n+=`/* ${r[e]} */
-`,n+=await s[e].text();let a=document.createElement("style");a.textContent=n,document.head.appendChild(a)}function iW(){i2.scrollPos=-1,i2.skipScrollsDecayTimes=[],i2.lastActiveElements=[],i2.lastScrollDebugContext.activeElms=[],i2.lastScrollDebugContext.centers=[],i2.doneFirstInstantScroll=!1,i2.queuedScroll=!1,i4.clear(),i5.clear(),ij&&(ij.disconnect(),ij=null),nn.lyricData&&(nn.lyricData.lines=[],nn.lyricData=null);let e=document.querySelector(w)?.parentElement;e&&(e.style.display="");let t=document.getElementsByClassName(b)[0];t&&t.remove(),i6().setAttribute("autoscroll-hidden","true");let i=document.querySelector(".blyrics-no-lyrics-button-container");i&&i.remove();try{let e=document.getElementById(E);e&&(e.innerHTML="")}catch(e){Y(e)}}function iY(e,t){let i=encodeURIComponent(`${t.trim()} - ${e.trim()}`);return`https://genius.com/search?q=${i}`}let iQ="blyrics-lyric-debug-canvas",iq=null,iG=null;function iH(){if(iG){let e=window.devicePixelRatio||1,t=Number(getComputedStyle(iG).getPropertyValue("height").slice(0,-2)),i=Number(getComputedStyle(iG).getPropertyValue("width").slice(0,-2));iG.width=i*e,iG.height=t*e,iq?.scale(e,e)}}let iZ=tY("blyrics-lyric-ending-threshold-s",.5),iX=tY("blyrics-early-scroll-consider-s",.62),iK=tY("blyrics-queue-scroll-ms",150),iJ=tY("blyrics-debug-renderer",!1),i0=tY("blyrics-target-scroll-pos-ratio",.37),i1=tY("blyrics-add-extra-top-padding",!1),i2={skipScrolls:0,skipScrollsDecayTimes:[],scrollResumeTime:0,scrollPos:0,selectedElementIndex:0,nextScrollAllowedTime:0,wasUserScrolling:!1,lastTime:0,lastPlayState:!1,lastEventCreationTime:0,doneFirstInstantScroll:!0,lastActiveElements:[],queuedScroll:!1,lastScrollDebugContext:{activeElms:[],centers:[],lyricScrollTime:0}},i4=new Map;function i3(e,t){let i=i4.get(t);return void 0===i&&(i=i9(window.getComputedStyle(e).getPropertyValue(t)),i4.set(t,i)),i}let i5=new Map;function i7(e,t,i=!0,r=!0){let n=Date.now();if(iV()||!nn.areLyricsTicking||0===e&&!i)return;let s=Math.abs(e-i2.lastTime-(t-i2.lastEventCreationTime)/1e3)>.5;i2.lastTime=e,i2.lastPlayState=i,i2.lastEventCreationTime=t;let u=n-t;i||(u=0),e+=u/1e3;let c=document.getElementsByClassName(a)[1];console.assert(null!=c);let d=document.getElementById("player-page")?.getAttribute("player-ui-state");if("true"!==c.getAttribute("aria-selected")||!(!d||"PLAYER_PAGE_OPEN"===d||"FULLSCREEN"===d||"MINIPLAYER_IN_PLAYER_PAGE"===d)){i2.doneFirstInstantScroll=!1;return}if(iU())return void i$();iB();try{let t=document.getElementsByClassName(l)[0];if(!t){nn.areLyricsTicking=!1,Y("[BetterLyrics] No lyrics element found on the page, skipping lyrics injection");return}let a=nn.lyricData;if(!a){nn.areLyricsTicking=!1,Y("Lyrics are ticking, but lyricData are null!");return}let u=nn.lyricData.lines;"richsync"===a.syncType?e+=i3(t,"--blyrics-richsync-timing-offset")/1e3:e+=i3(t,"--blyrics-timing-offset")/1e3;let c=e+i3(t,"--blyrics-scroll-timing-offset")/1e3,d=[],y=s;u.every((t,r)=>{let s=t.time,a=1/0;r+1<u.length&&(a=u[r+1].time),c>=s-iX.getNumberValue()&&(c<a||c<s+t.duration)?(d.push(t),!i2.lastActiveElements.includes(t)&&c>=s&&(y=!0),i2.selectedElementIndex=r,t.isScrolled||(t.lyricElement.classList.add(o),t.isScrolled=!0)):t.isScrolled&&(t.lyricElement.classList.remove(o),t.isScrolled=!1);let l=2;i||(l=0);let f=Math.max(a,s+t.duration+.05);if(e+l>=s&&e<f){t.isSelected=!0;let r=e-s,a=(n-t.animationStartTimeMs)/1e3-r;if(t.accumulatedOffsetMs=t.accumulatedOffsetMs/1.08,t.accumulatedOffsetMs+=1e3*a*.4,t.isAnimating&&Math.abs(t.accumulatedOffsetMs)>100&&i&&(t.isAnimating=!1),i!==t.isAnimationPlayStatePlaying){t.isAnimationPlayStatePlaying=i;let e=[t,...t.parts];i?(e.forEach(e=>{e.lyricElement.classList.remove(p)}),t.isAnimating=!1):e.forEach(e=>{e.animationStartTimeMs>n?(e.lyricElement.classList.remove(h),e.lyricElement.classList.remove(m)):e.lyricElement.classList.add(p)})}t.isAnimating||([t,...t.parts].forEach(t=>{let i=t.duration,r=t.time,s=e-r;t.lyricElement.classList.remove(h),t.lyricElement.classList.remove(p),t.lyricElement.style.setProperty("--blyrics-swipe-delay",-s-.1*i+"s"),t.lyricElement.style.setProperty("--blyrics-anim-delay",-s+"s"),t.lyricElement.classList.add(m),re(t.lyricElement),t.lyricElement.classList.add(h),t.animationStartTimeMs=n-1e3*s}),t.isAnimating=!0,t.isAnimationPlayStatePlaying=!0,t.accumulatedOffsetMs=0)}else t.isSelected&&([t,...t.parts].forEach(e=>{e.lyricElement.style.setProperty("--blyrics-swipe-delay",""),e.lyricElement.style.setProperty("--blyrics-anim-delay",""),e.lyricElement.classList.remove(h),e.lyricElement.classList.remove(m),e.lyricElement.classList.remove(p),e.animationStartTimeMs=1/0}),t.isSelected=!1,t.isAnimating=!1);return!0});let b=t.getBoundingClientRect().height,M=document.querySelector(v),w=M.getBoundingClientRect().height,N=M.scrollTop;if(i2.scrollResumeTime<Date.now()||-1===i2.scrollPos){0==d.length&&d.push(a.lines[0]),i2.lastActiveElements=d.filter(e=>c>=e.time);let e=w*i0.getNumberValue(),i=d[d.length-1],n=d.filter((e,t)=>c<e.time+e.duration-iZ.getNumberValue()||t==d.length-1).map(e=>e.position+e.height/2),l=n.reduce((e,t)=>e+t,0)/n.length-e;if(l=Math.min(l,d[0].position),l=Math.max(l,i.position-w+i.height),l=Math.min(l,i.position),l=Math.max(0,l),iJ.getBooleanValue()){let i=window.getComputedStyle(t).transform,r=new DOMMatrix(i).f,s=N-r;if(!function(e){if(!iq&&(!function(){let e=document.querySelector("#tab-renderer");if(!e)return console.error("Can't find tab renderer");let t=document.getElementById(iQ);t&&t.remove(),(iG=document.createElement("canvas")).id=iQ,iG.style.position="fixed",iG.style.width="100%",iG.style.height="100%",iG.style.order="100";let i=document.getElementById("blyrics-wrapper");(e.insertBefore(iG,i),iq=iG.getContext("2d"))?iH():console.error("Can't find canvas context")}(),!iq))return;iq.reset();let t=window.devicePixelRatio||1;iq.scale(t,t),iq.translate(0,-e)}(s),iq){function g(e,t,i,r,n){iq.strokeStyle="red",iq.fillStyle="red",iq.fillText(t,e+2,s+45),iq.fillText("scroll time: "+n.toFixed(3),e+2,s+60),i.forEach(t=>{let i=t.time-n,r=t.time+t.duration,s=r-n;s<iZ.getNumberValue()?(iq.strokeStyle="gray",iq.fillStyle="gray"):i>0?(iq.strokeStyle="magenta",iq.fillStyle="magenta"):(iq.strokeStyle="orange",iq.fillStyle="orange"),iq?.beginPath(),iq?.moveTo(e+5,t.position),iq?.lineTo(e+5,t.position+t.height),iq?.stroke(),iq?.fillText("time: start="+t.time.toFixed(2)+" end="+r.toFixed(2),e+15,t.position),iq?.fillText("till active: "+i.toFixed(2),e+15,t.position+15),iq?.fillText("till end: "+s.toFixed(2),e+15,t.position+30)}),iq.strokeStyle="pink",iq.fillStyle="pink",r.forEach(t=>{iq?.beginPath(),iq?.arc(e+5,t,5,0,2*Math.PI,!1),iq?.fill()})}iq.strokeStyle="green",iq.fillStyle="green",iq?.fillText("visible top",0,N),iq?.beginPath(),iq?.moveTo(40,N),iq?.lineTo(1e3,N),iq.stroke(),iq.strokeStyle="blue",iq.fillStyle="blue",iq?.fillText("visible bottom",0,N+w),iq?.beginPath(),iq?.moveTo(40,N+w),iq?.lineTo(1e3,N+w),iq.stroke(),iq.strokeStyle="yellow",iq.fillStyle="yellow",iq?.fillText("target",0,N+e),iq?.beginPath(),iq?.moveTo(40,N+e),iq?.lineTo(1e3,N+e),iq.stroke(),g(0,"realtime",d,n,c),g(160,"last scroll",i2.lastScrollDebugContext.activeElms,i2.lastScrollDebugContext.centers,i2.lastScrollDebugContext.lyricScrollTime)}}if(0!==N||i2.doneFirstInstantScroll||(r=!1,i2.doneFirstInstantScroll=!0,i2.nextScrollAllowedTime=0),i2.wasUserScrolling||y||i2.queuedScroll)if(Date.now()>i2.nextScrollAllowedTime){if(i2.queuedScroll=!1,i2.lastScrollDebugContext.lyricScrollTime=c,i2.lastScrollDebugContext.centers=n,i2.lastScrollDebugContext.activeElms=d,r){t.style.transitionTimingFunction="",t.style.transitionProperty="",t.style.transitionDuration="";let e=i3(t,"transition-duration");t.style.transition="transform 0s ease-in-out 0s",t.style.transform=`translate(0px, ${-(N-l)}px)`,re(t),t.style.transition="",t.style.transform="translate(0px, 0px)",i2.nextScrollAllowedTime=e+Date.now()+20}let e=Math.max(w*(1-i0.getNumberValue()),w-b);document.getElementById(S).style.height=`${e.toFixed(0)}px`,N=l,i2.scrollPos=l}else(i2.nextScrollAllowedTime-Date.now()<iK.getNumberValue()||s)&&(i2.queuedScroll=!0)}i2.wasUserScrolling&&i2.scrollResumeTime<Date.now()&&(i6().setAttribute("autoscroll-hidden","true"),t.classList.remove(f),i2.wasUserScrolling=!1),Math.abs(N-M.scrollTop)>1&&(M.scrollTop=N,i2.skipScrolls+=1,i2.skipScrollsDecayTimes.push(Date.now()+2e3));let E=0;for(;E<i2.skipScrollsDecayTimes.length&&!(i2.skipScrollsDecayTimes[E]>n);E++);i2.skipScrollsDecayTimes=i2.skipScrollsDecayTimes.slice(E),i2.skipScrolls-=E,i2.skipScrolls<1&&(i2.skipScrolls=1)}catch(e){e.message?.includes("undefined")||Y("[BetterLyrics] Error in lyrics check interval:",e)}}function i8(){nn.areLyricsTicking&&(rl(),i7(i2.lastTime,i2.lastEventCreationTime,i2.lastPlayState,!1))}function i6(){let e=document.getElementById("autoscroll-resume-button");if(!e){let t=document.createElement("div");t.id="autoscroll-resume-wrapper",t.className="autoscroll-resume-wrapper",(e=document.createElement("button")).id="autoscroll-resume-button",e.innerText="Resume Autoscroll",e.classList.add("autoscroll-resume-button"),e.setAttribute("autoscroll-hidden","true"),e.addEventListener("click",()=>{i2.scrollResumeTime=0,e.setAttribute("autoscroll-hidden","true")}),document.querySelector("#side-panel > tp-yt-paper-tabs").after(t),t.appendChild(e)}return e}function i9(e){return e?e.endsWith("ms")?parseFloat(e.slice(0,-2)):e.endsWith("s")?1e3*parseFloat(e.slice(0,-1)):0:0}function re(e){e.offsetHeight}let rt=tY("blyrics-disable-richsync",!1,!0),ri=tY("blyrics-line-synced-animation-delay",50,!0),rr=new ResizeObserver(e=>{for(let t of e)t.target.id===E&&nn.lyricData&&(t.target.clientWidth!==nn.lyricData.lyricWidth||t.target.clientHeight!==nn.lyricData.lyricHeight)&&rl()});function rn(e,t=!1){let i=e.lyrics;if(!i||0===i.length)throw Error("[BetterLyrics] No lyrics found for the current song");Y("[BetterLyrics] Lyrics found, injecting into the page");let r=document.querySelector(w)?.parentElement;r&&r.classList.add("blyrics-hidden");try{document.getElementsByClassName(l)[0].innerHTML=""}catch(e){Y("[BetterLyrics] (Safe to ignore) Lyrics tab is not disabled, unable to enable it")}!function(e,t=!1){let i=e.lyrics;iW(),rr.disconnect();let r=function(){let e=document.querySelector(v);e.removeEventListener("scroll",ix),e.addEventListener("scroll",ix);let t=document.getElementById(E);if(t)return t.innerHTML="",t.style.top="",t.style.transition="",t;let i=document.createElement("div");return i.id=E,e.appendChild(i),i.addEventListener("copy",e=>{let t=window.getSelection();if(!t||t.isCollapsed)return;let i=t.getRangeAt(0).cloneContents(),r=i.querySelectorAll(".blyrics--line");if(0===r.length){let t=i.textContent?.replace(/\s+/g," ").trim();t&&e.clipboardData&&(e.preventDefault(),e.clipboardData.setData("text/plain",t));return}let n=[];for(let e of r){let t=[Array.from(e.querySelectorAll(".blyrics--word")).map(e=>e.textContent?.trim()).filter(Boolean).join(" "),e.querySelector(`.${y}`)?.textContent?.trim(),e.querySelector(`.${g}`)?.textContent?.trim()].filter(Boolean);t.length>0&&n.push(t.join("\n"))}n.length>0&&(e.preventDefault(),e.clipboardData?.setData("text/plain",n.join("\n")))}),Y("[BetterLyrics] Lyrics wrapper created"),i}();r.innerHTML="";let n=document.createElement("div");n.className=l,r.appendChild(n),r.removeAttribute("is-empty"),tB(e=>{Y("[BetterLyrics] Translation enabled, translating lyrics. Language: ",e.translationLanguage)});let s=i.every(e=>0===e.startTimeMs);t?iP(!0):function(e=!1){try{let t=document.getElementById(N);if(t&&e&&(t.setAttribute("small-loader",""),re(t),t.setAttribute("no-sync-available","")),t?.hasAttribute("active")){clearTimeout(nn.loaderAnimationEndTimeout),t.dataset.animatingOut="true",t.removeAttribute("active"),t.addEventListener("transitionend",function e(i){clearTimeout(nn.loaderAnimationEndTimeout),t.dataset.animatingOut="false",iR=!1,t.removeEventListener("transitionend",e),Y("[BetterLyrics] Loader Transition Ended")});let e=1e3,i=window.getComputedStyle(t).getPropertyValue("transition-delay");i&&(e+=i9(i)),nn.loaderAnimationEndTimeout=window.setTimeout(()=>{t.dataset.animatingOut=String(!1),iR=!1,Y("[BetterLyrics] Loader Animation Didn't End")},e)}}catch(e){Y(e)}}(s&&i[0].words!==R);let a=new Promise(async t=>{if(e.language)t(e.language);else{let e="",r=0;for(let t of i)if(e+=t.words.trim()+"\n",++r>=10)break;let n=await tU(e,"en"),s=n?.originalLanguage||"";return Y(A,"Lang was missing. Determined it is: "+s),t(s)}}),o=[],u=s?"none":"synced";i.forEach((t,r)=>{var d,h,p,m,f;let b;if(t.isInstrumental){let e,a,l,u,c,h,p,m,f,g,y,b,M,v,w,N,E,S,x=(d=t.durationMs,(e=document.createElement("div")).classList.add("blyrics--instrumental"),e.style.setProperty("--blyrics-duration",`${d}ms`),a="http://www.w3.org/2000/svg",(l=document.createElementNS(a,"svg")).classList.add("blyrics--instrumental-icon"),l.setAttribute("viewBox","0 0 24 24"),u=document.createElementNS(a,"defs"),c=`blyrics-glow-${r}`,h=`blyrics-wave-clip-${r}`,(p=document.createElementNS(a,"filter")).setAttribute("id",c),p.setAttribute("x","-100%"),p.setAttribute("y","-100%"),p.setAttribute("width","300%"),p.setAttribute("height","300%"),(m=document.createElementNS(a,"feGaussianBlur")).setAttribute("in","SourceGraphic"),m.setAttribute("stdDeviation","5"),m.setAttribute("result","blur"),p.appendChild(m),(f=document.createElementNS(a,"feColorMatrix")).setAttribute("in","blur"),f.setAttribute("type","matrix"),f.setAttribute("values","1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.6 0"),f.setAttribute("result","fadedBlur"),p.appendChild(f),g=document.createElementNS(a,"feMerge"),(y=document.createElementNS(a,"feMergeNode")).setAttribute("in","fadedBlur"),g.appendChild(y),(b=document.createElementNS(a,"feMergeNode")).setAttribute("in","SourceGraphic"),g.appendChild(b),p.appendChild(g),u.appendChild(p),(M=document.createElementNS(a,"clipPath")).setAttribute("id",h),M.classList.add("blyrics--wave-clip"),(v=document.createElementNS(a,"path")).classList.add("blyrics--wave-rect"),v.setAttribute("d","M -4 3.9 L 30 3.9 L 30 30 L -4 30 Z"),M.appendChild(v),(w=document.createElementNS(a,"path")).classList.add("blyrics--wave-path"),w.setAttribute("d","M -4 3 Q 1 2 5 3 Q 10 4 14 3 Q 18 2 22 3 Q 26 4 30 3 L 30 4 L -4 4 Z"),M.appendChild(w),u.appendChild(M),l.appendChild(u),(N=document.createElementNS(a,"path")).classList.add("blyrics--instrumental-bg"),N.setAttribute("d","M10 21q-1.65 0-2.825-1.175T6 17t1.175-2.825T10 13q.575 0 1.063.138t.937.412V4q0-.425.288-.712T13 3h4q.425 0 .713.288T18 4v2q0 .425-.288.713T17 7h-3v10q0 1.65-1.175 2.825T10 21"),l.appendChild(N),(E=document.createElementNS(a,"g")).setAttribute("filter",`url(#${c})`),(S=document.createElementNS(a,"path")).classList.add("blyrics--instrumental-fill"),S.setAttribute("clip-path",`url(#${h})`),S.setAttribute("d","M10 21q-1.65 0-2.825-1.175T6 17t1.175-2.825T10 13q.575 0 1.063.138t.937.412V4q0-.425.288-.712T13 3h4q.425 0 .713.288T18 4v2q0 .425-.288.713T17 7h-3v10q0 1.65-1.175 2.825T10 21"),E.appendChild(S),l.appendChild(E),e.appendChild(l),e);x.classList.add("blyrics--line"),x.dataset.time=String(t.startTimeMs/1e3),x.dataset.duration=String(t.durationMs/1e3),x.dataset.lineNumber=String(r),x.dataset.instrumental="true";let I=function(e,t){for(let i=t-1;i>=0;i--)if(!e[i].isInstrumental&&e[i].agent)return e[i].agent;for(let i=t+1;i<e.length;i++)if(!e[i].isInstrumental&&e[i].agent)return e[i].agent}(i,r);if(I&&(x.dataset.agent=I),!s){let e=t.startTimeMs/1e3;x.addEventListener("click",()=>{Y(A,`Seeking to ${e.toFixed(2)}s`),document.dispatchEvent(new CustomEvent("blyrics-seek-to",{detail:e})),i2.scrollResumeTime=0})}let L={lyricElement:x,time:t.startTimeMs/1e3,duration:t.durationMs/1e3,parts:[],isScrolled:!1,animationStartTimeMs:1/0,isAnimationPlayStatePlaying:!1,accumulatedOffsetMs:0,isAnimating:!1,isSelected:!1,height:-1,position:-1};try{o.push(L),n.appendChild(x)}catch(e){Y(j)}return}t.parts||(t.parts=[]),(0===t.parts.length||rt.getBooleanValue())&&(t.parts=[],t.words.split(" ").forEach((e,i)=>{e=e.trim().length<1?e:e+" ",t.parts.push({startTimeMs:t.startTimeMs+i*ri.getNumberValue(),words:e,durationMs:0})})),t.parts.every(e=>0===e.durationMs)||(u="richsync");let M=document.createElement("div");M.classList.add("blyrics--line");let v={lyricElement:M,time:t.startTimeMs/1e3,duration:t.durationMs/1e3,parts:[],isScrolled:!1,animationStartTimeMs:1/0,isAnimationPlayStatePlaying:!1,accumulatedOffsetMs:0,isAnimating:!1,isSelected:!1,height:-1,position:-1};rs(t.parts,v,M),ra(M,1),M.dataset.time=String(v.time),M.dataset.duration=String(v.duration),M.dataset.lineNumber=String(r),M.style.setProperty("--blyrics-duration",t.durationMs+"ms"),t.agent&&(M.dataset.agent=t.agent),s?M.style.cursor="unset":M.addEventListener("click",e=>{let t,i=e.target,r=M.closest(`.${l}`);if(r?.dataset.sync==="richsync")if(e.altKey){let r=i.closest(`.${c}`);if(!r){let t=M.querySelectorAll(`.${c}`),i=1/0;t.forEach(t=>{let n=t.getBoundingClientRect(),s=n.left+n.width/2,a=n.top+n.height/2,l=Math.hypot(e.clientX-s,e.clientY-a);l<i&&(i=l,r=t)})}if(!r)return;t=parseFloat(r.dataset.time||"0")}else t=parseFloat(M.dataset.time||"0");else t=parseFloat(M.dataset.time||"0");Y(A,`Seeking to ${t.toFixed(2)}s`),document.dispatchEvent(new CustomEvent("blyrics-seek-to",{detail:t})),i2.scrollResumeTime=0});let w=()=>{ra(M,4);let e=document.createElement("div");return e.classList.add(y),e.style.order="5",M.appendChild(e),e},N=(h=t.words,tV.romanization.get(h)||null),E=(e.language&&T.includes(e.language)||W(t.words))&&t.romanization||null!==N;t.romanization&&(N=t.romanization),E&&nn.isRomanizationEnabled?N!==t.words&&(t.timedRomanization&&t.timedRomanization.length>0&&!rt.getBooleanValue()?rs(t.timedRomanization,v,w()):w().textContent="\n"+N):a.then(e=>{var i;i=async()=>{let i=W(t.words);if(T.includes(e)||i){let r=e;if(i&&!T.includes(e)&&(r="auto"),"♪"!==t.words.trim()&&""!==t.words.trim()){let e;(e=t.romanization?t.romanization:await t$(r,t.words))&&!ro(e,t.words)&&(w().textContent=e,i8())}}},tC({isRomanizationEnabled:!1},e=>{e.isRomanizationEnabled&&i(e)})});let S=()=>{ra(M,6);let e=document.createElement("div");return e.classList.add(g),e.style.order="7",M.appendChild(e),e},x=nn.translationLanguage;if(t.translation&&(m=x,f=t.translation.lang,m.split("-")[0]===f.split("-")[0]))b={originalLanguage:t.translation.lang,translatedText:t.translation.text};else{let e;p=t.words,e=`${x}_${p}`,b=tV.translation.get(e)||null}b&&nn.isTranslateEnabled?ro(b.translatedText,t.words)||(S().textContent="\n"+b.translatedText):a.then(e=>{tB(async i=>{let r=i.translationLanguage||"en";if((e!==r||W(t.words))&&"♪"!==t.words.trim()&&""!==t.words.trim()){let e;(e=t.translation&&r===t.translation.lang?{originalLanguage:t.translation.lang,translatedText:t.translation.text}:await tU(t.words,r))&&!ro(e.translatedText,t.words)&&(S().textContent="\n"+e.translatedText,i8())}})});try{o.push(v),n.appendChild(M)}catch(e){Y(j)}}),i2.skipScrolls=2,i2.skipScrollsDecayTimes=[];for(let e=0;e<i2.skipScrolls;e++)i2.skipScrollsDecayTimes.push(Date.now()+2e3);i2.scrollResumeTime=0,i[0].words!==R?function(e,t,i,r,n,s,a){0!==document.getElementsByClassName(b).length&&document.getElementsByClassName(b)[0].remove();let o=document.getElementsByClassName(l)[0],u=document.createElement("div");u.classList.add(b),o.appendChild(u),function(e,t,i,r){try{let n=document.getElementsByClassName(b)[0];n.innerHTML="";let s=document.createElement("div");s.className=`${b}__container`;let a=document.createElement("img");a.src="https://better-lyrics.boidu.dev/icon-512.png",a.alt="Better Lyrics Logo",a.width=20,a.height=20,s.appendChild(a),s.appendChild(document.createTextNode("Source: "));let l=document.createElement("a");l.target="_blank",l.id="betterLyricsFooterLink",s.appendChild(l);let o=document.createElement("img");o.src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IiNhYWEiIGQ9Ik0xOS4yNyA1LjMzQzE3Ljk0IDQuNzEgMTYuNSA0LjI2IDE1IDRhLjA5LjA5IDAgMCAwLS4wNy4wM2MtLjE4LjMzLS4zOS43Ni0uNTMgMS4wOWExNi4wOSAxNi4wOSAwIDAgMC00LjggMGMtLjE0LS4zNC0uMzUtLjc2LS41NC0xLjA5Yy0uMDEtLjAyLS4wNC0uMDMtLjA3LS4wM2MtMS41LjI2LTIuOTMuNzEtNC4yNyAxLjMzYy0uMDEgMC0uMDIuMDEtLjAzLjAyYy0yLjcyIDQuMDctMy40NyA4LjAzLTMuMSAxMS45NWMwIC4wMi4wMS4wNC4wMy4wNWMxLjggMS4zMiAzLjUzIDIuMTIgNS4yNCAyLjY1Yy4wMy4wMS4wNiAwIC4wNy0uMDJjLjQtLjU1Ljc2LTEuMTMgMS4wNy0xLjc0Yy4wMi0uMDQgMC0uMDgtLjA0LS4wOWMtLjU3LS4yMi0xLjExLS40OC0xLjY0LS43OGMtLjA0LS4wMi0uMDQtLjA4LS4wMS0uMTFjLjExLS4wOC4yMi0uMTcuMzMtLjI1Yy4wMi0uMDIuMDUtLjAyLjA3LS4wMWMzLjQ0IDEuNTcgNy4xNSAxLjU3IDEwLjU1IDBjLjAyLS4wMS4wNS0uMDEuMDcuMDFjLjExLjA5LjIyLjE3LjMzLjI2Yy4wNC4wMy4wNC4wOS0uMDEuMTFjLS41Mi4zMS0xLjA3LjU2LTEuNjQuNzhjLS4wNC4wMS0uMDUuMDYtLjA0LjA5Yy4zMi42MS42OCAxLjE5IDEuMDcgMS43NGMuMDMuMDEuMDYuMDIuMDkuMDFjMS43Mi0uNTMgMy40NS0xLjMzIDUuMjUtMi42NWMuMDItLjAxLjAzLS4wMy4wMy0uMDVjLjQ0LTQuNTMtLjczLTguNDYtMy4xLTExLjk1Yy0uMDEtLjAxLS4wMi0uMDItLjA0LS4wMk04LjUyIDE0LjkxYy0xLjAzIDAtMS44OS0uOTUtMS44OS0yLjEycy44NC0yLjEyIDEuODktMi4xMmMxLjA2IDAgMS45Ljk2IDEuODkgMi4xMmMwIDEuMTctLjg0IDIuMTItMS44OSAyLjEybTYuOTcgMGMtMS4wMyAwLTEuODktLjk1LTEuODktMi4xMnMuODQtMi4xMiAxLjg5LTIuMTJjMS4wNiAwIDEuOS45NiAxLjg5IDIuMTJjMCAxLjE3LS44MyAyLjEyLTEuODkgMi4xMiIvPjwvc3ZnPg==",o.alt="Better Lyrics Discord",o.width=20,o.height=20;let u=document.createElement("a");u.className=`${b}__discord`,u.href="https://discord.gg/UsHE3d5fWF",u.target="_blank",u.appendChild(o);let c=new URL(L);e&&c.searchParams.append("title",e),t&&c.searchParams.append("artist",t),i&&c.searchParams.append("album",i),r&&c.searchParams.append("duration",r.toString()),l.target="_blank";let d=iA({text:"Add Lyrics to LRCLib",href:c.toString()}),h=iA({text:"Search on Genius",href:iY(e,t),logoSrc:I,logoAlt:"Genius"});n.appendChild(s),n.appendChild(h),n.appendChild(d),n.appendChild(u),n.removeAttribute("is-empty")}catch(e){Y("[BetterLyrics] (Safe to ignore) Footer is not visible, unable to inject source link")}}(i,r,n,s);let c=document.getElementById("betterLyricsFooterLink");t=t||"https://better-lyrics.boidu.dev/";let d=a?iT[a]:null;if(c.textContent="",c.href=t,d){var h;let e,t;c.appendChild(document.createTextNode(d.name));let i=document.createElement("span");i.style.opacity="0.5",i.style.marginLeft="6px",i.style.display="inline-flex",i.style.verticalAlign="middle",i.style.color=ik[d.syncType];let r=(h=iL[d.syncType],(t=(e=(new DOMParser).parseFromString(h,"image/svg+xml")).documentElement)instanceof SVGElement&&!e.querySelector("parsererror")?t:null);r&&i.appendChild(r),c.appendChild(i)}else c.textContent=e||"boidu.dev"}(e.source,e.sourceHref,e.song,e.artist,e.album,e.duration,e.providerKey):function(e,t,i,r){let n=document.getElementById(E);if(!n)return;let s=document.createElement("div");s.className="blyrics-no-lyrics-button-container";let a=new URL(L);e&&a.searchParams.append("title",e),t&&a.searchParams.append("artist",t),i&&a.searchParams.append("album",i),r&&a.searchParams.append("duration",r.toString());let l=iA({text:"Add Lyrics to LRCLib",href:a.toString()}),o=iA({text:"Search on Genius",href:iY(e,t),logoSrc:I,logoAlt:"Genius"});s.appendChild(l),s.appendChild(o),n.appendChild(s)}(e.song,e.artist,e.album,e.duration);let d=document.createElement("div");d.id=S,d.style.height="100px",d.textContent="",d.style.padding="0",d.style.margin="0",n.appendChild(d),n.dataset.sync=u,n.dataset.loaderVisible=String(t),i[0].words===R&&(n.dataset.noLyrics="true");let h={lines:o,syncType:u,lyricWidth:n.clientWidth,lyricHeight:n.clientHeight,isMusicVideoSynced:!0===e.musicVideoSynced};e.segmentMap&&nt(h,e.segmentMap),nn.lyricData=h,s?Y("[BetterLyrics] Syncing lyrics disabled due to all lyrics having a start time of 0"):(nn.areLyricsTicking=!0,rl(),rr.observe(r)),nn.areLyricsLoaded=!0}(e,t)}function rs(e,t,i){var r,n;let s,a,l,o,h=[],p=!0,m=[];e.forEach(e=>{let i,r=(i=e.words,/[\p{Script=Arabic}\p{Script=Hebrew}\p{Script=Syriac}\p{Script=Thaana}]/u.test(i));!r&&e.words.trim().length>0&&(p=!1,h.reverse().forEach(e=>{m.push(e)}),h=[]);let n=document.createElement("span");n.classList.add(c),0===e.durationMs&&n.classList.add("blyrics-zero-dur-animate"),r&&n.classList.add(u);let s={time:e.startTimeMs/1e3,duration:e.durationMs/1e3,lyricElement:n,animationStartTimeMs:1/0};n.textContent=e.words,n.dataset.time=String(s.time),n.dataset.duration=String(s.duration),n.dataset.content=e.words,n.style.setProperty("--blyrics-duration",e.durationMs+"ms"),e.isBackground&&n.classList.add(d),0===e.words.trim().length&&(n.style.display="inline"),t.parts.push(s),r?h.push(n):m.push(n)}),p&&h.length>0?(i.classList.add(u),h.forEach(e=>{m.push(e)})):h.length>0&&h.reverse().forEach(e=>{m.push(e)}),r=i,n=m,s=/([\s\u200B\u00AD\p{Dash_Punctuation}])/gu,a=[],l=!1,o=()=>{if(a.length>0){let e=document.createElement("span");a.forEach(t=>{e.appendChild(t)}),l&&e.classList.add(d),r.appendChild(e),a=[]}},n.forEach(e=>{let t=l!==e.classList.contains(d),i=1!==e.textContent.length||" "!==e.textContent[0];t||a.push(e),(e.textContent.length>0&&s.test(e.textContent[e.textContent.length-1])||t)&&o(),t&&i&&(a.push(e),l=e.classList.contains(d))}),o()}function ra(e,t){let i=document.createElement("span");i.classList.add("blyrics--break"),i.style.order=String(t),e.appendChild(i)}function rl(){if(nn.lyricData&&nn.areLyricsTicking){let e=document.getElementsByClassName(l)[0];if(i1.getBooleanValue()){let t=document.getElementById("tab-renderer")?.clientHeight;t?e.style.paddingTop=`${t*i0.getNumberValue()}px`:(e.style.paddingTop="",Y("Could not find tab renderer height, not adding extra padding top."))}let t=nn.lyricData;t.lyricWidth=e.clientWidth,t.lines.forEach(t=>{var i;let r,n,s=(i=t.lyricElement,r=e.getBoundingClientRect(),new DOMRect((n=i.getBoundingClientRect()).x-r.x,n.y-r.y,n.width,n.height));t.position=s.y,t.height=s.height}),i2.wasUserScrolling=!0,iH()}}function ro(e,t){return(e=e.toLowerCase().replaceAll(/(\p{P})/gu,"").trim())===(t=t.toLowerCase().replaceAll(/(\p{P})/gu,"").trim())}let ru={preserveOrder:!1,attributeNamePrefix:"@_",attributesGroupName:!1,textNodeName:"#text",ignoreAttributes:!0,removeNSPrefix:!1,allowBooleanAttributes:!1,parseTagValue:!0,parseAttributeValue:!1,trimValues:!0,cdataPropName:!1,numberParseOptions:{hex:!0,leadingZeros:!0,eNotation:!0},tagValueProcessor:function(e,t){return t},attributeValueProcessor:function(e,t){return t},stopNodes:[],alwaysCreateTextNode:!1,isArray:()=>!1,commentPropName:!1,unpairedTags:[],processEntities:!0,htmlEntities:!1,ignoreDeclaration:!1,ignorePiTags:!1,transformTagName:!1,transformAttributeName:!1,updateTag:function(e,t,i){return e},captureMetaData:!1},rc=":A-Za-z_\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD",rd=RegExp("^"+("["+rc+"]["+rc)+"\\-.\\d\\u00B7\\u0300-\\u036F\\u203F-\\u2040]*$");function rh(e,t){let i=[],r=t.exec(e);for(;r;){let n=[];n.startIndex=t.lastIndex-r[0].length;let s=r.length;for(let e=0;e<s;e++)n.push(r[e]);i.push(n),r=t.exec(e)}return i}let rp=function(e){return null!=rd.exec(e)};e="function"!=typeof Symbol?"@@xmlMetadata":Symbol("XML Node Metadata");class rm{constructor(e){this.tagname=e,this.child=[],this[":@"]={}}add(e,t){"__proto__"===e&&(e="#__proto__"),this.child.push({[e]:t})}addChild(t,i){"__proto__"===t.tagname&&(t.tagname="#__proto__"),t[":@"]&&Object.keys(t[":@"]).length>0?this.child.push({[t.tagname]:t.child,":@":t[":@"]}):this.child.push({[t.tagname]:t.child}),void 0!==i&&(this.child[this.child.length-1][e]={startIndex:i})}static getMetaDataSymbol(){return e}}class rf{constructor(e){this.suppressValidationErr=!e}readDocType(e,t){let i={};if("O"===e[t+3]&&"C"===e[t+4]&&"T"===e[t+5]&&"Y"===e[t+6]&&"P"===e[t+7]&&"E"===e[t+8]){t+=9;let r=1,n=!1,s=!1;for(;t<e.length;t++)if("<"!==e[t]||s)if(">"===e[t]){if(s?"-"===e[t-1]&&"-"===e[t-2]&&(s=!1,r--):r--,0===r)break}else"["===e[t]?n=!0:e[t];else{if(n&&ry(e,"!ENTITY",t)){let r,n;t+=7,[r,n,t]=this.readEntityExp(e,t+1,this.suppressValidationErr),-1===n.indexOf("&")&&(i[r]={regx:RegExp(`&${r};`,"g"),val:n})}else if(n&&ry(e,"!ELEMENT",t)){t+=8;let{index:i}=this.readElementExp(e,t+1);t=i}else if(n&&ry(e,"!ATTLIST",t))t+=8;else if(n&&ry(e,"!NOTATION",t)){t+=9;let{index:i}=this.readNotationExp(e,t+1,this.suppressValidationErr);t=i}else if(ry(e,"!--",t))s=!0;else throw Error("Invalid DOCTYPE");r++}if(0!==r)throw Error("Unclosed DOCTYPE")}else throw Error("Invalid Tag instead of DOCTYPE");return{entities:i,i:t}}readEntityExp(e,t){t=rg(e,t);let i="";for(;t<e.length&&!/\s/.test(e[t])&&'"'!==e[t]&&"'"!==e[t];)i+=e[t],t++;if(rb(i),t=rg(e,t),!this.suppressValidationErr){if("SYSTEM"===e.substring(t,t+6).toUpperCase())throw Error("External entities are not supported");else if("%"===e[t])throw Error("Parameter entities are not supported")}let r="";return[t,r]=this.readIdentifierVal(e,t,"entity"),[i,r,--t]}readNotationExp(e,t){t=rg(e,t);let i="";for(;t<e.length&&!/\s/.test(e[t]);)i+=e[t],t++;this.suppressValidationErr||rb(i),t=rg(e,t);let r=e.substring(t,t+6).toUpperCase();if(!this.suppressValidationErr&&"SYSTEM"!==r&&"PUBLIC"!==r)throw Error(`Expected SYSTEM or PUBLIC, found "${r}"`);t+=r.length,t=rg(e,t);let n=null,s=null;if("PUBLIC"===r)[t,n]=this.readIdentifierVal(e,t,"publicIdentifier"),t=rg(e,t),('"'===e[t]||"'"===e[t])&&([t,s]=this.readIdentifierVal(e,t,"systemIdentifier"));else if("SYSTEM"===r&&([t,s]=this.readIdentifierVal(e,t,"systemIdentifier"),!this.suppressValidationErr&&!s))throw Error("Missing mandatory system identifier for SYSTEM notation");return{notationName:i,publicIdentifier:n,systemIdentifier:s,index:--t}}readIdentifierVal(e,t,i){let r="",n=e[t];if('"'!==n&&"'"!==n)throw Error(`Expected quoted string, found "${n}"`);for(t++;t<e.length&&e[t]!==n;)r+=e[t],t++;if(e[t]!==n)throw Error(`Unterminated ${i} value`);return[++t,r]}readElementExp(e,t){t=rg(e,t);let i="";for(;t<e.length&&!/\s/.test(e[t]);)i+=e[t],t++;if(!this.suppressValidationErr&&!rp(i))throw Error(`Invalid element name: "${i}"`);t=rg(e,t);let r="";if("E"===e[t]&&ry(e,"MPTY",t))t+=4;else if("A"===e[t]&&ry(e,"NY",t))t+=2;else if("("===e[t]){for(t++;t<e.length&&")"!==e[t];)r+=e[t],t++;if(")"!==e[t])throw Error("Unterminated content model")}else if(!this.suppressValidationErr)throw Error(`Invalid Element Expression, found "${e[t]}"`);return{elementName:i,contentModel:r.trim(),index:t}}readAttlistExp(e,t){t=rg(e,t);let i="";for(;t<e.length&&!/\s/.test(e[t]);)i+=e[t],t++;rb(i),t=rg(e,t);let r="";for(;t<e.length&&!/\s/.test(e[t]);)r+=e[t],t++;if(!rb(r))throw Error(`Invalid attribute name: "${r}"`);t=rg(e,t);let n="";if("NOTATION"===e.substring(t,t+8).toUpperCase()){if(n="NOTATION",t+=8,t=rg(e,t),"("!==e[t])throw Error(`Expected '(', found "${e[t]}"`);t++;let i=[];for(;t<e.length&&")"!==e[t];){let r="";for(;t<e.length&&"|"!==e[t]&&")"!==e[t];)r+=e[t],t++;if(!rb(r=r.trim()))throw Error(`Invalid notation name: "${r}"`);i.push(r),"|"===e[t]&&(t=rg(e,++t))}if(")"!==e[t])throw Error("Unterminated list of notations");t++,n+=" ("+i.join("|")+")"}else{for(;t<e.length&&!/\s/.test(e[t]);)n+=e[t],t++;if(!this.suppressValidationErr&&!["CDATA","ID","IDREF","IDREFS","ENTITY","ENTITIES","NMTOKEN","NMTOKENS"].includes(n.toUpperCase()))throw Error(`Invalid attribute type: "${n}"`)}t=rg(e,t);let s="";return"#REQUIRED"===e.substring(t,t+8).toUpperCase()?(s="#REQUIRED",t+=8):"#IMPLIED"===e.substring(t,t+7).toUpperCase()?(s="#IMPLIED",t+=7):[t,s]=this.readIdentifierVal(e,t,"ATTLIST"),{elementName:i,attributeName:r,attributeType:n,defaultValue:s,index:t}}}let rg=(e,t)=>{for(;t<e.length&&/\s/.test(e[t]);)t++;return t};function ry(e,t,i){for(let r=0;r<t.length;r++)if(t[r]!==e[i+r+1])return!1;return!0}function rb(e){if(rp(e))return e;throw Error(`Invalid entity name ${e}`)}let rM=/^[-+]?0x[a-fA-F0-9]+$/,rv=/^([\-\+])?(0*)([0-9]*(\.[0-9]*)?)$/,rw={hex:!0,leadingZeros:!0,decimalPoint:".",eNotation:!0},rN=/^([-+])?(0*)(\d*(\.\d*)?[eE][-\+]?\d+)$/;class rE{constructor(e){if(this.options=e,this.currentNode=null,this.tagsNodeStack=[],this.docTypeEntities={},this.lastEntities={apos:{regex:/&(apos|#39|#x27);/g,val:"'"},gt:{regex:/&(gt|#62|#x3E);/g,val:">"},lt:{regex:/&(lt|#60|#x3C);/g,val:"<"},quot:{regex:/&(quot|#34|#x22);/g,val:'"'}},this.ampEntity={regex:/&(amp|#38|#x26);/g,val:"&"},this.htmlEntities={space:{regex:/&(nbsp|#160);/g,val:" "},cent:{regex:/&(cent|#162);/g,val:"\xa2"},pound:{regex:/&(pound|#163);/g,val:"\xa3"},yen:{regex:/&(yen|#165);/g,val:"\xa5"},euro:{regex:/&(euro|#8364);/g,val:"€"},copyright:{regex:/&(copy|#169);/g,val:"\xa9"},reg:{regex:/&(reg|#174);/g,val:"\xae"},inr:{regex:/&(inr|#8377);/g,val:"₹"},num_dec:{regex:/&#([0-9]{1,7});/g,val:(e,t)=>String.fromCodePoint(Number.parseInt(t,10))},num_hex:{regex:/&#x([0-9a-fA-F]{1,6});/g,val:(e,t)=>String.fromCodePoint(Number.parseInt(t,16))}},this.addExternalEntities=rS,this.parseXml=rT,this.parseTextData=rx,this.resolveNameSpace=rI,this.buildAttributesMap=rk,this.isItStopNode=rj,this.replaceEntitiesValue=rC,this.readStopNodeData=rR,this.saveTextToParentTag=rD,this.addChild=rA,this.ignoreAttributesFn=function(e){return"function"==typeof e?e:Array.isArray(e)?t=>{for(let i of e)if("string"==typeof i&&t===i||i instanceof RegExp&&i.test(t))return!0}:()=>!1}(this.options.ignoreAttributes),this.options.stopNodes&&this.options.stopNodes.length>0){this.stopNodesExact=new Set,this.stopNodesWildcard=new Set;for(let e=0;e<this.options.stopNodes.length;e++){const t=this.options.stopNodes[e];"string"==typeof t&&(t.startsWith("*.")?this.stopNodesWildcard.add(t.substring(2)):this.stopNodesExact.add(t))}}}}function rS(e){let t=Object.keys(e);for(let i=0;i<t.length;i++){let r=t[i];this.lastEntities[r]={regex:RegExp("&"+r+";","g"),val:e[r]}}}function rx(e,t,i,r,n,s,a){if(void 0!==e&&(this.options.trimValues&&!r&&(e=e.trim()),e.length>0)){a||(e=this.replaceEntitiesValue(e));let r=this.options.tagValueProcessor(t,e,i,n,s);return null==r?e:typeof r!=typeof e||r!==e?r:this.options.trimValues||e.trim()===e?rP(e,this.options.parseTagValue,this.options.numberParseOptions):e}}function rI(e){if(this.options.removeNSPrefix){let t=e.split(":"),i="/"===e.charAt(0)?"/":"";if("xmlns"===t[0])return"";2===t.length&&(e=i+t[1])}return e}let rL=RegExp("([^\\s=]+)\\s*(=\\s*(['\"])([\\s\\S]*?)\\3)?","gm");function rk(e,t){if(!0!==this.options.ignoreAttributes&&"string"==typeof e){let i=rh(e,rL),r=i.length,n={};for(let e=0;e<r;e++){let r=this.resolveNameSpace(i[e][1]);if(this.ignoreAttributesFn(r,t))continue;let s=i[e][4],a=this.options.attributeNamePrefix+r;if(r.length)if(this.options.transformAttributeName&&(a=this.options.transformAttributeName(a)),"__proto__"===a&&(a="#__proto__"),void 0!==s){this.options.trimValues&&(s=s.trim()),s=this.replaceEntitiesValue(s);let e=this.options.attributeValueProcessor(r,s,t);null==e?n[a]=s:typeof e!=typeof s||e!==s?n[a]=e:n[a]=rP(s,this.options.parseAttributeValue,this.options.numberParseOptions)}else this.options.allowBooleanAttributes&&(n[a]=!0)}if(Object.keys(n).length){if(this.options.attributesGroupName){let e={};return e[this.options.attributesGroupName]=n,e}return n}}}let rT=function(e){e=e.replace(/\r\n?/g,"\n");let t=new rm("!xml"),i=t,r="",n="",s=new rf(this.options.processEntities);for(let a=0;a<e.length;a++)if("<"===e[a])if("/"===e[a+1]){let t=rz(e,">",a,"Closing Tag is not closed."),s=e.substring(a+2,t).trim();if(this.options.removeNSPrefix){let e=s.indexOf(":");-1!==e&&(s=s.substr(e+1))}this.options.transformTagName&&(s=this.options.transformTagName(s)),i&&(r=this.saveTextToParentTag(r,i,n));let l=n.substring(n.lastIndexOf(".")+1);if(s&&-1!==this.options.unpairedTags.indexOf(s))throw Error(`Unpaired tag can not be used as closing tag: </${s}>`);let o=0;l&&-1!==this.options.unpairedTags.indexOf(l)?(o=n.lastIndexOf(".",n.lastIndexOf(".")-1),this.tagsNodeStack.pop()):o=n.lastIndexOf("."),n=n.substring(0,o),i=this.tagsNodeStack.pop(),r="",a=t}else if("?"===e[a+1]){let t=rO(e,a,!1,"?>");if(!t)throw Error("Pi Tag is not closed.");if(r=this.saveTextToParentTag(r,i,n),this.options.ignoreDeclaration&&"?xml"===t.tagName||this.options.ignorePiTags);else{let e=new rm(t.tagName);e.add(this.options.textNodeName,""),t.tagName!==t.tagExp&&t.attrExpPresent&&(e[":@"]=this.buildAttributesMap(t.tagExp,n)),this.addChild(i,e,n,a)}a=t.closeIndex+1}else if("!--"===e.substr(a+1,3)){let t=rz(e,"--\x3e",a+4,"Comment is not closed.");if(this.options.commentPropName){let s=e.substring(a+4,t-2);r=this.saveTextToParentTag(r,i,n),i.add(this.options.commentPropName,[{[this.options.textNodeName]:s}])}a=t}else if("!D"===e.substr(a+1,2)){let t=s.readDocType(e,a);this.docTypeEntities=t.entities,a=t.i}else if("!["===e.substr(a+1,2)){let t=rz(e,"]]>",a,"CDATA is not closed.")-2,s=e.substring(a+9,t);r=this.saveTextToParentTag(r,i,n);let l=this.parseTextData(s,i.tagname,n,!0,!1,!0,!0);void 0==l&&(l=""),this.options.cdataPropName?i.add(this.options.cdataPropName,[{[this.options.textNodeName]:s}]):i.add(this.options.textNodeName,l),a=t+2}else{let s=rO(e,a,this.options.removeNSPrefix),l=s.tagName,o=s.rawTagName,u=s.tagExp,c=s.attrExpPresent,d=s.closeIndex;if(this.options.transformTagName){let e=this.options.transformTagName(l);u===l&&(u=e),l=e}i&&r&&"!xml"!==i.tagname&&(r=this.saveTextToParentTag(r,i,n,!1));let h=i;h&&-1!==this.options.unpairedTags.indexOf(h.tagname)&&(i=this.tagsNodeStack.pop(),n=n.substring(0,n.lastIndexOf("."))),l!==t.tagname&&(n+=n?"."+l:l);let p=a;if(this.isItStopNode(this.stopNodesExact,this.stopNodesWildcard,n,l)){let t="";if(u.length>0&&u.lastIndexOf("/")===u.length-1)"/"===l[l.length-1]?(l=l.substr(0,l.length-1),n=n.substr(0,n.length-1),u=l):u=u.substr(0,u.length-1),a=s.closeIndex;else if(-1!==this.options.unpairedTags.indexOf(l))a=s.closeIndex;else{let i=this.readStopNodeData(e,o,d+1);if(!i)throw Error(`Unexpected end of ${o}`);a=i.i,t=i.tagContent}let r=new rm(l);l!==u&&c&&(r[":@"]=this.buildAttributesMap(u,n)),t&&(t=this.parseTextData(t,l,n,!0,c,!0,!0)),n=n.substr(0,n.lastIndexOf(".")),r.add(this.options.textNodeName,t),this.addChild(i,r,n,p)}else{if(u.length>0&&u.lastIndexOf("/")===u.length-1){if("/"===l[l.length-1]?(l=l.substr(0,l.length-1),n=n.substr(0,n.length-1),u=l):u=u.substr(0,u.length-1),this.options.transformTagName){let e=this.options.transformTagName(l);u===l&&(u=e),l=e}let e=new rm(l);l!==u&&c&&(e[":@"]=this.buildAttributesMap(u,n)),this.addChild(i,e,n,p),n=n.substr(0,n.lastIndexOf("."))}else{let e=new rm(l);this.tagsNodeStack.push(i),l!==u&&c&&(e[":@"]=this.buildAttributesMap(u,n)),this.addChild(i,e,n,p),i=e}r="",a=d}}else r+=e[a];return t.child};function rA(e,t,i,r){this.options.captureMetaData||(r=void 0);let n=this.options.updateTag(t.tagname,i,t[":@"]);!1===n||("string"==typeof n&&(t.tagname=n),e.addChild(t,r))}let rC=function(e){if(this.options.processEntities){for(let t in this.docTypeEntities){let i=this.docTypeEntities[t];e=e.replace(i.regx,i.val)}for(let t in this.lastEntities){let i=this.lastEntities[t];e=e.replace(i.regex,i.val)}if(this.options.htmlEntities)for(let t in this.htmlEntities){let i=this.htmlEntities[t];e=e.replace(i.regex,i.val)}e=e.replace(this.ampEntity.regex,this.ampEntity.val)}return e};function rD(e,t,i,r){return e&&(void 0===r&&(r=0===t.child.length),void 0!==(e=this.parseTextData(e,t.tagname,i,!1,!!t[":@"]&&0!==Object.keys(t[":@"]).length,r))&&""!==e&&t.add(this.options.textNodeName,e),e=""),e}function rj(e,t,i,r){return!!(t&&t.has(r)||e&&e.has(i))}function rz(e,t,i,r){let n=e.indexOf(t,i);if(-1!==n)return n+t.length-1;throw Error(r)}function rO(e,t,i,r=">"){let n=function(e,t,i=">"){let r,n="";for(let s=t;s<e.length;s++){let t=e[s];if(r)t===r&&(r="");else if('"'===t||"'"===t)r=t;else if(t===i[0]){if(!i[1])return{data:n,index:s};else if(e[s+1]===i[1])return{data:n,index:s}}else"	"===t&&(t=" ");n+=t}}(e,t+1,r);if(!n)return;let s=n.data,a=n.index,l=s.search(/\s/),o=s,u=!0;-1!==l&&(o=s.substring(0,l),s=s.substring(l+1).trimStart());let c=o;if(i){let e=o.indexOf(":");-1!==e&&(u=(o=o.substr(e+1))!==n.data.substr(e+1))}return{tagName:o,tagExp:s,closeIndex:a,attrExpPresent:u,rawTagName:c}}function rR(e,t,i){let r=i,n=1;for(;i<e.length;i++)if("<"===e[i])if("/"===e[i+1]){let s=rz(e,">",i,`${t} is not closed`);if(e.substring(i+2,s).trim()===t&&0==--n)return{tagContent:e.substring(r,i),i:s};i=s}else if("?"===e[i+1])i=rz(e,"?>",i+1,"StopNode is not closed.");else if("!--"===e.substr(i+1,3))i=rz(e,"--\x3e",i+3,"StopNode is not closed.");else if("!["===e.substr(i+1,2))i=rz(e,"]]>",i,"StopNode is not closed.")-2;else{let r=rO(e,i,">");r&&((r&&r.tagName)===t&&"/"!==r.tagExp[r.tagExp.length-1]&&n++,i=r.closeIndex)}}function rP(e,t,i){if(t&&"string"==typeof e){let t=e.trim();return"true"===t||"false"!==t&&function(e,t={}){if(t=Object.assign({},rw,t),!e||"string"!=typeof e)return e;let i=e.trim();if(void 0!==t.skipLike&&t.skipLike.test(i))return e;{if("0"===e)return 0;if(t.hex&&rM.test(i)){var r,n=i;if(parseInt)return parseInt(n,16);if(Number.parseInt)return Number.parseInt(n,16);if(window&&window.parseInt)return window.parseInt(n,16);throw Error("parseInt, Number.parseInt, window.parseInt are not supported")}if(i.includes("e")||i.includes("E"))return function(e,t,i){if(!i.eNotation)return e;let r=t.match(rN);if(!r)return e;{let n=r[1]||"",s=-1===r[3].indexOf("e")?"E":"e",a=r[2],l=n?e[a.length+1]===s:e[a.length]===s;return a.length>1&&l?e:1===a.length&&(r[3].startsWith(`.${s}`)||r[3][0]===s)?Number(t):i.leadingZeros&&!l?Number(t=(r[1]||"")+r[3]):e}}(e,i,t);let s=rv.exec(i);if(!s)return e;{let n=s[1]||"",a=s[2],l=((r=s[3])&&-1!==r.indexOf(".")&&("."===(r=r.replace(/0+$/,""))?r="0":"."===r[0]?r="0"+r:"."===r[r.length-1]&&(r=r.substring(0,r.length-1))),r),o=n?"."===e[a.length+1]:"."===e[a.length];if(!t.leadingZeros&&(a.length>1||1===a.length&&!o))return e;{let r=Number(i),s=String(r);if(0===r)return r;if(-1!==s.search(/[eE]/))if(t.eNotation)return r;else return e;if(-1!==i.indexOf("."))if("0"===s)return r;else if(s===l)return r;else if(s===`${n}${l}`)return r;else return e;let o=a?l:i;return a?o===s||n+o===s?r:e:o===s||o===n+s?r:e}}}}(e,i)}return void 0!==e?e:""}let rV=rm.getMetaDataSymbol(),rU={allowBooleanAttributes:!1,unpairedTags:[]};function r$(e){return" "===e||"	"===e||"\n"===e||"\r"===e}function rB(e,t){let i=t;for(;t<e.length;t++)if("?"==e[t]||" "==e[t]){let r=e.substr(i,t-i);if(t>5&&"xml"===r)return rY("InvalidXml","XML declaration allowed only at the start of the document.",rQ(e,t));if("?"!=e[t]||">"!=e[t+1])continue;t++;break}return t}function r_(e,t){if(e.length>t+5&&"-"===e[t+1]&&"-"===e[t+2]){for(t+=3;t<e.length;t++)if("-"===e[t]&&"-"===e[t+1]&&">"===e[t+2]){t+=2;break}}else if(e.length>t+8&&"D"===e[t+1]&&"O"===e[t+2]&&"C"===e[t+3]&&"T"===e[t+4]&&"Y"===e[t+5]&&"P"===e[t+6]&&"E"===e[t+7]){let i=1;for(t+=8;t<e.length;t++)if("<"===e[t])i++;else if(">"===e[t]&&0==--i)break}else if(e.length>t+9&&"["===e[t+1]&&"C"===e[t+2]&&"D"===e[t+3]&&"A"===e[t+4]&&"T"===e[t+5]&&"A"===e[t+6]&&"["===e[t+7]){for(t+=8;t<e.length;t++)if("]"===e[t]&&"]"===e[t+1]&&">"===e[t+2]){t+=2;break}}return t}let rF=RegExp("(\\s*)([^\\s=]+)(\\s*=)?(\\s*(['\"])(([\\s\\S])*?)\\5)?","g");function rW(e,t){let i=rh(e,rF),r={};for(let e=0;e<i.length;e++){if(0===i[e][1].length)return rY("InvalidAttr","Attribute '"+i[e][2]+"' has no space in starting.",rq(i[e]));if(void 0!==i[e][3]&&void 0===i[e][4])return rY("InvalidAttr","Attribute '"+i[e][2]+"' is without value.",rq(i[e]));if(void 0===i[e][3]&&!t.allowBooleanAttributes)return rY("InvalidAttr","boolean attribute '"+i[e][2]+"' is not allowed.",rq(i[e]));let n=i[e][2];if(!rp(n))return rY("InvalidAttr","Attribute '"+n+"' is an invalid name.",rq(i[e]));if(r.hasOwnProperty(n))return rY("InvalidAttr","Attribute '"+n+"' is repeated.",rq(i[e]));r[n]=1}return!0}function rY(e,t,i){return{err:{code:e,msg:t,line:i.line||i,col:i.col}}}function rQ(e,t){let i=e.substring(0,t).split(/\r?\n/);return{line:i.length,col:i[i.length-1].length+1}}function rq(e){return e.startIndex+e[1].length}class rG{constructor(e){this.externalEntities={},this.options=Object.assign({},ru,e)}parse(e,t){if("string"!=typeof e&&e.toString)e=e.toString();else if("string"!=typeof e)throw Error("XML data is accepted in String or Bytes[] form.");if(t){!0===t&&(t={});let i=function(e,t){t=Object.assign({},rU,t);let i=[],r=!1,n=!1;"\uFEFF"===e[0]&&(e=e.substr(1));for(let s=0;s<e.length;s++)if("<"===e[s]&&"?"===e[s+1]){if(s+=2,(s=rB(e,s)).err)return s}else if("<"===e[s]){let a=s;if("!"===e[++s]){s=r_(e,s);continue}{let l=!1;"/"===e[s]&&(l=!0,s++);let o="";for(;s<e.length&&">"!==e[s]&&" "!==e[s]&&"	"!==e[s]&&"\n"!==e[s]&&"\r"!==e[s];s++)o+=e[s];if("/"===(o=o.trim())[o.length-1]&&(o=o.substring(0,o.length-1),s--),!rp(o))return rY("InvalidTag",0===o.trim().length?"Invalid space after '<'.":"Tag '"+o+"' is an invalid name.",rQ(e,s));let u=function(e,t){let i="",r="",n=!1;for(;t<e.length;t++){if('"'===e[t]||"'"===e[t])""===r?r=e[t]:r!==e[t]||(r="");else if(">"===e[t]&&""===r){n=!0;break}i+=e[t]}return""===r&&{value:i,index:t,tagClosed:n}}(e,s);if(!1===u)return rY("InvalidAttr","Attributes for '"+o+"' have open quote.",rQ(e,s));let c=u.value;if(s=u.index,"/"===c[c.length-1]){let i=s-c.length,n=rW(c=c.substring(0,c.length-1),t);if(!0!==n)return rY(n.err.code,n.err.msg,rQ(e,i+n.err.line));r=!0}else if(l)if(!u.tagClosed)return rY("InvalidTag","Closing tag '"+o+"' doesn't have proper closing.",rQ(e,s));else{if(c.trim().length>0)return rY("InvalidTag","Closing tag '"+o+"' can't have attributes or invalid starting.",rQ(e,a));if(0===i.length)return rY("InvalidTag","Closing tag '"+o+"' has not been opened.",rQ(e,a));let t=i.pop();if(o!==t.tagName){let i=rQ(e,t.tagStartPos);return rY("InvalidTag","Expected closing tag '"+t.tagName+"' (opened in line "+i.line+", col "+i.col+") instead of closing tag '"+o+"'.",rQ(e,a))}0==i.length&&(n=!0)}else{let l=rW(c,t);if(!0!==l)return rY(l.err.code,l.err.msg,rQ(e,s-c.length+l.err.line));if(!0===n)return rY("InvalidXml","Multiple possible root nodes found.",rQ(e,s));-1!==t.unpairedTags.indexOf(o)||i.push({tagName:o,tagStartPos:a}),r=!0}for(s++;s<e.length;s++)if("<"===e[s])if("!"===e[s+1]){s=r_(e,++s);continue}else if("?"===e[s+1]){if((s=rB(e,++s)).err)return s}else break;else if("&"===e[s]){let t=function(e,t){if(";"===e[++t])return -1;if("#"===e[t]){var i=++t;let r=/\d/;for("x"===e[i]&&(i++,r=/[\da-fA-F]/);i<e.length;i++){if(";"===e[i])return i;if(!e[i].match(r))break}return -1}let r=0;for(;t<e.length;t++,r++)if(!e[t].match(/\w/)||!(r<20)){if(";"===e[t])break;return -1}return t}(e,s);if(-1==t)return rY("InvalidChar","char '&' is not expected.",rQ(e,s));s=t}else if(!0===n&&!r$(e[s]))return rY("InvalidXml","Extra text at the end",rQ(e,s));"<"===e[s]&&s--}}else{if(r$(e[s]))continue;return rY("InvalidChar","char '"+e[s]+"' is not expected.",rQ(e,s))}return r?1==i.length?rY("InvalidTag","Unclosed tag '"+i[0].tagName+"'.",rQ(e,i[0].tagStartPos)):!(i.length>0)||rY("InvalidXml","Invalid '"+JSON.stringify(i.map(e=>e.tagName),null,4).replace(/\r?\n/g,"")+"' found.",{line:1,col:1}):rY("InvalidXml","Start tag expected.",1)}(e,t);if(!0!==i)throw Error(`${i.err.msg}:${i.err.line}:${i.err.col}`)}let i=new rE(this.options);i.addExternalEntities(this.externalEntities);let r=i.parseXml(e);return this.options.preserveOrder||void 0===r?r:function e(t,i,r){let n,s={};for(let a=0;a<t.length;a++){let l=t[a],o=function(e){let t=Object.keys(e);for(let e=0;e<t.length;e++){let i=t[e];if(":@"!==i)return i}}(l),u="";if(u=void 0===r?o:r+"."+o,o===i.textNodeName)void 0===n?n=l[o]:n+=""+l[o];else if(void 0===o)continue;else if(l[o]){let t=e(l[o],i,u),r=function(e,t){let{textNodeName:i}=t,r=Object.keys(e).length;return 0===r||1===r&&(!!e[i]||"boolean"==typeof e[i]||0===e[i])}(t,i);void 0!==l[rV]&&(t[rV]=l[rV]),l[":@"]?function(e,t,i,r){if(t){let n=Object.keys(t),s=n.length;for(let a=0;a<s;a++){let s=n[a];r.isArray(s,i+"."+s,!0,!0)?e[s]=[t[s]]:e[s]=t[s]}}}(t,l[":@"],u,i):1!==Object.keys(t).length||void 0===t[i.textNodeName]||i.alwaysCreateTextNode?0===Object.keys(t).length&&(i.alwaysCreateTextNode?t[i.textNodeName]="":t=""):t=t[i.textNodeName],void 0!==s[o]&&s.hasOwnProperty(o)?(Array.isArray(s[o])||(s[o]=[s[o]]),s[o].push(t)):i.isArray(o,u,r)?s[o]=[t]:s[o]=t}}return"string"==typeof n?n.length>0&&(s[i.textNodeName]=n):void 0!==n&&(s[i.textNodeName]=n),s}(r,this.options)}addEntity(e,t){if(-1!==t.indexOf("&"))throw Error("Entity value can't have '&'");if(-1!==e.indexOf("&")||-1!==e.indexOf(";"))throw Error("An entity must be set without '&' and ';'. Eg. use '#xD' for '&#xD;'");if("&"===t)throw Error("An entity with value '&' is not permitted");this.externalEntities[e]=t}static getMetaDataSymbol(){return rm.getMetaDataSymbol()}}function rH(e,t,i=!1){let r="",n=[],s=!1;return e.forEach(e=>{let a=!1,l=[e];for(let o of(e[":@"]&&"x-bg"===e[":@"]["@_role"]&&(a=!0,l=e.span),l))if(o["#text"]&&(!i||l.length<=1)){r+=o["#text"];let e=n[n.length-1];n.push({startTimeMs:e?e.startTimeMs+e.durationMs:t,durationMs:0,words:o["#text"],isBackground:a})}else if(o.span){let e=o.span[0]["#text"],t=t6(o[":@"]?.["@_begin"]),i=t6(o[":@"]?.["@_end"]);n.push({startTimeMs:t,durationMs:i-t,isBackground:a,words:e}),r+=e,s=!0}}),s||(n=[]),{parts:n,text:r,isWordSynced:s}}async function rZ(e,t){let i=new rG({ignoreAttributes:!1,attributeNamePrefix:"@_",attributesGroupName:!1,textNodeName:"#text",trimValues:!1,removeNSPrefix:!0,preserveOrder:!0,allowBooleanAttributes:!0,parseAttributeValue:!1,parseTagValue:!1}),r=await i.parse(e),n=new Map,s=r[0].tt,a=s.find(e=>e.head).head,l=s.find(e=>e.body),o=l.body,u=l[":@"],c=o.flatMap(e=>e.div);if(!(c.length>0&&void 0!==c[0][":@"])){t.sourceMap["bLyrics-richsynced"].lyricSourceResult=null,t.sourceMap["bLyrics-richsynced"].filled=!0,t.sourceMap["bLyrics-synced"].lyricSourceResult=null,t.sourceMap["bLyrics-synced"].filled=!0;return}let d=!1;c.forEach(e=>{let t=e[":@"],i=t6(t?.["@_begin"]),r=t6(t?.["@_end"]),s=rH(e.p,i);s.isWordSynced&&(d=!0),n.set(t?.["@_key"]||n.size.toString(),{agent:t?.["@_agent"],durationMs:r-i,parts:s.parts,startTimeMs:i,words:s.text,romanization:void 0,timedRomanization:void 0,translation:void 0})});let h=a[0].metadata.find(e=>e.iTunesMetadata);if(h){let e=h.iTunesMetadata.find(e=>e.translations),t=h.iTunesMetadata.find(e=>e.transliterations);if(e&&e.translations&&e.translations.length>0){let t=e.translations[0][":@"]["@_lang"];e.translations[0].translation.forEach(e=>{let i=e.text[0]["#text"],r=e[":@"]["@_for"];if(t&&i&&r){let e=n.get(r);e&&(e.translation={text:i,lang:t})}})}t&&t.transliterations&&t.transliterations.length>0&&t.transliterations[0].transliteration.forEach(e=>{let t=e[":@"]["@_for"];if(t){let i=n.get(t),r=i.startTimeMs,s=rH(e.text,r,!1);i.romanization=s.text,i.timedRomanization=s.parts}})}let p=Array.from(n.values());p=function(e,t){if(0===e.length)return e;let i=[],r=(e,t)=>({startTimeMs:e,durationMs:t,words:"",parts:[],isInstrumental:!0});e[0].startTimeMs>5e3&&i.push(r(0,e[0].startTimeMs));for(let t=0;t<e.length;t++)if(i.push(e[t]),t<e.length-1){let n=e[t].startTimeMs+e[t].durationMs,s=e[t+1].startTimeMs-n;s>5e3&&i.push(r(n,s))}let n=e[e.length-1],s=n.startTimeMs+n.durationMs,a=t-s;return a>5e3&&i.push(r(s,a)),i}(p,t6(u["@_dur"]));let m={cacheAllowed:!0,language:u["@_lang"],lyrics:p,musicVideoSynced:!1,source:"boidu.dev",sourceHref:"https://boidu.dev/"};d?(t.sourceMap["bLyrics-richsynced"].lyricSourceResult=m,t.sourceMap["bLyrics-synced"].lyricSourceResult=null):(t.sourceMap["bLyrics-richsynced"].lyricSourceResult=null,t.sourceMap["bLyrics-synced"].lyricSourceResult=m),t.sourceMap["bLyrics-synced"].filled=!0,t.sourceMap["bLyrics-richsynced"].filled=!0}async function rX(e){let t=new URL("https://lyrics-api.boidu.dev/getLyrics");t.searchParams.append("s",e.song),t.searchParams.append("a",e.artist),t.searchParams.append("d",String(e.duration)),null!=e.album&&t.searchParams.append("al",e.album);let i=await fetch(t.toString(),{signal:AbortSignal.any([e.signal,AbortSignal.timeout(1e4)])});if(!i.ok){e.sourceMap["bLyrics-richsynced"].filled=!0,e.sourceMap["bLyrics-richsynced"].lyricSourceResult=null,e.sourceMap["bLyrics-synced"].filled=!0,e.sourceMap["bLyrics-synced"].lyricSourceResult=null;return}let r=await i.json().then(e=>e.ttml);await rZ(r,e)}async function rK(e){async function t(e=!1){if(e)Y(A,"Forcing new token, removing any existing one."),await chrome.storage.local.remove("jwtToken");else{let e=await tL(["jwtToken"]);if(e.jwtToken)if(!function(e){try{let t=e.split(".")[1];if(!t)return!0;let i=t.replace(/-/g,"+").replace(/_/g,"/"),r=atob(i),n=JSON.parse(r).exp;if(!n)return!0;return Date.now()/1e3>n}catch(e){return console.error(A,"Error decoding JWT on client-side:",e),!0}}(e.jwtToken))return Y(A,"Using valid, non-expired JWT for bypass."),e.jwtToken;else Y(A,"Local JWT has expired. Removing and requesting a new one."),await chrome.storage.local.remove("jwtToken")}try{Y(A,"No valid JWT found, initiating Turnstile challenge...");let e=await new Promise((e,t)=>{let i=document.createElement("iframe");i.src="https://lyrics.api.dacubeking.com/challenge",i.style.position="fixed",i.style.bottom="calc(20px + var(--ytmusic-player-bar-height))",i.style.right="20px",i.style.width="0px",i.style.height="0px",i.style.border="none",i.style.zIndex="999999",document.body.appendChild(i);let r=r=>{if(r.source===i.contentWindow)switch(r.data.type){case"turnstile-token":Y(A,"Received Success Token:",r.data.token),n(),e(r.data.token);break;case"turnstile-error":console.error(A,"Received Challenge Error:",r.data.error),n(),t(Error(`${A} Turnstile challenge error: ${r.data.error}`));break;case"turnstile-expired":console.warn(A,"Token expired. Resetting challenge."),i.contentWindow.postMessage({type:"reset-turnstile"},"*");break;case"turnstile-timeout":console.warn(A,"Challenge timed out."),n(),t(Error(`${A} Turnstile challenge timed out.`))}},n=()=>{window.removeEventListener("message",r),document.body.contains(i)&&document.body.removeChild(i)};window.addEventListener("message",r)}),t=await fetch(k+"verify-turnstile",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token:e}),credentials:"include"});if(!t.ok)throw Error(`API verification failed: ${t.statusText}`);let i=(await t.json()).jwt;if(!i)throw Error("No JWT returned from API after verification.");return await chrome.storage.local.set({jwtToken:i}),Y(A,"New JWT received and stored."),i}catch(e){return console.error(A,"Authentication process failed:",e),null}}async function i(t){let i=new URL(k+"lyrics");return i.searchParams.append("song",e.song),i.searchParams.append("artist",e.artist),i.searchParams.append("duration",String(e.duration)),i.searchParams.append("videoId",e.videoId),e.album&&i.searchParams.append("album",e.album),i.searchParams.append("alwaysFetchMetadata",String(e.alwaysFetchMetadata)),await fetch(i.toString(),{signal:AbortSignal.any([e.signal,AbortSignal.timeout(1e4)]),headers:{Authorization:`Bearer ${t}`},credentials:"include"})}let r=await t();if(!r){console.error(A,"Could not obtain an initial authentication token. Aborting lyrics fetch."),["musixmatch-synced","musixmatch-richsync","lrclib-synced","lrclib-plain"].forEach(t=>{e.sourceMap[t].filled=!0});return}let n=await i(r);if(403===n.status){if(console.warn(A,"Request was blocked (403 Forbidden), possibly by WAF. Forcing new Turnstile challenge."),!(r=await t(!0))){console.error(A,"Could not obtain a new token after WAF block. Aborting."),["musixmatch-synced","musixmatch-richsync","lrclib-synced","lrclib-plain"].forEach(t=>{e.sourceMap[t].filled=!0});return}Y(A,"Retrying API call with new token..."),n=await i(r)}if(!n.ok){console.error(A,`API request failed with status: ${n.status}`),["musixmatch-synced","musixmatch-richsync","lrclib-synced","lrclib-plain"].forEach(t=>{e.sourceMap[t].filled=!0});return}let s=await n.json();if(s.album&&Y(A,"Found Album: "+s.album),s.musixmatchWordByWordLyrics){let t=t9(s.musixmatchWordByWordLyrics,Number(e.duration));!function(e){for(let t of e)if(t.parts)for(let e=1;e<t.parts.length;e++){let i=t.parts[e],r=t.parts[e-1];if(" "===i.words&&" "!==r.words&&(15>=Math.abs(i.durationMs-r.durationMs)||i.durationMs<=100)){let e=i.durationMs;r.durationMs+=e,i.durationMs-=e,i.startTimeMs+=e}}let t=0,i=0;for(let r of e)if(r.parts&&0!==r.parts.length)for(let e=0;e<r.parts.length-2;e++){let n=r.parts[e];" "!==n.words&&(n.durationMs<=100&&t++,i++)}if(i>0&&t/i>.5){Y("Found a lot of short duration lyrics, fudging durations");for(let t=0;t<e.length;t++){let i=e[t];if(i.parts&&0!==i.parts.length)for(let r=0;r<i.parts.length;r++){let n=i.parts[r];if(" "!==n.words&&n.durationMs<=400){let s;null===(s=r+1<i.parts.length?i.parts[r+1]:t+1<i.parts.length&&e[t+1].parts&&e[t+1].parts.length>0?e[t+1].parts[0]:null)?n.durationMs=300:" "===s.words?(n.durationMs+=s.durationMs,s.startTimeMs+=s.durationMs,s.durationMs=0):n.durationMs=s.startTimeMs-n.startTimeMs}}}}}(t),e.sourceMap["musixmatch-richsync"].lyricSourceResult={lyrics:t,source:"Musixmatch",sourceHref:"https://www.musixmatch.com",musicVideoSynced:!1,album:s.album,artist:s.artist,song:s.song,duration:s.duration,cacheAllowed:!0}}else e.sourceMap["musixmatch-richsync"].lyricSourceResult={lyrics:null,source:"Musixmatch",sourceHref:"https://www.musixmatch.com",musicVideoSynced:!1,album:s.album,artist:s.artist,song:s.song,duration:s.duration,cacheAllowed:!0};if(s.musixmatchSyncedLyrics){let t=t9(s.musixmatchSyncedLyrics,Number(e.duration));e.sourceMap["musixmatch-synced"].lyricSourceResult={lyrics:t,source:"Musixmatch",sourceHref:"https://www.musixmatch.com",musicVideoSynced:!1}}if(s.lrclibSyncedLyrics){let t=t9(s.lrclibSyncedLyrics,Number(e.duration));e.sourceMap["lrclib-synced"].lyricSourceResult={lyrics:t,source:"LRCLib",sourceHref:"https://lrclib.net",musicVideoSynced:!1}}if(s.lrclibPlainLyrics){let t=ie(s.lrclibPlainLyrics);e.sourceMap["lrclib-plain"].lyricSourceResult={lyrics:t,source:"LRCLib",sourceHref:"https://lrclib.net",musicVideoSynced:!1,cacheAllowed:!1}}if(s.goLyricsApiTtml){let t=JSON.parse(s.goLyricsApiTtml);await rZ(t.ttml,e)}["musixmatch-synced","musixmatch-richsync","lrclib-synced","lrclib-plain","bLyrics-richsynced","bLyrics-synced"].forEach(t=>{e.sourceMap[t].filled=!0})}async function rJ(e){let t=new URL("https://lrclib.net/api/get");t.searchParams.append("track_name",e.song),t.searchParams.append("artist_name",e.artist),e.album&&t.searchParams.append("album_name",e.album),t.searchParams.append("duration",String(e.duration));let i=await fetch(t.toString(),{headers:{"Lrclib-Client":"BetterLyrics Extension (https://github.com/better-lyrics/better-lyrics)"},signal:AbortSignal.any([e.signal,AbortSignal.timeout(1e4)])});i.ok||(e.sourceMap["lrclib-synced"].filled=!0,e.sourceMap["lrclib-plain"].filled=!0,e.sourceMap["lrclib-synced"].lyricSourceResult=null,e.sourceMap["lrclib-plain"].lyricSourceResult=null);let r=await i.json();r&&(Y("[BetterLyrics] Lyrics found from LRCLIB"),r.syncedLyrics&&(e.sourceMap["lrclib-synced"].lyricSourceResult={lyrics:t9(r.syncedLyrics,r.duration),source:"LRCLib",sourceHref:"https://lrclib.net",musicVideoSynced:!1}),r.plainLyrics&&(e.sourceMap["lrclib-plain"].lyricSourceResult={lyrics:ie(r.plainLyrics),source:"LRCLib",sourceHref:"https://lrclib.net",musicVideoSynced:!1,cacheAllowed:!1})),e.sourceMap["lrclib-synced"].filled=!0,e.sourceMap["lrclib-plain"].filled=!0}async function r0(e){let t=await function(e,t=250){if(ii.has(e))return Promise.resolve(ii.get(e));{let i=0;return new Promise(r=>{let n=setInterval(()=>{if(ii.has(e)&&(clearInterval(n),r(ii.get(e))),ir.get(e)){let t=ir.get(e).counterpartVideoId;t&&ii.has(t)&&(clearInterval(n),r(ii.get(t)))}i>t&&(clearInterval(n),Y("Failed to sniff lyrics"),r({hasLyrics:!1,lyrics:"",sourceText:""})),i+=1},20)})}}(e.videoId);if(t.hasLyrics){let i=t.lyrics,r=t.sourceText.substring(8)+" (via YT)",n=ie(i);e.sourceMap["yt-lyrics"].lyricSourceResult={lyrics:n,text:i,source:r,sourceHref:"",musicVideoSynced:!1,cacheAllowed:!1},e.sourceMap["yt-lyrics"].filled=!0}}async function r1(e){let t=e.audioTrackData;if(!t||0===t.captionTracks.length)return;let i=null;if(1===t.captionTracks.length)i=t.captionTracks[0].languageCode;else for(let e in t.captionTracks){let r=t.captionTracks[e];if(r.displayName.includes("auto-generated")){i=r.languageCode;break}}i||(Y("Found Caption Tracks, but couldn't determine the default",t),e.sourceMap["yt-captions"].filled=!0,e.sourceMap["yt-captions"].lyricSourceResult=null);let r=null;for(let e in t.captionTracks){let n=t.captionTracks[e];if(!n.displayName.includes("auto-generated")&&n.languageCode===i){r=new URL(n.url);break}}if(!r){Y("Only found auto generated lyrics for youtube captions, not using",t),e.sourceMap["yt-captions"].filled=!0,e.sourceMap["yt-captions"].lyricSourceResult=null;return}(r=new URL(r)).searchParams.set("fmt","json3");let n=await fetch(r.toString(),{method:"GET",signal:AbortSignal.any([e.signal,AbortSignal.timeout(1e4)])}).then(e=>e.json()),s=[];n.events.forEach(e=>{let t="";for(let i in e.segs)t+=e.segs[i].utf8;for(let e of(t=t.replace(/\n/g," "),"♪\uD834\uDD60\uD834\uDD61\uD834\uDD62\uD834\uDD63\uD834\uDD64"))(t=t.trim()).startsWith(e)&&(t=t.substring(1)),t.endsWith(e)&&(t=t.substring(0,t.length-1));t=t.trim(),s.push({startTimeMs:e.tStartMs,words:t,durationMs:e.dDurationMs})}),s.every(e=>e.words.toUpperCase()===e.words)&&s.every(e=>(e.words=e.words.substring(0,1).toUpperCase()+e.words.substring(1).toLowerCase(),!0)),e.sourceMap["yt-captions"].filled=!0,e.sourceMap["yt-captions"].lyricSourceResult={lyrics:s,language:i,source:"Youtube Captions",sourceHref:"",musicVideoSynced:!0}}async function r2(e){let t=()=>{e.sourceMap["legato-synced"].filled=!0,e.sourceMap["legato-synced"].lyricSourceResult=null};try{let i=new URL("https://lyrics-api.boidu.dev/kugou/getLyrics");i.searchParams.append("s",e.song),i.searchParams.append("a",e.artist),i.searchParams.append("d",String(e.duration)),e.album&&i.searchParams.append("al",e.album);let r=await fetch(i.toString(),{signal:AbortSignal.any([e.signal,AbortSignal.timeout(1e4)])});if(!r.ok)return void t();let n=await r.json();if(!n.lyrics)return void t();e.sourceMap["legato-synced"].lyricSourceResult={lyrics:t9(n.lyrics,1e3*e.duration),source:"Better Lyrics Legato",sourceHref:"https://boidu.dev/",musicVideoSynced:!1},e.sourceMap["legato-synced"].filled=!0}catch(e){Y(D,"Legato provider error:",e),t()}}let r4="2.0.0",r3=[...$].sort((e,t)=>e.priority-t.priority).map(e=>e.key);function r5(e){return B.includes(e)}let r7=[],r8=!1,r6={"bLyrics-richsynced":rX,"bLyrics-synced":rX,"musixmatch-richsync":rK,"musixmatch-synced":rK,"lrclib-synced":rJ,"lrclib-plain":rJ,"yt-captions":r1,"yt-lyrics":r0,"legato-synced":r2};function r9(){var e;return e=e=>({filled:!1,lyricSourceResult:null,resultCached:!1,lyricSourceFiller:e}),Object.fromEntries(Object.entries(r6).map(([t,i])=>[t,e(i,t)]))}async function ne(e,t){let i=e.sourceMap[t];if(!i.filled){let r=`blyrics_${e.videoId}_${t}`,n=await tD(r);if(n){let e=JSON.parse(n);if(e&&e.version&&e.version===r4)return i.filled=!0,i.lyricSourceResult=e,i.resultCached=!0,e}await i.lyricSourceFiller(e)}return r3.forEach(t=>{let i=e.sourceMap[t];i.filled&&!i.resultCached&&i.lyricSourceResult&&!1!==i.lyricSourceResult.cacheAllowed&&(i.resultCached=!0,tj(`blyrics_${e.videoId}_${t}`,JSON.stringify({version:r4,...i.lyricSourceResult}),6048e5))}),i.lyricSourceResult}function nt(e,t){if(t&&e&&(e.isMusicVideoSynced=!e.isMusicVideoSynced,"none"!==e.syncType))for(let i of e.lines){i.accumulatedOffsetMs=1e6;let e=0;for(let r of t.segment){let t=1e3*i.time;if(t>=r.counterpartVideoStartTimeMilliseconds&&(e=r.primaryVideoStartTimeMilliseconds-r.counterpartVideoStartTimeMilliseconds,t<=r.counterpartVideoStartTimeMilliseconds+r.durationMilliseconds))break}let r=e/1e3;i.time=i.time+r,i.lyricElement.dataset.time=String(i.time),i.parts.forEach(e=>{e.time=e.time+r,e.lyricElement.dataset.time=String(e.time)})}}async function ni(e,t){let i,r=e.song,n=e.artist,s=e.videoId,l=Number(e.duration),o=e.audioTrackData,u=0!==e.contentRect.width&&0!==e.contentRect.height;if(!s)return void Y(O,"Invalid video id");let c=await il(s,1),d=!1,h=c&&c.counterpartVideoId&&c.counterpartVideoId===nn.lastLoadedVideoId||nn.lastLoadedVideoId===s,p=c?.segmentMap||null;h&&p?(nt(nn.lyricData,p),nn.suppressZeroTime=Date.now()+5e3,nn.areLyricsTicking=!0,Y("Switching between audio/video: Skipping Loader",p)):(Y("Not Switching between audio/video",h,p),iP(),t_(),c=await il(s),p=c?.segmentMap||null,nn.areLyricsLoaded=!1,nn.areLyricsTicking=!1,nn.suppressZeroTime=0),u&&c&&c.counterpartVideoId&&c.segmentMap&&(Y("Switching VideoId to Audio Id"),d=!0,s=c.counterpartVideoId);let m=document.getElementsByClassName(a)[1];if(console.assert(null!=m),"true"!==m.getAttribute("aria-selected")){nn.areLyricsLoaded=!1,nn.areLyricsTicking=!1,nn.lyricInjectionFailed=!0,Y("[BetterLyrics] (Safe to ignore) Lyrics tab is hidden, skipping lyrics fetch");return}r=r.trim(),n=(n=n.trim()).replace(", & ",", ");let f=await io(s);if(f||(f=""),!r||!n)return void Y(O,"Empty song or artist name");Y("[BetterLyrics] Fetching lyrics for:",r,n);let g=null,y={song:r,artist:n,duration:l,videoId:s,audioTrackData:o,album:f,sourceMap:r9(),alwaysFetchMetadata:d,signal:t},b=ne(y,"yt-lyrics").then(e=>(!nn.areLyricsLoaded&&e&&(Y(A,"Temporarily Using YT Music Lyrics while we wait for synced lyrics to load"),rn({...e,song:y.song,artist:y.artist,duration:y.duration,videoId:y.videoId,album:y.album||"",segmentMap:null},!0)),e));try{let e=await ne(y,"musixmatch-richsync");e&&e.album&&e.album.length>0&&f!==e.album&&(y.album=e.album),e&&e.song&&e.song.length>0&&r!==e.song&&(Y("Using '"+e.song+"' for song instead of '"+r+"'"),y.song=e.song),e&&e.artist&&e.artist.length>0&&n!==e.artist&&(Y("Using '"+e.artist+"' for artist instead of '"+n+"'"),y.artist=e.artist),e&&e.duration&&l!==e.duration&&(Y("Using '"+e.duration+"' for duration instead of '"+l+"'"),y.duration=e.duration)}catch(e){Y(e)}for(let e of r7){if(t.aborted)return;try{let t=await ne(y,e);if(t&&t.lyrics&&t.lyrics.length>0){let r=await b;if(null!==r){let e="";t.lyrics.forEach(t=>{e+=t.words+"\n"});let i=_(e.toLowerCase(),r.text.toLowerCase());if(i<.5){Y(`Got lyrics from ${t.source}, but they don't match yt lyrics. Rejecting: Match: ${i}%`);continue}}g=t,i=e;break}}catch(e){Y(e)}}if(g||(g={lyrics:[{startTimeMs:0,words:R,durationMs:0}],source:"Unknown",sourceHref:"",musicVideoSynced:!1,cacheAllowed:!1}),!g.lyrics)throw Error("Lyrics.lyrics is null or undefined. Report this bug");u===(!0===g.musicVideoSynced)&&(p=null),Y("Got Lyrics from "+g.source);let M={song:y.song,artist:y.artist,album:y.album||"",duration:y.duration,videoId:y.videoId,segmentMap:p,providerKey:i,...g};nn.lastLoadedVideoId=e.videoId,t.aborted||rn(M)}async function nr(e,t){Y(A,"Prefetching next song",e,t);let i=e.song,r=e.artist,n=e.videoId,s=Number(e.duration),a=new AbortController().signal,l=await il(n),o=!1;t&&l&&l.counterpartVideoId&&l.segmentMap&&(o=!0,n=l.counterpartVideoId),i=i.trim(),r=(r=r.trim()).replace(", & ",", ");let u=await io(n);u||(u=""),Y("Prefetching for: ",i,r);let c={song:i,artist:r,duration:s,videoId:n,audioTrackData:null,album:u,sourceMap:r9(),alwaysFetchMetadata:o,signal:a};try{let e=await ne(c,"musixmatch-richsync");e&&e.album&&e.album.length>0&&u!==e.album&&(c.album=e.album),e&&e.song&&e.song.length>0&&i!==e.song&&(c.song=e.song),e&&e.artist&&e.artist.length>0&&r!==e.artist&&(c.artist=e.artist),e&&e.duration&&s!==e.duration&&(c.duration=e.duration)}catch(e){Y(e)}for(let e of r7){if(a.aborted)return;try{let t=await ne(c,e);if(t&&t.lyrics&&t.lyrics.length>0)break}catch(e){Y(e)}}}let nn={suppressZeroTime:0,areLyricsTicking:!1,lyricData:null,areLyricsLoaded:!1,lyricInjectionFailed:!1,lastVideoId:null,lastVideoDetails:null,lyricInjectionPromise:null,queueLyricInjection:!1,queueAlbumArtInjection:!1,shouldInjectAlbumArt:"Unknown",queueSongDetailsInjection:!1,loaderAnimationEndTimeout:void 0,lastLoadedVideoId:null,lyricAbortController:null,isTranslateEnabled:!1,isRomanizationEnabled:!1,translationLanguage:"en",hasPreloadedNextSong:!1};function ns(){nn.lastVideoId=null}async function na(){Q(),await iF(),function e(){let t=document.querySelector(P),i=document.querySelector(v);if(!t||!i)return void setTimeout(e,1e3);iz&&iz.disconnect();let r=document.getElementById(U);r||((r=document.createElement("div")).id=U,i.prepend(r)),iU()&&i$(),(iz=new MutationObserver(()=>{iU()?i$():iB()})).observe(t,{attributes:!0,attributeFilter:[V]})}(),function e(){let t=document.getElementsByClassName(a)[1];t?(ih&&ih.disconnect(),t.removeAttribute("disabled"),t.setAttribute("aria-disabled","false"),(ih=new MutationObserver(e=>{e.forEach(e=>{"disabled"===e.attributeName&&(t.removeAttribute("disabled"),t.setAttribute("aria-disabled","false"))})})).observe(t,{attributes:!0})):setTimeout(()=>{e()},1e3)}(),ib||(ib=!0,document.addEventListener("keydown",e=>{if("f"!==e.key&&"F"!==e.key||e.metaKey||e.ctrlKey||e.altKey)return;let t=e.target;"INPUT"===t.tagName||"TEXTAREA"===t.tagName||t.isContentEditable||iI(e)},{capture:!0}),function e(){let t=document.querySelector("ytmusic-app-layout");if(!t)return void setTimeout(e,1e3);im&&im.disconnect();let i=!1;(im=new MutationObserver(()=>{let e="FULLSCREEN"===t.getAttribute("player-ui-state");i&&!e&&function(){if(!t5)return;t5=!1;let e=document.querySelector(".toggle-player-page-button");e&&e.click()}(),i=e})).observe(t,{attributes:!0,attributeFilter:["player-ui-state"]})}(),function e(){let t=document.querySelector("#song-media-window .fullscreen-button");t?t.addEventListener("click",iI,{capture:!0}):setTimeout(e,1e3)}()),t2(),tX(),function e(t,i){let r=document.querySelector("ytmusic-app-layout");if(!r)return void setTimeout(()=>e(t,i),1e3);id&&id.disconnect();let n=r.hasAttribute("player-fullscreened");(id=new MutationObserver(()=>{let e=r.hasAttribute("player-fullscreened");!n&&e?t():n&&!e&&i(),n=e})).observe(r,{attributes:!0,attributeFilter:["player-fullscreened"]})}(()=>void(iw(),document.addEventListener("visibilitychange",iN)),()=>void(ic&&(ic.release(),ic=null),document.removeEventListener("visibilitychange",iN))),t4(),tQ||(tQ=!0,chrome.storage.onChanged.addListener(async(e,t)=>{if(("sync"===t||"local"===t)&&e.customCSS&&e.customCSS.newValue){let t=e.customCSS.newValue;tx(t)&&(t=tS(t)),tq(tT(t))}if("local"===t)for(let t of Object.keys(e))t.startsWith("storeTheme:")&&await tH(t,e[t])}),tG()),await tP(),await tO(),tZ||(tZ=!0,chrome.runtime.onMessage.addListener((e,t,i)=>{if(Y(C,"Received message:",e.action),"applyStyles"===e.action)Y(C,"Processing applyStyles, RICS length:",e.ricsSource?.length),e.ricsSource?(Y(C,"Compiling RICS and applying styles"),tq(tT(e.ricsSource)),rl(),Y(C,"Styles applied successfully")):(Y(C,"Loading styles from storage"),tG().then(()=>{rl(),Y(C,"Styles loaded from storage and applied")}));else if("updateSettings"===e.action)t_(),Q(),t2(),tX(),t4(),nn.shouldInjectAlbumArt="Unknown",tJ(()=>nn.shouldInjectAlbumArt=!0,()=>{let e;nn.shouldInjectAlbumArt=!1,iC&&(iC.disconnect(),iC=null),iD&&(iD.disconnect(),iD=null),iO&&(clearTimeout(iO),iO=null),(e=document.getElementById("layout"))&&(e.style.removeProperty("--blyrics-background-img"),Y("[BetterLyrics] Album art removed from the layout"))}),ns();else if("clearCache"===e.action)try{tR(),ns(),i({success:!0})}catch{i({success:!1})}})),function e(){if(iy)return;let t=document.getElementsByClassName("tab-content style-scope tp-yt-paper-tab"),[i,r,n]=Array.from(t);if(void 0!==i&&void 0!==r&&void 0!==n){iy=!0;for(let e=0;e<t.length;e++)t[e].addEventListener("click",()=>{let t=document.querySelector(v);iS[iE]=t.scrollTop,t.scrollTop=iS[e],setTimeout(()=>{t.scrollTop=iS[e],nn.areLyricsTicking=nn.areLyricsLoaded&&nn.lyricData?.syncType!=="none"&&1===e},0),iE=e,1!==e&&(nn.areLyricsTicking=!1)});r.addEventListener("click",()=>{i6().classList.remove("blyrics-hidden"),nn.areLyricsLoaded||(Y("[BetterLyrics] Lyrics tab clicked, fetching lyrics"),iW(),iP(),ns())});let e=()=>{i6().classList.add("blyrics-hidden")};i.addEventListener("click",e),n.addEventListener("click",e)}else setTimeout(()=>e(),1e3)}(),iv||(iv=!0,document.addEventListener("blyrics-send-player-time",e=>{var t,i;let r,n,s,l,o,u,c=e.detail,d=c.videoId,h=c.song+" "+c.artist;if(d!==nn.lastVideoId||h!==nn.lastVideoDetails){if(nn.areLyricsTicking=!1,nn.lastVideoId=d,nn.lastVideoDetails=h,!c.song||!c.artist)return void Y("Lyrics switched: Still waiting for metadata ",c.videoId);Y("[BetterLyrics] Song has been switched",c.videoId),nn.queueLyricInjection=!0,nn.queueAlbumArtInjection=!0,nn.queueSongDetailsInjection=!0,nn.hasPreloadedNextSong=!1}if(nn.areLyricsTicking&&nn.areLyricsLoaded&&!nn.hasPreloadedNextSong&&(nn.hasPreloadedNextSong=!0,Y(A,"Trying to preload next song"),il(nn.lastVideoId).then(async e=>{if(e&&e.nextVideoId){let t=await il(e.nextVideoId);(!t||t.isVideo)&&e.counterpartVideoId&&(t=await il(e.counterpartVideoId).then(e=>e?.nextVideoId?il(e.nextVideoId):null)),t&&await nr({song:t.title,artist:t.artist,duration:String(Math.round(t.durationMs/1e3)),videoId:t.id},t.isVideo)}})),nn.queueSongDetailsInjection&&c.song&&c.artist&&document.getElementById("main-panel")&&(nn.queueSongDetailsInjection=!1,t=c.song,i=c.artist,console.assert(null!=(r=document.getElementById("main-panel"))),n=document.getElementById("blyrics-song-info"),s=document.getElementById("blyrics-watermark"),n?.remove(),s?.remove(),(l=document.createElement("p")).id="blyrics-title",l.textContent=t,(o=document.createElement("p")).id="blyrics-artist",o.textContent=i,(u=document.createElement("div")).id="blyrics-song-info",u.appendChild(l),u.appendChild(o),r.appendChild(u)),nn.queueAlbumArtInjection&&!0===nn.shouldInjectAlbumArt&&(nn.queueAlbumArtInjection=!1,function(e){if(!e)return;iD&&iD.disconnect(),iC&&iC.disconnect();let t=()=>{let t=document.querySelector(M);t.src.startsWith("data:image")?i_("https://img.youtube.com/vi/"+e+"/0.jpg"):i_(t.src)},i=document.querySelector(M),r=new ResizeObserver(()=>{iO&&clearTimeout(iO),iO=setTimeout(()=>{iO=null,function(e){let t=document.querySelector(M),i=t.src,r=t.src.match(/\d+/);if(r&&r[0]==e)return;let n=new Image;n.src=t.src,/w\d+-h\d+/.test(t.src)&&(n.src=t.src.replace(/w\d+-h\d+/,`w${e}-h${e}`)),n.onload=()=>{i==t.src&&(t.src=n.src)},Y("[BetterLyrics] Album art size changed to",e)}(screen.height)},1e3)});r.observe(document.documentElement),iD=r;let n=new MutationObserver(()=>{t(),Y("[BetterLyrics] Album art added to the layout from mutation event")});n.observe(i,{attributes:!0}),iC=n,t(),Y("[BetterLyrics] Album art added to the layout")}(d)),nn.lyricInjectionFailed){let e=document.getElementsByClassName(a)[1];if(e&&"true"!==e.getAttribute("aria-selected"))return}if(nn.queueLyricInjection||nn.lyricInjectionFailed){let e=document.getElementsByClassName(a)[1];e&&(nn.queueLyricInjection=!1,nn.lyricInjectionFailed=!1,"true"!==e.getAttribute("aria-selected")&&tC({isAutoSwitchEnabled:!1},t=>{t.isAutoSwitchEnabled&&(()=>{e.click(),Y("[BetterLyrics] Auto switch enabled, switching to lyrics tab"),i6().classList.remove("blyrics-hidden")})()}),function e(t){nn.lyricInjectionPromise?(nn.lyricAbortController?.abort("New song is being loaded"),nn.lyricInjectionPromise.then(()=>{nn.lyricInjectionPromise=null,e(t)})):(nn.lyricAbortController=new AbortController,nn.lyricInjectionPromise=ni(t,nn.lyricAbortController.signal).catch(e=>{Y(D,e),nn.areLyricsLoaded=!1,nn.lyricInjectionFailed=!0}))}(c))}(nn.suppressZeroTime<Date.now()||0!==c.currentTime)&&i7(c.currentTime,c.browserTime,c.playing)})),function e(){let t=document.getElementById("side-panel");t?(ip&&ip.disconnect(),(ip=new MutationObserver(e=>{tK(()=>{},()=>e.forEach(e=>{if("inert"===e.attributeName){e.target.removeAttribute("inert");let t=document.getElementsByClassName(a)[1];t&&"true"!==t.getAttribute("aria-selected")&&t.click()}}))})).observe(t,{attributes:!0}),t.removeAttribute("inert")):setTimeout(()=>{e()},1e3)}(),function(){if(iM)return;iM=!0;let e=e=>{let t=document.getElementById(E);t&&(e?t.setAttribute("blyrics-alt-hover",""):t.removeAttribute("blyrics-alt-hover"))};document.addEventListener("keydown",t=>{"Alt"===t.key&&e(!0)}),document.addEventListener("keyup",t=>{"Alt"===t.key&&e(!1)}),window.addEventListener("blur",()=>{e(!1)})}(),function(){if(r8)return;r8=!0;let e=e=>{let t=e??[...r3];r3.every(e=>t.includes(e)||t.includes(`d_${e}`))||(t=[...r3],Y("Invalid preferred provider list, resetting to default"));let i=t.filter(r5);Y("[BetterLyrics] Switching to provider = ",i),r7=i};chrome.storage.onChanged.addListener((t,i)=>{"sync"===i&&t.preferredProviderList&&e(t.preferredProviderList.newValue)}),chrome.storage.local.get({preferredProviderList:null},function(t){e(t.preferredProviderList)})}(),function e(){let t=document.querySelector("#av-id > ytmusic-av-toggle");if(!t)return void setTimeout(e,1e3);ig&&ig.disconnect();let i=e=>{let t=document.querySelector("#player-page");t&&(e?t.setAttribute("blyrics-video-mode",""):t.removeAttribute("blyrics-video-mode"))};(ig=new MutationObserver(e=>{for(let r of e)"attributes"===r.type&&"is-video-playback-mode-selected"===r.attributeName&&i("true"===t.getAttribute("is-video-playback-mode-selected"))})).observe(t,{attributes:!0,attributeFilter:["is-video-playback-mode-selected"]}),i("true"===t.getAttribute("is-video-playback-mode-selected")),Y(A,"Set up a/v toggle observer")}(),Y("%c[BetterLyrics] Loaded Successfully. Logs are enabled by default. You can disable them in the extension options.","background: rgba(10,11,12,1) ; color: rgba(214, 250, 214,1) ; padding: 0.5rem 0.75rem; border-radius: 0.5rem; font-size: 1rem; "),tJ(()=>nn.shouldInjectAlbumArt=!0,()=>nn.shouldInjectAlbumArt=!1)}document.addEventListener("DOMContentLoaded",na),(i=new URL(window.location.href)).searchParams.has("v")&&(ia=i.searchParams.get("v")),document.addEventListener("blyrics-send-response",e=>{if(!(e instanceof CustomEvent))return;let{url:t,requestJson:i,responseJson:r}=e.detail;if(iu(t,"/youtubei/v1/next")){let e=r.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs?.[0].tabRenderer.content?.musicQueueRenderer.content?.playlistPanelRenderer.contents;if(e||(e=r.continuationContents?.playlistPanelContinuation.contents),e||((e=r.onResponseReceivedEndpoints?.[0]?.queueUpdateCommand?.inlineContents?.playlistPanelRenderer?.contents)?Y("PlaylistPanelRendererContents found in onResponseReceivedEndpoints!"):Y("PlaylistPanelRendererContents not found.")),e){let t=e.map(e=>{let t=e.playlistPanelVideoWrapperRenderer?.counterpart?.[0]?.counterpartRenderer,i=e.playlistPanelVideoRenderer;if(i||(i=e.playlistPanelVideoWrapperRenderer?.primaryRenderer.playlistPanelVideoRenderer),!i)return null;let r=i?.videoId,n=i?.title.runs[0].text;function s(e){let t,i=!1,r=e.runs.filter(e=>{let t=e.text.trim(),r=t.includes("views")||t.includes("likes");return r&&(i=!0),t.length>0&&"•"!==t&&"&"!==t&&!r}).map(e=>e.text),n="";return i?t=r?.join(", "):(n=r[r?.length-2],t=r?.slice(0,-2).join(", ")),[t,n]}let[a,l]=s(i?.longBylineText),o=i?.thumbnail.thumbnails[0],u={id:r,title:n,artist:a,album:l,isVideo:o?.height!==o?.width,durationMs:t6(i.lengthText.runs[0].text)};if(!t)return{primary:u};{let i=t?.playlistPanelVideoRenderer.videoId,r=t.playlistPanelVideoRenderer.title.runs[0].text,n=t.playlistPanelVideoRenderer.thumbnail.thumbnails[0],a=n.height!==n.width,[l,o]=s(t?.playlistPanelVideoRenderer.longBylineText);return{primary:u,counterpart:{id:i,title:r,artist:l,album:o,isVideo:a,durationMs:t6(t.playlistPanelVideoRenderer.lengthText.runs[0].text),segmentMap:e.playlistPanelVideoWrapperRenderer.counterpart[0].segmentMap}}}}).filter(e=>e);for(let[e,i]of t.entries()){if(!i)continue;let r=t.length>e+1?t[e+1]:void 0,n=r?.primary.id,s=r?.counterpart?.id||n,a=i.counterpart;if(a){let e=null,t=null;if(e={segment:[],reversed:!1},a.segmentMap.segment){for(let t of a.segmentMap.segment)e.segment.push({counterpartVideoStartTimeMilliseconds:Number(t.counterpartVideoStartTimeMilliseconds),primaryVideoStartTimeMilliseconds:Number(t.primaryVideoStartTimeMilliseconds),durationMilliseconds:Number(t.durationMilliseconds)});for(let i of(t={segment:[],reversed:!0},e.segment))t.segment.push({primaryVideoStartTimeMilliseconds:i.counterpartVideoStartTimeMilliseconds,counterpartVideoStartTimeMilliseconds:i.primaryVideoStartTimeMilliseconds,durationMilliseconds:i.durationMilliseconds})}ir.set(i.primary.id,{artist:i.primary.artist,nextVideoId:n,title:i.primary.title,album:i.primary.album,isVideo:i.primary.isVideo,counterpartVideoId:a.id,segmentMap:e,durationMs:i.primary.durationMs,id:i.primary.id}),ir.set(a.id,{artist:a.artist,isVideo:a.isVideo,nextVideoId:s,album:a.album,title:a.title,counterpartVideoId:i.primary.id,segmentMap:t,durationMs:a.durationMs,id:a.id}),is.set(a.id,a.album)}else ir.set(i.primary.id,{artist:i.primary.artist,nextVideoId:n,title:i.primary.title,album:i.primary.album,isVideo:i.primary.isVideo,counterpartVideoId:null,segmentMap:null,durationMs:i.primary.durationMs,id:i.primary.id});is.set(i.primary.id,i.primary.album)}}r.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[0].tabRenderer.content?.musicQueueRenderer.content?.playlistPanelRenderer.continuations?.[0].nextRadioContinuationData.continuation;let t=i.videoId,n=i.playlistId;t||(t=r.currentVideoEndpoint?.watchEndpoint?.videoId),n||(n=r.currentVideoEndpoint?.watchEndpoint?.playlistId);let s=r?.playerOverlays?.playerOverlayRenderer?.browserMediaSession?.browserMediaSessionRenderer?.album?.runs[0]?.text;if(is.set(t,s),ir.has(t)){let e=ir.get(t).counterpartVideoId;e&&is.set(e,s)}if(!t)return;let a=r.contents?.singleColumnMusicWatchNextResultsRenderer?.tabbedRenderer?.watchNextTabbedResultsRenderer?.tabs[1]?.tabRenderer;if(a&&a.unselectable)ii.set(t,{hasLyrics:!1,lyrics:"",sourceText:""});else if(a){let e=a.endpoint?.browseEndpoint?.browseId;e&&it.set(e,t)}}else if(iu(t,"/youtubei/v1/browse")){let e=i.browseId,t=it.get(e);if(void 0!==e&&void 0===t&&null!==ia&&(t=ia),void 0!==t){let i=r.contents?.sectionListRenderer?.contents?.[0]?.musicDescriptionShelfRenderer?.description?.runs?.[0]?.text,n=r.contents?.sectionListRenderer?.contents?.[0]?.musicDescriptionShelfRenderer?.footer?.runs?.[0]?.text;i&&n?(ii.set(t,{hasLyrics:!0,lyrics:i,sourceText:n}),t===ia&&(it.set(e,t),ia=null)):ii.set(t,{hasLyrics:!1,lyrics:null,sourceText:null})}}})})();
+${q(e)}`,
+        ),
+        e
+      );
+    }
+  }
+  async function tA() {
+    let e = await tL(['customCSS_chunked', 'customCSS_chunkCount']);
+    if (!e.customCSS_chunked || !e.customCSS_chunkCount) return null;
+    let t = Array.from(
+        { length: e.customCSS_chunkCount },
+        (e, t) => `customCSS_chunk_${t}`,
+      ),
+      i = await tL(t),
+      r = [];
+    for (let t = 0; t < e.customCSS_chunkCount; t++) {
+      let e = i[`customCSS_chunk_${t}`];
+      if (!e) return (Y(D, `Missing CSS chunk ${t}`), null);
+      r.push(e);
+    }
+    return r.join('');
+  }
+  function tC(e, t) {
+    chrome.storage.local.get(e, t);
+  }
+  async function tD(e) {
+    try {
+      let t = (await chrome.storage.local.get(e))[e];
+      if (!t) return null;
+      let { value: i, expiry: r } = t;
+      if (r && Date.now() > r)
+        return (await chrome.storage.local.remove(e), null);
+      if ('string' == typeof i && tx(i)) return tS(i);
+      return i;
+    } catch (e) {
+      return (Y(D, e), null);
+    }
+  }
+  async function tj(e, t, i) {
+    try {
+      let r = Date.now() + i,
+        n =
+          'string' == typeof t
+            ? (function (e) {
+                try {
+                  var t, i, r, n, s, a, l;
+                  let o =
+                      ((t = (function (e, t) {
+                        if (tv) return tv.encode(e);
+                        for (
+                          var i,
+                            r = e.length,
+                            n = new eO(e.length + (e.length >> 1)),
+                            s = 0,
+                            a = function (e) {
+                              n[s++] = e;
+                            },
+                            i = 0;
+                          i < r;
+                          ++i
+                        ) {
+                          if (s + 5 > n.length) {
+                            var l = new eO(s + 8 + ((r - i) << 1));
+                            (l.set(n), (n = l));
+                          }
+                          var o = e.charCodeAt(i);
+                          o < 128
+                            ? a(o)
+                            : (o < 2048
+                                ? a(192 | (o >> 6))
+                                : (o > 55295 && o < 57344
+                                    ? (a(
+                                        240 |
+                                          ((o =
+                                            (65536 + (1047552 & o)) |
+                                            (1023 & e.charCodeAt(++i))) >>
+                                            18),
+                                      ),
+                                      a(128 | ((o >> 12) & 63)))
+                                    : a(224 | (o >> 12)),
+                                  a(128 | ((o >> 6) & 63))),
+                              a(128 | (63 & o)));
+                        }
+                        return e6(n, 0, s);
+                      })(e)),
+                      i || (i = {}),
+                      (r = tm()),
+                      (n = t.length),
+                      r.p(t),
+                      (l = (a = tf(
+                        t,
+                        i,
+                        10 + ((s = i).filename ? s.filename.length + 1 : 0),
+                        8,
+                      )).length),
+                      ty(a, i),
+                      tg(a, l - 8, r.d()),
+                      tg(a, l - 4, n),
+                      a),
+                    u = '';
+                  for (let e = 0; e < o.length; e++)
+                    u += String.fromCharCode(o[e]);
+                  return `${tE}${btoa(u)}`;
+                } catch (t) {
+                  return (console.warn(A, 'Failed to compress:', t), e);
+                }
+              })(t)
+            : t;
+      (await chrome.storage.local.set({
+        [e]: { type: 'transient', value: n, expiry: r },
+      }),
+        Y('[BetterLyrics] Set transient storage for key: ', e),
+        await tO());
+    } catch (e) {
+      Y(D, e);
+    }
+  }
+  async function tz() {
+    try {
+      let e = await chrome.storage.local.get(null),
+        t = Object.keys(e).filter((e) => e.startsWith('blyrics_')),
+        i = new Set();
+      for (let e of t) {
+        let t = (function (e) {
+          let t = e.slice(8);
+          for (let e of B) {
+            let i = `_${e}`;
+            if (t.endsWith(i)) return t.slice(0, -i.length);
+          }
+          return null;
+        })(e);
+        t && i.add(t);
+      }
+      let r = t.reduce((t, i) => {
+        let r = e[i];
+        return t + JSON.stringify(r).length;
+      }, 0);
+      return { count: i.size, size: r };
+    } catch (e) {
+      return (Y(D, e), { count: 0, size: 0 });
+    }
+  }
+  async function tO() {
+    let e = await tz();
+    await chrome.storage.local.set({ cacheInfo: e });
+  }
+  async function tR() {
+    try {
+      let e = await chrome.storage.local.get(null),
+        t = Object.keys(e).filter(
+          (e) => e.startsWith('blyrics_') && !tI.includes(e),
+        );
+      (await chrome.storage.local.remove(t), await tO());
+    } catch (e) {
+      Y(D, e);
+    }
+  }
+  async function tP() {
+    try {
+      let e = Date.now(),
+        t = await chrome.storage.local.get(null),
+        i = [];
+      (Object.keys(t).forEach((r) => {
+        if (r.startsWith('blyrics_')) {
+          let n = t[r];
+          n.expiry && e >= n.expiry && i.push(r);
+        }
+      }),
+        i.length && (await chrome.storage.local.remove(i)));
+    } catch (e) {
+      Y(D, e);
+    }
+  }
+  let tV = { romanization: new Map(), translation: new Map() };
+  async function tU(e, t) {
+    let i = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${t}&dt=t&q=${encodeURIComponent(e)}`,
+      r = `${t}_${e}`;
+    return tV.translation.has(r)
+      ? tV.translation.get(r)
+      : fetch(i, { cache: 'force-cache' })
+          .then((e) => e.json())
+          .then((t) => {
+            let i = t[2],
+              n = '';
+            if (
+              (t[0].forEach((e) => {
+                n += e[0];
+              }),
+              e.trim().toLowerCase() === n.trim().toLowerCase() &&
+                '' !== e.trim())
+            )
+              return null;
+            {
+              let e = { originalLanguage: i, translatedText: n };
+              return (tV.translation.set(r, e), e);
+            }
+          })
+          .catch((e) => (Y(z, e), null));
+  }
+  async function t$(e, t) {
+    return tV.romanization.has(t)
+      ? tV.romanization.get(t)
+      : fetch(
+          `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${e}&tl=${e}-Latn&dt=t&dt=rm&q=${encodeURIComponent(t)}`,
+          { cache: 'force-cache' },
+        )
+          .then((e) => e.json())
+          .then((e) => {
+            let i = e[0][1][3];
+            return (void 0 === i && (i = e[0][1][2]),
+            t.trim().toLowerCase() === i.trim().toLowerCase() &&
+              '' !== t.trim())
+              ? null
+              : (tV.romanization.set(t, i), i);
+          })
+          .catch((e) => (Y(z, e), null));
+  }
+  function tB(e) {
+    tC({ isTranslateEnabled: !1, translationLanguage: 'en' }, (t) => {
+      t.isTranslateEnabled && e(t);
+    });
+  }
+  function t_() {
+    (tV.romanization.clear(), tV.translation.clear());
+  }
+  let tF = new Map();
+  class tW {
+    type;
+    value;
+    defaultValue;
+    requiresLyricReload;
+    constructor(e, t, i, r) {
+      ((this.type = e),
+        (this.value = t),
+        (this.defaultValue = i),
+        (this.requiresLyricReload = r));
+    }
+    getNumberValue() {
+      return this.value;
+    }
+    getBooleanValue() {
+      return this.value;
+    }
+    getStringValue() {
+      return this.value;
+    }
+  }
+  function tY(e, t, i = !1) {
+    let r = typeof t;
+    if ('number' !== r && 'boolean' !== r && 'string' !== r)
+      throw Error('Invalid type for theme setting');
+    let n = new tW(r, t, t, i);
+    return (tF.set(e, n), n);
+  }
+  let tQ = !1;
+  function tq(e) {
+    var t = (function (e) {
+      let t,
+        i = new Map(),
+        r = /\/\*([\s\S]*?)\*\//g,
+        n = /(blyrics-[\w-]+)\s*=\s*([^;]+);/g;
+      for (; null !== (t = r.exec(e)); ) {
+        let e,
+          r = t[1];
+        for (; null !== (e = n.exec(r)); ) {
+          let t = e[1],
+            r = e[2].trim();
+          i.set(t, r);
+        }
+      }
+      return i;
+    })(e);
+    let i = !1;
+    for (let [e, r] of (t.forEach((e, t) => {
+      let r = tF.get(t);
+      if (r) {
+        let t = r.value;
+        if ('number' === r.type) {
+          let t = parseFloat(e);
+          isNaN(t) ? (r.value = r.defaultValue) : (r.value = t);
+        } else
+          'boolean' === r.type
+            ? (r.value = 'true' === e.toLowerCase())
+            : (r.value = e);
+        r.requiresLyricReload && t !== r.value && (i = !0);
+      }
+    }),
+    tF.entries()))
+      !t.has(e) &&
+        r.value !== r.defaultValue &&
+        ((r.value = r.defaultValue), r.requiresLyricReload && (i = !0));
+    i && ns();
+    let r = document.getElementById('blyrics-custom-style');
+    (r
+      ? (r.textContent = e)
+      : (((r = document.createElement('style')).id = 'blyrics-custom-style'),
+        (r.textContent = e),
+        document.head.appendChild(r)),
+      i4.clear(),
+      i5.clear());
+  }
+  async function tG() {
+    var e, t, i, r;
+    try {
+      let t = await tk(['cssStorageType', 'customCSS', 'cssCompressed']),
+        i = null,
+        r = !1;
+      if ('chunked' === t.cssStorageType)
+        ((i = await tA()), (r = t.cssCompressed || !1));
+      else if ('local' === t.cssStorageType) {
+        let e = await tL(['customCSS', 'cssCompressed']);
+        ((i = e.customCSS ?? null), (r = e.cssCompressed || !1));
+      } else ((i = t.customCSS ?? null), (r = t.cssCompressed || !1));
+      i && ((r || tx(i)) && ((e = i), (i = tS(e))), tq(tT(i)));
+    } catch (e) {
+      Y(D, e);
+      try {
+        let e = await tA();
+        if (e) {
+          let i = await tk(['cssCompressed']),
+            r = e;
+          ((i.cssCompressed || tx(r)) && ((t = r), (r = tS(t))), tq(tT(r)));
+          return;
+        }
+        let n = await tL(['customCSS', 'cssCompressed']);
+        if (n.customCSS) {
+          let e = n.customCSS;
+          ((n.cssCompressed || tx(e)) && ((i = e), (e = tS(i))), tq(tT(e)));
+          return;
+        }
+        let s = await tk(['customCSS', 'cssCompressed']);
+        if (s.customCSS) {
+          let e = s.customCSS;
+          ((s.cssCompressed || tx(e)) && ((r = e), (e = tS(r))), tq(tT(e)));
+        }
+      } catch (e) {
+        Y(D, e);
+      }
+    }
+  }
+  async function tH(e, t) {
+    let i = e.replace('storeTheme:', ''),
+      { activeStoreTheme: r } = await tk(['activeStoreTheme']);
+    if (r !== i) return;
+    let n = t.newValue;
+    n?.css &&
+      (t.oldValue?.css !== n.css || t.oldValue?.version !== n.version) &&
+      (Y(A, 'Store theme updated:', n.title || i), tq(tT(n.css)));
+  }
+  let tZ = !1;
+  function tX() {
+    var e, t;
+    (tK(
+      () => {
+        let e = document.getElementById('layout'),
+          t = document.getElementById('player-page');
+        e && t && (e.setAttribute(x, ''), t.setAttribute(x, ''));
+      },
+      () => {
+        let e = document.getElementById('layout'),
+          t = document.getElementById('player-page');
+        e && t && (e.removeAttribute(x), t.removeAttribute(x));
+      },
+    ),
+      (e = () => {
+        let e = document.getElementById('blyrics-disable-effects');
+        e && e.remove();
+      }),
+      (t = async () => {
+        let e = document.getElementById('blyrics-disable-effects');
+        e ||
+          (((e = document.createElement('style')).id =
+            'blyrics-disable-effects'),
+          (e.textContent = await fetch(
+            chrome.runtime.getURL('css/disablestylizedanimations.css'),
+          ).then((e) => e.text())),
+          document.head.appendChild(e));
+      }),
+      tC({ isStylizedAnimationsEnabled: !0 }, (i) => {
+        i.isStylizedAnimationsEnabled ? e() : t();
+      }));
+  }
+  function tK(e, t) {
+    tC({ isFullScreenDisabled: !1 }, (i) => {
+      i.isFullScreenDisabled ? e() : t();
+    });
+  }
+  function tJ(e, t) {
+    tC({ isAlbumArtEnabled: !0 }, (i) => {
+      i.isAlbumArtEnabled ? e() : t();
+    });
+  }
+  let t0 = null,
+    t1 = null;
+  function t2() {
+    tC({ isCursorAutoHideEnabled: !0 }, (e) => {
+      e.isCursorAutoHideEnabled
+        ? (() => {
+            let e = !0;
+            function t() {
+              ((t0 = null),
+                document
+                  .getElementById('layout')
+                  .setAttribute('cursor-hidden', ''),
+                (e = !1));
+            }
+            function i() {
+              (t0 && window.clearTimeout(t0),
+                e ||
+                  (document
+                    .getElementById('layout')
+                    .removeAttribute('cursor-hidden'),
+                  (e = !0)),
+                (t0 = window.setTimeout(t, 3e3)));
+            }
+            (t1 && document.removeEventListener('mousemove', t1),
+              (t1 = i),
+              document.addEventListener('mousemove', i));
+          })()
+        : (() => {
+            (t0 && window.clearTimeout(t0),
+              document
+                .getElementById('layout')
+                .removeAttribute('cursor-hidden'),
+              t1 &&
+                (document.removeEventListener('mousemove', t1), (t1 = null)));
+          })();
+    });
+  }
+  function t4() {
+    tC(
+      {
+        isTranslateEnabled: !1,
+        isRomanizationEnabled: !1,
+        translationLanguage: 'en',
+      },
+      (e) => {
+        ((nn.isTranslateEnabled = e.isTranslateEnabled),
+          (nn.isRomanizationEnabled = e.isRomanizationEnabled),
+          (nn.translationLanguage = e.translationLanguage || 'en'));
+      },
+    );
+  }
+  let t3 = !1,
+    t5 = !1;
+  function t7() {
+    let e = document.querySelector('ytmusic-app-layout');
+    if (!e) return !1;
+    let t = e.getAttribute('player-ui-state');
+    return 'PLAYER_PAGE_OPEN' === t || 'FULLSCREEN' === t;
+  }
+  let t8 = [
+    'ti',
+    'ar',
+    'al',
+    'au',
+    'lr',
+    'length',
+    'by',
+    'offset',
+    're',
+    'tool',
+    've',
+    '#',
+  ];
+  function t6(e) {
+    if (!e) return 0;
+    if ('number' == typeof e) return e;
+    let t = e.split(':'),
+      i = 0;
+    try {
+      if (1 === t.length) i = 1e3 * parseFloat(t[0]);
+      else if (2 === t.length) {
+        let e = parseInt(t[0], 10),
+          r = parseFloat(t[1]);
+        i = 60 * e * 1e3 + 1e3 * r;
+      } else if (3 === t.length) {
+        let e = parseInt(t[0], 10),
+          r = parseInt(t[1], 10),
+          n = parseFloat(t[2]);
+        i = 3600 * e * 1e3 + 60 * r * 1e3 + 1e3 * n;
+      }
+      return Math.round(i);
+    } catch (t) {
+      return (console.error(`Error parsing time string: ${e}`, t), 0);
+    }
+  }
+  function t9(e, t) {
+    let i = e.split('\n'),
+      r = [],
+      n = {};
+    if (
+      (i.forEach((e) => {
+        let t,
+          i = (e = e.trim()).match(/^[\[](\w+):(.*)[\]]$/);
+        if (i && t8.includes(i[1])) {
+          n[i[1]] = i[2];
+          return;
+        }
+        let s = /[\[](\d+:\d+\.\d+)[\]]/g,
+          a = [];
+        for (; null !== (t = s.exec(e)); ) a.push(t6(t[1]));
+        if (0 === a.length) return;
+        let l = e.replace(s, '').trim(),
+          o = [],
+          u = null,
+          c = '';
+        l.split(/<(\d+:\d+\.\d+)>/g).forEach((e, t) => {
+          if (t % 2 == 0)
+            (e.length > 0 && ' ' === e[0] && (e = e.substring(1)),
+              e.length > 0 &&
+                ' ' === e[e.length - 1] &&
+                (e = e.substring(0, e.length - 1)),
+              (c += e),
+              o.length > 0 &&
+                o[o.length - 1].startTimeMs &&
+                (o[o.length - 1].words += e));
+          else {
+            let t = t6(e);
+            (null !== u && o.length > 0 && (o[o.length - 1].durationMs = t - u),
+              o.push({ startTimeMs: t, words: '', durationMs: 0 }),
+              (u = t));
+          }
+        });
+        let d = Math.min(...a),
+          h = Math.max(...a);
+        r.push({
+          startTimeMs: d,
+          words: c.trim(),
+          durationMs: h - d,
+          parts: o.length > 0 ? o : void 0,
+        });
+      }),
+      r.forEach((e, i) => {
+        if (i + 1 < r.length) {
+          let t = r[i + 1];
+          if (
+            (0 === e.durationMs &&
+              (e.durationMs = Math.max(t.startTimeMs - e.startTimeMs, 0)),
+            e.parts && e.parts.length > 0)
+          ) {
+            let i = t.startTimeMs;
+            e.parts.forEach((e) => {
+              i = Math.max(i, e.startTimeMs);
+            });
+            let r = e.parts[e.parts.length - 1];
+            ((r.durationMs = Math.max(t.startTimeMs - r.startTimeMs, 0)),
+              (e.durationMs = Math.max(i - e.startTimeMs, 0)));
+          }
+        } else if (
+          (0 === e.durationMs && (e.durationMs = t - e.startTimeMs),
+          e.parts && e.parts.length > 0)
+        ) {
+          let i = e.parts[e.parts.length - 1];
+          i.durationMs = t - i.startTimeMs;
+        }
+      }),
+      n.offset)
+    ) {
+      let e = Number(n.offset);
+      (isNaN(e) && ((e = 0), Y(A, 'Invalid offset in lyrics: ' + n.offset)),
+        (e *= 1e3),
+        r.forEach((t) => {
+          ((t.startTimeMs -= e),
+            t.parts?.forEach((t) => {
+              t.startTimeMs -= e;
+            }));
+        }));
+    }
+    return r;
+  }
+  function ie(e) {
+    let t = [];
+    return (
+      e.split('\n').forEach((e) => {
+        t.push({ startTimeMs: 0, words: e, durationMs: 0 });
+      }),
+      t
+    );
+  }
+  let it = new Map(),
+    ii = new Map(),
+    ir = new Map(),
+    is = new Map(),
+    ia = null;
+  function il(e, t = 250) {
+    if (ir.has(e)) return Promise.resolve(ir.get(e));
+    {
+      let i = 0;
+      return new Promise((r) => {
+        let n = setInterval(() => {
+          let s = ir.get(e);
+          (s && (clearInterval(n), r(s)),
+            i > t &&
+              (clearInterval(n),
+              Y('Failed to find Segment Map for video'),
+              r(null)),
+            (i += 1));
+        }, 20);
+      });
+    }
+  }
+  async function io(e) {
+    for (let t = 0; t < 250; t++) {
+      if (is.has(e)) return is.get(e);
+      await new Promise((e) => setTimeout(e, 20));
+    }
+    Y("Song album information didn't come in time for: ", e);
+  }
+  function iu(e, t) {
+    try {
+      let i = new URL(e);
+      return (
+        i &&
+        i.pathname.startsWith(t) &&
+        'https://music.youtube.com' === i.origin
+      );
+    } catch (e) {
+      return !1;
+    }
+  }
+  let ic = null,
+    id = null,
+    ih = null,
+    ip = null,
+    im = null,
+    ig = null,
+    iy = !1,
+    ib = !1,
+    iM = !1,
+    iv = !1;
+  async function iw() {
+    if (!('wakeLock' in navigator))
+      return void Y(D, 'Wake Lock API not supported in this browser.');
+    try {
+      (ic = await navigator.wakeLock.request('screen')).addEventListener(
+        'release',
+        () => {
+          ic = null;
+        },
+      );
+    } catch (e) {
+      Y(D, 'Wake Lock request failed:', e);
+    }
+  }
+  function iN() {
+    'visible' === document.visibilityState && null === ic && iw();
+  }
+  let iE = 0,
+    iS = [0, 0, 0];
+  function ix() {
+    if (
+      'true' ===
+        document.getElementsByClassName(a)[1].getAttribute('aria-selected') &&
+      nn.areLyricsTicking
+    ) {
+      if (i2.skipScrolls > 0) {
+        (i2.skipScrolls--, i2.skipScrollsDecayTimes.shift());
+        return;
+      }
+      !iV() &&
+        (i2.scrollResumeTime < Date.now() &&
+          Y('[BetterLyrics] Pausing Lyrics Autoscroll Due to User Scroll'),
+        (i2.scrollResumeTime = Date.now() + 25e3),
+        i2.wasUserScrolling ||
+          (i6().removeAttribute('autoscroll-hidden'),
+          document.getElementsByClassName(l)[0].classList.add(f),
+          (i2.wasUserScrolling = !0)));
+    }
+  }
+  function iI(e) {
+    t7() ||
+      !nn.lastVideoId ||
+      (e.preventDefault(),
+      e.stopPropagation(),
+      e instanceof KeyboardEvent && e.stopImmediatePropagation(),
+      t3 ||
+        new Promise((e) => {
+          if (t3) return void e();
+          ((t3 = !0), (t5 = !0));
+          let t = document.querySelector('ytmusic-player-bar');
+          (t && t.click(),
+            new Promise((e, t) => {
+              let i = Date.now(),
+                r = setInterval(() => {
+                  if (t7()) {
+                    (clearInterval(r), setTimeout(e, 100));
+                    return;
+                  }
+                  Date.now() - i > 3e3 &&
+                    (clearInterval(r), t(Error('Player page load timeout')));
+                }, 50);
+            })
+              .then(() => {
+                ((t3 = !1), e());
+              })
+              .catch((t) => {
+                (Y(D, 'Player page open timeout', t),
+                  (t3 = !1),
+                  (t5 = !1),
+                  e());
+              }));
+        }).then(() => {
+          let e = document.querySelector('.fullscreen-button');
+          if (e) e.click();
+          else {
+            let e = new KeyboardEvent('keydown', {
+              key: 'f',
+              code: 'KeyF',
+              keyCode: 70,
+              which: 70,
+              bubbles: !0,
+              cancelable: !0,
+            });
+            document.dispatchEvent(e);
+          }
+        }));
+  }
+  let iL = {
+      syllable:
+        '<svg width="14" height="14" viewBox="0 0 1024 1024" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="636" y="239" width="389.981" height="233.271" rx="48" fill-opacity="0.5"/><path d="M0 335C0 289.745 0 267.118 14.0589 253.059C28.1177 239 50.7452 239 96 239H213C243.17 239 258.255 239 267.627 248.373C277 257.745 277 272.83 277 303V408C277 438.17 277 453.255 267.627 462.627C258.255 472 243.17 472 213 472H96C50.7452 472 28.1177 472 14.0589 457.941C0 443.882 0 421.255 0 376V335Z"/><path d="M337 304C337 273.83 337 258.745 346.373 249.373C355.745 240 370.83 240 401 240H460C505.255 240 527.882 240 541.941 254.059C556 268.118 556 290.745 556 336V377C556 422.255 556 444.882 541.941 458.941C527.882 473 505.255 473 460 473H401C370.83 473 355.745 473 346.373 463.627C337 454.255 337 439.17 337 409V304Z" fill-opacity="0.5"/><rect y="552.271" width="1024" height="233" rx="48" fill-opacity="0.5"/></svg>',
+      word: '<svg width="14" height="14" viewBox="0 0 1024 1024" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="636" y="239" width="389.981" height="233.271" rx="48" fill-opacity="0.5"/><path d="M0 335C0 289.745 0 267.118 14.0589 253.059C28.1177 239 50.7452 239 96 239H213C243.17 239 258.255 239 267.627 248.373C277 257.745 277 272.83 277 303V408C277 438.17 277 453.255 267.627 462.627C258.255 472 243.17 472 213 472H96C50.7452 472 28.1177 472 14.0589 457.941C0 443.882 0 421.255 0 376V335Z"/><path d="M337 304C337 273.83 337 258.745 346.373 249.373C355.745 240 370.83 240 401 240H460C505.255 240 527.882 240 541.941 254.059C556 268.118 556 290.745 556 336V377C556 422.255 556 444.882 541.941 458.941C527.882 473 505.255 473 460 473H401C370.83 473 355.745 473 346.373 463.627C337 454.255 337 439.17 337 409V304Z"/><rect y="552.271" width="1024" height="233" rx="48" fill-opacity="0.5"/></svg>',
+      line: '<svg width="14" height="14" viewBox="0 0 1024 1024" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="636" y="239" width="389.981" height="233.271" rx="48"/><path d="M0 335C0 289.745 0 267.118 14.0589 253.059C28.1177 239 50.7452 239 96 239H213C243.17 239 258.255 239 267.627 248.373C277 257.745 277 272.83 277 303V408C277 438.17 277 453.255 267.627 462.627C258.255 472 243.17 472 213 472H96C50.7452 472 28.1177 472 14.0589 457.941C0 443.882 0 421.255 0 376V335Z"/><path d="M337 304C337 273.83 337 258.745 346.373 249.373C355.745 240 370.83 240 401 240H460C505.255 240 527.882 240 541.941 254.059C556 268.118 556 290.745 556 336V377C556 422.255 556 444.882 541.941 458.941C527.882 473 505.255 473 460 473H401C370.83 473 355.745 473 346.373 463.627C337 454.255 337 439.17 337 409V304Z"/><rect y="552.271" width="1024" height="233" rx="48" fill-opacity="0.5"/></svg>',
+      unsynced:
+        '<svg width="14" height="14" viewBox="0 0 1024 1024" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="636" y="239" width="389.981" height="233.271" rx="48" fill-opacity="0.5"/><path d="M0 335C0 289.745 0 267.118 14.0589 253.059C28.1177 239 50.7452 239 96 239H213C243.17 239 258.255 239 267.627 248.373C277 257.745 277 272.83 277 303V408C277 438.17 277 453.255 267.627 462.627C258.255 472 243.17 472 213 472H96C50.7452 472 28.1177 472 14.0589 457.941C0 443.882 0 421.255 0 376V335Z" fill-opacity="0.5"/><path d="M337 304C337 273.83 337 258.745 346.373 249.373C355.745 240 370.83 240 401 240H460C505.255 240 527.882 240 541.941 254.059C556 268.118 556 290.745 556 336V377C556 422.255 556 444.882 541.941 458.941C527.882 473 505.255 473 460 473H401C370.83 473 355.745 473 346.373 463.627C337 454.255 337 439.17 337 409V304Z" fill-opacity="0.5"/><rect y="552.271" width="1024" height="233" rx="48" fill-opacity="0.5"/></svg>',
+    },
+    ik = {
+      syllable: '#fde69b',
+      word: '#aad1ff',
+      line: '#c9f8da',
+      unsynced: 'rgba(255, 255, 255, 0.7)',
+    },
+    iT = Object.fromEntries(
+      $.map((e) => [e.key, { name: e.displayName, syncType: e.syncType }]),
+    );
+  function iA(e) {
+    let { text: t, href: i, logoSrc: r, logoAlt: n } = e,
+      s = document.createElement('div');
+    if (((s.className = `${b}__container`), r)) {
+      let e = document.createElement('img');
+      ((e.src = r),
+        (e.alt = n ?? ''),
+        (e.width = 20),
+        (e.height = 20),
+        s.appendChild(e));
+    }
+    let a = document.createElement('a');
+    return (
+      (a.href = i),
+      (a.target = '_blank'),
+      (a.rel = 'noreferrer noopener'),
+      (a.textContent = t),
+      (a.style.height = '100%'),
+      s.appendChild(a),
+      s
+    );
+  }
+  let iC = null,
+    iD = null,
+    ij = null,
+    iz = null,
+    iO = null,
+    iR = !1;
+  function iP(e = !1) {
+    if (!iU()) {
+      (e || iW(), (iR = !0));
+      try {
+        clearTimeout(nn.loaderAnimationEndTimeout);
+        let t = document.querySelector(v),
+          i = document.getElementById(N);
+        i || ((i = document.createElement('div')).id = N);
+        let r = i.hasAttribute('active');
+        (i.setAttribute('active', ''),
+          i.removeAttribute('no-sync-available'),
+          e
+            ? i.setAttribute('small-loader', '')
+            : i.removeAttribute('small-loader'),
+          r ||
+            (t.prepend(i),
+            (i.hidden = !1),
+            (i.style.display = 'inline-block !important'),
+            i.scrollIntoView({
+              behavior: 'instant',
+              block: 'start',
+              inline: 'start',
+            })));
+      } catch (e) {
+        Y(e);
+      }
+    }
+  }
+  function iV() {
+    try {
+      if (!iR) return !1;
+      let e = document.getElementById(N);
+      if (e)
+        return e.hasAttribute('active') || 'true' === e.dataset.animatingOut;
+    } catch (e) {
+      Y(e);
+    }
+    return !1;
+  }
+  function iU() {
+    let e = document.querySelector(P);
+    return e?.hasAttribute(V) ?? !1;
+  }
+  function i$() {
+    let e = document.querySelector(v);
+    if (!e) return;
+    let t = document.getElementById(N);
+    t && t.removeAttribute('active');
+    let i = document.getElementById(U);
+    (i || (((i = document.createElement('div')).id = U), e.prepend(i)),
+      i.setAttribute('active', ''));
+  }
+  function iB() {
+    let e = document.getElementById(U);
+    e && e.removeAttribute('active');
+  }
+  function i_(e) {
+    let t = new Image();
+    ((t.src = e),
+      (t.onload = () => {
+        document
+          .getElementById('layout')
+          .style.setProperty('--blyrics-background-img', `url('${e}')`);
+      }));
+  }
+  async function iF() {
+    let e = document.createElement('link');
+    ((e.rel = 'preload'),
+      (e.as = 'image'),
+      (e.href = 'https://better-lyrics.boidu.dev/icon-512.png'),
+      document.head.appendChild(e));
+    let t = document.createElement('link');
+    ((t.href = 'https://api.fontshare.com/v2/css?f[]=satoshi@1&display=swap'),
+      (t.rel = 'stylesheet'),
+      document.head.appendChild(t));
+    let i = document.createElement('link');
+    ((i.href =
+      'https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100..900&family=Noto+Sans+Armenian:wght@100..900&family=Noto+Sans+Bengali:wght@100..900&family=Noto+Sans+Devanagari:wght@100..900&family=Noto+Sans+Georgian:wght@100..900&family=Noto+Sans+Gujarati:wght@100..900&family=Noto+Sans+HK:wght@100..900&family=Noto+Sans+Hebrew:wght@100..900&family=Noto+Sans+JP:wght@100..900&family=Noto+Sans+KR:wght@100..900&family=Noto+Sans+Kannada:wght@100..900&family=Noto+Sans+Khmer:wght@100..900&family=Noto+Sans+Lao+Looped:wght@100..900&family=Noto+Sans+Lao:wght@100..900&family=Noto+Sans+Malayalam:wght@100..900&family=Noto+Sans+Marchen&family=Noto+Sans+Meetei+Mayek:wght@100..900&family=Noto+Sans+Multani&family=Noto+Sans+NKo&family=Noto+Sans+Old+Permic&family=Noto+Sans+SC:wght@100..900&family=Noto+Sans+Shavian&family=Noto+Sans+Sinhala:wght@100..900&family=Noto+Sans+Sunuwar&family=Noto+Sans+TC:wght@100..900&family=Noto+Sans+Takri&family=Noto+Sans+Tamil:wght@100..900&family=Noto+Sans+Telugu:wght@100..900&family=Noto+Sans+Thai+Looped:wght@100..900&family=Noto+Sans+Thai:wght@100..900&family=Noto+Sans+Vithkuqi:wght@400..700&family=Noto+Sans+Warang+Citi&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap'),
+      (i.rel = 'stylesheet'),
+      document.head.appendChild(i));
+    let r = ['css/ytmusic.css', 'css/blyrics.css', 'css/themesong.css'],
+      n = '',
+      s = await Promise.all(
+        r.map((e) => fetch(chrome.runtime.getURL(e), { cache: 'no-store' })),
+      );
+    for (let e = 0; e < r.length; e++)
+      ((n += `/* ${r[e]} */
+`),
+        (n += await s[e].text()));
+    let a = document.createElement('style');
+    ((a.textContent = n), document.head.appendChild(a));
+  }
+  function iW() {
+    ((i2.scrollPos = -1),
+      (i2.skipScrollsDecayTimes = []),
+      (i2.lastActiveElements = []),
+      (i2.lastScrollDebugContext.activeElms = []),
+      (i2.lastScrollDebugContext.centers = []),
+      (i2.doneFirstInstantScroll = !1),
+      (i2.queuedScroll = !1),
+      i4.clear(),
+      i5.clear(),
+      ij && (ij.disconnect(), (ij = null)),
+      nn.lyricData && ((nn.lyricData.lines = []), (nn.lyricData = null)));
+    let e = document.querySelector(w)?.parentElement;
+    e && (e.style.display = '');
+    let t = document.getElementsByClassName(b)[0];
+    (t && t.remove(), i6().setAttribute('autoscroll-hidden', 'true'));
+    let i = document.querySelector('.blyrics-no-lyrics-button-container');
+    i && i.remove();
+    try {
+      let e = document.getElementById(E);
+      e && (e.innerHTML = '');
+    } catch (e) {
+      Y(e);
+    }
+  }
+  function iY(e, t) {
+    let i = encodeURIComponent(`${t.trim()} - ${e.trim()}`);
+    return `https://genius.com/search?q=${i}`;
+  }
+  let iQ = 'blyrics-lyric-debug-canvas',
+    iq = null,
+    iG = null;
+  function iH() {
+    if (iG) {
+      let e = window.devicePixelRatio || 1,
+        t = Number(
+          getComputedStyle(iG).getPropertyValue('height').slice(0, -2),
+        ),
+        i = Number(getComputedStyle(iG).getPropertyValue('width').slice(0, -2));
+      ((iG.width = i * e), (iG.height = t * e), iq?.scale(e, e));
+    }
+  }
+  let iZ = tY('blyrics-lyric-ending-threshold-s', 0.5),
+    iX = tY('blyrics-early-scroll-consider-s', 0.62),
+    iK = tY('blyrics-queue-scroll-ms', 150),
+    iJ = tY('blyrics-debug-renderer', !1),
+    i0 = tY('blyrics-target-scroll-pos-ratio', 0.37),
+    i1 = tY('blyrics-add-extra-top-padding', !1),
+    i2 = {
+      skipScrolls: 0,
+      skipScrollsDecayTimes: [],
+      scrollResumeTime: 0,
+      scrollPos: 0,
+      selectedElementIndex: 0,
+      nextScrollAllowedTime: 0,
+      wasUserScrolling: !1,
+      lastTime: 0,
+      lastPlayState: !1,
+      lastEventCreationTime: 0,
+      doneFirstInstantScroll: !0,
+      lastActiveElements: [],
+      queuedScroll: !1,
+      lastScrollDebugContext: {
+        activeElms: [],
+        centers: [],
+        lyricScrollTime: 0,
+      },
+    },
+    i4 = new Map();
+  function i3(e, t) {
+    let i = i4.get(t);
+    return (
+      void 0 === i &&
+        ((i = i9(window.getComputedStyle(e).getPropertyValue(t))),
+        i4.set(t, i)),
+      i
+    );
+  }
+  let i5 = new Map();
+  function i7(e, t, i = !0, r = !0) {
+    let n = Date.now();
+    if (iV() || !nn.areLyricsTicking || (0 === e && !i)) return;
+    let s =
+      Math.abs(e - i2.lastTime - (t - i2.lastEventCreationTime) / 1e3) > 0.5;
+    ((i2.lastTime = e), (i2.lastPlayState = i), (i2.lastEventCreationTime = t));
+    let u = n - t;
+    (i || (u = 0), (e += u / 1e3));
+    let c = document.getElementsByClassName(a)[1];
+    console.assert(null != c);
+    let d = document
+      .getElementById('player-page')
+      ?.getAttribute('player-ui-state');
+    if (
+      'true' !== c.getAttribute('aria-selected') ||
+      !(
+        !d ||
+        'PLAYER_PAGE_OPEN' === d ||
+        'FULLSCREEN' === d ||
+        'MINIPLAYER_IN_PLAYER_PAGE' === d
+      )
+    ) {
+      i2.doneFirstInstantScroll = !1;
+      return;
+    }
+    if (iU()) return void i$();
+    iB();
+    try {
+      let t = document.getElementsByClassName(l)[0];
+      if (!t) {
+        ((nn.areLyricsTicking = !1),
+          Y(
+            '[BetterLyrics] No lyrics element found on the page, skipping lyrics injection',
+          ));
+        return;
+      }
+      let a = nn.lyricData;
+      if (!a) {
+        ((nn.areLyricsTicking = !1),
+          Y('Lyrics are ticking, but lyricData are null!'));
+        return;
+      }
+      let u = nn.lyricData.lines;
+      'richsync' === a.syncType
+        ? (e += i3(t, '--blyrics-richsync-timing-offset') / 1e3)
+        : (e += i3(t, '--blyrics-timing-offset') / 1e3);
+      let c = e + i3(t, '--blyrics-scroll-timing-offset') / 1e3,
+        d = [],
+        y = s;
+      u.every((t, r) => {
+        let s = t.time,
+          a = 1 / 0;
+        (r + 1 < u.length && (a = u[r + 1].time),
+          c >= s - iX.getNumberValue() && (c < a || c < s + t.duration)
+            ? (d.push(t),
+              !i2.lastActiveElements.includes(t) && c >= s && (y = !0),
+              (i2.selectedElementIndex = r),
+              t.isScrolled ||
+                (t.lyricElement.classList.add(o), (t.isScrolled = !0)))
+            : t.isScrolled &&
+              (t.lyricElement.classList.remove(o), (t.isScrolled = !1)));
+        let l = 2;
+        i || (l = 0);
+        let f = Math.max(a, s + t.duration + 0.05);
+        if (e + l >= s && e < f) {
+          t.isSelected = !0;
+          let r = e - s,
+            a = (n - t.animationStartTimeMs) / 1e3 - r;
+          if (
+            ((t.accumulatedOffsetMs = t.accumulatedOffsetMs / 1.08),
+            (t.accumulatedOffsetMs += 1e3 * a * 0.4),
+            t.isAnimating &&
+              Math.abs(t.accumulatedOffsetMs) > 100 &&
+              i &&
+              (t.isAnimating = !1),
+            i !== t.isAnimationPlayStatePlaying)
+          ) {
+            t.isAnimationPlayStatePlaying = i;
+            let e = [t, ...t.parts];
+            i
+              ? (e.forEach((e) => {
+                  e.lyricElement.classList.remove(p);
+                }),
+                (t.isAnimating = !1))
+              : e.forEach((e) => {
+                  e.animationStartTimeMs > n
+                    ? (e.lyricElement.classList.remove(h),
+                      e.lyricElement.classList.remove(m))
+                    : e.lyricElement.classList.add(p);
+                });
+          }
+          t.isAnimating ||
+            ([t, ...t.parts].forEach((t) => {
+              let i = t.duration,
+                r = t.time,
+                s = e - r;
+              (t.lyricElement.classList.remove(h),
+                t.lyricElement.classList.remove(p),
+                t.lyricElement.style.setProperty(
+                  '--blyrics-swipe-delay',
+                  -s - 0.1 * i + 's',
+                ),
+                t.lyricElement.style.setProperty(
+                  '--blyrics-anim-delay',
+                  -s + 's',
+                ),
+                t.lyricElement.classList.add(m),
+                re(t.lyricElement),
+                t.lyricElement.classList.add(h),
+                (t.animationStartTimeMs = n - 1e3 * s));
+            }),
+            (t.isAnimating = !0),
+            (t.isAnimationPlayStatePlaying = !0),
+            (t.accumulatedOffsetMs = 0));
+        } else
+          t.isSelected &&
+            ([t, ...t.parts].forEach((e) => {
+              (e.lyricElement.style.setProperty('--blyrics-swipe-delay', ''),
+                e.lyricElement.style.setProperty('--blyrics-anim-delay', ''),
+                e.lyricElement.classList.remove(h),
+                e.lyricElement.classList.remove(m),
+                e.lyricElement.classList.remove(p),
+                (e.animationStartTimeMs = 1 / 0));
+            }),
+            (t.isSelected = !1),
+            (t.isAnimating = !1));
+        return !0;
+      });
+      let b = t.getBoundingClientRect().height,
+        M = document.querySelector(v),
+        w = M.getBoundingClientRect().height,
+        N = M.scrollTop;
+      if (i2.scrollResumeTime < Date.now() || -1 === i2.scrollPos) {
+        (0 == d.length && d.push(a.lines[0]),
+          (i2.lastActiveElements = d.filter((e) => c >= e.time)));
+        let e = w * i0.getNumberValue(),
+          i = d[d.length - 1],
+          n = d
+            .filter(
+              (e, t) =>
+                c < e.time + e.duration - iZ.getNumberValue() ||
+                t == d.length - 1,
+            )
+            .map((e) => e.position + e.height / 2),
+          l = n.reduce((e, t) => e + t, 0) / n.length - e;
+        if (
+          ((l = Math.min(l, d[0].position)),
+          (l = Math.max(l, i.position - w + i.height)),
+          (l = Math.min(l, i.position)),
+          (l = Math.max(0, l)),
+          iJ.getBooleanValue())
+        ) {
+          let i = window.getComputedStyle(t).transform,
+            r = new DOMMatrix(i).f,
+            s = N - r;
+          if (
+            (!(function (e) {
+              if (
+                !iq &&
+                (!(function () {
+                  let e = document.querySelector('#tab-renderer');
+                  if (!e) return console.error("Can't find tab renderer");
+                  let t = document.getElementById(iQ);
+                  (t && t.remove(),
+                    ((iG = document.createElement('canvas')).id = iQ),
+                    (iG.style.position = 'fixed'),
+                    (iG.style.width = '100%'),
+                    (iG.style.height = '100%'),
+                    (iG.style.order = '100'));
+                  let i = document.getElementById('blyrics-wrapper');
+                  (e.insertBefore(iG, i), (iq = iG.getContext('2d')))
+                    ? iH()
+                    : console.error("Can't find canvas context");
+                })(),
+                !iq)
+              )
+                return;
+              iq.reset();
+              let t = window.devicePixelRatio || 1;
+              (iq.scale(t, t), iq.translate(0, -e));
+            })(s),
+            iq)
+          ) {
+            function g(e, t, i, r, n) {
+              ((iq.strokeStyle = 'red'),
+                (iq.fillStyle = 'red'),
+                iq.fillText(t, e + 2, s + 45),
+                iq.fillText('scroll time: ' + n.toFixed(3), e + 2, s + 60),
+                i.forEach((t) => {
+                  let i = t.time - n,
+                    r = t.time + t.duration,
+                    s = r - n;
+                  (s < iZ.getNumberValue()
+                    ? ((iq.strokeStyle = 'gray'), (iq.fillStyle = 'gray'))
+                    : i > 0
+                      ? ((iq.strokeStyle = 'magenta'),
+                        (iq.fillStyle = 'magenta'))
+                      : ((iq.strokeStyle = 'orange'),
+                        (iq.fillStyle = 'orange')),
+                    iq?.beginPath(),
+                    iq?.moveTo(e + 5, t.position),
+                    iq?.lineTo(e + 5, t.position + t.height),
+                    iq?.stroke(),
+                    iq?.fillText(
+                      'time: start=' +
+                        t.time.toFixed(2) +
+                        ' end=' +
+                        r.toFixed(2),
+                      e + 15,
+                      t.position,
+                    ),
+                    iq?.fillText(
+                      'till active: ' + i.toFixed(2),
+                      e + 15,
+                      t.position + 15,
+                    ),
+                    iq?.fillText(
+                      'till end: ' + s.toFixed(2),
+                      e + 15,
+                      t.position + 30,
+                    ));
+                }),
+                (iq.strokeStyle = 'pink'),
+                (iq.fillStyle = 'pink'),
+                r.forEach((t) => {
+                  (iq?.beginPath(),
+                    iq?.arc(e + 5, t, 5, 0, 2 * Math.PI, !1),
+                    iq?.fill());
+                }));
+            }
+            ((iq.strokeStyle = 'green'),
+              (iq.fillStyle = 'green'),
+              iq?.fillText('visible top', 0, N),
+              iq?.beginPath(),
+              iq?.moveTo(40, N),
+              iq?.lineTo(1e3, N),
+              iq.stroke(),
+              (iq.strokeStyle = 'blue'),
+              (iq.fillStyle = 'blue'),
+              iq?.fillText('visible bottom', 0, N + w),
+              iq?.beginPath(),
+              iq?.moveTo(40, N + w),
+              iq?.lineTo(1e3, N + w),
+              iq.stroke(),
+              (iq.strokeStyle = 'yellow'),
+              (iq.fillStyle = 'yellow'),
+              iq?.fillText('target', 0, N + e),
+              iq?.beginPath(),
+              iq?.moveTo(40, N + e),
+              iq?.lineTo(1e3, N + e),
+              iq.stroke(),
+              g(0, 'realtime', d, n, c),
+              g(
+                160,
+                'last scroll',
+                i2.lastScrollDebugContext.activeElms,
+                i2.lastScrollDebugContext.centers,
+                i2.lastScrollDebugContext.lyricScrollTime,
+              ));
+          }
+        }
+        if (
+          (0 !== N ||
+            i2.doneFirstInstantScroll ||
+            ((r = !1),
+            (i2.doneFirstInstantScroll = !0),
+            (i2.nextScrollAllowedTime = 0)),
+          i2.wasUserScrolling || y || i2.queuedScroll)
+        )
+          if (Date.now() > i2.nextScrollAllowedTime) {
+            if (
+              ((i2.queuedScroll = !1),
+              (i2.lastScrollDebugContext.lyricScrollTime = c),
+              (i2.lastScrollDebugContext.centers = n),
+              (i2.lastScrollDebugContext.activeElms = d),
+              r)
+            ) {
+              ((t.style.transitionTimingFunction = ''),
+                (t.style.transitionProperty = ''),
+                (t.style.transitionDuration = ''));
+              let e = i3(t, 'transition-duration');
+              ((t.style.transition = 'transform 0s ease-in-out 0s'),
+                (t.style.transform = `translate(0px, ${-(N - l)}px)`),
+                re(t),
+                (t.style.transition = ''),
+                (t.style.transform = 'translate(0px, 0px)'),
+                (i2.nextScrollAllowedTime = e + Date.now() + 20));
+            }
+            let e = Math.max(w * (1 - i0.getNumberValue()), w - b);
+            ((document.getElementById(S).style.height = `${e.toFixed(0)}px`),
+              (N = l),
+              (i2.scrollPos = l));
+          } else
+            (i2.nextScrollAllowedTime - Date.now() < iK.getNumberValue() ||
+              s) &&
+              (i2.queuedScroll = !0);
+      }
+      (i2.wasUserScrolling &&
+        i2.scrollResumeTime < Date.now() &&
+        (i6().setAttribute('autoscroll-hidden', 'true'),
+        t.classList.remove(f),
+        (i2.wasUserScrolling = !1)),
+        Math.abs(N - M.scrollTop) > 1 &&
+          ((M.scrollTop = N),
+          (i2.skipScrolls += 1),
+          i2.skipScrollsDecayTimes.push(Date.now() + 2e3)));
+      let E = 0;
+      for (
+        ;
+        E < i2.skipScrollsDecayTimes.length &&
+        !(i2.skipScrollsDecayTimes[E] > n);
+        E++
+      );
+      ((i2.skipScrollsDecayTimes = i2.skipScrollsDecayTimes.slice(E)),
+        (i2.skipScrolls -= E),
+        i2.skipScrolls < 1 && (i2.skipScrolls = 1));
+    } catch (e) {
+      e.message?.includes('undefined') ||
+        Y('[BetterLyrics] Error in lyrics check interval:', e);
+    }
+  }
+  function i8() {
+    nn.areLyricsTicking &&
+      (rl(), i7(i2.lastTime, i2.lastEventCreationTime, i2.lastPlayState, !1));
+  }
+  function i6() {
+    let e = document.getElementById('autoscroll-resume-button');
+    if (!e) {
+      let t = document.createElement('div');
+      ((t.id = 'autoscroll-resume-wrapper'),
+        (t.className = 'autoscroll-resume-wrapper'),
+        ((e = document.createElement('button')).id =
+          'autoscroll-resume-button'),
+        (e.innerText = 'Resume Autoscroll'),
+        e.classList.add('autoscroll-resume-button'),
+        e.setAttribute('autoscroll-hidden', 'true'),
+        e.addEventListener('click', () => {
+          ((i2.scrollResumeTime = 0),
+            e.setAttribute('autoscroll-hidden', 'true'));
+        }),
+        document.querySelector('#side-panel > tp-yt-paper-tabs').after(t),
+        t.appendChild(e));
+    }
+    return e;
+  }
+  function i9(e) {
+    return e
+      ? e.endsWith('ms')
+        ? parseFloat(e.slice(0, -2))
+        : e.endsWith('s')
+          ? 1e3 * parseFloat(e.slice(0, -1))
+          : 0
+      : 0;
+  }
+  function re(e) {
+    e.offsetHeight;
+  }
+  let rt = tY('blyrics-disable-richsync', !1, !0),
+    ri = tY('blyrics-line-synced-animation-delay', 50, !0),
+    rr = new ResizeObserver((e) => {
+      for (let t of e)
+        t.target.id === E &&
+          nn.lyricData &&
+          (t.target.clientWidth !== nn.lyricData.lyricWidth ||
+            t.target.clientHeight !== nn.lyricData.lyricHeight) &&
+          rl();
+    });
+  function rn(e, t = !1) {
+    let i = e.lyrics;
+    if (!i || 0 === i.length)
+      throw Error('[BetterLyrics] No lyrics found for the current song');
+    Y('[BetterLyrics] Lyrics found, injecting into the page');
+    let r = document.querySelector(w)?.parentElement;
+    r && r.classList.add('blyrics-hidden');
+    try {
+      document.getElementsByClassName(l)[0].innerHTML = '';
+    } catch (e) {
+      Y(
+        '[BetterLyrics] (Safe to ignore) Lyrics tab is not disabled, unable to enable it',
+      );
+    }
+    !(function (e, t = !1) {
+      let i = e.lyrics;
+      (iW(), rr.disconnect());
+      let r = (function () {
+        let e = document.querySelector(v);
+        (e.removeEventListener('scroll', ix), e.addEventListener('scroll', ix));
+        let t = document.getElementById(E);
+        if (t)
+          return (
+            (t.innerHTML = ''),
+            (t.style.top = ''),
+            (t.style.transition = ''),
+            t
+          );
+        let i = document.createElement('div');
+        return (
+          (i.id = E),
+          e.appendChild(i),
+          i.addEventListener('copy', (e) => {
+            let t = window.getSelection();
+            if (!t || t.isCollapsed) return;
+            let i = t.getRangeAt(0).cloneContents(),
+              r = i.querySelectorAll('.blyrics--line');
+            if (0 === r.length) {
+              let t = i.textContent?.replace(/\s+/g, ' ').trim();
+              t &&
+                e.clipboardData &&
+                (e.preventDefault(), e.clipboardData.setData('text/plain', t));
+              return;
+            }
+            let n = [];
+            for (let e of r) {
+              let t = [
+                Array.from(e.querySelectorAll('.blyrics--word'))
+                  .map((e) => e.textContent?.trim())
+                  .filter(Boolean)
+                  .join(' '),
+                e.querySelector(`.${y}`)?.textContent?.trim(),
+                e.querySelector(`.${g}`)?.textContent?.trim(),
+              ].filter(Boolean);
+              t.length > 0 && n.push(t.join('\n'));
+            }
+            n.length > 0 &&
+              (e.preventDefault(),
+              e.clipboardData?.setData('text/plain', n.join('\n')));
+          }),
+          Y('[BetterLyrics] Lyrics wrapper created'),
+          i
+        );
+      })();
+      r.innerHTML = '';
+      let n = document.createElement('div');
+      ((n.className = l),
+        r.appendChild(n),
+        r.removeAttribute('is-empty'),
+        tB((e) => {
+          Y(
+            '[BetterLyrics] Translation enabled, translating lyrics. Language: ',
+            e.translationLanguage,
+          );
+        }));
+      let s = i.every((e) => 0 === e.startTimeMs);
+      t
+        ? iP(!0)
+        : (function (e = !1) {
+            try {
+              let t = document.getElementById(N);
+              if (
+                (t &&
+                  e &&
+                  (t.setAttribute('small-loader', ''),
+                  re(t),
+                  t.setAttribute('no-sync-available', '')),
+                t?.hasAttribute('active'))
+              ) {
+                (clearTimeout(nn.loaderAnimationEndTimeout),
+                  (t.dataset.animatingOut = 'true'),
+                  t.removeAttribute('active'),
+                  t.addEventListener('transitionend', function e(i) {
+                    (clearTimeout(nn.loaderAnimationEndTimeout),
+                      (t.dataset.animatingOut = 'false'),
+                      (iR = !1),
+                      t.removeEventListener('transitionend', e),
+                      Y('[BetterLyrics] Loader Transition Ended'));
+                  }));
+                let e = 1e3,
+                  i = window
+                    .getComputedStyle(t)
+                    .getPropertyValue('transition-delay');
+                (i && (e += i9(i)),
+                  (nn.loaderAnimationEndTimeout = window.setTimeout(() => {
+                    ((t.dataset.animatingOut = String(!1)),
+                      (iR = !1),
+                      Y("[BetterLyrics] Loader Animation Didn't End"));
+                  }, e)));
+              }
+            } catch (e) {
+              Y(e);
+            }
+          })(s && i[0].words !== R);
+      let a = new Promise(async (t) => {
+          if (e.language) t(e.language);
+          else {
+            let e = '',
+              r = 0;
+            for (let t of i)
+              if (((e += t.words.trim() + '\n'), ++r >= 10)) break;
+            let n = await tU(e, 'en'),
+              s = n?.originalLanguage || '';
+            return (Y(A, 'Lang was missing. Determined it is: ' + s), t(s));
+          }
+        }),
+        o = [],
+        u = s ? 'none' : 'synced';
+      (i.forEach((t, r) => {
+        var d, h, p, m, f;
+        let b;
+        if (t.isInstrumental) {
+          let e,
+            a,
+            l,
+            u,
+            c,
+            h,
+            p,
+            m,
+            f,
+            g,
+            y,
+            b,
+            M,
+            v,
+            w,
+            N,
+            E,
+            S,
+            x =
+              ((d = t.durationMs),
+              (e = document.createElement('div')).classList.add(
+                'blyrics--instrumental',
+              ),
+              e.style.setProperty('--blyrics-duration', `${d}ms`),
+              (a = 'http://www.w3.org/2000/svg'),
+              (l = document.createElementNS(a, 'svg')).classList.add(
+                'blyrics--instrumental-icon',
+              ),
+              l.setAttribute('viewBox', '0 0 24 24'),
+              (u = document.createElementNS(a, 'defs')),
+              (c = `blyrics-glow-${r}`),
+              (h = `blyrics-wave-clip-${r}`),
+              (p = document.createElementNS(a, 'filter')).setAttribute('id', c),
+              p.setAttribute('x', '-100%'),
+              p.setAttribute('y', '-100%'),
+              p.setAttribute('width', '300%'),
+              p.setAttribute('height', '300%'),
+              (m = document.createElementNS(a, 'feGaussianBlur')).setAttribute(
+                'in',
+                'SourceGraphic',
+              ),
+              m.setAttribute('stdDeviation', '5'),
+              m.setAttribute('result', 'blur'),
+              p.appendChild(m),
+              (f = document.createElementNS(a, 'feColorMatrix')).setAttribute(
+                'in',
+                'blur',
+              ),
+              f.setAttribute('type', 'matrix'),
+              f.setAttribute(
+                'values',
+                '1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.6 0',
+              ),
+              f.setAttribute('result', 'fadedBlur'),
+              p.appendChild(f),
+              (g = document.createElementNS(a, 'feMerge')),
+              (y = document.createElementNS(a, 'feMergeNode')).setAttribute(
+                'in',
+                'fadedBlur',
+              ),
+              g.appendChild(y),
+              (b = document.createElementNS(a, 'feMergeNode')).setAttribute(
+                'in',
+                'SourceGraphic',
+              ),
+              g.appendChild(b),
+              p.appendChild(g),
+              u.appendChild(p),
+              (M = document.createElementNS(a, 'clipPath')).setAttribute(
+                'id',
+                h,
+              ),
+              M.classList.add('blyrics--wave-clip'),
+              (v = document.createElementNS(a, 'path')).classList.add(
+                'blyrics--wave-rect',
+              ),
+              v.setAttribute('d', 'M -4 3.9 L 30 3.9 L 30 30 L -4 30 Z'),
+              M.appendChild(v),
+              (w = document.createElementNS(a, 'path')).classList.add(
+                'blyrics--wave-path',
+              ),
+              w.setAttribute(
+                'd',
+                'M -4 3 Q 1 2 5 3 Q 10 4 14 3 Q 18 2 22 3 Q 26 4 30 3 L 30 4 L -4 4 Z',
+              ),
+              M.appendChild(w),
+              u.appendChild(M),
+              l.appendChild(u),
+              (N = document.createElementNS(a, 'path')).classList.add(
+                'blyrics--instrumental-bg',
+              ),
+              N.setAttribute(
+                'd',
+                'M10 21q-1.65 0-2.825-1.175T6 17t1.175-2.825T10 13q.575 0 1.063.138t.937.412V4q0-.425.288-.712T13 3h4q.425 0 .713.288T18 4v2q0 .425-.288.713T17 7h-3v10q0 1.65-1.175 2.825T10 21',
+              ),
+              l.appendChild(N),
+              (E = document.createElementNS(a, 'g')).setAttribute(
+                'filter',
+                `url(#${c})`,
+              ),
+              (S = document.createElementNS(a, 'path')).classList.add(
+                'blyrics--instrumental-fill',
+              ),
+              S.setAttribute('clip-path', `url(#${h})`),
+              S.setAttribute(
+                'd',
+                'M10 21q-1.65 0-2.825-1.175T6 17t1.175-2.825T10 13q.575 0 1.063.138t.937.412V4q0-.425.288-.712T13 3h4q.425 0 .713.288T18 4v2q0 .425-.288.713T17 7h-3v10q0 1.65-1.175 2.825T10 21',
+              ),
+              E.appendChild(S),
+              l.appendChild(E),
+              e.appendChild(l),
+              e);
+          (x.classList.add('blyrics--line'),
+            (x.dataset.time = String(t.startTimeMs / 1e3)),
+            (x.dataset.duration = String(t.durationMs / 1e3)),
+            (x.dataset.lineNumber = String(r)),
+            (x.dataset.instrumental = 'true'));
+          let I = (function (e, t) {
+            for (let i = t - 1; i >= 0; i--)
+              if (!e[i].isInstrumental && e[i].agent) return e[i].agent;
+            for (let i = t + 1; i < e.length; i++)
+              if (!e[i].isInstrumental && e[i].agent) return e[i].agent;
+          })(i, r);
+          if ((I && (x.dataset.agent = I), !s)) {
+            let e = t.startTimeMs / 1e3;
+            x.addEventListener('click', () => {
+              (Y(A, `Seeking to ${e.toFixed(2)}s`),
+                document.dispatchEvent(
+                  new CustomEvent('blyrics-seek-to', { detail: e }),
+                ),
+                (i2.scrollResumeTime = 0));
+            });
+          }
+          let L = {
+            lyricElement: x,
+            time: t.startTimeMs / 1e3,
+            duration: t.durationMs / 1e3,
+            parts: [],
+            isScrolled: !1,
+            animationStartTimeMs: 1 / 0,
+            isAnimationPlayStatePlaying: !1,
+            accumulatedOffsetMs: 0,
+            isAnimating: !1,
+            isSelected: !1,
+            height: -1,
+            position: -1,
+          };
+          try {
+            (o.push(L), n.appendChild(x));
+          } catch (e) {
+            Y(j);
+          }
+          return;
+        }
+        (t.parts || (t.parts = []),
+          (0 === t.parts.length || rt.getBooleanValue()) &&
+            ((t.parts = []),
+            t.words.split(' ').forEach((e, i) => {
+              ((e = e.trim().length < 1 ? e : e + ' '),
+                t.parts.push({
+                  startTimeMs: t.startTimeMs + i * ri.getNumberValue(),
+                  words: e,
+                  durationMs: 0,
+                }));
+            })),
+          t.parts.every((e) => 0 === e.durationMs) || (u = 'richsync'));
+        let M = document.createElement('div');
+        M.classList.add('blyrics--line');
+        let v = {
+          lyricElement: M,
+          time: t.startTimeMs / 1e3,
+          duration: t.durationMs / 1e3,
+          parts: [],
+          isScrolled: !1,
+          animationStartTimeMs: 1 / 0,
+          isAnimationPlayStatePlaying: !1,
+          accumulatedOffsetMs: 0,
+          isAnimating: !1,
+          isSelected: !1,
+          height: -1,
+          position: -1,
+        };
+        (rs(t.parts, v, M),
+          ra(M, 1),
+          (M.dataset.time = String(v.time)),
+          (M.dataset.duration = String(v.duration)),
+          (M.dataset.lineNumber = String(r)),
+          M.style.setProperty('--blyrics-duration', t.durationMs + 'ms'),
+          t.agent && (M.dataset.agent = t.agent),
+          s
+            ? (M.style.cursor = 'unset')
+            : M.addEventListener('click', (e) => {
+                let t,
+                  i = e.target,
+                  r = M.closest(`.${l}`);
+                if (r?.dataset.sync === 'richsync')
+                  if (e.altKey) {
+                    let r = i.closest(`.${c}`);
+                    if (!r) {
+                      let t = M.querySelectorAll(`.${c}`),
+                        i = 1 / 0;
+                      t.forEach((t) => {
+                        let n = t.getBoundingClientRect(),
+                          s = n.left + n.width / 2,
+                          a = n.top + n.height / 2,
+                          l = Math.hypot(e.clientX - s, e.clientY - a);
+                        l < i && ((i = l), (r = t));
+                      });
+                    }
+                    if (!r) return;
+                    t = parseFloat(r.dataset.time || '0');
+                  } else t = parseFloat(M.dataset.time || '0');
+                else t = parseFloat(M.dataset.time || '0');
+                (Y(A, `Seeking to ${t.toFixed(2)}s`),
+                  document.dispatchEvent(
+                    new CustomEvent('blyrics-seek-to', { detail: t }),
+                  ),
+                  (i2.scrollResumeTime = 0));
+              }));
+        let w = () => {
+            ra(M, 4);
+            let e = document.createElement('div');
+            return (
+              e.classList.add(y),
+              (e.style.order = '5'),
+              M.appendChild(e),
+              e
+            );
+          },
+          N = ((h = t.words), tV.romanization.get(h) || null),
+          E =
+            (((e.language && T.includes(e.language)) || W(t.words)) &&
+              t.romanization) ||
+            null !== N;
+        (t.romanization && (N = t.romanization),
+          E && nn.isRomanizationEnabled
+            ? N !== t.words &&
+              (t.timedRomanization &&
+              t.timedRomanization.length > 0 &&
+              !rt.getBooleanValue()
+                ? rs(t.timedRomanization, v, w())
+                : (w().textContent = '\n' + N))
+            : a.then((e) => {
+                var i;
+                ((i = async () => {
+                  let i = W(t.words);
+                  if (T.includes(e) || i) {
+                    let r = e;
+                    if (
+                      (i && !T.includes(e) && (r = 'auto'),
+                      '♪' !== t.words.trim() && '' !== t.words.trim())
+                    ) {
+                      let e;
+                      (e = t.romanization
+                        ? t.romanization
+                        : await t$(r, t.words)) &&
+                        !ro(e, t.words) &&
+                        ((w().textContent = e), i8());
+                    }
+                  }
+                }),
+                  tC({ isRomanizationEnabled: !1 }, (e) => {
+                    e.isRomanizationEnabled && i(e);
+                  }));
+              }));
+        let S = () => {
+            ra(M, 6);
+            let e = document.createElement('div');
+            return (
+              e.classList.add(g),
+              (e.style.order = '7'),
+              M.appendChild(e),
+              e
+            );
+          },
+          x = nn.translationLanguage;
+        if (
+          t.translation &&
+          ((m = x),
+          (f = t.translation.lang),
+          m.split('-')[0] === f.split('-')[0])
+        )
+          b = {
+            originalLanguage: t.translation.lang,
+            translatedText: t.translation.text,
+          };
+        else {
+          let e;
+          ((p = t.words),
+            (e = `${x}_${p}`),
+            (b = tV.translation.get(e) || null));
+        }
+        b && nn.isTranslateEnabled
+          ? ro(b.translatedText, t.words) ||
+            (S().textContent = '\n' + b.translatedText)
+          : a.then((e) => {
+              tB(async (i) => {
+                let r = i.translationLanguage || 'en';
+                if (
+                  (e !== r || W(t.words)) &&
+                  '♪' !== t.words.trim() &&
+                  '' !== t.words.trim()
+                ) {
+                  let e;
+                  (e =
+                    t.translation && r === t.translation.lang
+                      ? {
+                          originalLanguage: t.translation.lang,
+                          translatedText: t.translation.text,
+                        }
+                      : await tU(t.words, r)) &&
+                    !ro(e.translatedText, t.words) &&
+                    ((S().textContent = '\n' + e.translatedText), i8());
+                }
+              });
+            });
+        try {
+          (o.push(v), n.appendChild(M));
+        } catch (e) {
+          Y(j);
+        }
+      }),
+        (i2.skipScrolls = 2),
+        (i2.skipScrollsDecayTimes = []));
+      for (let e = 0; e < i2.skipScrolls; e++)
+        i2.skipScrollsDecayTimes.push(Date.now() + 2e3);
+      ((i2.scrollResumeTime = 0),
+        i[0].words !== R
+          ? (function (e, t, i, r, n, s, a) {
+              0 !== document.getElementsByClassName(b).length &&
+                document.getElementsByClassName(b)[0].remove();
+              let o = document.getElementsByClassName(l)[0],
+                u = document.createElement('div');
+              (u.classList.add(b),
+                o.appendChild(u),
+                (function (e, t, i, r) {
+                  try {
+                    let n = document.getElementsByClassName(b)[0];
+                    n.innerHTML = '';
+                    let s = document.createElement('div');
+                    s.className = `${b}__container`;
+                    let a = document.createElement('img');
+                    ((a.src = 'https://better-lyrics.boidu.dev/icon-512.png'),
+                      (a.alt = 'Better Lyrics Logo'),
+                      (a.width = 20),
+                      (a.height = 20),
+                      s.appendChild(a),
+                      s.appendChild(document.createTextNode('Source: ')));
+                    let l = document.createElement('a');
+                    ((l.target = '_blank'),
+                      (l.id = 'betterLyricsFooterLink'),
+                      s.appendChild(l));
+                    let o = document.createElement('img');
+                    ((o.src =
+                      'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IiNhYWEiIGQ9Ik0xOS4yNyA1LjMzQzE3Ljk0IDQuNzEgMTYuNSA0LjI2IDE1IDRhLjA5LjA5IDAgMCAwLS4wNy4wM2MtLjE4LjMzLS4zOS43Ni0uNTMgMS4wOWExNi4wOSAxNi4wOSAwIDAgMC00LjggMGMtLjE0LS4zNC0uMzUtLjc2LS41NC0xLjA5Yy0uMDEtLjAyLS4wNC0uMDMtLjA3LS4wM2MtMS41LjI2LTIuOTMuNzEtNC4yNyAxLjMzYy0uMDEgMC0uMDIuMDEtLjAzLjAyYy0yLjcyIDQuMDctMy40NyA4LjAzLTMuMSAxMS45NWMwIC4wMi4wMS4wNC4wMy4wNWMxLjggMS4zMiAzLjUzIDIuMTIgNS4yNCAyLjY1Yy4wMy4wMS4wNiAwIC4wNy0uMDJjLjQtLjU1Ljc2LTEuMTMgMS4wNy0xLjc0Yy4wMi0uMDQgMC0uMDgtLjA0LS4wOWMtLjU3LS4yMi0xLjExLS40OC0xLjY0LS43OGMtLjA0LS4wMi0uMDQtLjA4LS4wMS0uMTFjLjExLS4wOC4yMi0uMTcuMzMtLjI1Yy4wMi0uMDIuMDUtLjAyLjA3LS4wMWMzLjQ0IDEuNTcgNy4xNSAxLjU3IDEwLjU1IDBjLjAyLS4wMS4wNS0uMDEuMDcuMDFjLjExLjA5LjIyLjE3LjMzLjI2Yy4wNC4wMy4wNC4wOS0uMDEuMTFjLS41Mi4zMS0xLjA3LjU2LTEuNjQuNzhjLS4wNC4wMS0uMDUuMDYtLjA0LjA5Yy4zMi42MS42OCAxLjE5IDEuMDcgMS43NGMuMDMuMDEuMDYuMDIuMDkuMDFjMS43Mi0uNTMgMy40NS0xLjMzIDUuMjUtMi42NWMuMDItLjAxLjAzLS4wMy4wMy0uMDVjLjQ0LTQuNTMtLjczLTguNDYtMy4xLTExLjk1Yy0uMDEtLjAxLS4wMi0uMDItLjA0LS4wMk04LjUyIDE0LjkxYy0xLjAzIDAtMS44OS0uOTUtMS44OS0yLjEycy44NC0yLjEyIDEuODktMi4xMmMxLjA2IDAgMS45Ljk2IDEuODkgMi4xMmMwIDEuMTctLjg0IDIuMTItMS44OSAyLjEybTYuOTcgMGMtMS4wMyAwLTEuODktLjk1LTEuODktMi4xMnMuODQtMi4xMiAxLjg5LTIuMTJjMS4wNiAwIDEuOS45NiAxLjg5IDIuMTJjMCAxLjE3LS44MyAyLjEyLTEuODkgMi4xMiIvPjwvc3ZnPg=='),
+                      (o.alt = 'Better Lyrics Discord'),
+                      (o.width = 20),
+                      (o.height = 20));
+                    let u = document.createElement('a');
+                    ((u.className = `${b}__discord`),
+                      (u.href = 'https://discord.gg/UsHE3d5fWF'),
+                      (u.target = '_blank'),
+                      u.appendChild(o));
+                    let c = new URL(L);
+                    (e && c.searchParams.append('title', e),
+                      t && c.searchParams.append('artist', t),
+                      i && c.searchParams.append('album', i),
+                      r && c.searchParams.append('duration', r.toString()),
+                      (l.target = '_blank'));
+                    let d = iA({
+                        text: 'Add Lyrics to LRCLib',
+                        href: c.toString(),
+                      }),
+                      h = iA({
+                        text: 'Search on Genius',
+                        href: iY(e, t),
+                        logoSrc: I,
+                        logoAlt: 'Genius',
+                      });
+                    (n.appendChild(s),
+                      n.appendChild(h),
+                      n.appendChild(d),
+                      n.appendChild(u),
+                      n.removeAttribute('is-empty'));
+                  } catch (e) {
+                    Y(
+                      '[BetterLyrics] (Safe to ignore) Footer is not visible, unable to inject source link',
+                    );
+                  }
+                })(i, r, n, s));
+              let c = document.getElementById('betterLyricsFooterLink');
+              t = t || 'https://better-lyrics.boidu.dev/';
+              let d = a ? iT[a] : null;
+              if (((c.textContent = ''), (c.href = t), d)) {
+                var h;
+                let e, t;
+                c.appendChild(document.createTextNode(d.name));
+                let i = document.createElement('span');
+                ((i.style.opacity = '0.5'),
+                  (i.style.marginLeft = '6px'),
+                  (i.style.display = 'inline-flex'),
+                  (i.style.verticalAlign = 'middle'),
+                  (i.style.color = ik[d.syncType]));
+                let r =
+                  ((h = iL[d.syncType]),
+                  (t = (e = new DOMParser().parseFromString(h, 'image/svg+xml'))
+                    .documentElement) instanceof SVGElement &&
+                  !e.querySelector('parsererror')
+                    ? t
+                    : null);
+                (r && i.appendChild(r), c.appendChild(i));
+              } else c.textContent = e || 'boidu.dev';
+            })(
+              e.source,
+              e.sourceHref,
+              e.song,
+              e.artist,
+              e.album,
+              e.duration,
+              e.providerKey,
+            )
+          : (function (e, t, i, r) {
+              let n = document.getElementById(E);
+              if (!n) return;
+              let s = document.createElement('div');
+              s.className = 'blyrics-no-lyrics-button-container';
+              let a = new URL(L);
+              (e && a.searchParams.append('title', e),
+                t && a.searchParams.append('artist', t),
+                i && a.searchParams.append('album', i),
+                r && a.searchParams.append('duration', r.toString()));
+              let l = iA({ text: 'Add Lyrics to LRCLib', href: a.toString() }),
+                o = iA({
+                  text: 'Search on Genius',
+                  href: iY(e, t),
+                  logoSrc: I,
+                  logoAlt: 'Genius',
+                });
+              (s.appendChild(l), s.appendChild(o), n.appendChild(s));
+            })(e.song, e.artist, e.album, e.duration));
+      let d = document.createElement('div');
+      ((d.id = S),
+        (d.style.height = '100px'),
+        (d.textContent = ''),
+        (d.style.padding = '0'),
+        (d.style.margin = '0'),
+        n.appendChild(d),
+        (n.dataset.sync = u),
+        (n.dataset.loaderVisible = String(t)),
+        i[0].words === R && (n.dataset.noLyrics = 'true'));
+      let h = {
+        lines: o,
+        syncType: u,
+        lyricWidth: n.clientWidth,
+        lyricHeight: n.clientHeight,
+        isMusicVideoSynced: !0 === e.musicVideoSynced,
+      };
+      (e.segmentMap && nt(h, e.segmentMap),
+        (nn.lyricData = h),
+        s
+          ? Y(
+              '[BetterLyrics] Syncing lyrics disabled due to all lyrics having a start time of 0',
+            )
+          : ((nn.areLyricsTicking = !0), rl(), rr.observe(r)),
+        (nn.areLyricsLoaded = !0));
+    })(e, t);
+  }
+  function rs(e, t, i) {
+    var r, n;
+    let s,
+      a,
+      l,
+      o,
+      h = [],
+      p = !0,
+      m = [];
+    (e.forEach((e) => {
+      let i,
+        r =
+          ((i = e.words),
+          /[\p{Script=Arabic}\p{Script=Hebrew}\p{Script=Syriac}\p{Script=Thaana}]/u.test(
+            i,
+          ));
+      !r &&
+        e.words.trim().length > 0 &&
+        ((p = !1),
+        h.reverse().forEach((e) => {
+          m.push(e);
+        }),
+        (h = []));
+      let n = document.createElement('span');
+      (n.classList.add(c),
+        0 === e.durationMs && n.classList.add('blyrics-zero-dur-animate'),
+        r && n.classList.add(u));
+      let s = {
+        time: e.startTimeMs / 1e3,
+        duration: e.durationMs / 1e3,
+        lyricElement: n,
+        animationStartTimeMs: 1 / 0,
+      };
+      ((n.textContent = e.words),
+        (n.dataset.time = String(s.time)),
+        (n.dataset.duration = String(s.duration)),
+        (n.dataset.content = e.words),
+        n.style.setProperty('--blyrics-duration', e.durationMs + 'ms'),
+        e.isBackground && n.classList.add(d),
+        0 === e.words.trim().length && (n.style.display = 'inline'),
+        t.parts.push(s),
+        r ? h.push(n) : m.push(n));
+    }),
+      p && h.length > 0
+        ? (i.classList.add(u),
+          h.forEach((e) => {
+            m.push(e);
+          }))
+        : h.length > 0 &&
+          h.reverse().forEach((e) => {
+            m.push(e);
+          }),
+      (r = i),
+      (n = m),
+      (s = /([\s\u200B\u00AD\p{Dash_Punctuation}])/gu),
+      (a = []),
+      (l = !1),
+      (o = () => {
+        if (a.length > 0) {
+          let e = document.createElement('span');
+          (a.forEach((t) => {
+            e.appendChild(t);
+          }),
+            l && e.classList.add(d),
+            r.appendChild(e),
+            (a = []));
+        }
+      }),
+      n.forEach((e) => {
+        let t = l !== e.classList.contains(d),
+          i = 1 !== e.textContent.length || ' ' !== e.textContent[0];
+        (t || a.push(e),
+          ((e.textContent.length > 0 &&
+            s.test(e.textContent[e.textContent.length - 1])) ||
+            t) &&
+            o(),
+          t && i && (a.push(e), (l = e.classList.contains(d))));
+      }),
+      o());
+  }
+  function ra(e, t) {
+    let i = document.createElement('span');
+    (i.classList.add('blyrics--break'),
+      (i.style.order = String(t)),
+      e.appendChild(i));
+  }
+  function rl() {
+    if (nn.lyricData && nn.areLyricsTicking) {
+      let e = document.getElementsByClassName(l)[0];
+      if (i1.getBooleanValue()) {
+        let t = document.getElementById('tab-renderer')?.clientHeight;
+        t
+          ? (e.style.paddingTop = `${t * i0.getNumberValue()}px`)
+          : ((e.style.paddingTop = ''),
+            Y(
+              'Could not find tab renderer height, not adding extra padding top.',
+            ));
+      }
+      let t = nn.lyricData;
+      ((t.lyricWidth = e.clientWidth),
+        t.lines.forEach((t) => {
+          var i;
+          let r,
+            n,
+            s =
+              ((i = t.lyricElement),
+              (r = e.getBoundingClientRect()),
+              new DOMRect(
+                (n = i.getBoundingClientRect()).x - r.x,
+                n.y - r.y,
+                n.width,
+                n.height,
+              ));
+          ((t.position = s.y), (t.height = s.height));
+        }),
+        (i2.wasUserScrolling = !0),
+        iH());
+    }
+  }
+  function ro(e, t) {
+    return (
+      (e = e
+        .toLowerCase()
+        .replaceAll(/(\p{P})/gu, '')
+        .trim()) ===
+      (t = t
+        .toLowerCase()
+        .replaceAll(/(\p{P})/gu, '')
+        .trim())
+    );
+  }
+  let ru = {
+      preserveOrder: !1,
+      attributeNamePrefix: '@_',
+      attributesGroupName: !1,
+      textNodeName: '#text',
+      ignoreAttributes: !0,
+      removeNSPrefix: !1,
+      allowBooleanAttributes: !1,
+      parseTagValue: !0,
+      parseAttributeValue: !1,
+      trimValues: !0,
+      cdataPropName: !1,
+      numberParseOptions: { hex: !0, leadingZeros: !0, eNotation: !0 },
+      tagValueProcessor: function (e, t) {
+        return t;
+      },
+      attributeValueProcessor: function (e, t) {
+        return t;
+      },
+      stopNodes: [],
+      alwaysCreateTextNode: !1,
+      isArray: () => !1,
+      commentPropName: !1,
+      unpairedTags: [],
+      processEntities: !0,
+      htmlEntities: !1,
+      ignoreDeclaration: !1,
+      ignorePiTags: !1,
+      transformTagName: !1,
+      transformAttributeName: !1,
+      updateTag: function (e, t, i) {
+        return e;
+      },
+      captureMetaData: !1,
+    },
+    rc =
+      ':A-Za-z_\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD',
+    rd = RegExp(
+      '^' +
+        ('[' + rc + '][' + rc) +
+        '\\-.\\d\\u00B7\\u0300-\\u036F\\u203F-\\u2040]*$',
+    );
+  function rh(e, t) {
+    let i = [],
+      r = t.exec(e);
+    for (; r; ) {
+      let n = [];
+      n.startIndex = t.lastIndex - r[0].length;
+      let s = r.length;
+      for (let e = 0; e < s; e++) n.push(r[e]);
+      (i.push(n), (r = t.exec(e)));
+    }
+    return i;
+  }
+  let rp = function (e) {
+    return null != rd.exec(e);
+  };
+  e =
+    'function' != typeof Symbol ? '@@xmlMetadata' : Symbol('XML Node Metadata');
+  class rm {
+    constructor(e) {
+      ((this.tagname = e), (this.child = []), (this[':@'] = {}));
+    }
+    add(e, t) {
+      ('__proto__' === e && (e = '#__proto__'), this.child.push({ [e]: t }));
+    }
+    addChild(t, i) {
+      ('__proto__' === t.tagname && (t.tagname = '#__proto__'),
+        t[':@'] && Object.keys(t[':@']).length > 0
+          ? this.child.push({ [t.tagname]: t.child, ':@': t[':@'] })
+          : this.child.push({ [t.tagname]: t.child }),
+        void 0 !== i &&
+          (this.child[this.child.length - 1][e] = { startIndex: i }));
+    }
+    static getMetaDataSymbol() {
+      return e;
+    }
+  }
+  class rf {
+    constructor(e) {
+      this.suppressValidationErr = !e;
+    }
+    readDocType(e, t) {
+      let i = {};
+      if (
+        'O' === e[t + 3] &&
+        'C' === e[t + 4] &&
+        'T' === e[t + 5] &&
+        'Y' === e[t + 6] &&
+        'P' === e[t + 7] &&
+        'E' === e[t + 8]
+      ) {
+        t += 9;
+        let r = 1,
+          n = !1,
+          s = !1;
+        for (; t < e.length; t++)
+          if ('<' !== e[t] || s)
+            if ('>' === e[t]) {
+              if (
+                (s
+                  ? '-' === e[t - 1] && '-' === e[t - 2] && ((s = !1), r--)
+                  : r--,
+                0 === r)
+              )
+                break;
+            } else '[' === e[t] ? (n = !0) : e[t];
+          else {
+            if (n && ry(e, '!ENTITY', t)) {
+              let r, n;
+              ((t += 7),
+                ([r, n, t] = this.readEntityExp(
+                  e,
+                  t + 1,
+                  this.suppressValidationErr,
+                )),
+                -1 === n.indexOf('&') &&
+                  (i[r] = { regx: RegExp(`&${r};`, 'g'), val: n }));
+            } else if (n && ry(e, '!ELEMENT', t)) {
+              t += 8;
+              let { index: i } = this.readElementExp(e, t + 1);
+              t = i;
+            } else if (n && ry(e, '!ATTLIST', t)) t += 8;
+            else if (n && ry(e, '!NOTATION', t)) {
+              t += 9;
+              let { index: i } = this.readNotationExp(
+                e,
+                t + 1,
+                this.suppressValidationErr,
+              );
+              t = i;
+            } else if (ry(e, '!--', t)) s = !0;
+            else throw Error('Invalid DOCTYPE');
+            r++;
+          }
+        if (0 !== r) throw Error('Unclosed DOCTYPE');
+      } else throw Error('Invalid Tag instead of DOCTYPE');
+      return { entities: i, i: t };
+    }
+    readEntityExp(e, t) {
+      t = rg(e, t);
+      let i = '';
+      for (; t < e.length && !/\s/.test(e[t]) && '"' !== e[t] && "'" !== e[t]; )
+        ((i += e[t]), t++);
+      if ((rb(i), (t = rg(e, t)), !this.suppressValidationErr)) {
+        if ('SYSTEM' === e.substring(t, t + 6).toUpperCase())
+          throw Error('External entities are not supported');
+        else if ('%' === e[t])
+          throw Error('Parameter entities are not supported');
+      }
+      let r = '';
+      return (([t, r] = this.readIdentifierVal(e, t, 'entity')), [i, r, --t]);
+    }
+    readNotationExp(e, t) {
+      t = rg(e, t);
+      let i = '';
+      for (; t < e.length && !/\s/.test(e[t]); ) ((i += e[t]), t++);
+      (this.suppressValidationErr || rb(i), (t = rg(e, t)));
+      let r = e.substring(t, t + 6).toUpperCase();
+      if (!this.suppressValidationErr && 'SYSTEM' !== r && 'PUBLIC' !== r)
+        throw Error(`Expected SYSTEM or PUBLIC, found "${r}"`);
+      ((t += r.length), (t = rg(e, t)));
+      let n = null,
+        s = null;
+      if ('PUBLIC' === r)
+        (([t, n] = this.readIdentifierVal(e, t, 'publicIdentifier')),
+          (t = rg(e, t)),
+          ('"' === e[t] || "'" === e[t]) &&
+            ([t, s] = this.readIdentifierVal(e, t, 'systemIdentifier')));
+      else if (
+        'SYSTEM' === r &&
+        (([t, s] = this.readIdentifierVal(e, t, 'systemIdentifier')),
+        !this.suppressValidationErr && !s)
+      )
+        throw Error('Missing mandatory system identifier for SYSTEM notation');
+      return {
+        notationName: i,
+        publicIdentifier: n,
+        systemIdentifier: s,
+        index: --t,
+      };
+    }
+    readIdentifierVal(e, t, i) {
+      let r = '',
+        n = e[t];
+      if ('"' !== n && "'" !== n)
+        throw Error(`Expected quoted string, found "${n}"`);
+      for (t++; t < e.length && e[t] !== n; ) ((r += e[t]), t++);
+      if (e[t] !== n) throw Error(`Unterminated ${i} value`);
+      return [++t, r];
+    }
+    readElementExp(e, t) {
+      t = rg(e, t);
+      let i = '';
+      for (; t < e.length && !/\s/.test(e[t]); ) ((i += e[t]), t++);
+      if (!this.suppressValidationErr && !rp(i))
+        throw Error(`Invalid element name: "${i}"`);
+      t = rg(e, t);
+      let r = '';
+      if ('E' === e[t] && ry(e, 'MPTY', t)) t += 4;
+      else if ('A' === e[t] && ry(e, 'NY', t)) t += 2;
+      else if ('(' === e[t]) {
+        for (t++; t < e.length && ')' !== e[t]; ) ((r += e[t]), t++);
+        if (')' !== e[t]) throw Error('Unterminated content model');
+      } else if (!this.suppressValidationErr)
+        throw Error(`Invalid Element Expression, found "${e[t]}"`);
+      return { elementName: i, contentModel: r.trim(), index: t };
+    }
+    readAttlistExp(e, t) {
+      t = rg(e, t);
+      let i = '';
+      for (; t < e.length && !/\s/.test(e[t]); ) ((i += e[t]), t++);
+      (rb(i), (t = rg(e, t)));
+      let r = '';
+      for (; t < e.length && !/\s/.test(e[t]); ) ((r += e[t]), t++);
+      if (!rb(r)) throw Error(`Invalid attribute name: "${r}"`);
+      t = rg(e, t);
+      let n = '';
+      if ('NOTATION' === e.substring(t, t + 8).toUpperCase()) {
+        if (((n = 'NOTATION'), (t += 8), (t = rg(e, t)), '(' !== e[t]))
+          throw Error(`Expected '(', found "${e[t]}"`);
+        t++;
+        let i = [];
+        for (; t < e.length && ')' !== e[t]; ) {
+          let r = '';
+          for (; t < e.length && '|' !== e[t] && ')' !== e[t]; )
+            ((r += e[t]), t++);
+          if (!rb((r = r.trim()))) throw Error(`Invalid notation name: "${r}"`);
+          (i.push(r), '|' === e[t] && (t = rg(e, ++t)));
+        }
+        if (')' !== e[t]) throw Error('Unterminated list of notations');
+        (t++, (n += ' (' + i.join('|') + ')'));
+      } else {
+        for (; t < e.length && !/\s/.test(e[t]); ) ((n += e[t]), t++);
+        if (
+          !this.suppressValidationErr &&
+          ![
+            'CDATA',
+            'ID',
+            'IDREF',
+            'IDREFS',
+            'ENTITY',
+            'ENTITIES',
+            'NMTOKEN',
+            'NMTOKENS',
+          ].includes(n.toUpperCase())
+        )
+          throw Error(`Invalid attribute type: "${n}"`);
+      }
+      t = rg(e, t);
+      let s = '';
+      return (
+        '#REQUIRED' === e.substring(t, t + 8).toUpperCase()
+          ? ((s = '#REQUIRED'), (t += 8))
+          : '#IMPLIED' === e.substring(t, t + 7).toUpperCase()
+            ? ((s = '#IMPLIED'), (t += 7))
+            : ([t, s] = this.readIdentifierVal(e, t, 'ATTLIST')),
+        {
+          elementName: i,
+          attributeName: r,
+          attributeType: n,
+          defaultValue: s,
+          index: t,
+        }
+      );
+    }
+  }
+  let rg = (e, t) => {
+    for (; t < e.length && /\s/.test(e[t]); ) t++;
+    return t;
+  };
+  function ry(e, t, i) {
+    for (let r = 0; r < t.length; r++) if (t[r] !== e[i + r + 1]) return !1;
+    return !0;
+  }
+  function rb(e) {
+    if (rp(e)) return e;
+    throw Error(`Invalid entity name ${e}`);
+  }
+  let rM = /^[-+]?0x[a-fA-F0-9]+$/,
+    rv = /^([\-\+])?(0*)([0-9]*(\.[0-9]*)?)$/,
+    rw = { hex: !0, leadingZeros: !0, decimalPoint: '.', eNotation: !0 },
+    rN = /^([-+])?(0*)(\d*(\.\d*)?[eE][-\+]?\d+)$/;
+  class rE {
+    constructor(e) {
+      if (
+        ((this.options = e),
+        (this.currentNode = null),
+        (this.tagsNodeStack = []),
+        (this.docTypeEntities = {}),
+        (this.lastEntities = {
+          apos: { regex: /&(apos|#39|#x27);/g, val: "'" },
+          gt: { regex: /&(gt|#62|#x3E);/g, val: '>' },
+          lt: { regex: /&(lt|#60|#x3C);/g, val: '<' },
+          quot: { regex: /&(quot|#34|#x22);/g, val: '"' },
+        }),
+        (this.ampEntity = { regex: /&(amp|#38|#x26);/g, val: '&' }),
+        (this.htmlEntities = {
+          space: { regex: /&(nbsp|#160);/g, val: ' ' },
+          cent: { regex: /&(cent|#162);/g, val: '\xa2' },
+          pound: { regex: /&(pound|#163);/g, val: '\xa3' },
+          yen: { regex: /&(yen|#165);/g, val: '\xa5' },
+          euro: { regex: /&(euro|#8364);/g, val: '€' },
+          copyright: { regex: /&(copy|#169);/g, val: '\xa9' },
+          reg: { regex: /&(reg|#174);/g, val: '\xae' },
+          inr: { regex: /&(inr|#8377);/g, val: '₹' },
+          num_dec: {
+            regex: /&#([0-9]{1,7});/g,
+            val: (e, t) => String.fromCodePoint(Number.parseInt(t, 10)),
+          },
+          num_hex: {
+            regex: /&#x([0-9a-fA-F]{1,6});/g,
+            val: (e, t) => String.fromCodePoint(Number.parseInt(t, 16)),
+          },
+        }),
+        (this.addExternalEntities = rS),
+        (this.parseXml = rT),
+        (this.parseTextData = rx),
+        (this.resolveNameSpace = rI),
+        (this.buildAttributesMap = rk),
+        (this.isItStopNode = rj),
+        (this.replaceEntitiesValue = rC),
+        (this.readStopNodeData = rR),
+        (this.saveTextToParentTag = rD),
+        (this.addChild = rA),
+        (this.ignoreAttributesFn = (function (e) {
+          return 'function' == typeof e
+            ? e
+            : Array.isArray(e)
+              ? (t) => {
+                  for (let i of e)
+                    if (
+                      ('string' == typeof i && t === i) ||
+                      (i instanceof RegExp && i.test(t))
+                    )
+                      return !0;
+                }
+              : () => !1;
+        })(this.options.ignoreAttributes)),
+        this.options.stopNodes && this.options.stopNodes.length > 0)
+      ) {
+        ((this.stopNodesExact = new Set()),
+          (this.stopNodesWildcard = new Set()));
+        for (let e = 0; e < this.options.stopNodes.length; e++) {
+          const t = this.options.stopNodes[e];
+          'string' == typeof t &&
+            (t.startsWith('*.')
+              ? this.stopNodesWildcard.add(t.substring(2))
+              : this.stopNodesExact.add(t));
+        }
+      }
+    }
+  }
+  function rS(e) {
+    let t = Object.keys(e);
+    for (let i = 0; i < t.length; i++) {
+      let r = t[i];
+      this.lastEntities[r] = { regex: RegExp('&' + r + ';', 'g'), val: e[r] };
+    }
+  }
+  function rx(e, t, i, r, n, s, a) {
+    if (
+      void 0 !== e &&
+      (this.options.trimValues && !r && (e = e.trim()), e.length > 0)
+    ) {
+      a || (e = this.replaceEntitiesValue(e));
+      let r = this.options.tagValueProcessor(t, e, i, n, s);
+      return null == r
+        ? e
+        : typeof r != typeof e || r !== e
+          ? r
+          : this.options.trimValues || e.trim() === e
+            ? rP(e, this.options.parseTagValue, this.options.numberParseOptions)
+            : e;
+    }
+  }
+  function rI(e) {
+    if (this.options.removeNSPrefix) {
+      let t = e.split(':'),
+        i = '/' === e.charAt(0) ? '/' : '';
+      if ('xmlns' === t[0]) return '';
+      2 === t.length && (e = i + t[1]);
+    }
+    return e;
+  }
+  let rL = RegExp('([^\\s=]+)\\s*(=\\s*([\'"])([\\s\\S]*?)\\3)?', 'gm');
+  function rk(e, t) {
+    if (!0 !== this.options.ignoreAttributes && 'string' == typeof e) {
+      let i = rh(e, rL),
+        r = i.length,
+        n = {};
+      for (let e = 0; e < r; e++) {
+        let r = this.resolveNameSpace(i[e][1]);
+        if (this.ignoreAttributesFn(r, t)) continue;
+        let s = i[e][4],
+          a = this.options.attributeNamePrefix + r;
+        if (r.length)
+          if (
+            (this.options.transformAttributeName &&
+              (a = this.options.transformAttributeName(a)),
+            '__proto__' === a && (a = '#__proto__'),
+            void 0 !== s)
+          ) {
+            (this.options.trimValues && (s = s.trim()),
+              (s = this.replaceEntitiesValue(s)));
+            let e = this.options.attributeValueProcessor(r, s, t);
+            null == e
+              ? (n[a] = s)
+              : typeof e != typeof s || e !== s
+                ? (n[a] = e)
+                : (n[a] = rP(
+                    s,
+                    this.options.parseAttributeValue,
+                    this.options.numberParseOptions,
+                  ));
+          } else this.options.allowBooleanAttributes && (n[a] = !0);
+      }
+      if (Object.keys(n).length) {
+        if (this.options.attributesGroupName) {
+          let e = {};
+          return ((e[this.options.attributesGroupName] = n), e);
+        }
+        return n;
+      }
+    }
+  }
+  let rT = function (e) {
+    e = e.replace(/\r\n?/g, '\n');
+    let t = new rm('!xml'),
+      i = t,
+      r = '',
+      n = '',
+      s = new rf(this.options.processEntities);
+    for (let a = 0; a < e.length; a++)
+      if ('<' === e[a])
+        if ('/' === e[a + 1]) {
+          let t = rz(e, '>', a, 'Closing Tag is not closed.'),
+            s = e.substring(a + 2, t).trim();
+          if (this.options.removeNSPrefix) {
+            let e = s.indexOf(':');
+            -1 !== e && (s = s.substr(e + 1));
+          }
+          (this.options.transformTagName &&
+            (s = this.options.transformTagName(s)),
+            i && (r = this.saveTextToParentTag(r, i, n)));
+          let l = n.substring(n.lastIndexOf('.') + 1);
+          if (s && -1 !== this.options.unpairedTags.indexOf(s))
+            throw Error(`Unpaired tag can not be used as closing tag: </${s}>`);
+          let o = 0;
+          (l && -1 !== this.options.unpairedTags.indexOf(l)
+            ? ((o = n.lastIndexOf('.', n.lastIndexOf('.') - 1)),
+              this.tagsNodeStack.pop())
+            : (o = n.lastIndexOf('.')),
+            (n = n.substring(0, o)),
+            (i = this.tagsNodeStack.pop()),
+            (r = ''),
+            (a = t));
+        } else if ('?' === e[a + 1]) {
+          let t = rO(e, a, !1, '?>');
+          if (!t) throw Error('Pi Tag is not closed.');
+          if (
+            ((r = this.saveTextToParentTag(r, i, n)),
+            (this.options.ignoreDeclaration && '?xml' === t.tagName) ||
+              this.options.ignorePiTags)
+          );
+          else {
+            let e = new rm(t.tagName);
+            (e.add(this.options.textNodeName, ''),
+              t.tagName !== t.tagExp &&
+                t.attrExpPresent &&
+                (e[':@'] = this.buildAttributesMap(t.tagExp, n)),
+              this.addChild(i, e, n, a));
+          }
+          a = t.closeIndex + 1;
+        } else if ('!--' === e.substr(a + 1, 3)) {
+          let t = rz(e, '--\x3e', a + 4, 'Comment is not closed.');
+          if (this.options.commentPropName) {
+            let s = e.substring(a + 4, t - 2);
+            ((r = this.saveTextToParentTag(r, i, n)),
+              i.add(this.options.commentPropName, [
+                { [this.options.textNodeName]: s },
+              ]));
+          }
+          a = t;
+        } else if ('!D' === e.substr(a + 1, 2)) {
+          let t = s.readDocType(e, a);
+          ((this.docTypeEntities = t.entities), (a = t.i));
+        } else if ('![' === e.substr(a + 1, 2)) {
+          let t = rz(e, ']]>', a, 'CDATA is not closed.') - 2,
+            s = e.substring(a + 9, t);
+          r = this.saveTextToParentTag(r, i, n);
+          let l = this.parseTextData(s, i.tagname, n, !0, !1, !0, !0);
+          (void 0 == l && (l = ''),
+            this.options.cdataPropName
+              ? i.add(this.options.cdataPropName, [
+                  { [this.options.textNodeName]: s },
+                ])
+              : i.add(this.options.textNodeName, l),
+            (a = t + 2));
+        } else {
+          let s = rO(e, a, this.options.removeNSPrefix),
+            l = s.tagName,
+            o = s.rawTagName,
+            u = s.tagExp,
+            c = s.attrExpPresent,
+            d = s.closeIndex;
+          if (this.options.transformTagName) {
+            let e = this.options.transformTagName(l);
+            (u === l && (u = e), (l = e));
+          }
+          i &&
+            r &&
+            '!xml' !== i.tagname &&
+            (r = this.saveTextToParentTag(r, i, n, !1));
+          let h = i;
+          (h &&
+            -1 !== this.options.unpairedTags.indexOf(h.tagname) &&
+            ((i = this.tagsNodeStack.pop()),
+            (n = n.substring(0, n.lastIndexOf('.')))),
+            l !== t.tagname && (n += n ? '.' + l : l));
+          let p = a;
+          if (
+            this.isItStopNode(this.stopNodesExact, this.stopNodesWildcard, n, l)
+          ) {
+            let t = '';
+            if (u.length > 0 && u.lastIndexOf('/') === u.length - 1)
+              ('/' === l[l.length - 1]
+                ? ((l = l.substr(0, l.length - 1)),
+                  (n = n.substr(0, n.length - 1)),
+                  (u = l))
+                : (u = u.substr(0, u.length - 1)),
+                (a = s.closeIndex));
+            else if (-1 !== this.options.unpairedTags.indexOf(l))
+              a = s.closeIndex;
+            else {
+              let i = this.readStopNodeData(e, o, d + 1);
+              if (!i) throw Error(`Unexpected end of ${o}`);
+              ((a = i.i), (t = i.tagContent));
+            }
+            let r = new rm(l);
+            (l !== u && c && (r[':@'] = this.buildAttributesMap(u, n)),
+              t && (t = this.parseTextData(t, l, n, !0, c, !0, !0)),
+              (n = n.substr(0, n.lastIndexOf('.'))),
+              r.add(this.options.textNodeName, t),
+              this.addChild(i, r, n, p));
+          } else {
+            if (u.length > 0 && u.lastIndexOf('/') === u.length - 1) {
+              if (
+                ('/' === l[l.length - 1]
+                  ? ((l = l.substr(0, l.length - 1)),
+                    (n = n.substr(0, n.length - 1)),
+                    (u = l))
+                  : (u = u.substr(0, u.length - 1)),
+                this.options.transformTagName)
+              ) {
+                let e = this.options.transformTagName(l);
+                (u === l && (u = e), (l = e));
+              }
+              let e = new rm(l);
+              (l !== u && c && (e[':@'] = this.buildAttributesMap(u, n)),
+                this.addChild(i, e, n, p),
+                (n = n.substr(0, n.lastIndexOf('.'))));
+            } else {
+              let e = new rm(l);
+              (this.tagsNodeStack.push(i),
+                l !== u && c && (e[':@'] = this.buildAttributesMap(u, n)),
+                this.addChild(i, e, n, p),
+                (i = e));
+            }
+            ((r = ''), (a = d));
+          }
+        }
+      else r += e[a];
+    return t.child;
+  };
+  function rA(e, t, i, r) {
+    this.options.captureMetaData || (r = void 0);
+    let n = this.options.updateTag(t.tagname, i, t[':@']);
+    !1 === n || ('string' == typeof n && (t.tagname = n), e.addChild(t, r));
+  }
+  let rC = function (e) {
+    if (this.options.processEntities) {
+      for (let t in this.docTypeEntities) {
+        let i = this.docTypeEntities[t];
+        e = e.replace(i.regx, i.val);
+      }
+      for (let t in this.lastEntities) {
+        let i = this.lastEntities[t];
+        e = e.replace(i.regex, i.val);
+      }
+      if (this.options.htmlEntities)
+        for (let t in this.htmlEntities) {
+          let i = this.htmlEntities[t];
+          e = e.replace(i.regex, i.val);
+        }
+      e = e.replace(this.ampEntity.regex, this.ampEntity.val);
+    }
+    return e;
+  };
+  function rD(e, t, i, r) {
+    return (
+      e &&
+        (void 0 === r && (r = 0 === t.child.length),
+        void 0 !==
+          (e = this.parseTextData(
+            e,
+            t.tagname,
+            i,
+            !1,
+            !!t[':@'] && 0 !== Object.keys(t[':@']).length,
+            r,
+          )) &&
+          '' !== e &&
+          t.add(this.options.textNodeName, e),
+        (e = '')),
+      e
+    );
+  }
+  function rj(e, t, i, r) {
+    return !!((t && t.has(r)) || (e && e.has(i)));
+  }
+  function rz(e, t, i, r) {
+    let n = e.indexOf(t, i);
+    if (-1 !== n) return n + t.length - 1;
+    throw Error(r);
+  }
+  function rO(e, t, i, r = '>') {
+    let n = (function (e, t, i = '>') {
+      let r,
+        n = '';
+      for (let s = t; s < e.length; s++) {
+        let t = e[s];
+        if (r) t === r && (r = '');
+        else if ('"' === t || "'" === t) r = t;
+        else if (t === i[0]) {
+          if (!i[1]) return { data: n, index: s };
+          else if (e[s + 1] === i[1]) return { data: n, index: s };
+        } else '	' === t && (t = ' ');
+        n += t;
+      }
+    })(e, t + 1, r);
+    if (!n) return;
+    let s = n.data,
+      a = n.index,
+      l = s.search(/\s/),
+      o = s,
+      u = !0;
+    -1 !== l && ((o = s.substring(0, l)), (s = s.substring(l + 1).trimStart()));
+    let c = o;
+    if (i) {
+      let e = o.indexOf(':');
+      -1 !== e && (u = (o = o.substr(e + 1)) !== n.data.substr(e + 1));
+    }
+    return {
+      tagName: o,
+      tagExp: s,
+      closeIndex: a,
+      attrExpPresent: u,
+      rawTagName: c,
+    };
+  }
+  function rR(e, t, i) {
+    let r = i,
+      n = 1;
+    for (; i < e.length; i++)
+      if ('<' === e[i])
+        if ('/' === e[i + 1]) {
+          let s = rz(e, '>', i, `${t} is not closed`);
+          if (e.substring(i + 2, s).trim() === t && 0 == --n)
+            return { tagContent: e.substring(r, i), i: s };
+          i = s;
+        } else if ('?' === e[i + 1])
+          i = rz(e, '?>', i + 1, 'StopNode is not closed.');
+        else if ('!--' === e.substr(i + 1, 3))
+          i = rz(e, '--\x3e', i + 3, 'StopNode is not closed.');
+        else if ('![' === e.substr(i + 1, 2))
+          i = rz(e, ']]>', i, 'StopNode is not closed.') - 2;
+        else {
+          let r = rO(e, i, '>');
+          r &&
+            ((r && r.tagName) === t &&
+              '/' !== r.tagExp[r.tagExp.length - 1] &&
+              n++,
+            (i = r.closeIndex));
+        }
+  }
+  function rP(e, t, i) {
+    if (t && 'string' == typeof e) {
+      let t = e.trim();
+      return (
+        'true' === t ||
+        ('false' !== t &&
+          (function (e, t = {}) {
+            if (((t = Object.assign({}, rw, t)), !e || 'string' != typeof e))
+              return e;
+            let i = e.trim();
+            if (void 0 !== t.skipLike && t.skipLike.test(i)) return e;
+            {
+              if ('0' === e) return 0;
+              if (t.hex && rM.test(i)) {
+                var r,
+                  n = i;
+                if (parseInt) return parseInt(n, 16);
+                if (Number.parseInt) return Number.parseInt(n, 16);
+                if (window && window.parseInt) return window.parseInt(n, 16);
+                throw Error(
+                  'parseInt, Number.parseInt, window.parseInt are not supported',
+                );
+              }
+              if (i.includes('e') || i.includes('E'))
+                return (function (e, t, i) {
+                  if (!i.eNotation) return e;
+                  let r = t.match(rN);
+                  if (!r) return e;
+                  {
+                    let n = r[1] || '',
+                      s = -1 === r[3].indexOf('e') ? 'E' : 'e',
+                      a = r[2],
+                      l = n ? e[a.length + 1] === s : e[a.length] === s;
+                    return a.length > 1 && l
+                      ? e
+                      : 1 === a.length &&
+                          (r[3].startsWith(`.${s}`) || r[3][0] === s)
+                        ? Number(t)
+                        : i.leadingZeros && !l
+                          ? Number((t = (r[1] || '') + r[3]))
+                          : e;
+                  }
+                })(e, i, t);
+              let s = rv.exec(i);
+              if (!s) return e;
+              {
+                let n = s[1] || '',
+                  a = s[2],
+                  l =
+                    ((r = s[3]) &&
+                      -1 !== r.indexOf('.') &&
+                      ('.' === (r = r.replace(/0+$/, ''))
+                        ? (r = '0')
+                        : '.' === r[0]
+                          ? (r = '0' + r)
+                          : '.' === r[r.length - 1] &&
+                            (r = r.substring(0, r.length - 1))),
+                    r),
+                  o = n ? '.' === e[a.length + 1] : '.' === e[a.length];
+                if (!t.leadingZeros && (a.length > 1 || (1 === a.length && !o)))
+                  return e;
+                {
+                  let r = Number(i),
+                    s = String(r);
+                  if (0 === r) return r;
+                  if (-1 !== s.search(/[eE]/))
+                    if (t.eNotation) return r;
+                    else return e;
+                  if (-1 !== i.indexOf('.'))
+                    if ('0' === s) return r;
+                    else if (s === l) return r;
+                    else if (s === `${n}${l}`) return r;
+                    else return e;
+                  let o = a ? l : i;
+                  return a
+                    ? o === s || n + o === s
+                      ? r
+                      : e
+                    : o === s || o === n + s
+                      ? r
+                      : e;
+                }
+              }
+            }
+          })(e, i))
+      );
+    }
+    return void 0 !== e ? e : '';
+  }
+  let rV = rm.getMetaDataSymbol(),
+    rU = { allowBooleanAttributes: !1, unpairedTags: [] };
+  function r$(e) {
+    return ' ' === e || '	' === e || '\n' === e || '\r' === e;
+  }
+  function rB(e, t) {
+    let i = t;
+    for (; t < e.length; t++)
+      if ('?' == e[t] || ' ' == e[t]) {
+        let r = e.substr(i, t - i);
+        if (t > 5 && 'xml' === r)
+          return rY(
+            'InvalidXml',
+            'XML declaration allowed only at the start of the document.',
+            rQ(e, t),
+          );
+        if ('?' != e[t] || '>' != e[t + 1]) continue;
+        t++;
+        break;
+      }
+    return t;
+  }
+  function r_(e, t) {
+    if (e.length > t + 5 && '-' === e[t + 1] && '-' === e[t + 2]) {
+      for (t += 3; t < e.length; t++)
+        if ('-' === e[t] && '-' === e[t + 1] && '>' === e[t + 2]) {
+          t += 2;
+          break;
+        }
+    } else if (
+      e.length > t + 8 &&
+      'D' === e[t + 1] &&
+      'O' === e[t + 2] &&
+      'C' === e[t + 3] &&
+      'T' === e[t + 4] &&
+      'Y' === e[t + 5] &&
+      'P' === e[t + 6] &&
+      'E' === e[t + 7]
+    ) {
+      let i = 1;
+      for (t += 8; t < e.length; t++)
+        if ('<' === e[t]) i++;
+        else if ('>' === e[t] && 0 == --i) break;
+    } else if (
+      e.length > t + 9 &&
+      '[' === e[t + 1] &&
+      'C' === e[t + 2] &&
+      'D' === e[t + 3] &&
+      'A' === e[t + 4] &&
+      'T' === e[t + 5] &&
+      'A' === e[t + 6] &&
+      '[' === e[t + 7]
+    ) {
+      for (t += 8; t < e.length; t++)
+        if (']' === e[t] && ']' === e[t + 1] && '>' === e[t + 2]) {
+          t += 2;
+          break;
+        }
+    }
+    return t;
+  }
+  let rF = RegExp(
+    '(\\s*)([^\\s=]+)(\\s*=)?(\\s*([\'"])(([\\s\\S])*?)\\5)?',
+    'g',
+  );
+  function rW(e, t) {
+    let i = rh(e, rF),
+      r = {};
+    for (let e = 0; e < i.length; e++) {
+      if (0 === i[e][1].length)
+        return rY(
+          'InvalidAttr',
+          "Attribute '" + i[e][2] + "' has no space in starting.",
+          rq(i[e]),
+        );
+      if (void 0 !== i[e][3] && void 0 === i[e][4])
+        return rY(
+          'InvalidAttr',
+          "Attribute '" + i[e][2] + "' is without value.",
+          rq(i[e]),
+        );
+      if (void 0 === i[e][3] && !t.allowBooleanAttributes)
+        return rY(
+          'InvalidAttr',
+          "boolean attribute '" + i[e][2] + "' is not allowed.",
+          rq(i[e]),
+        );
+      let n = i[e][2];
+      if (!rp(n))
+        return rY(
+          'InvalidAttr',
+          "Attribute '" + n + "' is an invalid name.",
+          rq(i[e]),
+        );
+      if (r.hasOwnProperty(n))
+        return rY(
+          'InvalidAttr',
+          "Attribute '" + n + "' is repeated.",
+          rq(i[e]),
+        );
+      r[n] = 1;
+    }
+    return !0;
+  }
+  function rY(e, t, i) {
+    return { err: { code: e, msg: t, line: i.line || i, col: i.col } };
+  }
+  function rQ(e, t) {
+    let i = e.substring(0, t).split(/\r?\n/);
+    return { line: i.length, col: i[i.length - 1].length + 1 };
+  }
+  function rq(e) {
+    return e.startIndex + e[1].length;
+  }
+  class rG {
+    constructor(e) {
+      ((this.externalEntities = {}), (this.options = Object.assign({}, ru, e)));
+    }
+    parse(e, t) {
+      if ('string' != typeof e && e.toString) e = e.toString();
+      else if ('string' != typeof e)
+        throw Error('XML data is accepted in String or Bytes[] form.');
+      if (t) {
+        !0 === t && (t = {});
+        let i = (function (e, t) {
+          t = Object.assign({}, rU, t);
+          let i = [],
+            r = !1,
+            n = !1;
+          '\uFEFF' === e[0] && (e = e.substr(1));
+          for (let s = 0; s < e.length; s++)
+            if ('<' === e[s] && '?' === e[s + 1]) {
+              if (((s += 2), (s = rB(e, s)).err)) return s;
+            } else if ('<' === e[s]) {
+              let a = s;
+              if ('!' === e[++s]) {
+                s = r_(e, s);
+                continue;
+              }
+              {
+                let l = !1;
+                '/' === e[s] && ((l = !0), s++);
+                let o = '';
+                for (
+                  ;
+                  s < e.length &&
+                  '>' !== e[s] &&
+                  ' ' !== e[s] &&
+                  '	' !== e[s] &&
+                  '\n' !== e[s] &&
+                  '\r' !== e[s];
+                  s++
+                )
+                  o += e[s];
+                if (
+                  ('/' === (o = o.trim())[o.length - 1] &&
+                    ((o = o.substring(0, o.length - 1)), s--),
+                  !rp(o))
+                )
+                  return rY(
+                    'InvalidTag',
+                    0 === o.trim().length
+                      ? "Invalid space after '<'."
+                      : "Tag '" + o + "' is an invalid name.",
+                    rQ(e, s),
+                  );
+                let u = (function (e, t) {
+                  let i = '',
+                    r = '',
+                    n = !1;
+                  for (; t < e.length; t++) {
+                    if ('"' === e[t] || "'" === e[t])
+                      '' === r ? (r = e[t]) : r !== e[t] || (r = '');
+                    else if ('>' === e[t] && '' === r) {
+                      n = !0;
+                      break;
+                    }
+                    i += e[t];
+                  }
+                  return '' === r && { value: i, index: t, tagClosed: n };
+                })(e, s);
+                if (!1 === u)
+                  return rY(
+                    'InvalidAttr',
+                    "Attributes for '" + o + "' have open quote.",
+                    rQ(e, s),
+                  );
+                let c = u.value;
+                if (((s = u.index), '/' === c[c.length - 1])) {
+                  let i = s - c.length,
+                    n = rW((c = c.substring(0, c.length - 1)), t);
+                  if (!0 !== n)
+                    return rY(n.err.code, n.err.msg, rQ(e, i + n.err.line));
+                  r = !0;
+                } else if (l)
+                  if (!u.tagClosed)
+                    return rY(
+                      'InvalidTag',
+                      "Closing tag '" + o + "' doesn't have proper closing.",
+                      rQ(e, s),
+                    );
+                  else {
+                    if (c.trim().length > 0)
+                      return rY(
+                        'InvalidTag',
+                        "Closing tag '" +
+                          o +
+                          "' can't have attributes or invalid starting.",
+                        rQ(e, a),
+                      );
+                    if (0 === i.length)
+                      return rY(
+                        'InvalidTag',
+                        "Closing tag '" + o + "' has not been opened.",
+                        rQ(e, a),
+                      );
+                    let t = i.pop();
+                    if (o !== t.tagName) {
+                      let i = rQ(e, t.tagStartPos);
+                      return rY(
+                        'InvalidTag',
+                        "Expected closing tag '" +
+                          t.tagName +
+                          "' (opened in line " +
+                          i.line +
+                          ', col ' +
+                          i.col +
+                          ") instead of closing tag '" +
+                          o +
+                          "'.",
+                        rQ(e, a),
+                      );
+                    }
+                    0 == i.length && (n = !0);
+                  }
+                else {
+                  let l = rW(c, t);
+                  if (!0 !== l)
+                    return rY(
+                      l.err.code,
+                      l.err.msg,
+                      rQ(e, s - c.length + l.err.line),
+                    );
+                  if (!0 === n)
+                    return rY(
+                      'InvalidXml',
+                      'Multiple possible root nodes found.',
+                      rQ(e, s),
+                    );
+                  (-1 !== t.unpairedTags.indexOf(o) ||
+                    i.push({ tagName: o, tagStartPos: a }),
+                    (r = !0));
+                }
+                for (s++; s < e.length; s++)
+                  if ('<' === e[s])
+                    if ('!' === e[s + 1]) {
+                      s = r_(e, ++s);
+                      continue;
+                    } else if ('?' === e[s + 1]) {
+                      if ((s = rB(e, ++s)).err) return s;
+                    } else break;
+                  else if ('&' === e[s]) {
+                    let t = (function (e, t) {
+                      if (';' === e[++t]) return -1;
+                      if ('#' === e[t]) {
+                        var i = ++t;
+                        let r = /\d/;
+                        for (
+                          'x' === e[i] && (i++, (r = /[\da-fA-F]/));
+                          i < e.length;
+                          i++
+                        ) {
+                          if (';' === e[i]) return i;
+                          if (!e[i].match(r)) break;
+                        }
+                        return -1;
+                      }
+                      let r = 0;
+                      for (; t < e.length; t++, r++)
+                        if (!e[t].match(/\w/) || !(r < 20)) {
+                          if (';' === e[t]) break;
+                          return -1;
+                        }
+                      return t;
+                    })(e, s);
+                    if (-1 == t)
+                      return rY(
+                        'InvalidChar',
+                        "char '&' is not expected.",
+                        rQ(e, s),
+                      );
+                    s = t;
+                  } else if (!0 === n && !r$(e[s]))
+                    return rY('InvalidXml', 'Extra text at the end', rQ(e, s));
+                '<' === e[s] && s--;
+              }
+            } else {
+              if (r$(e[s])) continue;
+              return rY(
+                'InvalidChar',
+                "char '" + e[s] + "' is not expected.",
+                rQ(e, s),
+              );
+            }
+          return r
+            ? 1 == i.length
+              ? rY(
+                  'InvalidTag',
+                  "Unclosed tag '" + i[0].tagName + "'.",
+                  rQ(e, i[0].tagStartPos),
+                )
+              : !(i.length > 0) ||
+                rY(
+                  'InvalidXml',
+                  "Invalid '" +
+                    JSON.stringify(
+                      i.map((e) => e.tagName),
+                      null,
+                      4,
+                    ).replace(/\r?\n/g, '') +
+                    "' found.",
+                  { line: 1, col: 1 },
+                )
+            : rY('InvalidXml', 'Start tag expected.', 1);
+        })(e, t);
+        if (!0 !== i) throw Error(`${i.err.msg}:${i.err.line}:${i.err.col}`);
+      }
+      let i = new rE(this.options);
+      i.addExternalEntities(this.externalEntities);
+      let r = i.parseXml(e);
+      return this.options.preserveOrder || void 0 === r
+        ? r
+        : (function e(t, i, r) {
+            let n,
+              s = {};
+            for (let a = 0; a < t.length; a++) {
+              let l = t[a],
+                o = (function (e) {
+                  let t = Object.keys(e);
+                  for (let e = 0; e < t.length; e++) {
+                    let i = t[e];
+                    if (':@' !== i) return i;
+                  }
+                })(l),
+                u = '';
+              if (((u = void 0 === r ? o : r + '.' + o), o === i.textNodeName))
+                void 0 === n ? (n = l[o]) : (n += '' + l[o]);
+              else if (void 0 === o) continue;
+              else if (l[o]) {
+                let t = e(l[o], i, u),
+                  r = (function (e, t) {
+                    let { textNodeName: i } = t,
+                      r = Object.keys(e).length;
+                    return (
+                      0 === r ||
+                      (1 === r &&
+                        (!!e[i] || 'boolean' == typeof e[i] || 0 === e[i]))
+                    );
+                  })(t, i);
+                (void 0 !== l[rV] && (t[rV] = l[rV]),
+                  l[':@']
+                    ? (function (e, t, i, r) {
+                        if (t) {
+                          let n = Object.keys(t),
+                            s = n.length;
+                          for (let a = 0; a < s; a++) {
+                            let s = n[a];
+                            r.isArray(s, i + '.' + s, !0, !0)
+                              ? (e[s] = [t[s]])
+                              : (e[s] = t[s]);
+                          }
+                        }
+                      })(t, l[':@'], u, i)
+                    : 1 !== Object.keys(t).length ||
+                        void 0 === t[i.textNodeName] ||
+                        i.alwaysCreateTextNode
+                      ? 0 === Object.keys(t).length &&
+                        (i.alwaysCreateTextNode
+                          ? (t[i.textNodeName] = '')
+                          : (t = ''))
+                      : (t = t[i.textNodeName]),
+                  void 0 !== s[o] && s.hasOwnProperty(o)
+                    ? (Array.isArray(s[o]) || (s[o] = [s[o]]), s[o].push(t))
+                    : i.isArray(o, u, r)
+                      ? (s[o] = [t])
+                      : (s[o] = t));
+              }
+            }
+            return (
+              'string' == typeof n
+                ? n.length > 0 && (s[i.textNodeName] = n)
+                : void 0 !== n && (s[i.textNodeName] = n),
+              s
+            );
+          })(r, this.options);
+    }
+    addEntity(e, t) {
+      if (-1 !== t.indexOf('&')) throw Error("Entity value can't have '&'");
+      if (-1 !== e.indexOf('&') || -1 !== e.indexOf(';'))
+        throw Error(
+          "An entity must be set without '&' and ';'. Eg. use '#xD' for '&#xD;'",
+        );
+      if ('&' === t) throw Error("An entity with value '&' is not permitted");
+      this.externalEntities[e] = t;
+    }
+    static getMetaDataSymbol() {
+      return rm.getMetaDataSymbol();
+    }
+  }
+  function rH(e, t, i = !1) {
+    let r = '',
+      n = [],
+      s = !1;
+    return (
+      e.forEach((e) => {
+        let a = !1,
+          l = [e];
+        for (let o of (e[':@'] &&
+          'x-bg' === e[':@']['@_role'] &&
+          ((a = !0), (l = e.span)),
+        l))
+          if (o['#text'] && (!i || l.length <= 1)) {
+            r += o['#text'];
+            let e = n[n.length - 1];
+            n.push({
+              startTimeMs: e ? e.startTimeMs + e.durationMs : t,
+              durationMs: 0,
+              words: o['#text'],
+              isBackground: a,
+            });
+          } else if (o.span) {
+            let e = o.span[0]['#text'],
+              t = t6(o[':@']?.['@_begin']),
+              i = t6(o[':@']?.['@_end']);
+            (n.push({
+              startTimeMs: t,
+              durationMs: i - t,
+              isBackground: a,
+              words: e,
+            }),
+              (r += e),
+              (s = !0));
+          }
+      }),
+      s || (n = []),
+      { parts: n, text: r, isWordSynced: s }
+    );
+  }
+  async function rZ(e, t) {
+    let i = new rG({
+        ignoreAttributes: !1,
+        attributeNamePrefix: '@_',
+        attributesGroupName: !1,
+        textNodeName: '#text',
+        trimValues: !1,
+        removeNSPrefix: !0,
+        preserveOrder: !0,
+        allowBooleanAttributes: !0,
+        parseAttributeValue: !1,
+        parseTagValue: !1,
+      }),
+      r = await i.parse(e),
+      n = new Map(),
+      s = r[0].tt,
+      a = s.find((e) => e.head).head,
+      l = s.find((e) => e.body),
+      o = l.body,
+      u = l[':@'],
+      c = o.flatMap((e) => e.div);
+    if (!(c.length > 0 && void 0 !== c[0][':@'])) {
+      ((t.sourceMap['bLyrics-richsynced'].lyricSourceResult = null),
+        (t.sourceMap['bLyrics-richsynced'].filled = !0),
+        (t.sourceMap['bLyrics-synced'].lyricSourceResult = null),
+        (t.sourceMap['bLyrics-synced'].filled = !0));
+      return;
+    }
+    let d = !1;
+    c.forEach((e) => {
+      let t = e[':@'],
+        i = t6(t?.['@_begin']),
+        r = t6(t?.['@_end']),
+        s = rH(e.p, i);
+      (s.isWordSynced && (d = !0),
+        n.set(t?.['@_key'] || n.size.toString(), {
+          agent: t?.['@_agent'],
+          durationMs: r - i,
+          parts: s.parts,
+          startTimeMs: i,
+          words: s.text,
+          romanization: void 0,
+          timedRomanization: void 0,
+          translation: void 0,
+        }));
+    });
+    let h = a[0].metadata.find((e) => e.iTunesMetadata);
+    if (h) {
+      let e = h.iTunesMetadata.find((e) => e.translations),
+        t = h.iTunesMetadata.find((e) => e.transliterations);
+      if (e && e.translations && e.translations.length > 0) {
+        let t = e.translations[0][':@']['@_lang'];
+        e.translations[0].translation.forEach((e) => {
+          let i = e.text[0]['#text'],
+            r = e[':@']['@_for'];
+          if (t && i && r) {
+            let e = n.get(r);
+            e && (e.translation = { text: i, lang: t });
+          }
+        });
+      }
+      t &&
+        t.transliterations &&
+        t.transliterations.length > 0 &&
+        t.transliterations[0].transliteration.forEach((e) => {
+          let t = e[':@']['@_for'];
+          if (t) {
+            let i = n.get(t),
+              r = i.startTimeMs,
+              s = rH(e.text, r, !1);
+            ((i.romanization = s.text), (i.timedRomanization = s.parts));
+          }
+        });
+    }
+    let p = Array.from(n.values());
+    p = (function (e, t) {
+      if (0 === e.length) return e;
+      let i = [],
+        r = (e, t) => ({
+          startTimeMs: e,
+          durationMs: t,
+          words: '',
+          parts: [],
+          isInstrumental: !0,
+        });
+      e[0].startTimeMs > 5e3 && i.push(r(0, e[0].startTimeMs));
+      for (let t = 0; t < e.length; t++)
+        if ((i.push(e[t]), t < e.length - 1)) {
+          let n = e[t].startTimeMs + e[t].durationMs,
+            s = e[t + 1].startTimeMs - n;
+          s > 5e3 && i.push(r(n, s));
+        }
+      let n = e[e.length - 1],
+        s = n.startTimeMs + n.durationMs,
+        a = t - s;
+      return (a > 5e3 && i.push(r(s, a)), i);
+    })(p, t6(u['@_dur']));
+    let m = {
+      cacheAllowed: !0,
+      language: u['@_lang'],
+      lyrics: p,
+      musicVideoSynced: !1,
+      source: 'boidu.dev',
+      sourceHref: 'https://boidu.dev/',
+    };
+    (d
+      ? ((t.sourceMap['bLyrics-richsynced'].lyricSourceResult = m),
+        (t.sourceMap['bLyrics-synced'].lyricSourceResult = null))
+      : ((t.sourceMap['bLyrics-richsynced'].lyricSourceResult = null),
+        (t.sourceMap['bLyrics-synced'].lyricSourceResult = m)),
+      (t.sourceMap['bLyrics-synced'].filled = !0),
+      (t.sourceMap['bLyrics-richsynced'].filled = !0));
+  }
+  async function rX(e) {
+    let t = new URL('https://lyrics-api.boidu.dev/getLyrics');
+    (t.searchParams.append('s', e.song),
+      t.searchParams.append('a', e.artist),
+      t.searchParams.append('d', String(e.duration)),
+      null != e.album && t.searchParams.append('al', e.album));
+    let i = await fetch(t.toString(), {
+      signal: AbortSignal.any([e.signal, AbortSignal.timeout(1e4)]),
+    });
+    if (!i.ok) {
+      ((e.sourceMap['bLyrics-richsynced'].filled = !0),
+        (e.sourceMap['bLyrics-richsynced'].lyricSourceResult = null),
+        (e.sourceMap['bLyrics-synced'].filled = !0),
+        (e.sourceMap['bLyrics-synced'].lyricSourceResult = null));
+      return;
+    }
+    let r = await i.json().then((e) => e.ttml);
+    await rZ(r, e);
+  }
+  async function rK(e) {
+    async function t(e = !1) {
+      if (e)
+        (Y(A, 'Forcing new token, removing any existing one.'),
+          await chrome.storage.local.remove('jwtToken'));
+      else {
+        let e = await tL(['jwtToken']);
+        if (e.jwtToken)
+          if (
+            !(function (e) {
+              try {
+                let t = e.split('.')[1];
+                if (!t) return !0;
+                let i = t.replace(/-/g, '+').replace(/_/g, '/'),
+                  r = atob(i),
+                  n = JSON.parse(r).exp;
+                if (!n) return !0;
+                return Date.now() / 1e3 > n;
+              } catch (e) {
+                return (
+                  console.error(A, 'Error decoding JWT on client-side:', e),
+                  !0
+                );
+              }
+            })(e.jwtToken)
+          )
+            return (
+              Y(A, 'Using valid, non-expired JWT for bypass.'),
+              e.jwtToken
+            );
+          else
+            (Y(A, 'Local JWT has expired. Removing and requesting a new one.'),
+              await chrome.storage.local.remove('jwtToken'));
+      }
+      try {
+        Y(A, 'No valid JWT found, initiating Turnstile challenge...');
+        let e = await new Promise((e, t) => {
+            let i = document.createElement('iframe');
+            ((i.src = 'https://lyrics.api.dacubeking.com/challenge'),
+              (i.style.position = 'fixed'),
+              (i.style.bottom =
+                'calc(20px + var(--ytmusic-player-bar-height))'),
+              (i.style.right = '20px'),
+              (i.style.width = '0px'),
+              (i.style.height = '0px'),
+              (i.style.border = 'none'),
+              (i.style.zIndex = '999999'),
+              document.body.appendChild(i));
+            let r = (r) => {
+                if (r.source === i.contentWindow)
+                  switch (r.data.type) {
+                    case 'turnstile-token':
+                      (Y(A, 'Received Success Token:', r.data.token),
+                        n(),
+                        e(r.data.token));
+                      break;
+                    case 'turnstile-error':
+                      (console.error(
+                        A,
+                        'Received Challenge Error:',
+                        r.data.error,
+                      ),
+                        n(),
+                        t(
+                          Error(
+                            `${A} Turnstile challenge error: ${r.data.error}`,
+                          ),
+                        ));
+                      break;
+                    case 'turnstile-expired':
+                      (console.warn(A, 'Token expired. Resetting challenge.'),
+                        i.contentWindow.postMessage(
+                          { type: 'reset-turnstile' },
+                          '*',
+                        ));
+                      break;
+                    case 'turnstile-timeout':
+                      (console.warn(A, 'Challenge timed out.'),
+                        n(),
+                        t(Error(`${A} Turnstile challenge timed out.`)));
+                  }
+              },
+              n = () => {
+                (window.removeEventListener('message', r),
+                  document.body.contains(i) && document.body.removeChild(i));
+              };
+            window.addEventListener('message', r);
+          }),
+          t = await fetch(k + 'verify-turnstile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: e }),
+            credentials: 'include',
+          });
+        if (!t.ok) throw Error(`API verification failed: ${t.statusText}`);
+        let i = (await t.json()).jwt;
+        if (!i) throw Error('No JWT returned from API after verification.');
+        return (
+          await chrome.storage.local.set({ jwtToken: i }),
+          Y(A, 'New JWT received and stored.'),
+          i
+        );
+      } catch (e) {
+        return (console.error(A, 'Authentication process failed:', e), null);
+      }
+    }
+    async function i(t) {
+      let i = new URL(k + 'lyrics');
+      return (
+        i.searchParams.append('song', e.song),
+        i.searchParams.append('artist', e.artist),
+        i.searchParams.append('duration', String(e.duration)),
+        i.searchParams.append('videoId', e.videoId),
+        e.album && i.searchParams.append('album', e.album),
+        i.searchParams.append(
+          'alwaysFetchMetadata',
+          String(e.alwaysFetchMetadata),
+        ),
+        await fetch(i.toString(), {
+          signal: AbortSignal.any([e.signal, AbortSignal.timeout(1e4)]),
+          headers: { Authorization: `Bearer ${t}` },
+          credentials: 'include',
+        })
+      );
+    }
+    let r = await t();
+    if (!r) {
+      (console.error(
+        A,
+        'Could not obtain an initial authentication token. Aborting lyrics fetch.',
+      ),
+        [
+          'musixmatch-synced',
+          'musixmatch-richsync',
+          'lrclib-synced',
+          'lrclib-plain',
+        ].forEach((t) => {
+          e.sourceMap[t].filled = !0;
+        }));
+      return;
+    }
+    let n = await i(r);
+    if (403 === n.status) {
+      if (
+        (console.warn(
+          A,
+          'Request was blocked (403 Forbidden), possibly by WAF. Forcing new Turnstile challenge.',
+        ),
+        !(r = await t(!0)))
+      ) {
+        (console.error(
+          A,
+          'Could not obtain a new token after WAF block. Aborting.',
+        ),
+          [
+            'musixmatch-synced',
+            'musixmatch-richsync',
+            'lrclib-synced',
+            'lrclib-plain',
+          ].forEach((t) => {
+            e.sourceMap[t].filled = !0;
+          }));
+        return;
+      }
+      (Y(A, 'Retrying API call with new token...'), (n = await i(r)));
+    }
+    if (!n.ok) {
+      (console.error(A, `API request failed with status: ${n.status}`),
+        [
+          'musixmatch-synced',
+          'musixmatch-richsync',
+          'lrclib-synced',
+          'lrclib-plain',
+        ].forEach((t) => {
+          e.sourceMap[t].filled = !0;
+        }));
+      return;
+    }
+    let s = await n.json();
+    if (
+      (s.album && Y(A, 'Found Album: ' + s.album), s.musixmatchWordByWordLyrics)
+    ) {
+      let t = t9(s.musixmatchWordByWordLyrics, Number(e.duration));
+      (!(function (e) {
+        for (let t of e)
+          if (t.parts)
+            for (let e = 1; e < t.parts.length; e++) {
+              let i = t.parts[e],
+                r = t.parts[e - 1];
+              if (
+                ' ' === i.words &&
+                ' ' !== r.words &&
+                (15 >= Math.abs(i.durationMs - r.durationMs) ||
+                  i.durationMs <= 100)
+              ) {
+                let e = i.durationMs;
+                ((r.durationMs += e),
+                  (i.durationMs -= e),
+                  (i.startTimeMs += e));
+              }
+            }
+        let t = 0,
+          i = 0;
+        for (let r of e)
+          if (r.parts && 0 !== r.parts.length)
+            for (let e = 0; e < r.parts.length - 2; e++) {
+              let n = r.parts[e];
+              ' ' !== n.words && (n.durationMs <= 100 && t++, i++);
+            }
+        if (i > 0 && t / i > 0.5) {
+          Y('Found a lot of short duration lyrics, fudging durations');
+          for (let t = 0; t < e.length; t++) {
+            let i = e[t];
+            if (i.parts && 0 !== i.parts.length)
+              for (let r = 0; r < i.parts.length; r++) {
+                let n = i.parts[r];
+                if (' ' !== n.words && n.durationMs <= 400) {
+                  let s;
+                  null ===
+                  (s =
+                    r + 1 < i.parts.length
+                      ? i.parts[r + 1]
+                      : t + 1 < i.parts.length &&
+                          e[t + 1].parts &&
+                          e[t + 1].parts.length > 0
+                        ? e[t + 1].parts[0]
+                        : null)
+                    ? (n.durationMs = 300)
+                    : ' ' === s.words
+                      ? ((n.durationMs += s.durationMs),
+                        (s.startTimeMs += s.durationMs),
+                        (s.durationMs = 0))
+                      : (n.durationMs = s.startTimeMs - n.startTimeMs);
+                }
+              }
+          }
+        }
+      })(t),
+        (e.sourceMap['musixmatch-richsync'].lyricSourceResult = {
+          lyrics: t,
+          source: 'Musixmatch',
+          sourceHref: 'https://www.musixmatch.com',
+          musicVideoSynced: !1,
+          album: s.album,
+          artist: s.artist,
+          song: s.song,
+          duration: s.duration,
+          cacheAllowed: !0,
+        }));
+    } else
+      e.sourceMap['musixmatch-richsync'].lyricSourceResult = {
+        lyrics: null,
+        source: 'Musixmatch',
+        sourceHref: 'https://www.musixmatch.com',
+        musicVideoSynced: !1,
+        album: s.album,
+        artist: s.artist,
+        song: s.song,
+        duration: s.duration,
+        cacheAllowed: !0,
+      };
+    if (s.musixmatchSyncedLyrics) {
+      let t = t9(s.musixmatchSyncedLyrics, Number(e.duration));
+      e.sourceMap['musixmatch-synced'].lyricSourceResult = {
+        lyrics: t,
+        source: 'Musixmatch',
+        sourceHref: 'https://www.musixmatch.com',
+        musicVideoSynced: !1,
+      };
+    }
+    if (s.lrclibSyncedLyrics) {
+      let t = t9(s.lrclibSyncedLyrics, Number(e.duration));
+      e.sourceMap['lrclib-synced'].lyricSourceResult = {
+        lyrics: t,
+        source: 'LRCLib',
+        sourceHref: 'https://lrclib.net',
+        musicVideoSynced: !1,
+      };
+    }
+    if (s.lrclibPlainLyrics) {
+      let t = ie(s.lrclibPlainLyrics);
+      e.sourceMap['lrclib-plain'].lyricSourceResult = {
+        lyrics: t,
+        source: 'LRCLib',
+        sourceHref: 'https://lrclib.net',
+        musicVideoSynced: !1,
+        cacheAllowed: !1,
+      };
+    }
+    if (s.goLyricsApiTtml) {
+      let t = JSON.parse(s.goLyricsApiTtml);
+      await rZ(t.ttml, e);
+    }
+    [
+      'musixmatch-synced',
+      'musixmatch-richsync',
+      'lrclib-synced',
+      'lrclib-plain',
+      'bLyrics-richsynced',
+      'bLyrics-synced',
+    ].forEach((t) => {
+      e.sourceMap[t].filled = !0;
+    });
+  }
+  async function rJ(e) {
+    let t = new URL('https://lrclib.net/api/get');
+    (t.searchParams.append('track_name', e.song),
+      t.searchParams.append('artist_name', e.artist),
+      e.album && t.searchParams.append('album_name', e.album),
+      t.searchParams.append('duration', String(e.duration)));
+    let i = await fetch(t.toString(), {
+      headers: {
+        'Lrclib-Client':
+          'BetterLyrics Extension (https://github.com/better-lyrics/better-lyrics)',
+      },
+      signal: AbortSignal.any([e.signal, AbortSignal.timeout(1e4)]),
+    });
+    i.ok ||
+      ((e.sourceMap['lrclib-synced'].filled = !0),
+      (e.sourceMap['lrclib-plain'].filled = !0),
+      (e.sourceMap['lrclib-synced'].lyricSourceResult = null),
+      (e.sourceMap['lrclib-plain'].lyricSourceResult = null));
+    let r = await i.json();
+    (r &&
+      (Y('[BetterLyrics] Lyrics found from LRCLIB'),
+      r.syncedLyrics &&
+        (e.sourceMap['lrclib-synced'].lyricSourceResult = {
+          lyrics: t9(r.syncedLyrics, r.duration),
+          source: 'LRCLib',
+          sourceHref: 'https://lrclib.net',
+          musicVideoSynced: !1,
+        }),
+      r.plainLyrics &&
+        (e.sourceMap['lrclib-plain'].lyricSourceResult = {
+          lyrics: ie(r.plainLyrics),
+          source: 'LRCLib',
+          sourceHref: 'https://lrclib.net',
+          musicVideoSynced: !1,
+          cacheAllowed: !1,
+        })),
+      (e.sourceMap['lrclib-synced'].filled = !0),
+      (e.sourceMap['lrclib-plain'].filled = !0));
+  }
+  async function r0(e) {
+    let t = await (function (e, t = 250) {
+      if (ii.has(e)) return Promise.resolve(ii.get(e));
+      {
+        let i = 0;
+        return new Promise((r) => {
+          let n = setInterval(() => {
+            if ((ii.has(e) && (clearInterval(n), r(ii.get(e))), ir.get(e))) {
+              let t = ir.get(e).counterpartVideoId;
+              t && ii.has(t) && (clearInterval(n), r(ii.get(t)));
+            }
+            (i > t &&
+              (clearInterval(n),
+              Y('Failed to sniff lyrics'),
+              r({ hasLyrics: !1, lyrics: '', sourceText: '' })),
+              (i += 1));
+          }, 20);
+        });
+      }
+    })(e.videoId);
+    if (t.hasLyrics) {
+      let i = t.lyrics,
+        r = t.sourceText.substring(8) + ' (via YT)',
+        n = ie(i);
+      ((e.sourceMap['yt-lyrics'].lyricSourceResult = {
+        lyrics: n,
+        text: i,
+        source: r,
+        sourceHref: '',
+        musicVideoSynced: !1,
+        cacheAllowed: !1,
+      }),
+        (e.sourceMap['yt-lyrics'].filled = !0));
+    }
+  }
+  async function r1(e) {
+    let t = e.audioTrackData;
+    if (!t || 0 === t.captionTracks.length) return;
+    let i = null;
+    if (1 === t.captionTracks.length) i = t.captionTracks[0].languageCode;
+    else
+      for (let e in t.captionTracks) {
+        let r = t.captionTracks[e];
+        if (r.displayName.includes('auto-generated')) {
+          i = r.languageCode;
+          break;
+        }
+      }
+    i ||
+      (Y("Found Caption Tracks, but couldn't determine the default", t),
+      (e.sourceMap['yt-captions'].filled = !0),
+      (e.sourceMap['yt-captions'].lyricSourceResult = null));
+    let r = null;
+    for (let e in t.captionTracks) {
+      let n = t.captionTracks[e];
+      if (!n.displayName.includes('auto-generated') && n.languageCode === i) {
+        r = new URL(n.url);
+        break;
+      }
+    }
+    if (!r) {
+      (Y('Only found auto generated lyrics for youtube captions, not using', t),
+        (e.sourceMap['yt-captions'].filled = !0),
+        (e.sourceMap['yt-captions'].lyricSourceResult = null));
+      return;
+    }
+    (r = new URL(r)).searchParams.set('fmt', 'json3');
+    let n = await fetch(r.toString(), {
+        method: 'GET',
+        signal: AbortSignal.any([e.signal, AbortSignal.timeout(1e4)]),
+      }).then((e) => e.json()),
+      s = [];
+    (n.events.forEach((e) => {
+      let t = '';
+      for (let i in e.segs) t += e.segs[i].utf8;
+      for (let e of ((t = t.replace(/\n/g, ' ')),
+      '♪\uD834\uDD60\uD834\uDD61\uD834\uDD62\uD834\uDD63\uD834\uDD64'))
+        ((t = t.trim()).startsWith(e) && (t = t.substring(1)),
+          t.endsWith(e) && (t = t.substring(0, t.length - 1)));
+      ((t = t.trim()),
+        s.push({
+          startTimeMs: e.tStartMs,
+          words: t,
+          durationMs: e.dDurationMs,
+        }));
+    }),
+      s.every((e) => e.words.toUpperCase() === e.words) &&
+        s.every(
+          (e) => (
+            (e.words =
+              e.words.substring(0, 1).toUpperCase() +
+              e.words.substring(1).toLowerCase()),
+            !0
+          ),
+        ),
+      (e.sourceMap['yt-captions'].filled = !0),
+      (e.sourceMap['yt-captions'].lyricSourceResult = {
+        lyrics: s,
+        language: i,
+        source: 'Youtube Captions',
+        sourceHref: '',
+        musicVideoSynced: !0,
+      }));
+  }
+  async function r2(e) {
+    let t = () => {
+      ((e.sourceMap['legato-synced'].filled = !0),
+        (e.sourceMap['legato-synced'].lyricSourceResult = null));
+    };
+    try {
+      let i = new URL('https://lyrics-api.boidu.dev/kugou/getLyrics');
+      (i.searchParams.append('s', e.song),
+        i.searchParams.append('a', e.artist),
+        i.searchParams.append('d', String(e.duration)),
+        e.album && i.searchParams.append('al', e.album));
+      let r = await fetch(i.toString(), {
+        signal: AbortSignal.any([e.signal, AbortSignal.timeout(1e4)]),
+      });
+      if (!r.ok) return void t();
+      let n = await r.json();
+      if (!n.lyrics) return void t();
+      ((e.sourceMap['legato-synced'].lyricSourceResult = {
+        lyrics: t9(n.lyrics, 1e3 * e.duration),
+        source: 'Better Lyrics Legato',
+        sourceHref: 'https://boidu.dev/',
+        musicVideoSynced: !1,
+      }),
+        (e.sourceMap['legato-synced'].filled = !0));
+    } catch (e) {
+      (Y(D, 'Legato provider error:', e), t());
+    }
+  }
+  let r4 = '2.0.0',
+    r3 = [...$].sort((e, t) => e.priority - t.priority).map((e) => e.key);
+  function r5(e) {
+    return B.includes(e);
+  }
+  let r7 = [],
+    r8 = !1,
+    r6 = {
+      'bLyrics-richsynced': rX,
+      'bLyrics-synced': rX,
+      'musixmatch-richsync': rK,
+      'musixmatch-synced': rK,
+      'lrclib-synced': rJ,
+      'lrclib-plain': rJ,
+      'yt-captions': r1,
+      'yt-lyrics': r0,
+      'legato-synced': r2,
+    };
+  function r9() {
+    var e;
+    return (
+      (e = (e) => ({
+        filled: !1,
+        lyricSourceResult: null,
+        resultCached: !1,
+        lyricSourceFiller: e,
+      })),
+      Object.fromEntries(Object.entries(r6).map(([t, i]) => [t, e(i, t)]))
+    );
+  }
+  async function ne(e, t) {
+    let i = e.sourceMap[t];
+    if (!i.filled) {
+      let r = `blyrics_${e.videoId}_${t}`,
+        n = await tD(r);
+      if (n) {
+        let e = JSON.parse(n);
+        if (e && e.version && e.version === r4)
+          return (
+            (i.filled = !0),
+            (i.lyricSourceResult = e),
+            (i.resultCached = !0),
+            e
+          );
+      }
+      await i.lyricSourceFiller(e);
+    }
+    return (
+      r3.forEach((t) => {
+        let i = e.sourceMap[t];
+        i.filled &&
+          !i.resultCached &&
+          i.lyricSourceResult &&
+          !1 !== i.lyricSourceResult.cacheAllowed &&
+          ((i.resultCached = !0),
+          tj(
+            `blyrics_${e.videoId}_${t}`,
+            JSON.stringify({ version: r4, ...i.lyricSourceResult }),
+            6048e5,
+          ));
+      }),
+      i.lyricSourceResult
+    );
+  }
+  function nt(e, t) {
+    if (
+      t &&
+      e &&
+      ((e.isMusicVideoSynced = !e.isMusicVideoSynced), 'none' !== e.syncType)
+    )
+      for (let i of e.lines) {
+        i.accumulatedOffsetMs = 1e6;
+        let e = 0;
+        for (let r of t.segment) {
+          let t = 1e3 * i.time;
+          if (
+            t >= r.counterpartVideoStartTimeMilliseconds &&
+            ((e =
+              r.primaryVideoStartTimeMilliseconds -
+              r.counterpartVideoStartTimeMilliseconds),
+            t <=
+              r.counterpartVideoStartTimeMilliseconds + r.durationMilliseconds)
+          )
+            break;
+        }
+        let r = e / 1e3;
+        ((i.time = i.time + r),
+          (i.lyricElement.dataset.time = String(i.time)),
+          i.parts.forEach((e) => {
+            ((e.time = e.time + r),
+              (e.lyricElement.dataset.time = String(e.time)));
+          }));
+      }
+  }
+  async function ni(e, t) {
+    let i,
+      r = e.song,
+      n = e.artist,
+      s = e.videoId,
+      l = Number(e.duration),
+      o = e.audioTrackData,
+      u = 0 !== e.contentRect.width && 0 !== e.contentRect.height;
+    if (!s) return void Y(O, 'Invalid video id');
+    let c = await il(s, 1),
+      d = !1,
+      h =
+        (c &&
+          c.counterpartVideoId &&
+          c.counterpartVideoId === nn.lastLoadedVideoId) ||
+        nn.lastLoadedVideoId === s,
+      p = c?.segmentMap || null;
+    (h && p
+      ? (nt(nn.lyricData, p),
+        (nn.suppressZeroTime = Date.now() + 5e3),
+        (nn.areLyricsTicking = !0),
+        Y('Switching between audio/video: Skipping Loader', p))
+      : (Y('Not Switching between audio/video', h, p),
+        iP(),
+        t_(),
+        (c = await il(s)),
+        (p = c?.segmentMap || null),
+        (nn.areLyricsLoaded = !1),
+        (nn.areLyricsTicking = !1),
+        (nn.suppressZeroTime = 0)),
+      u &&
+        c &&
+        c.counterpartVideoId &&
+        c.segmentMap &&
+        (Y('Switching VideoId to Audio Id'),
+        (d = !0),
+        (s = c.counterpartVideoId)));
+    let m = document.getElementsByClassName(a)[1];
+    if (
+      (console.assert(null != m), 'true' !== m.getAttribute('aria-selected'))
+    ) {
+      ((nn.areLyricsLoaded = !1),
+        (nn.areLyricsTicking = !1),
+        (nn.lyricInjectionFailed = !0),
+        Y(
+          '[BetterLyrics] (Safe to ignore) Lyrics tab is hidden, skipping lyrics fetch',
+        ));
+      return;
+    }
+    ((r = r.trim()), (n = (n = n.trim()).replace(', & ', ', ')));
+    let f = await io(s);
+    if ((f || (f = ''), !r || !n))
+      return void Y(O, 'Empty song or artist name');
+    Y('[BetterLyrics] Fetching lyrics for:', r, n);
+    let g = null,
+      y = {
+        song: r,
+        artist: n,
+        duration: l,
+        videoId: s,
+        audioTrackData: o,
+        album: f,
+        sourceMap: r9(),
+        alwaysFetchMetadata: d,
+        signal: t,
+      },
+      b = ne(y, 'yt-lyrics').then(
+        (e) => (
+          !nn.areLyricsLoaded &&
+            e &&
+            (Y(
+              A,
+              'Temporarily Using YT Music Lyrics while we wait for synced lyrics to load',
+            ),
+            rn(
+              {
+                ...e,
+                song: y.song,
+                artist: y.artist,
+                duration: y.duration,
+                videoId: y.videoId,
+                album: y.album || '',
+                segmentMap: null,
+              },
+              !0,
+            )),
+          e
+        ),
+      );
+    try {
+      let e = await ne(y, 'musixmatch-richsync');
+      (e &&
+        e.album &&
+        e.album.length > 0 &&
+        f !== e.album &&
+        (y.album = e.album),
+        e &&
+          e.song &&
+          e.song.length > 0 &&
+          r !== e.song &&
+          (Y("Using '" + e.song + "' for song instead of '" + r + "'"),
+          (y.song = e.song)),
+        e &&
+          e.artist &&
+          e.artist.length > 0 &&
+          n !== e.artist &&
+          (Y("Using '" + e.artist + "' for artist instead of '" + n + "'"),
+          (y.artist = e.artist)),
+        e &&
+          e.duration &&
+          l !== e.duration &&
+          (Y("Using '" + e.duration + "' for duration instead of '" + l + "'"),
+          (y.duration = e.duration)));
+    } catch (e) {
+      Y(e);
+    }
+    for (let e of r7) {
+      if (t.aborted) return;
+      try {
+        let t = await ne(y, e);
+        if (t && t.lyrics && t.lyrics.length > 0) {
+          let r = await b;
+          if (null !== r) {
+            let e = '';
+            t.lyrics.forEach((t) => {
+              e += t.words + '\n';
+            });
+            let i = _(e.toLowerCase(), r.text.toLowerCase());
+            if (i < 0.5) {
+              Y(
+                `Got lyrics from ${t.source}, but they don't match yt lyrics. Rejecting: Match: ${i}%`,
+              );
+              continue;
+            }
+          }
+          ((g = t), (i = e));
+          break;
+        }
+      } catch (e) {
+        Y(e);
+      }
+    }
+    if (
+      (g ||
+        (g = {
+          lyrics: [{ startTimeMs: 0, words: R, durationMs: 0 }],
+          source: 'Unknown',
+          sourceHref: '',
+          musicVideoSynced: !1,
+          cacheAllowed: !1,
+        }),
+      !g.lyrics)
+    )
+      throw Error('Lyrics.lyrics is null or undefined. Report this bug');
+    (u === (!0 === g.musicVideoSynced) && (p = null),
+      Y('Got Lyrics from ' + g.source));
+    let M = {
+      song: y.song,
+      artist: y.artist,
+      album: y.album || '',
+      duration: y.duration,
+      videoId: y.videoId,
+      segmentMap: p,
+      providerKey: i,
+      ...g,
+    };
+    ((nn.lastLoadedVideoId = e.videoId), t.aborted || rn(M));
+  }
+  async function nr(e, t) {
+    Y(A, 'Prefetching next song', e, t);
+    let i = e.song,
+      r = e.artist,
+      n = e.videoId,
+      s = Number(e.duration),
+      a = new AbortController().signal,
+      l = await il(n),
+      o = !1;
+    (t &&
+      l &&
+      l.counterpartVideoId &&
+      l.segmentMap &&
+      ((o = !0), (n = l.counterpartVideoId)),
+      (i = i.trim()),
+      (r = (r = r.trim()).replace(', & ', ', ')));
+    let u = await io(n);
+    (u || (u = ''), Y('Prefetching for: ', i, r));
+    let c = {
+      song: i,
+      artist: r,
+      duration: s,
+      videoId: n,
+      audioTrackData: null,
+      album: u,
+      sourceMap: r9(),
+      alwaysFetchMetadata: o,
+      signal: a,
+    };
+    try {
+      let e = await ne(c, 'musixmatch-richsync');
+      (e &&
+        e.album &&
+        e.album.length > 0 &&
+        u !== e.album &&
+        (c.album = e.album),
+        e && e.song && e.song.length > 0 && i !== e.song && (c.song = e.song),
+        e &&
+          e.artist &&
+          e.artist.length > 0 &&
+          r !== e.artist &&
+          (c.artist = e.artist),
+        e && e.duration && s !== e.duration && (c.duration = e.duration));
+    } catch (e) {
+      Y(e);
+    }
+    for (let e of r7) {
+      if (a.aborted) return;
+      try {
+        let t = await ne(c, e);
+        if (t && t.lyrics && t.lyrics.length > 0) break;
+      } catch (e) {
+        Y(e);
+      }
+    }
+  }
+  let nn = {
+    suppressZeroTime: 0,
+    areLyricsTicking: !1,
+    lyricData: null,
+    areLyricsLoaded: !1,
+    lyricInjectionFailed: !1,
+    lastVideoId: null,
+    lastVideoDetails: null,
+    lyricInjectionPromise: null,
+    queueLyricInjection: !1,
+    queueAlbumArtInjection: !1,
+    shouldInjectAlbumArt: 'Unknown',
+    queueSongDetailsInjection: !1,
+    loaderAnimationEndTimeout: void 0,
+    lastLoadedVideoId: null,
+    lyricAbortController: null,
+    isTranslateEnabled: !1,
+    isRomanizationEnabled: !1,
+    translationLanguage: 'en',
+    hasPreloadedNextSong: !1,
+  };
+  function ns() {
+    nn.lastVideoId = null;
+  }
+  async function na() {
+    (Q(),
+      await iF(),
+      (function e() {
+        let t = document.querySelector(P),
+          i = document.querySelector(v);
+        if (!t || !i) return void setTimeout(e, 1e3);
+        iz && iz.disconnect();
+        let r = document.getElementById(U);
+        (r || (((r = document.createElement('div')).id = U), i.prepend(r)),
+          iU() && i$(),
+          (iz = new MutationObserver(() => {
+            iU() ? i$() : iB();
+          })).observe(t, { attributes: !0, attributeFilter: [V] }));
+      })(),
+      (function e() {
+        let t = document.getElementsByClassName(a)[1];
+        t
+          ? (ih && ih.disconnect(),
+            t.removeAttribute('disabled'),
+            t.setAttribute('aria-disabled', 'false'),
+            (ih = new MutationObserver((e) => {
+              e.forEach((e) => {
+                'disabled' === e.attributeName &&
+                  (t.removeAttribute('disabled'),
+                  t.setAttribute('aria-disabled', 'false'));
+              });
+            })).observe(t, { attributes: !0 }))
+          : setTimeout(() => {
+              e();
+            }, 1e3);
+      })(),
+      ib ||
+        ((ib = !0),
+        document.addEventListener(
+          'keydown',
+          (e) => {
+            if (
+              ('f' !== e.key && 'F' !== e.key) ||
+              e.metaKey ||
+              e.ctrlKey ||
+              e.altKey
+            )
+              return;
+            let t = e.target;
+            'INPUT' === t.tagName ||
+              'TEXTAREA' === t.tagName ||
+              t.isContentEditable ||
+              iI(e);
+          },
+          { capture: !0 },
+        ),
+        (function e() {
+          let t = document.querySelector('ytmusic-app-layout');
+          if (!t) return void setTimeout(e, 1e3);
+          im && im.disconnect();
+          let i = !1;
+          (im = new MutationObserver(() => {
+            let e = 'FULLSCREEN' === t.getAttribute('player-ui-state');
+            (i &&
+              !e &&
+              (function () {
+                if (!t5) return;
+                t5 = !1;
+                let e = document.querySelector('.toggle-player-page-button');
+                e && e.click();
+              })(),
+              (i = e));
+          })).observe(t, {
+            attributes: !0,
+            attributeFilter: ['player-ui-state'],
+          });
+        })(),
+        (function e() {
+          let t = document.querySelector(
+            '#song-media-window .fullscreen-button',
+          );
+          t
+            ? t.addEventListener('click', iI, { capture: !0 })
+            : setTimeout(e, 1e3);
+        })()),
+      t2(),
+      tX(),
+      (function e(t, i) {
+        let r = document.querySelector('ytmusic-app-layout');
+        if (!r) return void setTimeout(() => e(t, i), 1e3);
+        id && id.disconnect();
+        let n = r.hasAttribute('player-fullscreened');
+        (id = new MutationObserver(() => {
+          let e = r.hasAttribute('player-fullscreened');
+          (!n && e ? t() : n && !e && i(), (n = e));
+        })).observe(r, {
+          attributes: !0,
+          attributeFilter: ['player-fullscreened'],
+        });
+      })(
+        () => void (iw(), document.addEventListener('visibilitychange', iN)),
+        () =>
+          void (ic && (ic.release(), (ic = null)),
+          document.removeEventListener('visibilitychange', iN)),
+      ),
+      t4(),
+      tQ ||
+        ((tQ = !0),
+        chrome.storage.onChanged.addListener(async (e, t) => {
+          if (
+            ('sync' === t || 'local' === t) &&
+            e.customCSS &&
+            e.customCSS.newValue
+          ) {
+            let t = e.customCSS.newValue;
+            (tx(t) && (t = tS(t)), tq(tT(t)));
+          }
+          if ('local' === t)
+            for (let t of Object.keys(e))
+              t.startsWith('storeTheme:') && (await tH(t, e[t]));
+        }),
+        tG()),
+      await tP(),
+      await tO(),
+      tZ ||
+        ((tZ = !0),
+        chrome.runtime.onMessage.addListener((e, t, i) => {
+          if ((Y(C, 'Received message:', e.action), 'applyStyles' === e.action))
+            (Y(C, 'Processing applyStyles, RICS length:', e.ricsSource?.length),
+              e.ricsSource
+                ? (Y(C, 'Compiling RICS and applying styles'),
+                  tq(tT(e.ricsSource)),
+                  rl(),
+                  Y(C, 'Styles applied successfully'))
+                : (Y(C, 'Loading styles from storage'),
+                  tG().then(() => {
+                    (rl(), Y(C, 'Styles loaded from storage and applied'));
+                  })));
+          else if ('updateSettings' === e.action)
+            (t_(),
+              Q(),
+              t2(),
+              tX(),
+              t4(),
+              (nn.shouldInjectAlbumArt = 'Unknown'),
+              tJ(
+                () => (nn.shouldInjectAlbumArt = !0),
+                () => {
+                  let e;
+                  ((nn.shouldInjectAlbumArt = !1),
+                    iC && (iC.disconnect(), (iC = null)),
+                    iD && (iD.disconnect(), (iD = null)),
+                    iO && (clearTimeout(iO), (iO = null)),
+                    (e = document.getElementById('layout')) &&
+                      (e.style.removeProperty('--blyrics-background-img'),
+                      Y('[BetterLyrics] Album art removed from the layout')));
+                },
+              ),
+              ns());
+          else if ('clearCache' === e.action)
+            try {
+              (tR(), ns(), i({ success: !0 }));
+            } catch {
+              i({ success: !1 });
+            }
+        })),
+      (function e() {
+        if (iy) return;
+        let t = document.getElementsByClassName(
+            'tab-content style-scope tp-yt-paper-tab',
+          ),
+          [i, r, n] = Array.from(t);
+        if (void 0 !== i && void 0 !== r && void 0 !== n) {
+          iy = !0;
+          for (let e = 0; e < t.length; e++)
+            t[e].addEventListener('click', () => {
+              let t = document.querySelector(v);
+              ((iS[iE] = t.scrollTop),
+                (t.scrollTop = iS[e]),
+                setTimeout(() => {
+                  ((t.scrollTop = iS[e]),
+                    (nn.areLyricsTicking =
+                      nn.areLyricsLoaded &&
+                      nn.lyricData?.syncType !== 'none' &&
+                      1 === e));
+                }, 0),
+                (iE = e),
+                1 !== e && (nn.areLyricsTicking = !1));
+            });
+          r.addEventListener('click', () => {
+            (i6().classList.remove('blyrics-hidden'),
+              nn.areLyricsLoaded ||
+                (Y('[BetterLyrics] Lyrics tab clicked, fetching lyrics'),
+                iW(),
+                iP(),
+                ns()));
+          });
+          let e = () => {
+            i6().classList.add('blyrics-hidden');
+          };
+          (i.addEventListener('click', e), n.addEventListener('click', e));
+        } else setTimeout(() => e(), 1e3);
+      })(),
+      iv ||
+        ((iv = !0),
+        document.addEventListener('blyrics-send-player-time', (e) => {
+          var t, i;
+          let r,
+            n,
+            s,
+            l,
+            o,
+            u,
+            c = e.detail,
+            d = c.videoId,
+            h = c.song + ' ' + c.artist;
+          if (d !== nn.lastVideoId || h !== nn.lastVideoDetails) {
+            if (
+              ((nn.areLyricsTicking = !1),
+              (nn.lastVideoId = d),
+              (nn.lastVideoDetails = h),
+              !c.song || !c.artist)
+            )
+              return void Y(
+                'Lyrics switched: Still waiting for metadata ',
+                c.videoId,
+              );
+            (Y('[BetterLyrics] Song has been switched', c.videoId),
+              (nn.queueLyricInjection = !0),
+              (nn.queueAlbumArtInjection = !0),
+              (nn.queueSongDetailsInjection = !0),
+              (nn.hasPreloadedNextSong = !1));
+          }
+          if (
+            (nn.areLyricsTicking &&
+              nn.areLyricsLoaded &&
+              !nn.hasPreloadedNextSong &&
+              ((nn.hasPreloadedNextSong = !0),
+              Y(A, 'Trying to preload next song'),
+              il(nn.lastVideoId).then(async (e) => {
+                if (e && e.nextVideoId) {
+                  let t = await il(e.nextVideoId);
+                  ((!t || t.isVideo) &&
+                    e.counterpartVideoId &&
+                    (t = await il(e.counterpartVideoId).then((e) =>
+                      e?.nextVideoId ? il(e.nextVideoId) : null,
+                    )),
+                    t &&
+                      (await nr(
+                        {
+                          song: t.title,
+                          artist: t.artist,
+                          duration: String(Math.round(t.durationMs / 1e3)),
+                          videoId: t.id,
+                        },
+                        t.isVideo,
+                      )));
+                }
+              })),
+            nn.queueSongDetailsInjection &&
+              c.song &&
+              c.artist &&
+              document.getElementById('main-panel') &&
+              ((nn.queueSongDetailsInjection = !1),
+              (t = c.song),
+              (i = c.artist),
+              console.assert(
+                null != (r = document.getElementById('main-panel')),
+              ),
+              (n = document.getElementById('blyrics-song-info')),
+              (s = document.getElementById('blyrics-watermark')),
+              n?.remove(),
+              s?.remove(),
+              ((l = document.createElement('p')).id = 'blyrics-title'),
+              (l.textContent = t),
+              ((o = document.createElement('p')).id = 'blyrics-artist'),
+              (o.textContent = i),
+              ((u = document.createElement('div')).id = 'blyrics-song-info'),
+              u.appendChild(l),
+              u.appendChild(o),
+              r.appendChild(u)),
+            nn.queueAlbumArtInjection &&
+              !0 === nn.shouldInjectAlbumArt &&
+              ((nn.queueAlbumArtInjection = !1),
+              (function (e) {
+                if (!e) return;
+                (iD && iD.disconnect(), iC && iC.disconnect());
+                let t = () => {
+                    let t = document.querySelector(M);
+                    t.src.startsWith('data:image')
+                      ? i_('https://img.youtube.com/vi/' + e + '/0.jpg')
+                      : i_(t.src);
+                  },
+                  i = document.querySelector(M),
+                  r = new ResizeObserver(() => {
+                    (iO && clearTimeout(iO),
+                      (iO = setTimeout(() => {
+                        ((iO = null),
+                          (function (e) {
+                            let t = document.querySelector(M),
+                              i = t.src,
+                              r = t.src.match(/\d+/);
+                            if (r && r[0] == e) return;
+                            let n = new Image();
+                            ((n.src = t.src),
+                              /w\d+-h\d+/.test(t.src) &&
+                                (n.src = t.src.replace(
+                                  /w\d+-h\d+/,
+                                  `w${e}-h${e}`,
+                                )),
+                              (n.onload = () => {
+                                i == t.src && (t.src = n.src);
+                              }),
+                              Y('[BetterLyrics] Album art size changed to', e));
+                          })(screen.height));
+                      }, 1e3)));
+                  });
+                (r.observe(document.documentElement), (iD = r));
+                let n = new MutationObserver(() => {
+                  (t(),
+                    Y(
+                      '[BetterLyrics] Album art added to the layout from mutation event',
+                    ));
+                });
+                (n.observe(i, { attributes: !0 }),
+                  (iC = n),
+                  t(),
+                  Y('[BetterLyrics] Album art added to the layout'));
+              })(d)),
+            nn.lyricInjectionFailed)
+          ) {
+            let e = document.getElementsByClassName(a)[1];
+            if (e && 'true' !== e.getAttribute('aria-selected')) return;
+          }
+          if (nn.queueLyricInjection || nn.lyricInjectionFailed) {
+            let e = document.getElementsByClassName(a)[1];
+            e &&
+              ((nn.queueLyricInjection = !1),
+              (nn.lyricInjectionFailed = !1),
+              'true' !== e.getAttribute('aria-selected') &&
+                tC({ isAutoSwitchEnabled: !1 }, (t) => {
+                  t.isAutoSwitchEnabled &&
+                    (() => {
+                      (e.click(),
+                        Y(
+                          '[BetterLyrics] Auto switch enabled, switching to lyrics tab',
+                        ),
+                        i6().classList.remove('blyrics-hidden'));
+                    })();
+                }),
+              (function e(t) {
+                nn.lyricInjectionPromise
+                  ? (nn.lyricAbortController?.abort('New song is being loaded'),
+                    nn.lyricInjectionPromise.then(() => {
+                      ((nn.lyricInjectionPromise = null), e(t));
+                    }))
+                  : ((nn.lyricAbortController = new AbortController()),
+                    (nn.lyricInjectionPromise = ni(
+                      t,
+                      nn.lyricAbortController.signal,
+                    ).catch((e) => {
+                      (Y(D, e),
+                        (nn.areLyricsLoaded = !1),
+                        (nn.lyricInjectionFailed = !0));
+                    })));
+              })(c));
+          }
+          (nn.suppressZeroTime < Date.now() || 0 !== c.currentTime) &&
+            i7(c.currentTime, c.browserTime, c.playing);
+        })),
+      (function e() {
+        let t = document.getElementById('side-panel');
+        t
+          ? (ip && ip.disconnect(),
+            (ip = new MutationObserver((e) => {
+              tK(
+                () => {},
+                () =>
+                  e.forEach((e) => {
+                    if ('inert' === e.attributeName) {
+                      e.target.removeAttribute('inert');
+                      let t = document.getElementsByClassName(a)[1];
+                      t &&
+                        'true' !== t.getAttribute('aria-selected') &&
+                        t.click();
+                    }
+                  }),
+              );
+            })).observe(t, { attributes: !0 }),
+            t.removeAttribute('inert'))
+          : setTimeout(() => {
+              e();
+            }, 1e3);
+      })(),
+      (function () {
+        if (iM) return;
+        iM = !0;
+        let e = (e) => {
+          let t = document.getElementById(E);
+          t &&
+            (e
+              ? t.setAttribute('blyrics-alt-hover', '')
+              : t.removeAttribute('blyrics-alt-hover'));
+        };
+        (document.addEventListener('keydown', (t) => {
+          'Alt' === t.key && e(!0);
+        }),
+          document.addEventListener('keyup', (t) => {
+            'Alt' === t.key && e(!1);
+          }),
+          window.addEventListener('blur', () => {
+            e(!1);
+          }));
+      })(),
+      (function () {
+        if (r8) return;
+        r8 = !0;
+        let e = (e) => {
+          let t = e ?? [...r3];
+          r3.every((e) => t.includes(e) || t.includes(`d_${e}`)) ||
+            ((t = [...r3]),
+            Y('Invalid preferred provider list, resetting to default'));
+          let i = t.filter(r5);
+          (Y('[BetterLyrics] Switching to provider = ', i), (r7 = i));
+        };
+        (chrome.storage.onChanged.addListener((t, i) => {
+          'sync' === i &&
+            t.preferredProviderList &&
+            e(t.preferredProviderList.newValue);
+        }),
+          chrome.storage.local.get(
+            { preferredProviderList: null },
+            function (t) {
+              e(t.preferredProviderList);
+            },
+          ));
+      })(),
+      (function e() {
+        let t = document.querySelector('#av-id > ytmusic-av-toggle');
+        if (!t) return void setTimeout(e, 1e3);
+        ig && ig.disconnect();
+        let i = (e) => {
+          let t = document.querySelector('#player-page');
+          t &&
+            (e
+              ? t.setAttribute('blyrics-video-mode', '')
+              : t.removeAttribute('blyrics-video-mode'));
+        };
+        ((ig = new MutationObserver((e) => {
+          for (let r of e)
+            'attributes' === r.type &&
+              'is-video-playback-mode-selected' === r.attributeName &&
+              i('true' === t.getAttribute('is-video-playback-mode-selected'));
+        })).observe(t, {
+          attributes: !0,
+          attributeFilter: ['is-video-playback-mode-selected'],
+        }),
+          i('true' === t.getAttribute('is-video-playback-mode-selected')),
+          Y(A, 'Set up a/v toggle observer'));
+      })(),
+      Y(
+        '%c[BetterLyrics] Loaded Successfully. Logs are enabled by default. You can disable them in the extension options.',
+        'background: rgba(10,11,12,1) ; color: rgba(214, 250, 214,1) ; padding: 0.5rem 0.75rem; border-radius: 0.5rem; font-size: 1rem; ',
+      ),
+      tJ(
+        () => (nn.shouldInjectAlbumArt = !0),
+        () => (nn.shouldInjectAlbumArt = !1),
+      ));
+  }
+  (document.addEventListener('DOMContentLoaded', na),
+    (i = new URL(window.location.href)).searchParams.has('v') &&
+      (ia = i.searchParams.get('v')),
+    document.addEventListener('blyrics-send-response', (e) => {
+      if (!(e instanceof CustomEvent)) return;
+      let { url: t, requestJson: i, responseJson: r } = e.detail;
+      if (iu(t, '/youtubei/v1/next')) {
+        let e =
+          r.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer
+            .watchNextTabbedResultsRenderer.tabs?.[0].tabRenderer.content
+            ?.musicQueueRenderer.content?.playlistPanelRenderer.contents;
+        if (
+          (e ||
+            (e = r.continuationContents?.playlistPanelContinuation.contents),
+          e ||
+            ((e =
+              r.onResponseReceivedEndpoints?.[0]?.queueUpdateCommand
+                ?.inlineContents?.playlistPanelRenderer?.contents)
+              ? Y(
+                  'PlaylistPanelRendererContents found in onResponseReceivedEndpoints!',
+                )
+              : Y('PlaylistPanelRendererContents not found.')),
+          e)
+        ) {
+          let t = e
+            .map((e) => {
+              let t =
+                  e.playlistPanelVideoWrapperRenderer?.counterpart?.[0]
+                    ?.counterpartRenderer,
+                i = e.playlistPanelVideoRenderer;
+              if (
+                (i ||
+                  (i =
+                    e.playlistPanelVideoWrapperRenderer?.primaryRenderer
+                      .playlistPanelVideoRenderer),
+                !i)
+              )
+                return null;
+              let r = i?.videoId,
+                n = i?.title.runs[0].text;
+              function s(e) {
+                let t,
+                  i = !1,
+                  r = e.runs
+                    .filter((e) => {
+                      let t = e.text.trim(),
+                        r = t.includes('views') || t.includes('likes');
+                      return (
+                        r && (i = !0),
+                        t.length > 0 && '•' !== t && '&' !== t && !r
+                      );
+                    })
+                    .map((e) => e.text),
+                  n = '';
+                return (
+                  i
+                    ? (t = r?.join(', '))
+                    : ((n = r[r?.length - 2]),
+                      (t = r?.slice(0, -2).join(', '))),
+                  [t, n]
+                );
+              }
+              let [a, l] = s(i?.longBylineText),
+                o = i?.thumbnail.thumbnails[0],
+                u = {
+                  id: r,
+                  title: n,
+                  artist: a,
+                  album: l,
+                  isVideo: o?.height !== o?.width,
+                  durationMs: t6(i.lengthText.runs[0].text),
+                };
+              if (!t) return { primary: u };
+              {
+                let i = t?.playlistPanelVideoRenderer.videoId,
+                  r = t.playlistPanelVideoRenderer.title.runs[0].text,
+                  n = t.playlistPanelVideoRenderer.thumbnail.thumbnails[0],
+                  a = n.height !== n.width,
+                  [l, o] = s(t?.playlistPanelVideoRenderer.longBylineText);
+                return {
+                  primary: u,
+                  counterpart: {
+                    id: i,
+                    title: r,
+                    artist: l,
+                    album: o,
+                    isVideo: a,
+                    durationMs: t6(
+                      t.playlistPanelVideoRenderer.lengthText.runs[0].text,
+                    ),
+                    segmentMap:
+                      e.playlistPanelVideoWrapperRenderer.counterpart[0]
+                        .segmentMap,
+                  },
+                };
+              }
+            })
+            .filter((e) => e);
+          for (let [e, i] of t.entries()) {
+            if (!i) continue;
+            let r = t.length > e + 1 ? t[e + 1] : void 0,
+              n = r?.primary.id,
+              s = r?.counterpart?.id || n,
+              a = i.counterpart;
+            if (a) {
+              let e = null,
+                t = null;
+              if (((e = { segment: [], reversed: !1 }), a.segmentMap.segment)) {
+                for (let t of a.segmentMap.segment)
+                  e.segment.push({
+                    counterpartVideoStartTimeMilliseconds: Number(
+                      t.counterpartVideoStartTimeMilliseconds,
+                    ),
+                    primaryVideoStartTimeMilliseconds: Number(
+                      t.primaryVideoStartTimeMilliseconds,
+                    ),
+                    durationMilliseconds: Number(t.durationMilliseconds),
+                  });
+                for (let i of ((t = { segment: [], reversed: !0 }), e.segment))
+                  t.segment.push({
+                    primaryVideoStartTimeMilliseconds:
+                      i.counterpartVideoStartTimeMilliseconds,
+                    counterpartVideoStartTimeMilliseconds:
+                      i.primaryVideoStartTimeMilliseconds,
+                    durationMilliseconds: i.durationMilliseconds,
+                  });
+              }
+              (ir.set(i.primary.id, {
+                artist: i.primary.artist,
+                nextVideoId: n,
+                title: i.primary.title,
+                album: i.primary.album,
+                isVideo: i.primary.isVideo,
+                counterpartVideoId: a.id,
+                segmentMap: e,
+                durationMs: i.primary.durationMs,
+                id: i.primary.id,
+              }),
+                ir.set(a.id, {
+                  artist: a.artist,
+                  isVideo: a.isVideo,
+                  nextVideoId: s,
+                  album: a.album,
+                  title: a.title,
+                  counterpartVideoId: i.primary.id,
+                  segmentMap: t,
+                  durationMs: a.durationMs,
+                  id: a.id,
+                }),
+                is.set(a.id, a.album));
+            } else
+              ir.set(i.primary.id, {
+                artist: i.primary.artist,
+                nextVideoId: n,
+                title: i.primary.title,
+                album: i.primary.album,
+                isVideo: i.primary.isVideo,
+                counterpartVideoId: null,
+                segmentMap: null,
+                durationMs: i.primary.durationMs,
+                id: i.primary.id,
+              });
+            is.set(i.primary.id, i.primary.album);
+          }
+        }
+        r.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer
+          .watchNextTabbedResultsRenderer.tabs[0].tabRenderer.content
+          ?.musicQueueRenderer.content?.playlistPanelRenderer.continuations?.[0]
+          .nextRadioContinuationData.continuation;
+        let t = i.videoId,
+          n = i.playlistId;
+        (t || (t = r.currentVideoEndpoint?.watchEndpoint?.videoId),
+          n || (n = r.currentVideoEndpoint?.watchEndpoint?.playlistId));
+        let s =
+          r?.playerOverlays?.playerOverlayRenderer?.browserMediaSession
+            ?.browserMediaSessionRenderer?.album?.runs[0]?.text;
+        if ((is.set(t, s), ir.has(t))) {
+          let e = ir.get(t).counterpartVideoId;
+          e && is.set(e, s);
+        }
+        if (!t) return;
+        let a =
+          r.contents?.singleColumnMusicWatchNextResultsRenderer?.tabbedRenderer
+            ?.watchNextTabbedResultsRenderer?.tabs[1]?.tabRenderer;
+        if (a && a.unselectable)
+          ii.set(t, { hasLyrics: !1, lyrics: '', sourceText: '' });
+        else if (a) {
+          let e = a.endpoint?.browseEndpoint?.browseId;
+          e && it.set(e, t);
+        }
+      } else if (iu(t, '/youtubei/v1/browse')) {
+        let e = i.browseId,
+          t = it.get(e);
+        if (
+          (void 0 !== e && void 0 === t && null !== ia && (t = ia),
+          void 0 !== t)
+        ) {
+          let i =
+              r.contents?.sectionListRenderer?.contents?.[0]
+                ?.musicDescriptionShelfRenderer?.description?.runs?.[0]?.text,
+            n =
+              r.contents?.sectionListRenderer?.contents?.[0]
+                ?.musicDescriptionShelfRenderer?.footer?.runs?.[0]?.text;
+          i && n
+            ? (ii.set(t, { hasLyrics: !0, lyrics: i, sourceText: n }),
+              t === ia && (it.set(e, t), (ia = null)))
+            : ii.set(t, { hasLyrics: !1, lyrics: null, sourceText: null });
+        }
+      }
+    }));
+})();
 
 //# sourceMappingURL=https://better-lyrics-sourcemaps.dacubeking.com/chrome/v2.2.0.2-daafb0b/content-0.js.map

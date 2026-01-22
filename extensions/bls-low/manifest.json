@@ -1,0 +1,34 @@
+{
+   "action": {
+      "default_icon": {
+         "128": "icon128.plasmo.3c1ed2d2.png",
+         "16": "icon16.plasmo.6c567d50.png",
+         "32": "icon32.plasmo.76b92899.png",
+         "48": "icon48.plasmo.aced7582.png",
+         "64": "icon64.plasmo.8bb5e6e0.png"
+      },
+      "default_popup": "popup.html"
+   },
+   "author": "Boidu",
+   "content_scripts": [ {
+      "all_frames": false,
+      "css": [  ],
+      "js": [ "youtube-music.242969f5.js" ],
+      "matches": [ "https://music.youtube.com/*" ]
+   } ],
+   "description": "Add beautiful gradient effects to YouTube Music",
+   "host_permissions": [ "https://music.youtube.com/*", "https://i.ytimg.com/*", "https://*.googleusercontent.com/*" ],
+   "icons": {
+      "128": "icon128.plasmo.3c1ed2d2.png",
+      "16": "icon16.plasmo.6c567d50.png",
+      "32": "icon32.plasmo.76b92899.png",
+      "48": "icon48.plasmo.aced7582.png",
+      "64": "icon64.plasmo.8bb5e6e0.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvjE2x3sjgKBrCZc3Rc3zCAefJT63C5aMCd7dV+0i6RThP2Pw3oi2Xmx6FcMGUADYeiKYa8cZWOfmbdxZMQ79XmGH8xyJwHcXZKoqdpyRpHuA8ColDhB2qZstG9q8WFgxMnNPtjq3JVUFv1EfPqzgQEi8veTkwpzieCItEjEEeEvf1MS1oO7FWm8D3nI2agySo5tMu2mX7Uu2MUhgmPuUQQDCgPW3OoDxn3UPRuSiTiwkIQYdKPF/N8VV9QVDmLBs70kE6EJEh3e6ETLq6enmgGb71dIvR1C6GmQmE585/2f/rBJfzrTjo7wfw0rtpMLqOsHgvQQ67y2YXkaneSG8IQIDAQAB",
+   "manifest_version": 3,
+   "name": "Better Lyrics Shaders",
+   "permissions": [ "storage", "activeTab" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "1.0.8"
+}

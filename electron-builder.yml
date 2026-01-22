@@ -1,4 +1,4 @@
-appId: "youtube-music-nankill"
+appId: "youtube-music-nankill-mod"
 productName: "YouTube Music (NanKill Modded)"
 files:
   - '!*'
@@ -43,7 +43,7 @@ linux:
   category: AudioVideo
   desktop:
     entry:
-      StartupWMClass: "nankill.xyz.youtube.music"
+      StartupWMClass: "nankill.xyz.youtube.music.mod"
   target:
     - target: AppImage
       arch:

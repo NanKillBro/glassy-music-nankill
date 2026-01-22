@@ -35,6 +35,14 @@ const MY_CUSTOM_CSS = `
   --blyrics-background-filter: blur(70px) saturate(2.5) brightness(70%);
 }
 
+#player-bar-background {
+    opacity: 1 !important;            /* Giữ nguyên để "lừa" extension là nó đang hiện */
+    background: transparent !important; /* Biến màu nền thành trong suốt */
+    background-color: transparent !important; /* Thêm dòng này cho chắc */
+    box-shadow: none !important;      /* Xóa bóng đổ nếu có */
+    pointer-events: none !important;  /* Click xuyên qua */
+}
+
 /* ĐÃ FIX: Tắt hoàn toàn Glass Effect của các bar mặc định */
 #layout[player-ui-state="PLAYER_PAGE_OPEN"] #mini-guide-background,
 #layout[player-ui-state="PLAYER_PAGE_OPEN"] #nav-bar-background,
@@ -42,14 +50,6 @@ const MY_CUSTOM_CSS = `
   backdrop-filter: none !important; 
   background: transparent !important;
   border: none !important;
-}
-
-#player-bar-background {
-    opacity: 1 !important;            /* Giữ nguyên để "lừa" extension là nó đang hiện */
-    background: transparent !important; /* Biến màu nền thành trong suốt */
-    background-color: transparent !important; /* Thêm dòng này cho chắc */
-    box-shadow: none !important;      /* Xóa bóng đổ nếu có */
-    pointer-events: none !important;  /* Click xuyên qua */
 }
 
 ytmusic-player-bar,

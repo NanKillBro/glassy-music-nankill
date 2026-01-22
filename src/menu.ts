@@ -31,6 +31,8 @@ export type MenuTemplate = Electron.MenuItemConstructorOptions[];
 // True only if in-app-menu was loaded on launch
 const inAppMenuActive = await config.plugins.isEnabled('in-app-menu');
 
+const LOCKED_PLUGINS = ['better-lyrics', 'better-lyrics-shaders'];
+
 const pluginEnabledMenu = async (
   plugin: string,
   label = '',
@@ -38,24 +40,44 @@ const pluginEnabledMenu = async (
   isNew = false,
   hasSubmenu = false,
   refreshMenu: (() => void) | undefined = undefined,
-): Promise<Electron.MenuItemConstructorOptions> => ({
-  label: label || plugin,
-  sublabel: isNew ? t('main.menu.plugins.new') : undefined,
-  toolTip: description,
-  type: 'checkbox',
-  checked: await config.plugins.isEnabled(plugin),
-  click(item: Electron.MenuItem) {
-    if (item.checked) {
-      config.plugins.enable(plugin);
-    } else {
-      config.plugins.disable(plugin);
-    }
+): Promise<Electron.MenuItemConstructorOptions> => {
+  // 1. Kiểm tra xem plugin này có nằm trong danh sách bị khóa không
+  const isLocked = LOCKED_PLUGINS.includes(plugin);
 
-    if (hasSubmenu) {
-      refreshMenu?.();
-    }
-  },
-});
+  // 2. Logic "Hardcore": Nếu bị khóa, ép config luôn bật ngay lập tức
+  // (Đề phòng trường hợp file config.json cũ đang lưu là false)
+  if (isLocked) {
+    config.plugins.enable(plugin); 
+  }
+
+  return {
+    label: label || plugin,
+    sublabel: isNew ? t('main.menu.plugins.new') : undefined,
+    toolTip: description,
+    type: 'checkbox',
+    
+    // 3. Hiển thị dấu tích: Nếu Locked thì luôn True, ngược lại thì lấy theo config
+    checked: isLocked ? true : await config.plugins.isEnabled(plugin),
+    
+    // 4. Khóa thao tác: Nếu Locked thì Disable (xám mờ đi) để không click được
+    enabled: !isLocked, 
+    
+    click(item: Electron.MenuItem) {
+      // Safety check: Nếu bị khóa thì không làm gì cả (dù UI đã chặn rồi)
+      if (isLocked) return;
+
+      if (item.checked) {
+        config.plugins.enable(plugin);
+      } else {
+        config.plugins.disable(plugin);
+      }
+
+      if (hasSubmenu) {
+        refreshMenu?.();
+      }
+    },
+  };
+};
 
 export const refreshMenu = async (win: BrowserWindow) => {
   await setApplicationMenu(win);
@@ -391,7 +413,7 @@ const htmlContent = `
                     <span class="log-tag">BETA</span>
                 </div>
                 <ul>
-                    <li>Based on commit: <code style="">b37db09e</code></li>
+                    <li>Based on commit: <code style="">1d72d12</code></li>
                     <li>Add new <strong>NonStop plugin</strong> 🎵</li>
                     <li>Add new <strong>Adblock</strong></li>
                     <li>Add new <strong>Better Lyrics Shaders</strong></li>
@@ -400,6 +422,7 @@ const htmlContent = `
                     <li>Remove Update Check</li>
                     <li>Remove MERGE THEME dynamic background</li>
                     <li>✨ <strong>Rebrand the whole client</strong></li>
+                    <li>Add Low Performance Mode for potato pc.</li>
                     <li>Fixed some small bugs and optimize 🐛</li>
                 </ul>
             </div>
