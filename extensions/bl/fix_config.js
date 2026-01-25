@@ -35,6 +35,13 @@ const MY_CUSTOM_CSS = `
   --blyrics-background-filter: blur(70px) saturate(2.5) brightness(70%);
 }
 
+/* --- BƯỚC 1: Bật Blur mặc định cho TẤT CẢ trường hợp --- */
+ytmusic-player-bar,
+#player-bar-background {
+  backdrop-filter: blur(var(--blyrics-blur-amount)) !important;
+  background: transparent !important; /* Đảm bảo nền trong suốt để thấy blur */
+}
+
 /* --- BƯỚC 2: Tắt Blur KHI VÀ CHỈ KHI Player đang mở --- */
 /* Logic: Kiểm tra nếu body có chứa #layout đang mở player -> thì tắt blur ở bar */
 body:has(#layout[player-ui-state="PLAYER_PAGE_OPEN"]) ytmusic-player-bar,
