@@ -14,14 +14,21 @@ files:
 asarUnpack:
   - assets
 mac:
-  identity: null
+  identity: null    # Quan trọng nhất: Bỏ qua bước ký code (Code Signing)
+  hardenedRuntime: false # Tắt Hardened Runtime vì không ký thì không bật cái này được
+  gatekeeperAssess: false # Tắt kiểm tra Gatekeeper
   target:
-    - target: dmg
+    - target: dmg   # Build ra file .dmg
       arch:
         - x64
         - arm64
-  icon: assets/generated/icons/mac/icon.icon
-  compression: maximum
+    - target: zip   # Khuyên dùng: Build thêm .zip để dễ debug hoặc gửi file thô nếu dmg lỗi
+      arch:
+        - x64
+        - arm64
+  icon: assets/generated/icons/mac/icon.icns # LƯU Ý: Phải là đuôi .icns chuẩn
+  extendInfo:
+    NSAppleEventsUsageDescription: "Controls music playback." # Tránh crash nếu đụng permission
 win:
   icon: assets/generated/icons/win/icon.ico
   target:
