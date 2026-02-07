@@ -2,7 +2,7 @@
 
 # Youtube Music (NanKill Modded)
 
-[![GitHub license](https://img.shields.io/github/license/pear-devs/pear-desktop.svg?style=for-the-badge)](https://git.nankill.xyz/nankill/youtube-music-nankill/src/branch/master/license)
+[![GPLv3 License](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://git.nankill.xyz/nankill/youtube-music-nankill/src/branch/master/LICENSE)
 [![eslint code style](https://img.shields.io/badge/code_style-eslint-5ed9c7.svg?style=for-the-badge)](https://git.nankill.xyz/nankill/youtube-music-nankill/src/branch/master/eslint.config.mjs)
 <a href="https://github.com/pear-devs/pear-desktop">
   <img src="https://img.shields.io/badge/Original_Repo-pear--devs%2Fpear--desktop-blue?style=for-the-badge&logo=github" alt="Original Repo">
