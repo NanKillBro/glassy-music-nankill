@@ -1,7 +1,6 @@
 import { session, app } from 'electron';
 import path from 'path';
 import { createPlugin } from '@/utils';
-import { t } from '@/i18n'; // Import nếu muốn dùng đa ngôn ngữ, không thì hardcode string cũng được
 
 // 1. Định nghĩa kiểu dữ liệu cho Config
 export type BetterLyricsShadersConfig = {
