@@ -3,7 +3,7 @@ const MY_CUSTOM_CSS = `
 
 /* =================================================================================================================*/
 /* MERGED THEME V17: Some UI Update                                                                                 */
-/* Adds: More rounded corner, more blur,...                                                                         */
+/* Adds: More rounded corner, more blur, more smooth animation,...                                                  */
 /* Fixes: Nope                                                                                                      */
 /* Based on: Dynamic Background (by chengg), Big Blurry Slow Lyrics for TV (by zobiron), Luxurious Glass (by SKMJi) */
 /* Made by: Gemini 3 Pro and NanKill                                                                                */
