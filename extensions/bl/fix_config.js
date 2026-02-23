@@ -174,7 +174,7 @@ ytmusic-player-expanding-menu,
 .blyrics-container:hover > div {
   opacity: 1 !important;
   filter: blur(0px) !important;
-  transition: opacity 0.3s ease, filter 0.3s ease;
+  transition: opacity 0.3s ease 1s, filter 0.3s ease 1s;
 }
 
 /* Translated & Romanized */
@@ -530,6 +530,16 @@ ytmusic-play-button-renderer[size="MUSIC_PLAY_BUTTON_SIZE_HUGE"] .content-wrappe
 ytmusic-app-layout:not([player-page-open]) ytmusic-player-page::before,
 ytmusic-app-layout:not([player-page-open]) ytmusic-player-page[is-mweb-modernization-enabled] #main-panel::before {
   opacity: 0 !important;
+}
+
+ytmusic-app-layout:not([player-page-open]) [id*="-backdrop-"] {
+  transform: translateY(6vh) !important;
+}
+
+/* 3. TRƯỢT CANVAS: Đây là linh hồn của hiệu ứng. Chỉ phần hình ảnh bị kéo xuống! */
+ytmusic-app-layout:not([player-page-open]) [id^="better-lyrics-kawarp-"]:not([id*="-backdrop-"]) canvas {
+  transform: translateY(4vh) !important;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
 }
 
 ytmusic-player-page {
