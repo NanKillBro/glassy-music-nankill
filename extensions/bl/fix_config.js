@@ -3,7 +3,7 @@ const MY_CUSTOM_CSS = `
 /* =================================================================================================================*/
 /* MERGED THEME V17: Some UI Update                                                                                 */
 /* Adds: More rounded corner, more blur, more smooth animation,...                                                  */
-/* Fixes: Nope                                                                                                      */
+/* Fixes: Artist Page                                                                                               */
 /* Based on: Dynamic Background (by chengg), Big Blurry Slow Lyrics for TV (by zobiron), Luxurious Glass (by SKMJi) */
 /* Made by: Gemini 3 Pro and NanKill                                                                                */
 /* ================================================================================================================ */
@@ -349,8 +349,8 @@ ytmusic-search-box #suggestion-list {
   visibility: hidden;
   display: initial !important;
   border-radius: 12px !important;
-  background: rgba(0, 0, 0, 0.7) !important; /* Đổi từ transparent sang dòng này */
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.8) !important; /* Đổi từ transparent sang dòng này */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
   border: transparent !important;
   transition: opacity 0.3s ease, top 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0.3s;
 }
@@ -441,7 +441,7 @@ yt-img-shadow[object-fit="CONTAIN"] img,
 @keyframes menuFadeIn {
   0% {
     opacity: 0;
-    margin-top: -8px; /* Trượt nhẹ từ trên xuống */
+    margin-top: -10px; /* Trượt nhẹ từ trên xuống */
   }
   100% {
     opacity: 1;
@@ -451,7 +451,7 @@ yt-img-shadow[object-fit="CONTAIN"] img,
 
 /* 2. Container của Menu 3 chấm */
 tp-yt-iron-dropdown.ytmusic-popup-container {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(15px);
   border-radius: 24px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
@@ -466,6 +466,148 @@ tp-yt-iron-dropdown.ytmusic-popup-container {
 tp-yt-paper-listbox.ytmusic-menu-popup-renderer {
   background: transparent;
   border: 0;
+}
+
+/* Nếu bạn muốn áp dụng riêng cho phần hộp thoại bên trong */
+.ytmusicMultiPageMenuRendererHost {
+    background: transparent;
+}
+
+/* Gộp cả 3 loại bảng vào chung một thuộc tính */
+ytmusic-add-to-playlist-renderer,
+ytmusic-unified-share-panel-renderer,
+ytmusic-dialog {
+  /* Nền đen trong suốt & hiệu ứng mờ */
+  background-color: rgba(15, 15, 15, 0.5) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  
+  /* Viền và khối 3D */
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+
+  /* Ép bảng luôn nằm giữa màn hình (ghi đè inline CSS của YouTube) */
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  margin: 0 !important; /* Xóa margin thừa nếu có */
+  
+  /* Gọi animation xuất hiện */
+  animation: popupXuatHien 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+}
+/* Xóa nền thừa của trang cài đặt và phần nội dung của dialog */
+ytmusic-settings-page,
+ytmusic-dialog .content,
+ytmusic-dialog #content,
+ytmusic-unified-share-panel-renderer #contents {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+/* Animation xuất hiện */
+@keyframes popupXuatHien {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -45%) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Sửa nền của mục đang được chọn bên menu trái */
+tp-yt-paper-item.category-menu-item.iron-selected {
+  background-color: rgba(255, 255, 255, 0.15) !important; /* Trắng mờ 15% */
+}
+
+/* (Tùy chọn) Chỉnh luôn hiệu ứng khi di chuột qua các mục khác cho đồng bộ */
+tp-yt-paper-item.category-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important; 
+}
+
+/* Xóa màu nền đặc của các thành phần bên trong bảng tạo playlist */
+ytmusic-playlist-form,
+ytmusic-playlist-form .content,
+ytmusic-playlist-form #general-pane,
+ytmusic-playlist-form #collaborate-pane,
+ytmusic-playlist-form tp-yt-iron-pages {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Áp dụng nền kính mờ cho các hộp thoại thả xuống (Quyền riêng tư, Chất lượng âm thanh...) */
+tp-yt-iron-dropdown .dropdown-content,
+tp-yt-paper-listbox.dropdown-content {
+  background-color: rgba(15, 15, 15, 0.7) !important;
+  
+  /* Thêm viền mỏng và shadow */
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important; /* Bo góc 12px cho menu nhỏ nhắn hơn */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* 1. Xóa nền xám mặc định của các dòng lựa chọn bên trong dropdown */
+tp-yt-paper-listbox ytmusic-dropdown-item-renderer,
+tp-yt-paper-listbox tp-yt-paper-item,
+tp-yt-paper-listbox tp-yt-paper-item.menu-item {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* 2. Hiệu ứng sáng lên khi di chuột qua (Hover) */
+tp-yt-paper-listbox ytmusic-dropdown-item-renderer:hover,
+tp-yt-paper-listbox tp-yt-paper-item.menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  transition: background-color 0.2s ease !important;
+}
+
+/* 3. Hiệu ứng sáng hơn một chút cho mục đang được chọn (Selected) */
+tp-yt-paper-listbox ytmusic-dropdown-item-renderer.iron-selected,
+tp-yt-paper-listbox tp-yt-paper-item.menu-item.iron-selected {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* (Tùy chọn) Bỏ viền outline xấu xí khi click vào mục menu */
+tp-yt-paper-listbox tp-yt-paper-item:focus {
+  outline: none !important;
+}
+
+/* =========================================
+   1. BẢNG XÁC NHẬN (Ví dụ: Hủy đăng ký)
+   2. BẢNG THÔNG TIN BÀI HÁT (Credits)
+   ========================================= */
+
+/* Ép hiệu ứng kính mờ, bo góc và ép căn giữa cho thẻ bọc ngoài cùng */
+tp-yt-paper-dialog:has(yt-confirm-dialog-renderer),
+tp-yt-paper-dialog:has(ytmusic-dismissable-dialog-renderer) {
+  /* Nền đen kính mờ */
+  background-color: rgba(15, 15, 15, 0.5) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  
+  /* Viền và khối 3D */
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+
+  /* Ghi đè tọa độ tuyệt đối (top, left) cứng nhắc do JavaScript của web tự tạo ra */
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  margin: 0 !important;
+  
+  /* Gọi animation xuất hiện (dùng chung @keyframes cũ) */
+  animation: popupXuatHien 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+}
+
+/* Làm trong suốt màu nền đặc mặc định của các thẻ con bên trong */
+yt-confirm-dialog-renderer,
+ytmusic-dismissable-dialog-renderer,
+ytmusic-dismissable-dialog-renderer #metadata,
+ytmusic-dismissable-dialog-renderer .top-bar {
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 /* Bo góc cho toàn bộ khung ảnh Album/Playlist ở Trang chủ */
@@ -520,6 +662,70 @@ ytmusic-play-button-renderer[size="MUSIC_PLAY_BUTTON_SIZE_HUGE"] .content-wrappe
 /* Hiệu ứng phóng to nút Play lên 1 chút khi hover giống hệt bản gốc */
 #play-button .content-wrapper.ytmusic-play-button-renderer:hover {
   transform: scale(1.2);
+}
+
+ytmusic-tabs#tabs {
+    /* 1. Thu gọn và căn giữa */
+    width: 50% !important;  /* Tự co lại vừa khít với các tab bên trong */
+    margin: 10px auto 0 auto !important;      /* Đẩy thanh tab ra giữa màn hình */
+    top: 74px !important;
+
+    /* 2. Bo tròn và hiệu ứng kính mờ (cũ) */
+    border-radius: 16px !important; 
+    background-color: rgba(0, 0, 0, 0.6) !important; 
+    backdrop-filter: blur(12px) !important; 
+    -webkit-backdrop-filter: blur(12px) !important; 
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8) !important; 
+    padding-left: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+/* Xóa nốt viền xám ở container bên trong (nếu có) */
+ytmusic-tabs#tabs .tab-container {
+    border-bottom: none !important; 
+}
+
+ytmusic-tabs#tabs .tab-container {
+    display: flex !important;           /* Đảm bảo hộp con sử dụng bố cục linh hoạt Flexbox */
+    justify-content: center !important; /* Đẩy tất cả các phần tử bên trong ra chính giữa */
+    width: 100% !important;             /* Bắt buộc hộp con giãn nạp đầy 70% chiều rộng của thanh tab tổng */
+}
+
+/* 1. Tắt thanh gạch chân chạy qua chạy lại mặc định của YouTube Music */
+ytmusic-tabs#tabs tp-yt-paper-tabs-selection-bar,
+ytmusic-tabs#tabs .selection-bar {
+    display: none !important; 
+}
+
+/* 2. Style cho Tab ĐANG ĐƯỢC CHỌN (Nổi bật) */
+ytmusic-tabs#tabs .tab.selected,
+ytmusic-tabs#tabs .tab[aria-selected="true"] {
+    border-bottom: none !important; /* Đảm bảo xóa sạch gạch chân */
+    background-color: rgba(255, 255, 255, 0.15) !important; /* Nền trắng hơi mờ nhẹ */
+    border-radius: 10px !important; /* Bo tròn các góc của tab */
+    color: #ffffff !important; /* Chữ trắng sáng */
+    font-weight: 700 !important; /* In đậm chữ */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.4) !important; /* Chữ phát sáng nhẹ */
+    padding: 8px 20px !important; /* Tăng khoảng trống trong nút cho cân đối */
+    margin: 0 4px !important; /* Cách nhẹ hai tab ra với nhau */
+    transition: all 0.3s ease !important; /* Hiệu ứng chuyển đổi mượt mà */
+}
+
+/* 3. Style cho Tab BÌNH THƯỜNG (Chưa được chọn) */
+ytmusic-tabs#tabs .tab:not(.selected) {
+    color: rgba(255, 255, 255, 0.5) !important; /* Chữ mờ đi để nhường sân khấu cho tab đang chọn */
+    font-weight: 500 !important;
+    padding: 8px 20px !important;
+    margin: 0 4px !important;
+    transition: all 0.3s ease !important;
+}
+
+/* 4. Hiệu ứng khi lướt chuột qua Tab bình thường */
+ytmusic-tabs#tabs .tab:not(.selected):hover {
+    background-color: rgba(255, 255, 255, 0.08) !important; /* Sáng nhẹ lên khi di chuột */
+    border-radius: 10px !important;
+    color: #ffffff !important;
 }
 
 /* ========================================================== */
@@ -708,8 +914,8 @@ ytmusic-player[player-ui-state="FULLSCREEN"],
 ytmusic-player-page[player-fullscreened] #player.ytmusic-player-page {
     /* Ép tắt mọi animation đang chạy lỡ dở từ miniplayer/mở player để tránh xung đột */
     animation: none !important; 
-    transition: max-width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s,
-                opacity 0.4s ease 0.3s !important; 
+    transition: max-width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s,
+                opacity 0.4s ease 0.2s !important; 
     will-change: max-width, opacity; 
 }
 
@@ -726,6 +932,100 @@ ytmusic-player-page[mini-player-enabled]:not([player-page-open]):not([player-ful
     animation: mp-shrink 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
     transition: none !important; 
     will-change: transform, opacity;
+}
+/* ========================== ARTIST PAGE ========================== */
+
+ytmusic-immersive-header-renderer {
+  background: var(--ytmusic-app); /* Biến mặc định của YT Music, giữ nguyên để không lỗi giao diện web */
+}
+
+ytmusic-immersive-header-renderer .image {
+  margin-left: 0 !important;
+  opacity: 0.8;
+  filter: brightness(0.95);
+}
+
+.description.ytmusic-immersive-header-renderer {
+  color: white;
+}
+
+ytmusic-toggle-button-renderer yt-formatted-string.ytmusic-toggle-button-renderer {
+  color: white;
+}
+
+ytmusic-immersive-header-renderer[is-description-expanded] .image {
+  filter: brightness(0.55);
+}
+
+/* Artist Header */
+.image.ytmusic-immersive-header-renderer {
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  mask-repeat: no-repeat;
+  mask-size: 100%;
+}
+
+.ytmusic-browse-response .content-container-wrapper,
+.content-container-wrapper .gradient-container {
+  background: transparent !important;
+}
+
+/* Sub Button */
+ytmusic-subscribe-button-renderer {
+  --ytmusic-subscribe-button-outline-color: transparent;
+  --ytmusic-subscribe-button-color: white;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  border: transparent;
+}
+
+ytmusic-subscribe-button-renderer:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+ytmusic-subscribe-button-renderer[is-subscribed] {
+  --ytmusic-subscribe-button-outline-color: transparent;
+  --ytmusic-subscribe-button-color: white;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: transparent;
+}
+
+ytmusic-subscribe-button-renderer[is-subscribed]:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Unsub Confirm */
+yt-confirm-dialog-renderer[dialog][dialog][dialog] {
+  --ytd-user-comment-color: white;
+  background: transparent;
+}
+
+ytmusic-popup-container tp-yt-paper-dialog.ytmusic-popup-container[role=dialog] {
+  outline: none !important;
+}
+
+/* Shuffle and Radio Button */
+.yt-spec-button-shape-next--mono.yt-spec-button-shape-next--filled {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: transparent;
+  border-radius: 16px;
+}
+
+.yt-spec-button-shape-next--mono.yt-spec-button-shape-next--filled:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border: transparent;
+}
+
+.yt-spec-button-shape-next--mono.yt-spec-button-shape-next--filled .yt-icon-shape {
+  color: white;
+}
+
+/* User Page */
+ytmusic-subscribe-button-renderer.ytmusic-visual-header-renderer {
+  background: none;
 }
 `;
 

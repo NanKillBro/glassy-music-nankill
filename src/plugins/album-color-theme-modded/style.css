@@ -44,17 +44,6 @@ ytmusic-fullbleed-thumbnail-renderer img {
   -webkit-mask: linear-gradient(to bottom, #000 0%, #000 50%, transparent 100%);
 }
 
-/* --- XÓA: Đã xóa đoạn .background-gradient.style-scope set var(--ytmusic-background) 
-   Lý do: Đây là thủ phạm chính khiến nền bị đổi màu đặc --- */
-
-
-/* --- GIỮ LẠI: Fix nền ô tìm kiếm --- 
-   Chỉ định ô tìm kiếm dùng màu đen mờ của theme (var(--ytmusic-color-black3)) 
-   thay vì màu mặc định --- */
-ytmusic-search-box[is-bauhaus-sidenav-enabled] {
-  --ytmusic-search-background: var(--ytmusic-color-black3) !important;
-}
-
 
 /* --- QUAN TRỌNG: STYLE THANH TUA NHẠC (SEEKBAR) --- 
    Giữ lại đoạn này để thanh tua nhạc có màu gradient đẹp theo bìa album 
@@ -63,4 +52,18 @@ ytmusic-search-box[is-bauhaus-sidenav-enabled] {
   --paper-slider-active-color: linear-gradient(to right, var(--paper-progress-active-color-1) 80%, var(--paper-progress-active-color-2) 100%) !important;
   --paper-slider-knob-color: var(--paper-progress-active-color-1) !important;
   --paper-slider-knob-start-color: var(--paper-progress-active-color-2) !important;
+}
+
+tp-yt-paper-toast {
+  color: #ffffff !important;
+}
+
+tp-yt-paper-toast yt-formatted-string,
+tp-yt-paper-toast .text.ytmusic-snackbar-renderer {
+  color: #ffffff !important;
+}
+
+/* Đổi màu chữ của nút bấm (ví dụ: nút Hoàn tác / Undo) trong popup */
+tp-yt-paper-toast tp-yt-paper-button {
+  color: rgba(255, 255, 255, 0.8) !important;
 }
