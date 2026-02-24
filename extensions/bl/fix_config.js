@@ -1,9 +1,9 @@
 // Dán CSS theme "cucu" của bạn vào giữa 2 dấu huyền (`) ở dưới
 const MY_CUSTOM_CSS = `
 /* =================================================================================================================*/
-/* MERGED THEME V17: Some UI Update                                                                                 */
+/* MERGED THEME V17: Major UI Update                                                                                */
 /* Adds: More rounded corner, more blur, more smooth animation,...                                                  */
-/* Fixes: Artist Page                                                                                               */
+/* Fixes: Artist Page, Podcast Page,...                                                                             */
 /* Based on: Dynamic Background (by chengg), Big Blurry Slow Lyrics for TV (by zobiron), Luxurious Glass (by SKMJi) */
 /* Made by: Gemini 3 Pro and NanKill                                                                                */
 /* ================================================================================================================ */
@@ -473,10 +473,13 @@ tp-yt-paper-listbox.ytmusic-menu-popup-renderer {
     background: transparent;
 }
 
-/* Gộp cả 3 loại bảng vào chung một thuộc tính */
+/* Gộp cả 6 loại bảng vào chung một thuộc tính */
 ytmusic-add-to-playlist-renderer,
 ytmusic-unified-share-panel-renderer,
-ytmusic-dialog {
+ytmusic-dialog,
+ytmusic-engagement-panel-section-list-renderer,
+tp-yt-paper-dialog:has(yt-confirm-dialog-renderer),
+tp-yt-paper-dialog:has(ytmusic-dismissable-dialog-renderer) {
   /* Nền đen trong suốt & hiệu ứng mờ */
   background-color: rgba(15, 15, 15, 0.5) !important;
   backdrop-filter: blur(15px) !important;
@@ -486,24 +489,73 @@ ytmusic-dialog {
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   border-radius: 16px !important;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
-
+  
   /* Ép bảng luôn nằm giữa màn hình (ghi đè inline CSS của YouTube) */
   position: fixed !important;
   top: 50% !important;
   left: 50% !important;
   margin: 0 !important; /* Xóa margin thừa nếu có */
-  
+
   /* Gọi animation xuất hiện */
   animation: popupXuatHien 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
 }
-/* Xóa nền thừa của trang cài đặt và phần nội dung của dialog */
+
+/* Xóa nền thừa */
 ytmusic-settings-page,
 ytmusic-dialog .content,
 ytmusic-dialog #content,
-ytmusic-unified-share-panel-renderer #contents {
+ytmusic-unified-share-panel-renderer #contents,
+ytmusic-playlist-form,
+ytmusic-playlist-form .content,
+ytmusic-playlist-form #general-pane,
+ytmusic-playlist-form #collaborate-pane,
+ytmusic-playlist-form tp-yt-iron-pages,
+tp-yt-paper-listbox ytmusic-dropdown-item-renderer,
+tp-yt-paper-listbox tp-yt-paper-item,
+tp-yt-paper-listbox tp-yt-paper-item.menu-item,
+yt-confirm-dialog-renderer,
+ytmusic-dismissable-dialog-renderer,
+ytmusic-dismissable-dialog-renderer #metadata,
+ytmusic-dismissable-dialog-renderer .top-bar,
+ytmusic-multi-select-menu-renderer #container,
+ytmusic-multi-select-menu-renderer #items,
+ytmusic-multi-select-menu-renderer ytmusic-menu-title-renderer,
+ytmusic-background-promo-renderer,
+ytmusic-offline-item-section-renderer,
+ytmusic-item-section-renderer #items.ytmusic-item-section-renderer {
   background: transparent !important;
   background-color: transparent !important;
 }
+
+/* Triệt tiêu nền xám của bảng Engagement Panel và các thành phần con */
+ytmusic-engagement-panel-section-list-renderer,
+ytmusic-engagement-panel-title-header-renderer,
+playlist-collaboration-view-model,
+content-list-item-view-model,
+.ytContentListItemViewModelContentListItemWrapper,
+#header.ytmusic-engagement-panel-section-list-renderer,
+#content.ytmusic-engagement-panel-section-list-renderer,
+.scrollable-content.ytmusic-engagement-panel-section-list-renderer {
+  background: transparent !important;
+  background-color: transparent !important;
+  /* Ghi đè các biến màu hệ thống của YouTube */
+  --ytmusic-background: transparent !important;
+  --yt-spec-brand-background-primary: transparent !important;
+  --yt-spec-general-background-a: transparent !important;
+}
+
+/* Xử lý nền của Avatar và các phần tử nhỏ hơn */
+yt-avatar-shape,
+.yt-spec-avatar-shape,
+.yt-spec-avatar-shape--avatar-size-extra-large {
+  background: transparent !important;
+}
+
+ytmusic-engagement-panel-title-header-renderer #header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; /* Tạo đường kẻ mờ ngăn cách header */
+  background: transparent !important;
+}
+
 /* Animation xuất hiện */
 @keyframes popupXuatHien {
   0% {
@@ -526,16 +578,6 @@ tp-yt-paper-item.category-menu-item:hover {
   background-color: rgba(255, 255, 255, 0.08) !important; 
 }
 
-/* Xóa màu nền đặc của các thành phần bên trong bảng tạo playlist */
-ytmusic-playlist-form,
-ytmusic-playlist-form .content,
-ytmusic-playlist-form #general-pane,
-ytmusic-playlist-form #collaborate-pane,
-ytmusic-playlist-form tp-yt-iron-pages {
-  background: transparent !important;
-  background-color: transparent !important;
-}
-
 /* Áp dụng nền kính mờ cho các hộp thoại thả xuống (Quyền riêng tư, Chất lượng âm thanh...) */
 tp-yt-iron-dropdown .dropdown-content,
 tp-yt-paper-listbox.dropdown-content {
@@ -545,14 +587,6 @@ tp-yt-paper-listbox.dropdown-content {
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   border-radius: 12px !important; /* Bo góc 12px cho menu nhỏ nhắn hơn */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
-}
-
-/* 1. Xóa nền xám mặc định của các dòng lựa chọn bên trong dropdown */
-tp-yt-paper-listbox ytmusic-dropdown-item-renderer,
-tp-yt-paper-listbox tp-yt-paper-item,
-tp-yt-paper-listbox tp-yt-paper-item.menu-item {
-  background: transparent !important;
-  background-color: transparent !important;
 }
 
 /* 2. Hiệu ứng sáng lên khi di chuột qua (Hover) */
@@ -578,36 +612,20 @@ tp-yt-paper-listbox tp-yt-paper-item:focus {
    2. BẢNG THÔNG TIN BÀI HÁT (Credits)
    ========================================= */
 
-/* Ép hiệu ứng kính mờ, bo góc và ép căn giữa cho thẻ bọc ngoài cùng */
-tp-yt-paper-dialog:has(yt-confirm-dialog-renderer),
-tp-yt-paper-dialog:has(ytmusic-dismissable-dialog-renderer) {
-  /* Nền đen kính mờ */
-  background-color: rgba(15, 15, 15, 0.5) !important;
-  backdrop-filter: blur(15px) !important;
-  -webkit-backdrop-filter: blur(15px) !important;
-  
-  /* Viền và khối 3D */
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
-
-  /* Ghi đè tọa độ tuyệt đối (top, left) cứng nhắc do JavaScript của web tự tạo ra */
-  position: fixed !important;
-  top: 50% !important;
-  left: 50% !important;
-  margin: 0 !important;
-  
-  /* Gọi animation xuất hiện (dùng chung @keyframes cũ) */
-  animation: popupXuatHien 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+/* Áp dụng cho bảng Sắp xếp và Chọn quốc gia */
+ytmusic-multi-select-menu-renderer {
+  background-color: transparent !important;
 }
 
-/* Làm trong suốt màu nền đặc mặc định của các thẻ con bên trong */
-yt-confirm-dialog-renderer,
-ytmusic-dismissable-dialog-renderer,
-ytmusic-dismissable-dialog-renderer #metadata,
-ytmusic-dismissable-dialog-renderer .top-bar {
-  background: transparent !important;
+/* Làm trong suốt các dòng item đơn lẻ */
+ytmusic-multi-select-menu-item-renderer,
+ytmusic-multi-select-menu-item-renderer button {
   background-color: transparent !important;
+}
+
+/* Hiệu ứng khi di chuột qua các mục chọn (Highlight) */
+ytmusic-multi-select-menu-item-renderer:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 /* Bo góc cho toàn bộ khung ảnh Album/Playlist ở Trang chủ */
@@ -668,7 +686,7 @@ ytmusic-tabs#tabs {
     /* 1. Thu gọn và căn giữa */
     width: 50% !important;  /* Tự co lại vừa khít với các tab bên trong */
     margin: 10px auto 0 auto !important;      /* Đẩy thanh tab ra giữa màn hình */
-    top: 74px !important;
+    top: calc(var(--menu-bar-height, 0px) + 100px) !important;
 
     /* 2. Bo tròn và hiệu ứng kính mờ (cũ) */
     border-radius: 16px !important; 
@@ -1026,6 +1044,73 @@ ytmusic-popup-container tp-yt-paper-dialog.ytmusic-popup-container[role=dialog] 
 /* User Page */
 ytmusic-subscribe-button-renderer.ytmusic-visual-header-renderer {
   background: none;
+}
+
+/* ========================== PODCAST ========================== */
+
+ytmusic-player-page[player-fullscreened] ytmusic-description-shelf-renderer {
+  display: none;
+}
+
+ytmusic-multi-row-list-item-renderer[is-detailed-view] {
+  --ytmusic-list-item-height: 182px;
+  --ytmusic-multi-row-list-item-thumbnail-size: 80px;
+}
+
+/* Podcast Header */
+ytmusic-visual-header-renderer[has-banner-image] .gradient-container.ytmusic-visual-header-renderer {
+  background: transparent;
+}
+
+.image.ytmusic-visual-header-renderer {
+  mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  mask-repeat: no-repeat;
+  mask-size: 100%;
+}
+
+/* Podcast Hover */
+.thumbnail-wrapper.ytmusic-multi-row-list-item-renderer {
+  position: relative;
+  /* Radius art mặc định: 8px */
+  border-radius: 8px;
+}
+
+ytmusic-multi-row-list-item-renderer.ytmusic-shelf-renderer .thumbnail-overlay {
+  aspect-ratio: 16 / 9;
+  top: auto;
+  bottom: auto;
+  height: auto;
+}
+
+.menu.ytmusic-multi-row-list-item-renderer {
+  background: transparent !important;
+}
+
+ytmusic-responsive-header-renderer ytmusic-toggle-button-renderer.ytmusic-responsive-header-renderer {
+  /* Button color: rgba(255, 255, 255, 0.1) */
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: transparent !important;
+}
+
+/* Podcast Focused */
+ytmusic-multi-row-list-item-renderer[play-button-state] {
+  /* Radius highlight big: 12px */
+  border-radius: 12px;
+}
+
+ytmusic-multi-row-list-item-renderer.ytmusic-shelf-renderer {
+  border-bottom: 0 !important;
+}
+
+/* Progress Bar */
+.foreground-bar.ytmusic-playback-progress-renderer {
+  /* Accent color: white */
+  background: white;
+}
+
+.subtitle.ytmusic-multi-row-list-item-renderer {
+  /* Text color 2: rgba(white, 0.7) */
+  color: rgba(255, 255, 255, 0.7);
 }
 `;
 
