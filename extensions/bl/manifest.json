@@ -81,7 +81,7 @@
         "*://music.youtube.com/*"
       ],
       "js": [
-        "script.js", "fix_config.js"
+        "script.js", "mergetheme.js", "fix.js"
       ],
       "run_at": "document_end",
       "world": "MAIN",
