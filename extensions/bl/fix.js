@@ -224,83 +224,200 @@
 
 /**
  * ════════════════════════════════════════════════════════════════════════
- *  HOW BETTERLYRICS SCROLLS  (animationEngine.ts)
+ *  SPRING SCROLL v5.1 — MutationObserver-based transform intercept + perf
  * ════════════════════════════════════════════════════════════════════════
  *
- *  FLIP technique:
- *   1. style.transition = "none"
- *   2. style.transform  = `translate(0, ${delta}px)`  ← snap to OLD visual pos
- *   3. reflow()
- *   4. style.transition = ""                           ← restore CSS transition
- *   5. style.transform  = "translate(0, 0)"            ← CSS animates delta → 0
- *   6. tabRenderer.scrollTop = newPos                  ← actual DOM scroll
+ *  v5 thay Object.defineProperty (không hoạt động trong userscript sandbox)
+ *  bằng MutationObserver theo dõi style attribute trên .blyrics-container.
  *
- *  BL also reads `getComputedStyle(el).transitionDuration` after step 3
- *  to throttle how often it allows a new scroll:
- *    nextScrollAllowedTime = transitionDurationMs + Date.now() + 20
+ *  Khi BetterLyrics set style.transform (FLIP scroll):
+ *    1. Observer bắt mutation, đọc translateY delta
+ *    2. Zero-out transform ngay lập tức
+ *    3. Gọi applyStagger(delta) → spring animation
+ *
+ *  Fix chính cho bug giật khi đổi bài:
+ *   • BL tạo container MỚI mỗi bài (replaceChildren trên wrapper)
+ *   • Script detect container mới qua body MutationObserver
+ *   • Khi container mới xuất hiện → cleanup springs cũ, attach observer mới
  *
  * ════════════════════════════════════════════════════════════════════════
- *  WHAT WE DO
- * ════════════════════════════════════════════════════════════════════════
- *
- *  • Shadow style.transform on the container instance (defineProperty).
- *    Step 2 (non-zero) → capture delta, write translate(0,0) instead.
- *    Step 5 (reset 0)  → fire per-line stagger with the saved delta.
- *
- *  • DO NOT touch --blyrics-lyric-scroll-duration.
- *    BL reads the resulting transition-duration to throttle re-scrolls.
- *    If we zero it out, BL re-scrolls every 20 ms → position drift.
- *
- *  • For each line we play a WAAPI translateY(delta → 0) with composite:'add'
- *    and an increasing delay, creating the Youly-style wave.
- *    While the WAAPI is running we set `transition-property: opacity, filter`
- *    inline to stop the user's CSS `transition: transform 1.66s` from
- *    fighting our animation and causing a snap when WAAPI finishes.
  */
 
 (function () {
   'use strict';
 
-  /* ─── CONFIG ──────────────────────────────────────────────────────── */
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   *  SPRING SOLVER — damped harmonic oscillator (ported from AMLL)
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+  class Spring {
+    constructor(position = 0) {
+      this.pos = position;           // current position
+      this.target = position;        // target position
+      this._time = 0;                // elapsed time for current solver
+      this._solver = () => position; // position(t) function
+      this._getV = () => 0;         // velocity(t) function
+
+      // Spring parameters (tuned to feel like AMLL)
+      this.stiffness = 120;  // độ cứng lò xo    (k)
+      this.damping = 18;   // độ giảm chấn      (c)
+      this.mass = 1;    // khối lượng         (m)
+    }
+
+    /** Tạo lại solver khi target hoặc trạng thái thay đổi */
+    _resetSolver() {
+      const curV = this._getV(this._time);
+      this._time = 0;
+      this._solver = _solveSpring(
+        this.pos, curV, this.target,
+        this.stiffness, this.damping, this.mass
+      );
+      this._getV = _derivative(this._solver);
+    }
+
+    /** Đã đến target chưa? */
+    arrived() {
+      return (
+        Math.abs(this.target - this.pos) < 0.1 &&
+        Math.abs(this._getV(this._time)) < 0.1
+      );
+    }
+
+    /** Snap ngay (không animate) */
+    setPosition(p) {
+      this.pos = p;
+      this.target = p;
+      this._time = 0;
+      this._solver = () => p;
+      this._getV = () => 0;
+    }
+
+    /** Đặt target mới — velocity được bảo toàn tự động */
+    setTarget(newTarget) {
+      if (Math.abs(newTarget - this.target) < 0.01) return;
+      this.target = newTarget;
+      this._resetSolver();
+    }
+
+    /**
+     * Dịch chuyển position thêm delta KHÔNG xóa velocity.
+     * Dùng khi scroll mới đến giữa chừng animation.
+     */
+    nudge(delta) {
+      this.pos += delta;
+      this._resetSolver(); // rebuilds solver from new pos, preserving velocity
+    }
+
+    /** Gọi mỗi frame — delta tính bằng giây */
+    update(dt) {
+      this._time += dt;
+      this.pos = this._solver(this._time);
+
+      if (this.arrived()) {
+        this.setPosition(this.target);
+      }
+      return this.pos;
+    }
+  }
+
+  /**
+   * Giải phương trình spring (damped harmonic oscillator).
+   * Trả về hàm position(t) với input t tính bằng giây.
+   *
+   * Xử lý 2 trường hợp:
+   *  - Overdamped / critically damped: c² ≥ 4mk
+   *  - Underdamped: c² < 4mk (có overshoot — đây là trường hợp mong muốn)
+   */
+  function _solveSpring(from, velocity, to, stiffness, damping, mass) {
+    const delta = to - from;
+
+    // Check damping ratio
+    if (damping * damping >= 4.0 * stiffness * mass) {
+      // Overdamped / critically damped — no oscillation
+      const angFreq = -Math.sqrt(stiffness / mass);
+      const leftover = -angFreq * delta - velocity;
+      return (t) => {
+        if (t < 0) return from;
+        return to - (delta + t * leftover) * Math.exp(t * angFreq);
+      };
+    }
+
+    // Underdamped — oscillates around target (overshoot!)
+    const dampFreq = Math.sqrt(4.0 * mass * stiffness - damping * damping);
+    const leftover = (damping * delta - 2.0 * mass * velocity) / dampFreq;
+    const dfm = (0.5 * dampFreq) / mass;
+    const dm = -(0.5 * damping) / mass;
+
+    return (t) => {
+      if (t < 0) return from;
+      return (
+        to -
+        (Math.cos(t * dfm) * delta + Math.sin(t * dfm) * leftover) *
+        Math.exp(t * dm)
+      );
+    };
+  }
+
+  /**
+   * Numerical derivative — dùng để tính velocity từ position function.
+   * (Giống AMLL: packages/core/src/utils/derivative.ts)
+   */
+  function _derivative(fn) {
+    const h = 0.001;
+    return (t) => (fn(t + h) - fn(t - h)) / (2 * h);
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   *  CONFIG
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   const CFG = {
-    staggerStep:  30,    // ms of extra delay per line ahead of active
-    duration:    800,    // ms base animation duration
-    lookBehind:    8,    // lines before active to include in wave
-    lookAhead:    8,    // lines after  active to include in wave
-    minDelta:      2,    // px: ignore micro-scrolls
-    easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+    staggerStep: 30,   // ms of extra delay per line ahead of active
+    lookBehind: 7,   // lines behind active to include in wave
+    lookAhead: 7,   // lines after active to include in wave
+    minDelta: 2,   // px: ignore micro-scrolls
+
+    // Spring tuning (underdamped for nice overshoot)
+    stiffness: 120,   // lò xo cứng hơn → nhanh hơn
+    damping: 18,   // giảm chấn thấp → nhiều overshoot hơn
+    mass: 1,   // khối lượng
   };
 
-  /* ─── STATE ───────────────────────────────────────────────────────── */
-  let container    = null;
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   *  STATE
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  let container = null;
   let pendingDelta = 0;
-  let intercepted  = false;
-  let domObserver  = null;
-  const lineAnims  = new WeakMap();  // line el → running Animation
-// Thêm 2 dòng này để quản lý trạng thái bật/tắt
+  let domObserver = null;
+  let styleObserver = null;   // MutationObserver trên container style
   let isScriptEnabled = true;
-  let resizeTimer     = null;
+  let resizeTimer = null;
+  let suppressTransform = false; // flag để tránh loop khi ta zero-out transform
+  let lastFlipTime = 0;           // timestamp lần cuối style observer xử lý FLIP
 
-/* ─── HELPERS ─────────────────────────────────────────────────────── */
+  // Per-line spring data: WeakMap<Element, { spring: Spring, staggerRemaining: number }>
+  const lineSprings = new WeakMap();
+
+  // rAF loop state
+  let rafId = null;
+  let lastFrameTs = 0;
+  let activeLines = new Set(); // lines currently being animated
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   *  HELPERS
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   function setScrollOverride(enabled) {
     if (!container) return;
     if (enabled) {
-      // Chỉ khi script hoạt động mới ép về 0ms
       container.style.setProperty('--blyrics-lyric-scroll-duration', '0ms', 'important');
     } else {
-      // Khi resize, gỡ bỏ hoàn toàn để BetterLyrics dùng transition mặc định (thường là 1.66s)
       container.style.removeProperty('--blyrics-lyric-scroll-duration');
     }
   }
 
-  /* ─── HELPERS ─────────────────────────────────────────────────────── */
-
   function parseTranslateY(val) {
     if (!val || val === 'none') return 0;
-    // translate(Xpx, Ypx)
     const m = val.match(/translate\(\s*-?[\d.]+px\s*,\s*(-?[\d.]+)px\s*\)/);
     if (m) return parseFloat(m[1]);
-    // translateY(Ypx)
     const m2 = val.match(/translateY\(\s*(-?[\d.]+)px\s*\)/);
     if (m2) return parseFloat(m2[1]);
     return 0;
@@ -308,155 +425,275 @@
 
   function getLines() {
     if (!container) return [];
-    // Thêm .blyrics-footer vào danh sách
     return Array.from(container.querySelectorAll('.blyrics--line, .blyrics-footer'));
   }
 
-  /**
-   * Find the active line index.
-   * BetterLyrics adds blyrics--animating to both the line div AND its
-   * word-level child spans (lineData and parts both get the class).
-   * Checking the line div directly is sufficient and cheap.
-   */
   function getRefIndex(lines) {
     for (let i = 0; i < lines.length; i++) {
       if (lines[i].classList.contains('blyrics--animating')) return i;
     }
-    // pre-animating: line is set up but hasn't fired yet (early-scroll window)
     for (let i = 0; i < lines.length; i++) {
       if (lines[i].classList.contains('blyrics--pre-animating')) return i;
     }
-    // scroll-active class (CURRENT_LYRICS_CLASS in BL source)
     for (let i = 0; i < lines.length; i++) {
       if (lines[i].classList.contains('blyrics-current-lyric')) return i;
     }
     return Math.floor(lines.length / 5);
   }
 
-  /* ─── STAGGER ENGINE ──────────────────────────────────────────────── */
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   *  getOrCreateSpring — lấy hoặc tạo Spring cho một dòng
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function getOrCreateSpring(line) {
+    let data = lineSprings.get(line);
+    if (!data) {
+      data = {
+        spring: new Spring(0),
+        releaseDelay: 0, // ms trước khi spring bắt đầu chạy về 0
+        released: true,  // đã gửi target = 0 cho spring chưa?
+      };
+      data.spring.stiffness = CFG.stiffness;
+      data.spring.damping = CFG.damping;
+      data.spring.mass = CFG.mass;
+      lineSprings.set(line, data);
+    }
+    return data;
+  }
 
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   *  rAF ANIMATION LOOP — trái tim của spring engine
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function springLoop(timestamp) {
+    if (!isScriptEnabled || activeLines.size === 0) {
+      rafId = null;
+      lastFrameTs = 0;
+      return;
+    }
+
+    if (lastFrameTs === 0) lastFrameTs = timestamp;
+    const dtMs = Math.min(timestamp - lastFrameTs, 32); // cap at ~30fps min
+    const dt = dtMs / 1000; // seconds
+    lastFrameTs = timestamp;
+
+    const toRemove = [];
+
+    for (const line of activeLines) {
+      const data = lineSprings.get(line);
+      if (!data) { toRemove.push(line); continue; }
+
+      // Handle stagger release delay:
+      // Dòng đã được offset ngay lập tức, nhưng chưa cho spring chạy về 0
+      if (!data.released) {
+        data.releaseDelay -= dtMs;
+        if (data.releaseDelay <= 0) {
+          data.released = true;
+          data.spring.setTarget(0);
+        } else {
+          // Vẫn giữ offset tĩnh, chưa animate
+          continue;
+        }
+      }
+
+      // Update spring
+      const y = data.spring.update(dt);
+      // Round to 0.5px (sub-pixel, visually identical) — avoids toFixed() string alloc
+      line.style.translate = `0px ${(y * 2 + 0.5 | 0) / 2}px`;
+
+      // Remove when arrived
+      if (data.spring.arrived()) {
+        line.style.translate = '';
+        line.style.willChange = '';
+        toRemove.push(line);
+      }
+    }
+
+    for (const line of toRemove) {
+      activeLines.delete(line);
+    }
+
+    if (activeLines.size > 0) {
+      rafId = requestAnimationFrame(springLoop);
+    } else {
+      rafId = null;
+      lastFrameTs = 0;
+    }
+  }
+
+  function ensureLoopRunning() {
+    if (rafId === null && activeLines.size > 0) {
+      lastFrameTs = 0;
+      rafId = requestAnimationFrame(springLoop);
+    }
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   *  APPLY STAGGER — khởi tạo spring target cho mỗi dòng
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   function applyStagger(delta) {
     if (!isScriptEnabled || Math.abs(delta) < CFG.minDelta) return;
 
     const lines = getLines();
     if (!lines.length) return;
 
-    const ref   = getRefIndex(lines);
+    const ref = getRefIndex(lines);
     const start = Math.max(0, ref - CFG.lookBehind);
-    const end   = Math.min(lines.length, ref + CFG.lookAhead);
+    const end = Math.min(lines.length, ref + CFG.lookAhead);
 
     let aheadCount = 0;
 
-for (let i = start; i < end; i++) {
-      const line  = lines[i];
+    for (let i = start; i < end; i++) {
+      const line = lines[i];
       const delay = i >= ref ? (aheadCount++) * CFG.staggerStep : 0;
 
-      // Hủy animation cũ nếu có
-      lineAnims.get(line)?.cancel();
+      const data = getOrCreateSpring(line);
 
-      // Dùng thuộc tính 'translate' độc lập thay vì 'transform'
-      // JS lo việc cuộn, CSS lo việc scale -> 2 bên không đánh nhau
-      const anim = line.animate(
-        [
-          { translate: `0px ${delta}px` },
-          { translate: `0px 0px`        },
-        ],
-        {
-          duration:  CFG.duration,
-          delay,
-          fill:      'backwards',
-          easing:    CFG.easing,
-          // Không cần composite: 'add' nữa vì translate độc lập với transform
+      if (activeLines.has(line)) {
+        // Đang animate → dịch thêm delta, GIỮ velocity hiện tại
+        data.spring.nudge(delta);
+        // Cập nhật visual ngay cho dòng đang chạy
+        line.style.translate = `0px ${(data.spring.pos * 2 + 0.5 | 0) / 2}px`;
+      } else {
+        // Bắt đầu mới:
+        // 1. Snap position = delta VÀ set translate ngay lập tức
+        //    → dòng trông như không nhúc nhích dù scrollTop đã thay đổi
+        data.spring.setPosition(delta);
+        line.style.willChange = 'translate';  // GPU compositing hint
+        line.style.translate = `0px ${delta}px`;  // OFFSET NGAY!
+
+        // 2. Stagger: delay rồi mới cho spring chạy về 0
+        if (delay > 0) {
+          data.released = false;
+          data.releaseDelay = delay;
+          // target chưa set → spring đứng yên tại delta
+        } else {
+          data.released = true;
+          data.spring.setTarget(0);
         }
-      );
+      }
 
-      lineAnims.set(line, anim);
-
-      const cleanup = () => {
-        if (lineAnims.get(line) === anim) {
-          lineAnims.delete(line);
-        }
-      };
-      anim.onfinish = cleanup;
-      anim.oncancel = cleanup;
+      activeLines.add(line);
     }
+
+    ensureLoopRunning();
   }
 
-  /* ─── FLIP INTERCEPTOR ────────────────────────────────────────────── */
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   *  STYLE OBSERVER — theo dõi BL's FLIP transform qua MutationObserver
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   *
+   *  BetterLyrics animationEngine.ts thực hiện FLIP scroll như sau:
+   *    1. style.transition = "none"
+   *    2. style.transform = "translate(0px, -120px)"   ← FLIP offset
+   *    3. reflow (void el.offsetHeight)
+   *    4. style.transition = ""                         ← restore transition
+   *    5. style.transform = "translate(0px, 0px)"       ← animate to 0
+   *    6. tabRenderer.scrollTop = scrollPos             ← actual scroll
+   *
+   *  Ta cần:
+   *    - Bắt step 2: lưu delta = parseTranslateY(transform)
+   *    - Bắt step 5: zero-out transform, gọi applyStagger(delta)
+   *
+   *  MutationObserver trên attributeFilter: ['style'] sẽ fire cho MỌI
+   *  thay đổi style attribute, kể cả từ inline JS (style.transform = ...).
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function installStyleObserver(el) {
+    // Disconnect observer cũ nếu có
+    styleObserver?.disconnect();
 
-  function interceptTransform(el) {
-    if (intercepted) return;
+    // Cache last transform to skip no-change mutations
+    // (BL thay đổi nhiều style properties khác ngoài transform)
+    let lastTransform = el.style.transform || '';
 
-    const proto = CSSStyleDeclaration.prototype;
-    const desc  = Object.getOwnPropertyDescriptor(proto, 'transform');
+    styleObserver = new MutationObserver(() => {
+      if (!isScriptEnabled || suppressTransform) return;
 
-    if (!desc || typeof desc.set !== 'function' || !desc.configurable) {
-      console.warn('[BL-Stagger] defineProperty unavailable — using scroll fallback');
-      useScrollFallback(el);
-      return;
-    }
+      // Early-exit nếu transform không thay đổi
+      const transformVal = el.style.transform;
+      if (transformVal === lastTransform) return;
+      lastTransform = transformVal;
 
-    let _writing = false;
+      const y = parseTranslateY(transformVal);
 
-    Object.defineProperty(el.style, 'transform', {
-      configurable: true,
-      enumerable:   desc.enumerable,
-      get() {
-        return desc.get.call(this);
-      },
-      set(value) {
-        if (!isScriptEnabled || _writing) {
-          desc.set.call(this, value);
-          return;
-        }
+      if (Math.abs(y) > CFG.minDelta) {
+        // FLIP Step 2 — BL vừa set offset transform (vd: translate(0px, -120px))
+        // Lưu delta, zero-out transform ngay
+        pendingDelta = y;
+        suppressTransform = true;
+        el.style.transform = 'translate(0px, 0px)';
+        lastTransform = 'translate(0px, 0px)';
+        suppressTransform = false;
+      } else if (pendingDelta !== 0) {
+        // FLIP Step 5 — BL set transform về 0, kích hoạt transition
+        // Chặn transition, zero-out, gọi spring
+        const delta = pendingDelta;
+        pendingDelta = 0;
 
-        const y = parseTranslateY(value);
+        suppressTransform = true;
+        el.style.transition = 'none';
+        el.style.transform = 'none';
+        lastTransform = 'none';
+        suppressTransform = false;
 
-        if (Math.abs(y) > CFG.minDelta) {
-          // ── FLIP Step 2 ───────────────────────────────────────────────
-          // BL snapping container to old visual position.
-          // Capture delta, write (0,0) instead → container never offsets.
-          pendingDelta = y;
-          _writing = true;
-          desc.set.call(this, 'translate(0px, 0px)');
-          _writing = false;
-
-        } else {
-          // ── FLIP Step 5 ───────────────────────────────────────────────
-          // BL releasing transform back to (0,0).
-          // Write normally, then fire stagger after scrollTop settles.
-          _writing = true;
-          desc.set.call(this, value);
-          _writing = false;
-
-          if (pendingDelta !== 0) {
-            const delta = pendingDelta;
-            pendingDelta = 0;
-            // rAF so tabRenderer.scrollTop (step 6) has already been committed.
-            requestAnimationFrame(() => applyStagger(delta));
-          }
-        }
-      },
+        applyStagger(delta);
+        lastFlipTime = Date.now();
+      }
     });
 
-    intercepted = true;
-    console.debug('[BL-Stagger] transform interceptor installed', el);
+    styleObserver.observe(el, {
+      attributes: true,
+      attributeFilter: ['style'],
+    });
+
+    console.debug('[BL-Spring] Style observer installed on', el);
   }
 
-  /* ─── SCROLL FALLBACK ─────────────────────────────────────────────── */
-  // Used only if defineProperty is unavailable (extremely unlikely on Chrome).
-  // Less accurate (can't prevent container FLIP) but still adds stagger.
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   *  SCROLL FALLBACK — dự phòng nếu style observer không bắt được
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  let scrollParent = null;
+  let scrollHandler = null;
+  let lastScrollTop = 0;
 
-  function useScrollFallback(el) {
-    const parent = findScrollParent(el);
-    if (!parent) return;
-    let lastScroll = parent.scrollTop;
-    parent.addEventListener('scroll', () => {
-      const cur   = parent.scrollTop;
-      const delta = cur - lastScroll;
-      lastScroll  = cur;
-      if (Math.abs(delta) > CFG.minDelta) applyStagger(delta);
-    }, { passive: true });
+  function installScrollFallback(el) {
+    // Remove handler cũ
+    removeScrollFallback();
+
+    scrollParent = findScrollParent(el);
+    if (!scrollParent) return;
+
+    lastScrollTop = scrollParent.scrollTop;
+
+    scrollHandler = () => {
+      const cur = scrollParent.scrollTop;
+      const delta = cur - lastScrollTop;
+      lastScrollTop = cur;
+
+      // Bỏ qua nếu:
+      // 1. Đang giữa FLIP sequence (style observer đang xử lý)
+      if (pendingDelta !== 0) return;
+
+      // 2. Scroll xảy ra ngay sau FLIP → là BL set scrollTop (programmatic)
+      //    Cho thời gian cooldown 150ms sau FLIP
+      if (Date.now() - lastFlipTime < 150) return;
+
+      // 3. User đang tự scroll (BL thêm class này khi user kéo tay)
+      if (container && container.classList.contains('blyrics-user-scrolling')) return;
+
+      // Chỉ fallback khi style observer không bắt được (edge case)
+      if (Math.abs(delta) > CFG.minDelta) {
+        applyStagger(delta);
+      }
+    };
+
+    scrollParent.addEventListener('scroll', scrollHandler, { passive: true });
+  }
+
+  function removeScrollFallback() {
+    if (scrollParent && scrollHandler) {
+      scrollParent.removeEventListener('scroll', scrollHandler);
+    }
+    scrollParent = null;
+    scrollHandler = null;
   }
 
   function findScrollParent(el) {
@@ -469,20 +706,28 @@ for (let i = start; i < end; i++) {
     return null;
   }
 
-  /* ─── CONTAINER LIFECYCLE ─────────────────────────────────────────── */
-
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   *  CONTAINER LIFECYCLE
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   function attach(el) {
     if (el === container) return;
 
-    if (container && intercepted) {
-      try { delete container.style.transform; } catch (_) {}
-    }
+    console.debug('[BL-Spring] Attaching to new container', el);
 
-    container    = el;
-    intercepted  = false;
+    // Dọn dẹp spring + observer cũ
+    cleanupAllSprings();
+
+    container = el;
     pendingDelta = 0;
-    interceptTransform(el);
-    setScrollOverride(true); // Bật override ngay khi tìm thấy container
+
+    // Cài style observer (thay thế Object.defineProperty)
+    installStyleObserver(el);
+
+    // Cài scroll fallback dự phòng
+    installScrollFallback(el);
+
+    // Override BL's smooth scroll duration
+    setScrollOverride(true);
   }
 
   function boot() {
@@ -490,46 +735,75 @@ for (let i = start; i < end; i++) {
     if (existing) attach(existing);
 
     domObserver?.disconnect();
+
+    // Debounce body observer: YTM fires hàng trăm mutations/s.
+    // Batch vào microtask thay vì querySelector mỗi mutation.
+    let domCheckQueued = false;
     domObserver = new MutationObserver(() => {
-      const el = document.querySelector('.blyrics-container');
-      if (el && el !== container) attach(el);
+      if (domCheckQueued) return;
+      domCheckQueued = true;
+      queueMicrotask(() => {
+        domCheckQueued = false;
+        const el = document.querySelector('.blyrics-container');
+        if (el && el !== container) {
+          console.debug('[BL-Spring] New container detected (song change)');
+          attach(el);
+        }
+      });
     });
     domObserver.observe(document.body, { childList: true, subtree: true });
   }
 
-  /* ─── SPA NAVIGATION ──────────────────────────────────────────────── */
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   *  CLEANUP HELPER
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function cleanupAllSprings() {
+    for (const line of activeLines) {
+      line.style.translate = '';
+    }
+    activeLines.clear();
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+    lastFrameTs = 0;
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   *  SPA NAVIGATION
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   window.addEventListener('yt-navigate-finish', () => {
-    container    = null;
-    intercepted  = false;
+    container = null;
     pendingDelta = 0;
+    styleObserver?.disconnect();
+    removeScrollFallback();
+    cleanupAllSprings();
     boot();
   });
 
-  /* ─── INIT ────────────────────────────────────────────────────────── */
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   *  INIT
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
   } else {
     boot();
   }
 
-
-/* ─── RESIZE RECOVERY ────────────────────────────────────────────── */
-window.addEventListener('resize', () => {
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   *  RESIZE RECOVERY
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  window.addEventListener('resize', () => {
     isScriptEnabled = false;
     pendingDelta = 0;
-    setScrollOverride(false); // Trả lại quyền scroll mượt cho BetterLyrics
-
-    // Dọn dẹp các hiệu ứng cũ đang chạy dở
-    getLines().forEach(line => {
-      lineAnims.get(line)?.cancel();
-      line.style.translate = '';
-    });
+    setScrollOverride(false);
+    cleanupAllSprings();
 
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
       isScriptEnabled = true;
-      setScrollOverride(true); // Kích hoạt lại hiệu ứng sau khi layout đã ổn định
-      console.debug('[BL-Stagger] Re-enabled after resize.');
-    }, 1500); // Đợi 1.5 giây để đảm bảo BetterLyrics đã cân chỉnh xong
+      setScrollOverride(true);
+      console.debug('[BL-Spring] Re-enabled after resize.');
+    }, 1500);
   });
 })();
