@@ -5,9 +5,6 @@
 [![GPLv3 License](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://git.nankill.xyz/nankill/youtube-music-nankill/src/branch/master/LICENSE)
 [![eslint code style](https://img.shields.io/badge/code_style-eslint-5ed9c7.svg?style=for-the-badge)](https://git.nankill.xyz/nankill/youtube-music-nankill/src/branch/master/eslint.config.mjs)
 [![Gitea Release](https://img.shields.io/gitea/v/release/nankill/youtube-music-nankill?gitea_url=https%3A%2F%2Fgit.nankill.xyz&include_prereleases&label=version&color=orange&style=for-the-badge)](https://git.nankill.xyz/nankill/youtube-music-nankill/releases)
-<a href="https://github.com/pear-devs/pear-desktop">
-  <img src="https://img.shields.io/badge/Original_Repo-pear--devs%2Fpear--desktop-blue?style=for-the-badge&logo=github" alt="Original Repo">
-</a>
 
 </div>
 
@@ -17,7 +14,7 @@
 
 ![Screenshot](web/image.png "Screenshot")
 <p>
-    This project is enhanced with AI assistance from <b>Gemini 3 Pro</b>.
+    This project is enhanced with AI assistance from <b>Gemini 3 Pro, Claude Opus 4.6</b>.
 </p>
 
 <hr>
@@ -39,7 +36,7 @@ Here are the key improvements and features added in this build:
 
 This version includes heavy visual customization. **It is not recommended for very old or low-end hardware.**
 - **Windows/Linux:** For the best experience at 1080p60, use a device with at least a **4-core CPU** and decent graphics (Intel UHD/Iris Xe or dedicated GPU). Dual-core CPUs may max out system resources.
-- **Mac:** Runs perfectly on Apple Silicon (> M1).
+- **Mac:** Runs perfectly on Apple Silicon (>M1).
 ---
 
 ### 🚀 How to use?
@@ -76,6 +73,7 @@ Since this is a custom build, you will need to build it yourself.
 - [Production Preview](#production-preview)
 - [Tests](#tests)
 - [License](#license)
+- [Credits](#credits--acknowledgements)
 - [FAQ](#faq)
 
 ## Themes
@@ -216,21 +214,35 @@ export default createPlugin({
   example in `sponsorblock` plugin.
 
 ## Build
+### 🛠️ Prerequisites
+Before you begin, ensure you have the following installed on your system:
+* **[Git](https://git-scm.com/downloads)**: Required to clone the repository.
+* **[Node.js](https://nodejs.org/en/download/)**: Please install the **latest version**. Older versions will likely cause build errors.
+* **[pnpm](https://pnpm.io/installation/)**: Follow this official guide to install `pnpm` globally on your machine.
+### 🚀 Build Steps
 
-1. Clone the repo
-2. Follow [this guide](https://pnpm.io/installation) to install `pnpm`
-3. Run `pnpm install --frozen-lockfile` to install dependencies
-4. Run `pnpm build:OS`
+1. **Clone the repository and navigate into the project folder:**
+```bash
+git clone https://git.nankill.xyz/nankill/youtube-music-nankill
+cd youtube-music-nankill
+```
 
-- `pnpm dist:win` - Windows
-- `pnpm dist:linux` - Linux (amd64)
-- `pnpm dist:linux:deb-arm64` - Linux (arm64 for Debian)
-- `pnpm dist:linux:rpm-arm64` - Linux (arm64 for Fedora)
-- `pnpm dist:mac` - macOS (amd64)
-- `pnpm dist:mac:arm64` - macOS (arm64)
+2. **Install dependencies:**
+Run the following command to cleanly install all required packages:
+```bash
+pnpm install --frozen-lockfile
+```
 
-Builds the app for macOS, Linux, and Windows,
-using [electron-builder](https://github.com/electron-userland/electron-builder).
+3. **Build the app for your Operating System:**
+Run the command that matches your target OS:
+* `pnpm dist:win` - Windows
+* `pnpm dist:linux` - Linux (amd64)
+* `pnpm dist:linux:deb-arm64` - Linux (arm64 for Debian)
+* `pnpm dist:linux:rpm-arm64` - Linux (arm64 for Fedora)
+* `pnpm dist:mac` - macOS (amd64)
+* `pnpm dist:mac:arm64` - macOS (arm64)
+
+Builds the app for macOS, Linux, and Windows, using [electron-builder](https://github.com/electron-userland/electron-builder).
 
 ### Building in devcontainer
 
@@ -260,6 +272,22 @@ Uses [Playwright](https://playwright.dev/) to test the app.
 
 - **GPL-3.0** © [nankill](https://git.nankill.xyz/nankill/youtube-music-nankill)
 - Based on [pear-desktop](https://github.com/pear-devs/pear-desktop) (MIT © pear-devs)
+
+## Credits / Acknowledgements
+
+This project is made possible thanks to the amazing work of the open-source community. A huge thank you to the original creators and contributors of the following projects:
+
+### Core Projects & Features
+* **[Pear Desktop](https://github.com/pear-devs/pear-desktop)**: The incredible base application that this fork is built upon.
+* **[Better Lyrics](https://github.com/better-lyrics/better-lyrics)**: For the fantastic enhanced lyrics integration.
+* **[Better Lyrics Shader](https://github.com/better-lyrics/shaders)**: For the beautiful visual effects and background shaders.
+* **[Youtube NonStop+](https://chromewebstore.google.com/detail/youtube-nonstop-ch%E1%BA%B7n-t%E1%BB%B1-%C4%91/fboblaiflnpfojmmnenhacobmckefmlh)**: The underlying logic used to bypass the "Video paused" prompts.
+
+### Theme Inspirations
+Special thanks to the following creators whose work deeply inspired the **"Merge Theme"**:
+* **[chengggit](https://github.com/chengggit)**: Inspiration from the *Dynamic Background*.
+* **zobiron**: Inspiration from the *Big Blurry Slow Lyrics for TV* concept.
+* **SKMJi**: Inspiration from the *Luxurious Glass* design.
 ## FAQ
 
 ### Why apps menu isn't showing up?
