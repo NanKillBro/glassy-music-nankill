@@ -1,7 +1,6 @@
 import { createPlugin } from '@/utils';
 import { t } from '@/i18n';
 
-import { injectRm3 } from './scripts/rm3';
 import { injectCpuTamer } from './scripts/cpu-tamer';
 
 export default createPlugin({
@@ -13,7 +12,6 @@ export default createPlugin({
     enabled: false,
   },
   renderer() {
-    injectRm3();
     injectCpuTamer();
   },
 });
