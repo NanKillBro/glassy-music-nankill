@@ -11,66 +11,63 @@ ytmusic-app-layout {
   /* fixes laggy list scrolling in large playlists */
   backface-visibility: hidden;
 }
+
 ytmusic-app-layout#layout {
   --ytmusic-nav-bar-offset: 0px;
 }
-ytmusic-app-layout > #content {
+
+ytmusic-app-layout>#content {
   padding-top: var(--menu-bar-height, 36px);
 }
 
-ytmusic-app-layout::-webkit-scrollbar{
+ytmusic-app-layout::-webkit-scrollbar {
   width: var(--ytmusic-scrollbar-width);
 }
-ytmusic-app-layout::-webkit-scrollbar-thumb{
+
+ytmusic-app-layout::-webkit-scrollbar-thumb {
   background-color: rgb(126, 126, 126);
 }
 
-ytmusic-app-layout > [slot='nav-bar'],
+ytmusic-app-layout>[slot='nav-bar'],
 #nav-bar-background.ytmusic-app-layout {
   top: var(--menu-bar-height, 36px) !important;
 }
+
 #nav-bar-divider.ytmusic-app-layout {
-  top: calc(
-    var(--ytmusic-nav-bar-height) + var(--menu-bar-height, 36px)
-  ) !important;
+  top: calc(var(--ytmusic-nav-bar-height) + var(--menu-bar-height, 36px)) !important;
 }
+
+ytmusic-nav-bar::before {
+  -webkit-app-region: no-drag !important;
+}
+
 ytmusic-app[is-bauhaus-sidenav-enabled] #guide-spacer.ytmusic-app,
 ytmusic-app[is-bauhaus-sidenav-enabled] #mini-guide-spacer.ytmusic-app {
-  margin-top: calc(
-    var(--ytmusic-nav-bar-height) + var(--menu-bar-height, 36px)
-  ) !important;
+  margin-top: calc(var(--ytmusic-nav-bar-height) + var(--menu-bar-height, 36px)) !important;
 }
 
 @media (max-width: 935px) {
   ytmusic-app[is-bauhaus-sidenav-enabled] #guide-spacer.ytmusic-app {
-    margin-top: calc(
-      var(--menu-bar-height, 36px)
-    ) !important;
+    margin-top: calc(var(--menu-bar-height, 36px)) !important;
   }
+
   ytmusic-app[is-bauhaus-sidenav-enabled] #mini-guide-spacer.ytmusic-app {
-    margin-top: calc(
-      var(--ytmusic-nav-bar-height) + var(--menu-bar-height, 36px)
-    ) !important;
+    margin-top: calc(var(--ytmusic-nav-bar-height) + var(--menu-bar-height, 36px)) !important;
   }
 }
 
-ytmusic-app-layout > [slot='player-page'] {
+ytmusic-app-layout>[slot='player-page'] {
   margin-top: var(--menu-bar-height);
-  height: calc(
-    100vh - var(--menu-bar-height) - var(--ytmusic-nav-bar-height) -
-      var(--ytmusic-player-bar-height)
-  ) !important;
+  height: calc(100vh - var(--menu-bar-height) - var(--ytmusic-nav-bar-height) - var(--ytmusic-player-bar-height)) !important;
 }
 
 ytmusic-guide-renderer {
-  height: calc(
-    100vh - var(--menu-bar-height) - var(--ytmusic-nav-bar-height)
-  ) !important;
+  height: calc(100vh - var(--menu-bar-height) - var(--ytmusic-nav-bar-height)) !important;
 }
 
 /* fix mini player behavior */
 ytmusic-app-layout ytmusic-player-page[is-mweb-modernization-enabled] .side-panel.ytmusic-player-page {
-  transform: translate(0, calc(var(--ytmusic-player-page-inner-height) - var(--ytmusic-player-page-tabs-header-height) - var(--ytmusic-player-page-player-bar-height) - var(--menu-bar-height, 32px) ));
+  transform: translate(0, calc(var(--ytmusic-player-page-inner-height) - var(--ytmusic-player-page-tabs-header-height) - var(--ytmusic-player-page-player-bar-height) - var(--menu-bar-height, 32px)));
 }
 
 /* ytm-bugs: see https://github.com/pear-devs/pear-desktop/issues/1737 */

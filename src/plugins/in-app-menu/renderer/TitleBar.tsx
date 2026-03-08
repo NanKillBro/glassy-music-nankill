@@ -71,6 +71,20 @@ const titleStyle = cacheNoArgs(
   `,
 );
 
+const topDragAreaStyle = cacheNoArgs(
+  () => css`
+    -webkit-app-region: drag;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 32px;
+    z-index: 9999998;
+    background: transparent;
+  `,
+);
+
+
 const separatorStyle = cacheNoArgs(
   () => css`
     min-height: 1px;
@@ -331,121 +345,125 @@ export const TitleBar = (props: TitleBarProps) => {
   });
 
   return (
-    <nav
-      class={titleStyle()}
-      data-macos={props.isMacOS}
-      data-show={mouseY() < 32}
-      data-ytmd-main-panel={true}
-      id={'ytmd-title-bar-main-panel'}
-    >
-      <IconButton
-        onClick={() => setCollapsed(!collapsed())}
-        style={{
-          'border-top-left-radius': '4px',
-        }}
+    <>
+      <div class={topDragAreaStyle()} />
+      <nav
+        class={titleStyle()}
+        data-macos={props.isMacOS}
+        data-show={mouseY() < 32}
+        data-ytmd-main-panel={true}
+        id={'ytmd-title-bar-main-panel'}
       >
-        <svg height={16} viewBox={'0 0 24 24'} width={16}>
-          <path
-            d="M3 17h12a1 1 0 0 1 .117 1.993L15 19H3a1 1 0 0 1-.117-1.993L3 17h12H3Zm0-6h18a1 1 0 0 1 .117 1.993L21 13H3a1 1 0 0 1-.117-1.993L3 11h18H3Zm0-6h15a1 1 0 0 1 .117 1.993L18 7H3a1 1 0 0 1-.117-1.993L3 5h15H3Z"
-            fill="currentColor"
-          />
-        </svg>
-      </IconButton>
-      <TransitionGroup
-        enterActiveClass={
-          ignoreTransition()
-            ? animationStyle().fake
-            : animationStyle().enterActive
-        }
-        enterClass={
-          ignoreTransition()
-            ? animationStyle().fakeTarget
-            : animationStyle().enter
-        }
-        exitActiveClass={
-          ignoreTransition()
-            ? animationStyle().fake
-            : animationStyle().exitActive
-        }
-        exitToClass={
-          ignoreTransition()
-            ? animationStyle().fakeTarget
-            : animationStyle().exitTo
-        }
-        onAfterEnter={(element) => {
-          (element as HTMLElement).style.removeProperty('transition-delay');
-        }}
-        onBeforeEnter={(element) => {
-          if (ignoreTransition()) return;
-          const index = Number(element.getAttribute('data-index') ?? 0);
+        <IconButton
+          onClick={() => setCollapsed(!collapsed())}
+          style={{
+            'border-top-left-radius': '4px',
+          }}
+        >
+          <svg height={16} viewBox={'0 0 24 24'} width={16}>
+            <path
+              d="M3 17h12a1 1 0 0 1 .117 1.993L15 19H3a1 1 0 0 1-.117-1.993L3 17h12H3Zm0-6h18a1 1 0 0 1 .117 1.993L21 13H3a1 1 0 0 1-.117-1.993L3 11h18H3Zm0-6h15a1 1 0 0 1 .117 1.993L18 7H3a1 1 0 0 1-.117-1.993L3 5h15H3Z"
+              fill="currentColor"
+            />
+          </svg>
+        </IconButton>
+        <TransitionGroup
+          enterActiveClass={
+            ignoreTransition()
+              ? animationStyle().fake
+              : animationStyle().enterActive
+          }
+          enterClass={
+            ignoreTransition()
+              ? animationStyle().fakeTarget
+              : animationStyle().enter
+          }
+          exitActiveClass={
+            ignoreTransition()
+              ? animationStyle().fake
+              : animationStyle().exitActive
+          }
+          exitToClass={
+            ignoreTransition()
+              ? animationStyle().fakeTarget
+              : animationStyle().exitTo
+          }
+          onAfterEnter={(element) => {
+            (element as HTMLElement).style.removeProperty('transition-delay');
+          }}
+          onBeforeEnter={(element) => {
+            if (ignoreTransition()) return;
+            const index = Number(element.getAttribute('data-index') ?? 0);
 
-          (element as HTMLElement).style.setProperty(
-            'transition-delay',
-            `${index * 0.025}s`,
-          );
-        }}
-        onBeforeExit={(element) => {
-          if (ignoreTransition()) return;
-          const index = Number(element.getAttribute('data-index') ?? 0);
-          const length = Number(element.getAttribute('data-length') ?? 1);
+            (element as HTMLElement).style.setProperty(
+              'transition-delay',
+              `${index * 0.025}s`,
+            );
+          }}
+          onBeforeExit={(element) => {
+            if (ignoreTransition()) return;
+            const index = Number(element.getAttribute('data-index') ?? 0);
+            const length = Number(element.getAttribute('data-length') ?? 1);
 
-          (element as HTMLElement).style.setProperty(
-            'transition-delay',
-            `${length * 0.025 - index * 0.025}s`,
-          );
-        }}
-      >
-        <Show when={!collapsed()}>
-          <Index each={menu()?.items}>
-            {(item, index) => {
-              const [anchor, setAnchor] = createSignal<HTMLElement | null>(
-                null,
-              );
+            (element as HTMLElement).style.setProperty(
+              'transition-delay',
+              `${length * 0.025 - index * 0.025}s`,
+            );
+          }}
+        >
+          <Show when={!collapsed()}>
+            <Index each={menu()?.items}>
+              {(item, index) => {
+                const [anchor, setAnchor] = createSignal<HTMLElement | null>(
+                  null,
+                );
 
-              const handleClick = () => {
-                if (openTarget() === anchor()) {
-                  setOpenTarget(null);
-                } else {
-                  setOpenTarget(anchor());
-                }
-              };
+                const handleClick = () => {
+                  if (openTarget() === anchor()) {
+                    setOpenTarget(null);
+                  } else {
+                    setOpenTarget(anchor());
+                  }
+                };
 
-              return (
-                <>
-                  <MenuButton
-                    data-index={index}
-                    data-length={data()?.items.length}
-                    onClick={handleClick}
-                    ref={setAnchor}
-                    selected={openTarget() === anchor()}
-                    text={item().label}
-                  />
-                  <Panel
-                    anchor={anchor()}
-                    offset={{ mainAxis: 8 }}
-                    open={openTarget() === anchor()}
-                    placement={'bottom-start'}
-                  >
-                    <PanelRenderer
-                      items={item().submenu?.items ?? []}
-                      onClick={handleItemClick}
+                return (
+                  <>
+                    <MenuButton
+                      data-index={index}
+                      data-length={data()?.items.length}
+                      onClick={handleClick}
+                      ref={setAnchor}
+                      selected={openTarget() === anchor()}
+                      text={item().label}
                     />
-                  </Panel>
-                </>
-              );
-            }}
-          </Index>
+                    <Panel
+                      anchor={anchor()}
+                      offset={{ mainAxis: 8 }}
+                      open={openTarget() === anchor()}
+                      placement={'bottom-start'}
+                    >
+                      <PanelRenderer
+                        items={item().submenu?.items ?? []}
+                        onClick={handleItemClick}
+                      />
+                    </Panel>
+                  </>
+                );
+              }}
+            </Index>
+          </Show>
+        </TransitionGroup>
+        <Show when={props.enableController}>
+          <div style={{ flex: 1 }} />
+          <WindowController
+            isMaximize={isMaximized()}
+            onClose={handleClose}
+            onMinimize={handleMinimize}
+            onToggleMaximize={handleToggleMaximize}
+          />
         </Show>
-      </TransitionGroup>
-      <Show when={props.enableController}>
-        <div style={{ flex: 1 }} />
-        <WindowController
-          isMaximize={isMaximized()}
-          onClose={handleClose}
-          onMinimize={handleMinimize}
-          onToggleMaximize={handleToggleMaximize}
-        />
-      </Show>
-    </nav>
+      </nav>
+    </>
   );
 };
+
