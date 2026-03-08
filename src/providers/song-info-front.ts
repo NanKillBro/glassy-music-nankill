@@ -14,6 +14,24 @@ import type { VideoDataChanged } from '@/types/video-data-changed';
 
 const DATAUPDATED_FALLBACK_TIMEOUT_MS = 1500;
 
+if (typeof window.MediaMetadata === 'function') {
+  const originalMediaMetadata = window.MediaMetadata;
+  window.MediaMetadata = new Proxy(originalMediaMetadata, {
+    construct(target, args) {
+      if (args[0] && Array.isArray(args[0].artwork)) {
+        args[0].artwork = args[0].artwork.map((art: { src: string; sizes?: string; type?: string }) => ({
+          ...art,
+          src: art.src
+            .replace(/=w\d+-h\d+(-\w+)?/, '=w1024-h1024$1')
+            .replace(/\/(hqdefault|sddefault|default)\.jpg/, '/maxresdefault.jpg'),
+          sizes: '1024x1024',
+        }));
+      }
+      return new target(...args);
+    },
+  });
+}
+
 let songInfo: SongInfo = {} as SongInfo;
 export const getSongInfo = () => songInfo;
 
@@ -165,7 +183,7 @@ export const setupFullScreenChangedListener = singleton(() => {
     window.ipcRenderer.send(
       'peard:fullscreen-changed',
       (playerBar?.attributes.getNamedItem('player-fullscreened') ?? null) !==
-        null,
+      null,
     );
   });
 

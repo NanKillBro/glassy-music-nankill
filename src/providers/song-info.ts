@@ -153,7 +153,13 @@ const handleData = async (
     }
 
     const thumbnails = videoDetails.thumbnail?.thumbnails;
-    songInfo.imageSrc = thumbnails?.at(-1)?.url?.split('?')?.at(0);
+    let imageSrc = thumbnails?.at(-1)?.url?.split('?')?.at(0);
+    if (imageSrc) {
+      imageSrc = imageSrc
+        .replace(/=w\d+-h\d+(-\w+)?/, '=w1024-h1024$1')
+        .replace(/\/(hqdefault|sddefault|default)\.jpg/, '/maxresdefault.jpg');
+    }
+    songInfo.imageSrc = imageSrc;
 
     if (
       songInfo.imageSrc &&
