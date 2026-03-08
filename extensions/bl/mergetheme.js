@@ -231,6 +231,8 @@ body #nav-bar-background.ytmusic-app-layout {
   opacity: 1;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
+  mask-image: linear-gradient(to bottom, black 70%, transparent 100%) !important;
+  -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%) !important;
   background: transparent !important;
   border-bottom: transparent !important;
   border-top: 0 !important;
