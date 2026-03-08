@@ -67,11 +67,11 @@ export const onMenu = async ({
       },
     },
     {
-      label: t('plugins.discord.menu.play-on-application'),
+      label: t('plugins.discord.menu.play-on-application', { applicationName: 'YouTube Music' }),
       type: 'checkbox',
       checked:
         config[
-          'playOn\u0059\u006f\u0075\u0054\u0075\u0062\u0065\u004d\u0075\u0073\u0069\u0063'
+        'playOn\u0059\u006f\u0075\u0054\u0075\u0062\u0065\u004d\u0075\u0073\u0069\u0063'
         ],
       click(item: Electron.MenuItem) {
         setConfig({
@@ -113,7 +113,7 @@ export const onMenu = async ({
         .map((statusDisplayType) => ({
           label: t(
             DiscordStatusDisplayTypeLabels[
-              statusDisplayType as StatusDisplayType
+            statusDisplayType as StatusDisplayType
             ],
             {
               applicationName: APPLICATION_NAME,
