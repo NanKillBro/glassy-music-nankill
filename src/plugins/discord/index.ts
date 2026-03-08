@@ -50,7 +50,7 @@ export default createPlugin({
     'autoReconnect': true,
     'activityTimeoutEnabled': true,
     'activityTimeoutTime': 10 * 60 * 1000,
-    'playOn\u0059\u006f\u0075\u0054\u0075\u0062\u0065\u004d\u0075\u0073\u0069\u0063': false,
+    'playOn\u0059\u006f\u0075\u0054\u0075\u0062\u0065\u004d\u0075\u0073\u0069\u0063': true,
     'hideGitHubButton': true,
     'hideDurationLeft': false,
     'statusDisplayType': StatusDisplayType.Details,
