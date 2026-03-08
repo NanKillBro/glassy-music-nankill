@@ -84,6 +84,41 @@ const topDragAreaStyle = cacheNoArgs(
   `,
 );
 
+const windowControlContainerStyle = cacheNoArgs(
+  () => css`
+    position: fixed;
+    top: 8px;
+    right: 8px;
+    z-index: 10000000;
+    box-sizing: border-box;
+
+    height: var(--menu-bar-height, 32px);
+
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-end;
+    align-items: center;
+
+    color: #f1f1f1;
+    padding: 4px;
+    background-color: color-mix(in srgb, var(--titlebar-background-color, #030303) 60%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+    transition:
+      opacity 200ms ease 0s,
+      transform 300ms cubic-bezier(0.2, 0, 0.6, 1) 0s,
+      background-color 300ms cubic-bezier(0.2, 0, 0.6, 1) 0s;
+
+    ytmusic-app:has(ytmusic-player[player-ui-state='FULLSCREEN'])
+      ~ &:not([data-show='true']) {
+      transform: translateY(calc(-1 * (var(--menu-bar-height, 32px) + 8px)));
+    }
+  `,
+);
 
 const separatorStyle = cacheNoArgs(
   () => css`
@@ -453,16 +488,17 @@ export const TitleBar = (props: TitleBarProps) => {
             </Index>
           </Show>
         </TransitionGroup>
-        <Show when={props.enableController}>
-          <div style={{ flex: 1 }} />
+      </nav>
+      <Show when={props.enableController}>
+        <div class={windowControlContainerStyle()} data-show={mouseY() < 32}>
           <WindowController
             isMaximize={isMaximized()}
             onClose={handleClose}
             onMinimize={handleMinimize}
             onToggleMaximize={handleToggleMaximize}
           />
-        </Show>
-      </nav>
+        </div>
+      </Show>
     </>
   );
 };
