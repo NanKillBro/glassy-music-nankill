@@ -340,6 +340,12 @@ ytmusic-search-box #suggestion-list ytmusic-search-suggestion:hover {
     box-shadow: none !important;       
 }
 
+ytmusic-queue-header-renderer,
+ytmusic-player-queue-item,
+ytmusic-responsive-list-item-renderer,
+ytmusic-carousel-shelf-renderer {
+    padding-inline: 20px; /* Áp dụng 20px cho cả left và right */
+}
 /* Album Cover Size */
 ytmusic-player-page:not([video-mode]):not([player-fullscreened]):not([blyrics-dfs]):not([player-ui-state="MINIPLAYER"]) #player.ytmusic-player-page, 
 ytmusic-player[player-ui-state=FULLSCREEN], 
@@ -950,6 +956,12 @@ ytmusic-multi-select-menu-item-renderer:hover {
 
 ytmusic-immersive-header-renderer {
   background: var(--ytmusic-app); /* Biến mặc định của YT Music, giữ nguyên để không lỗi giao diện web */
+}
+
+/* Kéo toàn bộ thẻ bao ngoài lên trên để lấp khoảng trống do --menu-bar-height tạo ra */
+ytmusic-immersive-header-renderer,
+ytmusic-visual-header-renderer {
+    margin-top: calc(var(--menu-bar-height, 0px) * -1) !important;
 }
 
 ytmusic-immersive-header-renderer .image {

@@ -340,12 +340,19 @@ ytmusic-search-box #suggestion-list ytmusic-search-suggestion:hover {
     box-shadow: none !important;       
 }
 
-ytmusic-queue-header-renderer,
-ytmusic-player-queue-item,
-ytmusic-responsive-list-item-renderer,
+ytmusic-queue-header-renderer {
+    padding-inline: 20px; /* Áp dụng 20px cho cả left và right */
+}
+ytmusic-player-queue-item {
+    padding-inline: 20px; /* Áp dụng 20px cho cả left và right */
+}
+ytmusic-responsive-list-item-renderer {
+    padding-inline: 20px; /* Áp dụng 20px cho cả left và right */
+}
 ytmusic-carousel-shelf-renderer {
     padding-inline: 20px; /* Áp dụng 20px cho cả left và right */
 }
+
 /* Album Cover Size */
 ytmusic-player-page:not([video-mode]):not([player-fullscreened]):not([blyrics-dfs]):not([player-ui-state="MINIPLAYER"]) #player.ytmusic-player-page, 
 ytmusic-player[player-ui-state=FULLSCREEN], 

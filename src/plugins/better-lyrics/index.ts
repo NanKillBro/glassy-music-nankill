@@ -12,12 +12,13 @@ export default createPlugin({
   restartNeeded: true,
   config: {
     enabled: true,
-    experimentalOptimizationTrick: false,
+    optimizationLevel: 'disable',
     lyricsScroll: 'spring',
   },
   // THÊM PHẦN NÀY: Tạo menu để mở cài đặt
   menu: async ({ getConfig, setConfig }) => {
     const config = await getConfig();
+    const optLevel = config.optimizationLevel || ((config as any).experimentalOptimizationTrick ? 'trick1' : 'disable');
 
     return [
       {
@@ -44,12 +45,27 @@ export default createPlugin({
         ],
       },
       {
-        label: 'Experimental Optimization Trick (Restart Required)',
-        type: 'checkbox',
-        checked: !!config.experimentalOptimizationTrick,
-        click: (item) => {
-          setConfig({ experimentalOptimizationTrick: item.checked });
-        },
+        label: 'Experimental Performance Optimization (Restart Required)',
+        submenu: [
+          {
+            label: 'Disabled',
+            type: 'radio',
+            checked: optLevel === 'disable',
+            click: () => setConfig({ optimizationLevel: 'disable' }),
+          },
+          {
+            label: 'Optimization Trick 1',
+            type: 'radio',
+            checked: optLevel === 'trick1',
+            click: () => setConfig({ optimizationLevel: 'trick1' }),
+          },
+          {
+            label: 'Optimization Trick 2',
+            type: 'radio',
+            checked: optLevel === 'trick2',
+            click: () => setConfig({ optimizationLevel: 'trick2' }),
+          },
+        ],
       },
       {
         label: 'Open Settings',
@@ -85,7 +101,13 @@ export default createPlugin({
         ? process.resourcesPath
         : path.join(__dirname, '../../../../');
 
-      const folderName = config.experimentalOptimizationTrick ? 'bl-op' : 'bl';
+      const optLevel = config.optimizationLevel || ((config as any).experimentalOptimizationTrick ? 'trick1' : 'disable');
+      let folderName = 'bl';
+      if (optLevel === 'trick1') {
+        folderName = 'bl-op';
+      } else if (optLevel === 'trick2') {
+        folderName = 'bl-op2';
+      }
       const extensionPath = path.join(basePath, 'extensions', folderName);
 
       console.log('Loading Better Lyrics from:', extensionPath);

@@ -1,0 +1,810 @@
+{
+  "extensionName": {
+    "message": "Better Lyrics (เนื้อเพลงสำหรับ Youtube Music)",
+    "description": "The name of the extension"
+  },
+  "extensionDescription": {
+    "message": "เพิ่มความเท่ให้กับ Youtube Music ด้วยเนื้อเพลงที่ซิงก์กับเวลา การแปลเนื้อเพลงแบบสด อินเตอร์เฟซหลากหลายภาษา และอื่น ๆ อีกมาก",
+    "description": "The description of the extension"
+  },
+  "options_tab_general": {
+    "message": "ทั่วไป",
+    "description": "General settings tab label"
+  },
+  "options_tab_display": {
+    "message": "การแสดงผล",
+    "description": "Display settings tab label"
+  },
+  "options_tab_language": {
+    "message": "ภาษา",
+    "description": "Language settings tab label"
+  },
+  "options_tab_sources": {
+    "message": "ต้นทาง",
+    "description": "Sources settings tab label"
+  },
+  "options_tab_identity": {
+    "message": "การระบุตัวตน",
+    "description": "Identity settings tab label"
+  },
+  "options_tab_themes": {
+    "message": "ธีม",
+    "description": "Themes settings tab label"
+  },
+  "options_general_title": {
+    "message": "การตั้งค่าทั่วไป",
+    "description": "General settings section title"
+  },
+  "options_general_description": {
+    "message": "การตั้งค่าที่มีผลต่อการทำงานโดยรวมของ Better Lyrics",
+    "description": "General settings section description"
+  },
+  "options_general_showLogs": {
+    "message": "แสดง log",
+    "description": "Show logs setting label"
+  },
+  "options_general_autoSwitch": {
+    "message": "สลับไปแท็บเนื้อเพลงอัตโนมัติ",
+    "description": "Auto switch to lyrics tab setting label"
+  },
+  "options_general_cache": {
+    "message": "แคช",
+    "description": "Cache section label"
+  },
+  "options_general_clearCache": {
+    "message": "ล้างแคชทั้งหมด",
+    "description": "Clear cache button label"
+  },
+  "options_general_totalLyrics": {
+    "message": "เนื้อเพลงในแคชทั้งหมด",
+    "description": "Total lyrics in cache label"
+  },
+  "options_general_cacheSize": {
+    "message": "ขนาดแคช",
+    "description": "Cache size label"
+  },
+  "options_display_title": {
+    "message": "การตั้งค่าการแสดงผล",
+    "description": "Display settings section title"
+  },
+  "options_display_description": {
+    "message": "ปรับแต่งหน้าตาของ Better Lyrics",
+    "description": "Display settings section description"
+  },
+  "options_display_disableFullscreen": {
+    "message": "ปิดใช้งานโหมดเต็มหน้าจอ",
+    "description": "Disable fullscreen mode setting label"
+  },
+  "options_display_autoHideCursor": {
+    "message": "ซ่อนเคอร์เซอร์โดยอัตโนมัติเมื่อเปิดเต็มหน้าจอ",
+    "description": "Auto-hide cursor setting label"
+  },
+  "options_display_albumArt": {
+    "message": "แสดงภาพเบลอของอัลบัมเป็นพื้นหลัง",
+    "description": "Show album art background setting label"
+  },
+  "options_display_stylizedAnimations": {
+    "message": "แสดงแอนิเมชันสวยงาม",
+    "description": "Show stylized animations setting label"
+  },
+  "options_language_title": {
+    "message": "การตั้งค่าภาษา",
+    "description": "Language settings section title"
+  },
+  "options_language_description": {
+    "message": "การตั้งค่าภาษาและการแปลสำหรับ Better Lyrics",
+    "description": "Language settings section description"
+  },
+  "options_language_romanization": {
+    "message": "การถอดเสียง",
+    "description": "Romanization setting label"
+  },
+  "options_language_translate": {
+    "message": "แปลเนื้อเพลง",
+    "description": "Translate song lyrics setting label"
+  },
+  "options_language_translationLanguage": {
+    "message": "ภาษาปลายทางการแปล",
+    "description": "Translation language setting label"
+  },
+  "options_sources_title": {
+    "message": "การตั้งค่าที่มาของเนื้อเพลง",
+    "description": "Sources settings section title"
+  },
+  "options_sources_description": {
+    "message": "เรียงลำดับความสำคัญของแหล่งที่มาของเนื้อเพลง เมื่อฟังเพลงจะเริ่มหาเนื้อเพลงจากอันดับด้านบนก่อน กดปิดใช้งานเมื่อไม่ใช้แหล่งนั้น",
+    "description": "Sources settings section description"
+  },
+  "options_themes_title": {
+    "message": "การตั้งค่าธีม",
+    "description": "Theme settings section title"
+  },
+  "options_themes_description": {
+    "message": "ปรับแต่งรูปลักษณ์หน้าตาของ Better Lyrics",
+    "description": "Theme settings section description"
+  },
+  "options_themes_theme": {
+    "message": "ธีม",
+    "description": "Theme label"
+  },
+  "options_themes_chooseTheme": {
+    "message": "เลือกธีม",
+    "description": "Choose a theme button label"
+  },
+  "options_themes_customStyles": {
+    "message": "สไลต์กำหนดเอง",
+    "description": "Custom styles label"
+  },
+  "options_themes_create": {
+    "message": "สร้างใหม่",
+    "description": "Create button label"
+  },
+  "options_themes_marketplace": {
+    "message": "Theme Marketplace",
+    "description": "Theme marketplace button label"
+  },
+  "options_themes_installedThemes": {
+    "message": "ธีมที่ติดตั้งไว้แล้ว",
+    "description": "Installed themes button label"
+  },
+  "options_identity_title": {
+    "message": "การระบุตัวตน",
+    "description": "Identity settings section title"
+  },
+  "options_identity_description": {
+    "message": "ข้อมูลระบุตัวตนที่เป็นนิรนามของคุณสำหรับ Better Lyrics",
+    "description": "Identity settings section description"
+  },
+  "options_identity_yourIdentity": {
+    "message": "ตัวตนของคุณ",
+    "description": "Your identity label"
+  },
+  "options_identity_loading": {
+    "message": "กำลังโหลด...",
+    "description": "Loading identity placeholder"
+  },
+  "options_identity_exportImport": {
+    "message": "ส่งออก/นำเข้า",
+    "description": "Export/Import section label"
+  },
+  "options_identity_exportKey": {
+    "message": "ส่งออกคีย์",
+    "description": "Export key button label"
+  },
+  "options_identity_importKey": {
+    "message": "นำเข้าคีย์",
+    "description": "Import key button label"
+  },
+  "options_modal_selectTheme": {
+    "message": "เลือกธีม",
+    "description": "Theme modal title"
+  },
+  "options_modal_cancel": {
+    "message": "ยกเลิก",
+    "description": "Cancel button label"
+  },
+  "options_modal_confirm": {
+    "message": "ยืนยัน",
+    "description": "Confirm button label"
+  },
+  "options_alert_cacheCleared": {
+    "message": "ล้างแคชสำเร็จ",
+    "description": "Cache cleared success message"
+  },
+  "options_alert_cacheClearFailed": {
+    "message": "ไม่สามารถล้างแคชได้",
+    "description": "Cache clear failed message"
+  },
+  "options_alert_nothingToClear": {
+    "message": "ไม่มีอะไรให้ล้าง",
+    "description": "Nothing to clear message"
+  },
+  "options_alert_exportFailed": {
+    "message": "ไม่สามารถส่งออกข้อมูลระบุตัวตนได้",
+    "description": "Export identity failed message"
+  },
+  "options_alert_fileSaveDialogOpened": {
+    "message": "เปิดหน้าต่างสำหรับบันทึกไฟล์ระบุตัวตนแล้ว",
+    "description": "File save dialog opened message"
+  },
+  "options_alert_fileSaveFailed": {
+    "message": "ไม่สามารถบันทึกไฟล์ได้ โปรดลองใหม่อีกครั้ง",
+    "description": "File save failed message"
+  },
+  "options_alert_downloadInitiated": {
+    "message": "เริ่มต้นดาวน์โหลดไฟล์ระบุตัวตนแล้ว",
+    "description": "Download initiated message"
+  },
+  "options_alert_importSuccess": {
+    "message": "นำเข้าไฟล์ระบุตัวตนสำเร็จ",
+    "description": "Import success message"
+  },
+  "options_alert_identityLoadError": {
+    "message": "ไม่สามารถโหลดการระบุตัวตนได้",
+    "description": "Identity load error message"
+  },
+  "options_editor_saving": {
+    "message": "กำลังบันทึก...",
+    "description": "Saving indicator text"
+  },
+  "options_editor_importFile": {
+    "message": "นำเข้าจากไฟล์",
+    "description": "Import from file tooltip"
+  },
+  "options_editor_exportFile": {
+    "message": "ส่งออกเป็นไฟล์",
+    "description": "Export to file tooltip"
+  },
+  "options_editor_saveAsTheme": {
+    "message": "บันทึกเป็นธีม",
+    "description": "Save as theme tooltip"
+  },
+  "options_editor_openInNewTab": {
+    "message": "เปิดในแท็บใหม่",
+    "description": "Open in new tab tooltip"
+  },
+  "options_editor_backToSettings": {
+    "message": "กลับไปการตั้งค่า",
+    "description": "Back to settings button label"
+  },
+  "options_editor_fullExperienceNote": {
+    "message": "เพื่อความสะดวกในการใช้เครื่องมือแก้ไข ",
+    "description": "Full editor experience note prefix"
+  },
+  "options_editor_openInNewTabLink": {
+    "message": "เปิดเครื่องมือแก้ไขนี้ในแท็บใหม่",
+    "description": "Open in new tab link text"
+  },
+  "options_editor_stylingGuide": {
+    "message": "วิธีใช้",
+    "description": "Styling guide link text"
+  },
+  "options_editor_renameTheme": {
+    "message": "เปลี่ยนชื่อธีมที่กำหนดเอง",
+    "description": "Rename theme button title"
+  },
+  "options_editor_deleteTheme": {
+    "message": "ลบธีมที่กำหนดเอง",
+    "description": "Delete theme button title"
+  },
+  "options_editor_doubleClickRename": {
+    "message": "คลิ๊กสองครั้งเพื่อเปลี่ยนชื่อ",
+    "description": "Double-click to rename tooltip"
+  },
+  "options_provider_betterLyrics": {
+    "message": "Better Lyrics",
+    "description": "Better Lyrics provider name"
+  },
+  "options_provider_betterLyricsLegato": {
+    "message": "Better Lyrics Legato",
+    "description": "Better Lyrics Legato provider name"
+  },
+  "options_provider_musixmatch": {
+    "message": "Musixmatch",
+    "description": "Musixmatch provider name"
+  },
+  "options_provider_lrclib": {
+    "message": "LRClib",
+    "description": "LRClib provider name"
+  },
+  "options_provider_youtube": {
+    "message": "Youtube",
+    "description": "Youtube provider name"
+  },
+  "options_provider_youtubeCaptions": {
+    "message": "คำอธิบายภาพของ Youtube",
+    "description": "Youtube Captions provider name"
+  },
+  "options_syncType_syllable": {
+    "message": "รายพยางค์",
+    "description": "Syllable sync type label"
+  },
+  "options_syncType_syllable_tooltip": {
+    "message": "เน้นเนื้อเพลงทีละพยางค์พร้อมกับเสียงร้อง ให้ความรู้สึกดีที่สุด",
+    "description": "Syllable sync type tooltip"
+  },
+  "options_syncType_word": {
+    "message": "รายคำ",
+    "description": "Word sync type label"
+  },
+  "options_syncType_word_tooltip": {
+    "message": "เน้นเนื้อเพลงทีละคำพร้อมกับเสียงร้อง ให้ความรู้สึกในระดับดี",
+    "description": "Word sync type tooltip"
+  },
+  "options_syncType_line": {
+    "message": "รายบรรทัด",
+    "description": "Line sync type label"
+  },
+  "options_syncType_line_tooltip": {
+    "message": "เน้นเนื้อเพลงทีละประโยคตามเสียงร้อง ความรู้สึกโอเคแบบมาตรฐาน",
+    "description": "Line sync type tooltip"
+  },
+  "options_syncType_unsynced": {
+    "message": "เนื้อเพลงไม่ได้ถูกเน้นตามเวลา",
+    "description": "Unsynced sync type label"
+  },
+  "options_syncType_unsynced_tooltip": {
+    "message": "เนื้อเพลงที่ไม่มีข้อมูลเวลา ให้ประการณ์ที่ไม่ค่อยดี",
+    "description": "Unsynced sync type tooltip"
+  },
+  "options_detail_rateTheme": {
+    "message": "ให้คะแนนธีมนี้",
+    "description": "Rate theme label"
+  },
+  "options_detail_install": {
+    "message": "ติดตั้ง",
+    "description": "Install button label"
+  },
+  "options_detail_viewOnGitHub": {
+    "message": "ดูบน GitHub",
+    "description": "View on GitHub link text"
+  },
+  "options_detail_shaderInfo": {
+    "message": "ธีมนี้มีการตั้งค่า Shader",
+    "description": "Shader info text prefix"
+  },
+  "options_detail_downloadShader": {
+    "message": "ดาวน์โหลด shader.json",
+    "description": "Download shader link text"
+  },
+  "options_detail_shaderImportSuffix": {
+    "message": "และนำเข้าไว้ใน",
+    "description": "Shader import suffix text before Better Lyrics Shaders link"
+  },
+  "marketplace_pageTitle": {
+    "message": "Theme Marketplace ของ Better Lyrics",
+    "description": "Page title"
+  },
+  "marketplace_title": {
+    "message": "Theme Marketplace",
+    "description": "Header title"
+  },
+  "marketplace_subtitle": {
+    "message": "สำรวจและติดตั้งธีมโดยชุมชน",
+    "description": "Header subtitle"
+  },
+  "marketplace_searchPlaceholder": {
+    "message": "ค้นหาธีม...",
+    "description": "Search input placeholder"
+  },
+  "marketplace_refresh": {
+    "message": "รีเฟรช",
+    "description": "Refresh button label"
+  },
+  "marketplace_keyboardShortcuts": {
+    "message": "คีย์ลัด",
+    "description": "Keyboard shortcuts button label"
+  },
+  "marketplace_sortBy": {
+    "message": "เรียงตาม",
+    "description": "Sort filter group label"
+  },
+  "marketplace_sortRatingDesc": {
+    "message": "คะแนนสูงสุดก่อน",
+    "description": "Sort by highest rating"
+  },
+  "marketplace_sortRatingAsc": {
+    "message": "คะแนนต่ำสุดก่อน",
+    "description": "Sort by lowest rating"
+  },
+  "marketplace_sortDownloadsDesc": {
+    "message": "ดาวน์โหลดมากสุดก่อน",
+    "description": "Sort by most downloads"
+  },
+  "marketplace_sortDownloadsAsc": {
+    "message": "ดาวน์โหลดน้อยสุดก่อน",
+    "description": "Sort by least downloads"
+  },
+  "marketplace_sortNewest": {
+    "message": "ใหม่สุดก่อน",
+    "description": "Sort by newest"
+  },
+  "marketplace_sortOldest": {
+    "message": "เก่าสุดก่อน",
+    "description": "Sort by oldest"
+  },
+  "marketplace_show": {
+    "message": "แสดง",
+    "description": "Show filter group label"
+  },
+  "marketplace_showAll": {
+    "message": "ทั้งหมด",
+    "description": "Show all themes"
+  },
+  "marketplace_showInstalled": {
+    "message": "ติดตั้งแล้ว",
+    "description": "Show installed themes"
+  },
+  "marketplace_showNotInstalled": {
+    "message": "ยังไม่ได้ติดตั้ง",
+    "description": "Show not installed themes"
+  },
+  "marketplace_options": {
+    "message": "ตัวเลือก",
+    "description": "Options filter group label"
+  },
+  "marketplace_hasShaders": {
+    "message": "มี shader",
+    "description": "Filter for themes with shaders"
+  },
+  "marketplace_compatibleOnly": {
+    "message": "เฉพาะที่เข้ากันได้",
+    "description": "Filter for compatible themes"
+  },
+  "marketplace_installFromUrl": {
+    "message": "ติดตั้งจาก URL",
+    "description": "Install from URL button"
+  },
+  "marketplace_submitTheme": {
+    "message": "ส่งธีม",
+    "description": "Submit a theme link"
+  },
+  "marketplace_loading": {
+    "message": "กำลังโหลดธีม...",
+    "description": "Loading message"
+  },
+  "marketplace_retry": {
+    "message": "ลองใหม่",
+    "description": "Retry button"
+  },
+  "marketplace_noThemesMatch": {
+    "message": "ไม่พบธีมที่ตรงตามตัวกรองของคุณ",
+    "description": "Empty state message"
+  },
+  "marketplace_permissionTitle": {
+    "message": "จำเป็ตต้องมีสิทธิ์เข้าถึง",
+    "description": "Permission required title"
+  },
+  "marketplace_permissionMessage": {
+    "message": "ในการสำรวจและติดตั้งธีม Better Lyrics จำเป็นต้องมีสิทธิ์ในการเข้าถึง GitHub เพื่อเข้าถึงข้อมูลธีมและ API ของ Marketplace",
+    "description": "Permission required message"
+  },
+  "marketplace_grantPermission": {
+    "message": "อนุญาตสิทธิ์",
+    "description": "Grant permission button"
+  },
+  "marketplace_install": {
+    "message": "ติดตั้ง",
+    "description": "Install button"
+  },
+  "marketplace_remove": {
+    "message": "นำออก",
+    "description": "Remove button"
+  },
+  "marketplace_apply": {
+    "message": "เปิดใช้งาน",
+    "description": "Apply button"
+  },
+  "marketplace_active": {
+    "message": "กำลังใช้งาน",
+    "description": "Active theme indicator"
+  },
+  "marketplace_shadersBadge": {
+    "message": "Shader",
+    "description": "Shaders badge text"
+  },
+  "marketplace_githubBadge": {
+    "message": "GitHub",
+    "description": "GitHub badge text"
+  },
+  "marketplace_urlModalTitle": {
+    "message": "ติดตั้งจาก URL",
+    "description": "URL install modal title"
+  },
+  "marketplace_urlModalMessage": {
+    "message": "ระบุ URL ของ repository ของ GitHub เพื่อติดตั้งธีมโดยตรง:",
+    "description": "URL install modal message"
+  },
+  "marketplace_urlModalPlaceholder": {
+    "message": "รูปแบบ github.com/user/repo หรือ github.com/user/repo/tree/branch",
+    "description": "URL input placeholder"
+  },
+  "marketplace_urlModalError": {
+    "message": "โปรดระบุ URL ของ repository ของ GitHub",
+    "description": "URL validation error"
+  },
+  "marketplace_cancel": {
+    "message": "ยกเลิก",
+    "description": "Cancel button"
+  },
+  "marketplace_urlPermissionTitle": {
+    "message": "จำเป็นต้องมีสิทธิ์เพิ่มเติม",
+    "description": "URL permission modal title"
+  },
+  "marketplace_urlPermissionWhy": {
+    "message": "ทำไมจึงต้องมี",
+    "description": "URL permission explanation title"
+  },
+  "marketplace_urlPermissionDesc": {
+    "message": "การติดตั้งธีมที่กำหนดเองจาก GitHub URL จำเป็นต้องมีสิทธิ์เพิ่มเติมนอกเหนือจาก Marketplace ซึ่งจะอนุญาตให้ Better Lyrics สามารถ:",
+    "description": "URL permission description"
+  },
+  "marketplace_urlPermissionItem1": {
+    "message": "ดึงข้อมูลไฟล์ธีมจาก GitHub repository ใด ๆ",
+    "description": "URL permission list item 1"
+  },
+  "marketplace_urlPermissionItem2": {
+    "message": "ตรวจจับ branch ปริยายของ repository",
+    "description": "URL permission list item 2"
+  },
+  "marketplace_urlPermissionItem3": {
+    "message": "ตรวจยืนยันโครงสร้างธีมก่อนติดตั้ง",
+    "description": "URL permission list item 3"
+  },
+  "marketplace_urlPermissionNote": {
+    "message": "สิทธิ์นี้จะใช้งานเมื่อคุณติดตั้งธีมด้วย URL เท่านั้น ธีมจาก Marketplace ไม่จำเป็นต้องใช้สิทธิ์นี้",
+    "description": "URL permission note"
+  },
+  "marketplace_shortcutsTitle": {
+    "message": "ทางลัดคีย์บอร์ด",
+    "description": "Shortcuts modal title"
+  },
+  "marketplace_shortcutsNavigation": {
+    "message": "นำทาง",
+    "description": "Navigation shortcuts group"
+  },
+  "marketplace_shortcutsSearch": {
+    "message": "ค้นหาธีม",
+    "description": "Search shortcut label"
+  },
+  "marketplace_shortcutsRefresh": {
+    "message": "รีเฟรช Marketplace",
+    "description": "Refresh shortcut label"
+  },
+  "marketplace_shortcutsInstallUrl": {
+    "message": "ติดตั้งจาก URL",
+    "description": "Install from URL shortcut label"
+  },
+  "marketplace_shortcutsPrevPage": {
+    "message": "ก่อนหน้า",
+    "description": "Previous page shortcut label"
+  },
+  "marketplace_shortcutsNextPage": {
+    "message": "ถัดไป",
+    "description": "Next page shortcut label"
+  },
+  "marketplace_shortcutsSort": {
+    "message": "เรียง",
+    "description": "Sort shortcuts group"
+  },
+  "marketplace_shortcutsSortHint": {
+    "message": "กดซ้ำอีกครั้งเพื่อสลับวิธีการเรียง",
+    "description": "Sort toggle hint"
+  },
+  "marketplace_shortcutsByRating": {
+    "message": "ตามคะแนน",
+    "description": "Sort by rating shortcut"
+  },
+  "marketplace_shortcutsByDownloads": {
+    "message": "ตามจำนวนดาวน์โหลด",
+    "description": "Sort by downloads shortcut"
+  },
+  "marketplace_shortcutsByDate": {
+    "message": "ตามวันที่",
+    "description": "Sort by date shortcut"
+  },
+  "marketplace_shortcutsFilters": {
+    "message": "ตัวกรอง",
+    "description": "Filters shortcuts group"
+  },
+  "marketplace_shortcutsShowAll": {
+    "message": "แสดงทั้งหมด",
+    "description": "Show all shortcut"
+  },
+  "marketplace_shortcutsShowInstalled": {
+    "message": "แสดงที่ติดตั้งแล้ว",
+    "description": "Show installed shortcut"
+  },
+  "marketplace_shortcutsShowNotInstalled": {
+    "message": "แสดงที่ยังไม่ได้ติดตั้ง",
+    "description": "Show not installed shortcut"
+  },
+  "marketplace_shortcutsToggleShaders": {
+    "message": "ซ่อน/แสดง shader",
+    "description": "Toggle shaders shortcut"
+  },
+  "marketplace_shortcutsToggleCompatible": {
+    "message": "ซ่อน/แสดงที่เข้ากันได้",
+    "description": "Toggle compatible shortcut"
+  },
+  "marketplace_shortcutsDetails": {
+    "message": "รายละเอียดธีม",
+    "description": "Theme details shortcuts group"
+  },
+  "marketplace_shortcutsInstallRemove": {
+    "message": "ติดตั้ง/ลบออก",
+    "description": "Install/remove shortcut"
+  },
+  "marketplace_shortcutsPrevImage": {
+    "message": "ภาพก่อนหน้า",
+    "description": "Previous image shortcut"
+  },
+  "marketplace_shortcutsNextImage": {
+    "message": "ภาพถัดไป",
+    "description": "Next image shortcut"
+  },
+  "marketplace_shortcutsGeneral": {
+    "message": "ทั่วไป",
+    "description": "General shortcuts group"
+  },
+  "marketplace_shortcutsCloseModal": {
+    "message": "ปิดหน้าต่าง",
+    "description": "Close modal shortcut"
+  },
+  "marketplace_shortcutsShowShortcuts": {
+    "message": "แสดงทางลัด",
+    "description": "Show shortcuts shortcut"
+  },
+  "marketplace_shortcutsApplyTheme": {
+    "message": "เปิดใช้งานธีม (หลังติดตั้ง)",
+    "description": "Apply theme shortcut"
+  },
+  "marketplace_ratingFailed": {
+    "message": "ส่งคะแนนไม่สำเร็จ",
+    "description": "Rating submission error"
+  },
+  "marketplace_shaderFetchFailed": {
+    "message": "ดึงข้อมูลการตั้งค่า shader ไม่สำเร็จ",
+    "description": "Shader fetch error"
+  },
+  "marketplace_applyFailed": {
+    "message": "เปิดใช้งานธีมไม่สำเร็จ",
+    "description": "Theme apply error"
+  },
+  "marketplace_noThemesInstalled": {
+    "message": "ยังไม่ได้ติดตั้งธีมใด ๆ",
+    "description": "Empty installed themes message"
+  },
+  "marketplace_lastUpdatedOn": {
+    "message": "อัปเดตล่าสุดเมื่อ $date$",
+    "description": "Tooltip showing full date when a theme was last updated",
+    "placeholders": {
+      "date": {
+        "content": "$1",
+        "example": "January 15, 2025, 3:42 PM"
+      }
+    }
+  },
+  "editor_pageTitle": {
+    "message": "เครื่องมือแก้ไขสไตล์ของ Better Lyrics",
+    "description": "Standalone editor page title"
+  },
+  "editor_importFromFile": {
+    "message": "นำเข้าจากไฟล์",
+    "description": "Import from file button"
+  },
+  "editor_exportToFile": {
+    "message": "ส่งออกเป็นไฟล์",
+    "description": "Export to file button"
+  },
+  "editor_saveAsTheme": {
+    "message": "บันทึกเป็นธีม",
+    "description": "Save as theme button"
+  },
+  "editor_stylingGuide": {
+    "message": "แนวทางการปรับแต่งหน้าตา",
+    "description": "Styling guide button"
+  },
+  "editor_tip": {
+    "message": "ทิป: หน้านี้เป็นแท็บเบราว์เซอร์ในตัวของมันเอง คุณสามารถย้ายไปหน้าต่างใหม่หรือใช้โหมดแบ่งหน้าจอคู่กับ Youtube Music เพื่อดูการเปลี่ยนแปลงแบบเรียลไทม์ได้ สำหรับข้อมูลเพิ่มเติม ดูที่",
+    "description": "Editor tip text"
+  },
+  "editor_poweredBy": {
+    "message": "ดำเนินงานด้วย",
+    "description": "Powered by label"
+  },
+  "editor_playground": {
+    "message": "พื้นที่ทดสอบ",
+    "description": "Playground link text"
+  },
+  "editor_docs": {
+    "message": "วิธีใช้",
+    "description": "Docs link text"
+  },
+  "lyrics_source": {
+    "message": "ที่มา: ",
+    "description": "Lyrics source label"
+  },
+  "lyrics_addToLrclib": {
+    "message": "เพิ่มเนื้อเพลงที่ LRCLib",
+    "description": "Add lyrics button text"
+  },
+  "lyrics_searchOnGenius": {
+    "message": "ค้นหาบน Genius",
+    "description": "Search on Genius button text"
+  },
+  "lyrics_searching": {
+    "message": "Better Lyrics กำลังค้นหาเนื้อเพลง...",
+    "description": "Loading message while searching for lyrics"
+  },
+  "lyrics_stillSearching": {
+    "message": "กำลังลองค้นดูเนื้อเพลงแบบซิงก์กับเวลา...",
+    "description": "Loading message while still searching"
+  },
+  "lyrics_noSyncedLyrics": {
+    "message": "Better Lyrics ไม่พบเนื้อเพลงแบบซิงก์กับเวลา",
+    "description": "Message when no synced lyrics found"
+  },
+  "lyrics_adPlaying": {
+    "message": "[ดนตรีในลิฟต์]",
+    "description": "Message shown during ad playback"
+  },
+  "lyrics_notFound": {
+    "message": "ไม่พบเนื้อเพลงสำหรับเพลงนี้",
+    "description": "Message when no lyrics are available"
+  },
+  "options_language_exclusions": {
+    "message": "ภาษาที่ยกเว้น",
+    "description": "Label for language exclusions setting"
+  },
+  "options_manage": {
+    "message": "จัดการ",
+    "description": "Manage button label"
+  },
+  "options_language_exclusionsTitle": {
+    "message": "การยกเว้นบางภาษา",
+    "description": "Modal title for language exclusions"
+  },
+  "options_romanization_tab": {
+    "message": "การถอดเสียงร้อง",
+    "description": "Romanization tab label"
+  },
+  "options_translation_tab": {
+    "message": "การแปล",
+    "description": "Translation tab label"
+  },
+  "options_searchLanguages": {
+    "message": "ค้นหาภาษา...",
+    "description": "Search input placeholder"
+  },
+  "options_romanization_hint": {
+    "message": "กดเพื่อเปิด/ปิด ภาษาที่ถูกยกเว้นจะไม่ถูกถอดเสียง",
+    "description": "Hint text for romanization exclusions"
+  },
+  "options_translation_hint": {
+    "message": "กดเพื่อเปิด/ปิด ภาษาต้นทางที่ถูกยกเว้นไว้จะไม่ถูกแปล",
+    "description": "Hint text for translation exclusions"
+  },
+  "options_resetToDefault": {
+    "message": "รีเซ็ต $TYPE$ กลับเป็นค่าปริยาย",
+    "description": "Reset to default button label",
+    "placeholders": {
+      "type": {
+        "content": "$1",
+        "example": "Romanization"
+      }
+    }
+  },
+  "options_romanization_resetTitle": {
+    "message": "รีเซ็ตข้อยกเว้น$TYPE$",
+    "description": "Modal title for resetting exclusions",
+    "placeholders": {
+      "type": {
+        "content": "$1",
+        "example": "Romanization"
+      }
+    }
+  },
+  "options_romanization_resetMessage": {
+    "message": "การดำเนินการนี้จะลบการยกเว้นบางภาษาออกทั้งหมด ดำเนินการต่อหรือไม่",
+    "description": "Confirmation message for resetting exclusions"
+  },
+  "options_reset": {
+    "message": "รีเซ็ต",
+    "description": "Reset button label"
+  },
+  "options_cancel": {
+    "message": "ยกเลิก",
+    "description": "Cancel button label"
+  },
+  "options_romanization_resetSuccess": {
+    "message": "รีเซ็ตการยกเว้น$TYPE$กลับเป็นค่าปริยาย",
+    "description": "Success message after resetting exclusions",
+    "placeholders": {
+      "type": {
+        "content": "$1",
+        "example": "Romanization"
+      }
+    }
+  }
+}

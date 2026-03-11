@@ -1,0 +1,434 @@
+/* Loader & Wrapper State Machine styles */
+#tab-renderer {
+    position: relative;
+    container-type: size;
+}
+
+#blyrics-loader {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    z-index: 100;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-50%);
+    transition:
+        opacity var(--blyrics-loader-transition-duration, 0.6s) var(--blyrics-loader-transition-easing, cubic-bezier(0.22, 1, 0.36, 1)),
+        transform var(--blyrics-loader-transition-duration, 0.6s) var(--blyrics-loader-transition-easing, cubic-bezier(0.22, 1, 0.36, 1)),
+        visibility var(--blyrics-loader-transition-duration, 0.6s);
+    will-change: opacity, transform;
+}
+
+#blyrics-wrapper {
+    transition: transform var(--blyrics-loader-transition-duration, 0.6s) var(--blyrics-loader-transition-easing, cubic-bezier(0.22, 1, 0.36, 1));
+    will-change: transform;
+    transform: translateY(0);
+}
+
+/* State: hidden */
+#blyrics-loader[state="hidden"] {
+    display: none !important;
+}
+
+#blyrics-loader[state="hidden"] ~ #blyrics-wrapper {
+    transform: translateY(0);
+}
+
+#blyrics-loader[state="hidden"]:before,
+#blyrics-loader[state="hidden"]:after {
+    animation-play-state: paused !important;
+}
+
+/* State: full-loader */
+#blyrics-loader[state="full-loader"] {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(-50%);
+    transition: none;
+}
+
+#blyrics-loader[state="full-loader"] ~ #blyrics-wrapper {
+    transform: translateY(100cqh);
+    transition: none;
+}
+
+/* State: small-loader */
+#blyrics-loader[state="small-loader"] {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(calc(-50cqh + 5rem));
+}
+
+#blyrics-loader[state="small-loader"] ~ #blyrics-wrapper {
+    transform: translateY(12rem);
+}
+
+/* State: showing-message */
+#blyrics-loader[state="showing-message"] {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(calc(-50cqh + 5rem));
+}
+
+#blyrics-loader[state="showing-message"]:before {
+    display: none;
+}
+
+#blyrics-loader[state="showing-message"]:after {
+    animation-play-state: paused !important;
+    background: none !important;
+    -webkit-text-fill-color: var(--blyrics-ui-text-color) !important;
+    color: var(--blyrics-ui-text-color) !important;
+    opacity: 0.8;
+}
+
+#blyrics-loader[state="showing-message"] ~ #blyrics-wrapper {
+    transform: translateY(12rem);
+}
+
+/* State: exiting */
+#blyrics-loader[state="exiting"],
+#blyrics-loader[state="exiting-message"] {
+    visibility: visible;
+    opacity: 0;
+    transform: translateY(calc(-50cqh - 2rem));
+}
+
+#blyrics-loader[state="exiting-message"]:before {
+    display: none;
+}
+
+#blyrics-loader[state="exiting"] ~ #blyrics-wrapper,
+#blyrics-loader[state="exiting-message"] ~ #blyrics-wrapper {
+    transform: translateY(0);
+}
+
+/* Loader Visual Elements */
+#blyrics-loader:before {
+	animation: blyrics-spin 1.5s linear infinite;
+	background: url(https://better-lyrics.boidu.dev/icon-512.png);
+	background-position: 50%;
+	background-size: cover;
+	content: "";
+	display: block;
+	height: 3.5rem;
+	width: 3.5rem;
+	flex-shrink: 0;
+}
+
+#blyrics-loader:after {
+	color: color-mix(in srgb, var(--blyrics-ui-text-color) 70%, transparent);
+	content: var(--blyrics-loader-text, "");
+	font-family: var(--blyrics-font-family);
+	font-size: 2.2rem;
+	font-weight: 700;
+	isolation: isolate;
+	line-height: 1.5;
+	white-space: pre;
+	z-index: 1;
+}
+
+#blyrics-loader:not([state="showing-message"]):not([state="exiting-message"]):after {
+	background: var(--blyrics-shimmer-gradient) 0 0 / 200% 100%;
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	animation: blyrics-shimmer 3s linear infinite;
+	will-change: background-position;
+}
+
+
+
+
+/* Ad overlay styles */
+#blyrics-ad-overlay {
+	align-items: center;
+	display: flex !important;
+	gap: 1rem;
+	justify-content: center;
+	opacity: 0;
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 101;
+    visibility: hidden;
+    pointer-events: none;
+	transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+#blyrics-ad-overlay[active] {
+    opacity: 1;
+    visibility: visible;
+}
+
+#blyrics-ad-overlay:before {
+	animation: blyrics-spin 1s linear infinite;
+	background: url(https://better-lyrics.boidu.dev/icon-512.png);
+	background-position: 50%;
+	background-size: cover;
+	content: "";
+	display: block;
+	height: 3rem;
+	width: 3rem;
+    flex-shrink: 0;
+}
+
+#blyrics-ad-overlay:after {
+	background: var(--blyrics-shimmer-gradient) 0 0 / 200% 100%;
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	content: var(--blyrics-text-ad-playing, "[elevator music]");
+	font-family: var(--blyrics-font-family);
+	font-size: 2rem;
+	font-weight: 700;
+	isolation: isolate;
+	line-height: 1.5;
+	white-space: pre;
+	z-index: 1;
+	animation: blyrics-shimmer 3s linear infinite;
+	will-change: background-position;
+}
+
+#blyrics-ad-overlay[active] ~ #blyrics-wrapper,
+#blyrics-ad-overlay[active] ~ #blyrics-loader {
+	display: none !important;
+}
+
+:has(ytmusic-player-bar[is-advertisement]) #blyrics-wrapper,
+:has(ytmusic-player-bar[is-advertisement]) #blyrics-loader {
+	display: none !important;
+}
+
+:has(ytmusic-player-bar[is-advertisement]) #blyrics-ad-overlay {
+    opacity: 1;
+    visibility: visible;
+}
+
+#tab-renderer[page-type="MUSIC_PAGE_TYPE_TRACK_LYRICS"]
+	tp-yt-paper-spinner-lite {
+	display: none !important;
+}
+
+/* No lyrics button container */
+.blyrics-no-lyrics-button-container {
+	display: flex;
+	justify-content: flex-start;
+	opacity: 0.9;
+	z-index: 1;
+	position: relative;
+	transition: opacity 0.3s ease;
+	gap: 1rem;
+}
+
+/* Footer styles */
+.blyrics-footer {
+	height: 0;
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	direction: ltr;
+	position: relative;
+	z-index: 100;
+	margin-top: 6rem;
+	padding-inline: calc(0.25em - 2.5px);
+	flex-wrap: wrap;
+}
+
+.blyrics-footer__discord {
+	background-color: var(--blyrics-footer-bg-color);
+	border: 1px solid var(--blyrics-footer-border-color);
+	padding: 0.5rem;
+	border-radius: var(--blyrics-border-radius);
+	display: grid;
+	place-items: center;
+	transition: background-color 0.2s;
+}
+
+.blyrics-footer__discord:hover {
+	background-color: var(--blyrics-discord-hover-color);
+}
+
+.blyrics-footer__discord > img {
+	filter: brightness(1);
+	transition: filter 0.2s;
+}
+
+.blyrics-footer__discord:hover > img {
+	filter: brightness(10);
+}
+
+.blyrics-footer__container {
+	align-items: center;
+	background-color: var(--blyrics-footer-bg-color);
+	border: 1px solid var(--blyrics-footer-border-color);
+	border-radius: var(--blyrics-border-radius);
+	color: var(--blyrics-footer-text-color);
+	cursor: default;
+	display: flex;
+	font-family: var(--blyrics-footer-font-family);
+	font-size: var(--blyrics-footer-font-size);
+	font-weight: var(--blyrics-footer-font-weight);
+	line-height: var(--ytmusic-body-line-height);
+	padding: 0.5rem 1.25rem;
+	position: relative;
+	white-space: pre;
+	width: fit-content;
+	z-index: 2;
+}
+
+.blyrics-footer__container > a {
+	color: var(--blyrics-footer-link-color);
+	text-decoration: none;
+	text-underline-offset: 2px;
+}
+
+.blyrics-footer__container:hover > a {
+	text-decoration: underline;
+}
+
+.blyrics-footer__container > img {
+	margin-left: -6px;
+	margin-right: 0.75rem;
+}
+
+.autoscroll-resume-wrapper {
+	position: relative;
+	width: 100%;
+	height: 0;
+	background: rgba(0, 0, 0, 0);
+	z-index: 100;
+}
+
+.autoscroll-resume-button {
+	font-family: var(--blyrics-font-family);
+	position: absolute;
+	display: block;
+	font-size: 1.75rem;
+	font-weight: 600;
+	white-space: normal;
+	line-height: 1.1;
+	margin-top: 8px;
+
+	width: fit-content;
+	padding-block: 1rem;
+	background: rgba(255, 255, 255, 0.05);
+	padding: 0.5rem 1rem;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 1rem;
+	color: rgba(255, 255, 255, 1);
+
+	left: 50%;
+	transform: translate(-50%, 2em);
+
+	backdrop-filter: blur(5px);
+	will-change: backdrop-filter;
+
+	pointer-events: auto;
+	cursor: pointer;
+	user-select: none;
+
+	transition:
+		opacity 0.15s linear 0.05s,
+		transform 0.2s cubic-bezier(0.5, 1, 0.89, 1),
+		text-shadow 0.25s ease;
+}
+
+.autoscroll-resume-button[autoscroll-hidden="true"] {
+	transition:
+		opacity 0.1s linear,
+		transform 0.15s ease-in;
+	opacity: 0; /* Make it invisible */
+	pointer-events: none; /* Disable click events */
+	transform: translate(-50%, -3em);
+}
+
+.autoscroll-resume-button:hover {
+	text-shadow: 0 0 1.5rem var(--blyrics-glow-color);
+}
+
+.autoscroll-resume-button:focus {
+	outline-color: white;
+	outline-width: 1px;
+}
+
+/* Watermark styles */
+#blyrics-watermark {
+	display: none;
+	position: absolute;
+	bottom: 1rem;
+	left: 1rem;
+	margin-bottom: 0 !important;
+	justify-content: center;
+	user-select: none;
+}
+
+#blyrics-watermark > .blyrics-watermark__container {
+	display: flex;
+	align-items: center;
+	border-radius: var(--blyrics-border-radius);
+	padding: 0.25rem;
+	padding-right: 0.75rem;
+	background-color: rgba(0, 0, 0, 0);
+	border: 1px solid rgba(0, 0, 0, 0.02);
+	backdrop-filter: brightness(0.66) blur(var(--blyrics-blur-amount));
+}
+
+#blyrics-watermark > .blyrics-watermark__container > img {
+	width: 16px;
+	height: 16px;
+	margin-right: 0.5rem;
+}
+
+#blyrics-watermark > .blyrics-watermark__container > p {
+	font-size: 1rem;
+	color: var(--blyrics-ui-text-color);
+	text-decoration: none;
+	text-underline-offset: 2px;
+}
+
+/* Song info styles */
+#blyrics-song-info {
+	display: none;
+	z-index: 2;
+	max-width: 40rem;
+	font-family: var(--blyrics-font-family);
+}
+
+#blyrics-song-info > p#blyrics-title {
+	font-size: 2rem;
+	font-weight: 700;
+	margin: 0;
+}
+
+#blyrics-song-info > p#blyrics-artist {
+	font-size: 1.5rem;
+	margin: 0;
+	opacity: 0.5;
+	margin-top: 0.25rem;
+}
+
+@keyframes blyrics-spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(1turn);
+	}
+}
+
+@keyframes blyrics-shimmer {
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -200% 0;
+	}
+}

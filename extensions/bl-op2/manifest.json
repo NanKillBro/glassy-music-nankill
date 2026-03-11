@@ -1,0 +1,96 @@
+{
+  "manifest_version": 3,
+  "version": "2.2.0",
+  "default_locale": "en",
+  "name": "Better Lyrics (NanKill Modded)",
+  "description": "__MSG_extensionDescription__",
+  "homepage_url": "https://better-lyrics.boidu.dev",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "512": "icons/icon-512.png"
+  },
+  "host_permissions": [
+    "*://music.youtube.com/*"
+  ],
+  "permissions": [
+    "storage",
+    "alarms"
+  ],
+  "optional_permissions": [
+    "downloads"
+  ],
+  "optional_host_permissions": [],
+  "options_ui": {
+    "page": "options_ui/page.html",
+    "open_in_tab": false
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "*.js.map",
+        "css/blyrics/*.css",
+        "css/disablestylizedanimations.css",
+        "css/themes/*.css",
+        "css/themesong.css",
+        "css/ytmusic/*.css"
+      ],
+      "matches": [
+        "*://music.youtube.com/*"
+      ]
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "betterlyrics@boidu.dev",
+      "strict_min_version": "100.0"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://music.youtube.com/*"
+      ],
+      "js": [
+        "content_scripts/content-0.js"
+      ],
+      "run_at": "document_start",
+      "world": "ISOLATED",
+      "css": []
+    },
+    {
+      "matches": [
+        "*://music.youtube.com/*"
+      ],
+      "js": [
+        "earlyInject.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "css": []
+    },
+    {
+      "matches": [
+        "*://music.youtube.com/*"
+      ],
+      "js": [
+        "script.js",
+        "mod/mergetheme.js",
+        "mod/fix.js"
+      ],
+      "run_at": "document_end",
+      "world": "MAIN",
+      "css": []
+    }
+  ],
+  "action": {
+    "default_popup": "action/default_popup.html"
+  },
+  "version_name": "2.2.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4RTGjLjI1KqxGLgE7d3tD4O+mTA6pKDPZ29V4/uP9nBicHRst7R7n5wdFW1qvLiILyUqRm1fURMBeShb0mcPEMC6iW3cr4i8NG+52VxFcPIYbsegPHJsQFVWe6lgorVw20yn2mWshGKIppgN14FJCSFc7mS/CX4JL88E82AIaFJiVBgmpBu5RMcglUfSwMH5ePlRV68dOhMjX8bdoHH6FoAARh7igtyKBKEzA811PWRIBiKZBGAZc2ew6+5O2mERuFq0PRvfEcD4KsBRiWHltyUcYzVjIMF4soC8i6lNOJx8it0kAn5PN6G7TdiD3HbU5eLqk+iCr+cK/pS1ybiACQIDAQAB",
+  "background": {
+    "service_worker": "background/service_worker.js",
+    "type": "module"
+  },
+  "update_url": "https://clients2.google.com/service/update2/crx"
+}
