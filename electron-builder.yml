@@ -26,12 +26,10 @@ win:
     - target: nsis-web
       arch:
         - x64
-        - ia32
         - arm64
     - target: portable
       arch:
         - x64
-        - ia32
         - arm64
   compression: maximum
 nsisWeb:

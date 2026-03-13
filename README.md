@@ -234,13 +234,17 @@ pnpm install --frozen-lockfile
 ```
 
 3. **Build the app for your Operating System:**
-Run the command that matches your target OS:
-* `pnpm dist:win` - Windows
-* `pnpm dist:linux` - Linux (amd64)
-* `pnpm dist:linux:deb-arm64` - Linux (arm64 for Debian)
-* `pnpm dist:linux:rpm-arm64` - Linux (arm64 for Fedora)
-* `pnpm dist:mac` - macOS (amd64)
-* `pnpm dist:mac:arm64` - macOS (arm64)
+   - **For Windows Users (Recommended):**
+     Simply double-click the `build.bat` file in the project's root folder. It will automatically check for prerequisites, install them if necessary, and compile the app for Windows.
+
+   - **For other platforms or manual builds:**
+     Run the command that matches your target OS:
+     * `pnpm dist:win` - Windows
+     * `pnpm dist:linux` - Linux (amd64)
+     * `pnpm dist:linux:deb-arm64` - Linux (arm64 for Debian)
+     * `pnpm dist:linux:rpm-arm64` - Linux (arm64 for Fedora)
+     * `pnpm dist:mac` - macOS (amd64)
+     * `pnpm dist:mac:arm64` - macOS (arm64)
 
 Builds the app for macOS, Linux, and Windows, using [electron-builder](https://github.com/electron-userland/electron-builder).
 
