@@ -214,12 +214,24 @@ export default createPlugin({
   example in `sponsorblock` plugin.
 
 ## Build
-### 🛠️ Prerequisites
+
+### 🪟 Automated Build (Windows Only & Recommended)
+We provide an automated build script ([`build.bat`](https://git.nankill.xyz/nankill/youtube-music-nankill/raw/branch/master/build.bat)) for Windows that handles everything from A to Z, including checking/installing prerequisites, cloning the repository, installing packages, and compiling the app.
+
+1. Download the [`build.bat`](https://git.nankill.xyz/nankill/youtube-music-nankill/raw/branch/master/build.bat) file to any folder on your computer.
+2. Double-click `build.bat` to run it. If it prompts for Administrator privileges (required to install missing NodeJS/Git/pnpm), please allow it.
+3. Follow the on-screen prompts to select your build architecture.
+4. Once completed, your compiled portable app will be located in the `youtube-music-nankill/pack` folder.
+
+### 🐧🍏🪟 Manual Build (Linux, macOS, or Windows)
+
+#### 🛠️ Prerequisites
 Before you begin, ensure you have the following installed on your system:
 * **[Git](https://git-scm.com/downloads)**: Required to clone the repository.
 * **[Node.js](https://nodejs.org/en/download/)**: Please install the **latest version**. Older versions will likely cause build errors.
 * **[pnpm](https://pnpm.io/installation/)**: Follow this official guide to install `pnpm` globally on your machine.
-### 🚀 Build Steps
+
+#### 🚀 Build Steps
 
 1. **Clone the repository and navigate into the project folder:**
 ```bash
@@ -234,17 +246,13 @@ pnpm install --frozen-lockfile
 ```
 
 3. **Build the app for your Operating System:**
-   - **For Windows Users (Recommended):**
-     Simply double-click the `build.bat` file in the project's root folder. It will automatically check for prerequisites, install them if necessary, and compile the app for Windows.
-
-   - **For other platforms or manual builds:**
-     Run the command that matches your target OS:
-     * `pnpm dist:win` - Windows
-     * `pnpm dist:linux` - Linux (amd64)
-     * `pnpm dist:linux:deb-arm64` - Linux (arm64 for Debian)
-     * `pnpm dist:linux:rpm-arm64` - Linux (arm64 for Fedora)
-     * `pnpm dist:mac` - macOS (amd64)
-     * `pnpm dist:mac:arm64` - macOS (arm64)
+   Run the command that matches your target OS:
+   * `pnpm dist:win` - Windows
+   * `pnpm dist:linux` - Linux (amd64)
+   * `pnpm dist:linux:deb-arm64` - Linux (arm64 for Debian)
+   * `pnpm dist:linux:rpm-arm64` - Linux (arm64 for Fedora)
+   * `pnpm dist:mac` - macOS (amd64)
+   * `pnpm dist:mac:arm64` - macOS (arm64)
 
 Builds the app for macOS, Linux, and Windows, using [electron-builder](https://github.com/electron-userland/electron-builder).
 

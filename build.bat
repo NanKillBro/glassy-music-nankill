@@ -8,8 +8,12 @@ setlocal EnableDelayedExpansion
 net session >nul 2>&1
 if %errorLevel% neq 0 (
     echo Requesting Administrator privileges...
-    :: Use PowerShell for cleaner elevation - keeps window visible
-    powershell -Command "Start-Process cmd -ArgumentList '/c cd /d \"%~dp0\" && \"%~f0\"' -Verb RunAs"
+    set "SCRIPT_PATH=%~f0"
+    set "SCRIPT_DIR=%~dp0"
+    echo Set objShell = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
+    echo objShell.ShellExecute "%~f0", "", "%~dp0", "runas", 1 >> "%temp%\getadmin.vbs"
+    "%temp%\getadmin.vbs"
+    del "%temp%\getadmin.vbs"
     exit /B
 )
 
@@ -161,25 +165,34 @@ call :LOG "========================================================"
 
 if exist "package.json" goto :SKIP_CLONE
 
+set "REPO_DIR=youtube-music-nankill"
+
+if exist "!REPO_DIR!\package.json" goto :REPO_EXISTS
+
+:: Repo chua co, clone moi
 call :LOG ""
-call :LOG "Source code not found, downloading repository..."
-
-:: Backup this script before git operations (git reset will overwrite it!)
-set "BAT_BACKUP=%temp%\build_bat_backup_%RANDOM%.bat"
-copy /Y "%~f0" "!BAT_BACKUP!" >nul
-
-if not exist ".git" (
-    call :RUN_AND_LOG git init
-    call :RUN_AND_LOG git remote add origin https://git.nankill.xyz/nankill/youtube-music-nankill
+call :LOG "Source code not found, cloning repository..."
+if not exist "!REPO_DIR!" (
+    call :RUN_AND_LOG git clone https://git.nankill.xyz/nankill/youtube-music-nankill
 )
-call :RUN_AND_LOG git fetch origin master
-call :RUN_AND_LOG git reset --hard origin/master
+if not exist "!REPO_DIR!\package.json" goto :CLONE_FAILED
+call :LOG "[OK] Repository cloned successfully."
+goto :ENTER_REPO
 
-:: Restore this script so CMD keeps reading the correct file
-copy /Y "!BAT_BACKUP!" "%~f0" >nul
-del "!BAT_BACKUP!" >nul 2>&1
+:REPO_EXISTS
+:: Repo da co, pull update moi nhat
+call :LOG ""
+call :LOG "[*] Repository found. Pulling latest updates..."
+pushd "!REPO_DIR!"
+call :RUN_AND_LOG git pull origin master
+popd
+call :LOG "[OK] Repository updated."
+goto :ENTER_REPO
 
-if not exist "package.json" goto :CLONE_FAILED
+:ENTER_REPO
+call :LOG "[*] Entering !REPO_DIR! folder..."
+cd /d "!REPO_DIR!"
+set "LOG_FILE=%cd%\..\build_log.txt"
 goto :SKIP_CLONE
 
 :CLONE_FAILED
@@ -191,6 +204,7 @@ exit /B 1
 :SKIP_CLONE
 call :LOG ""
 call :LOG "Installing project Node modules (pnpm install)..."
+call :LOG "This process may take a few minutes, please wait. Check build_log.txt for details..."
 call :RUN_AND_LOG pnpm install --frozen-lockfile
 
 :: Verify node_modules was created
@@ -204,13 +218,29 @@ exit /B 1
 
 :PNPM_OK
 call :LOG ""
-call :LOG "Building Windows App (pnpm dist:win)..."
+echo Choose build architecture:
+echo [1] x64 only (faster)
+echo [2] x64 + arm64 (full)
+echo.
+set "ARCH_CHOICE="
+set /p "ARCH_CHOICE=Enter your choice (1/2): "
+
+if "!ARCH_CHOICE!"=="1" (
+    set "BUILD_CMD=pnpm dist:win:x64"
+    call :LOG "[*] Build target: x64 only"
+) else (
+    set "BUILD_CMD=pnpm dist:win"
+    call :LOG "[*] Build target: x64 + arm64"
+)
+
+call :LOG ""
+call :LOG "Building Windows App (!BUILD_CMD!)..."
 call :LOG "This process may take a few minutes, please wait. Check build_log.txt for details..."
 call :LOG ""
-call :RUN_AND_LOG pnpm dist:win
+call :RUN_AND_LOG !BUILD_CMD!
 
-:: Verify dist folder was created
-if not exist "dist" goto :BUILD_FAILED
+:: Verify pack folder was created
+if not exist "pack" goto :BUILD_FAILED
 goto :BUILD_OK
 
 :BUILD_FAILED
@@ -223,7 +253,7 @@ call :LOG ""
 call :LOG "========================================================"
 call :LOG "BUILD PROCESS COMPLETED SUCCESSFULLY."
 call :LOG "========================================================"
-call :LOG "The installation file has been generated in the 'dist' folder."
+call :LOG "The build file has been generated in the 'youtube-music-nankill/pack' folder."
 call :LOG "A detailed log has been saved to: !LOG_FILE!"
 call :SHOW_EXIT
 exit /B 0
