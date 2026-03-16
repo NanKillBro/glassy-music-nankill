@@ -1,0 +1,169 @@
+name: Build Glassy Music
+
+on:
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: "22.x"
+
+jobs:
+  build:
+    if: github.event.pull_request.draft == false
+    name: Build Glassy Music
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ macos-26, ubuntu-latest, windows-latest ]
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Setup NodeJS
+        if: startsWith(matrix.os, 'macOS') != true
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Setup NodeJS for macOS
+        if: startsWith(matrix.os, 'macOS')
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Only vite build without release if it is a fork, or it is a pull-request
+      - name: Vite Build
+        if: github.repository == 'NanKillBro/glassy-music-nankill' && github.event_name == 'pull_request'
+        run: |
+          pnpm build
+
+      # Build and release if it's the main repository and is not pull-request
+      - name: Build and release on Mac
+        if: startsWith(matrix.os, 'macOS') && (github.repository == 'NanKillBro/glassy-music-nankill' && github.event_name != 'pull_request')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pnpm release:mac
+
+      - name: Build and release on Linux
+        if: startsWith(matrix.os, 'ubuntu') && (github.repository == 'NanKillBro/glassy-music-nankill' && github.event_name != 'pull_request')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          sudo snap install snapcraft --classic
+          sudo apt update
+          sudo apt install -y flatpak flatpak-builder
+          sudo flatpak remote-add --if-not-exists --system flathub https://flathub.org/repo/flathub.flatpakrepo
+          sudo flatpak install -y flathub org.freedesktop.Platform/x86_64/24.08
+          sudo flatpak install -y flathub org.freedesktop.Sdk/x86_64/24.08
+          sudo flatpak install -y flathub org.electronjs.Electron2.BaseApp/x86_64/24.08
+          pnpm release:linux
+
+      - name: Build and release on Windows
+        if: startsWith(matrix.os, 'windows') && (github.repository == 'NanKillBro/glassy-music-nankill' && github.event_name != 'pull_request')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pnpm release:win
+
+      - name: Test
+        uses: coactions/setup-xvfb@v1
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+        with:
+          run: pnpm test:debug
+
+
+  release:
+    runs-on: ubuntu-latest
+    name: Release Glassy Music
+    if: github.repository == 'NanKillBro/glassy-music-nankill' && github.ref == 'refs/heads/master'
+    needs: build
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Setup NodeJS
+        if: startsWith(matrix.os, 'macOS') != true
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Setup NodeJS for macOS
+        if: startsWith(matrix.os, 'macOS')
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Get version
+        run: |
+          echo "VERSION_TAG=v$(node -pe "require('./package.json').version")" >> $GITHUB_ENV
+
+      - name: Check if version already exists in tags
+        run: |
+          echo "VERSION_HASH=$(git rev-parse -q --verify 'refs/tags/${{ env.VERSION_TAG }}')" >> $GITHUB_ENV
+          echo "CHANGELOG_ANCHOR=$(echo $VERSION_TAG | sed -e 's/\.//g')" >> $GITHUB_ENV
+
+      - name: Fetch draft release
+        if: ${{ env.VERSION_HASH == '' }}
+        uses: cardinalby/git-get-release-action@v1
+        id: get_draft_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          latest: true
+          draft: true
+          searchLimit: 1
+
+      - name: Publish Release (if it does not exist)
+        if: ${{ env.VERSION_HASH == '' }}
+        uses: irongut/EditRelease@v1.2.0
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          id: ${{ steps.get_draft_release.outputs.id }}
+          draft: false
+          prerelease: false
+          replacename: true
+          name: ${{ env.VERSION_TAG }}
+          replacebody: true
+          body: |
+            See [changelog](https://github.com/NanKillBro/glassy-music-nankill/blob/master/changelog.md#${{ env.CHANGELOG_ANCHOR }}) for the list of updates and the full diff.
+
+            Thanks to all contributors! 🏅
+
+            (Note for Windows: `Glassy-Music-Web-Setup-${{ env.VERSION_TAG }}.exe` is an installer, and `Glassy-Music-${{ env.VERSION_TAG }}.exe` is a portable version)
+
+      - name: Update changelog
+        if: ${{ env.VERSION_HASH == '' }}
+        run: |
+          pnpm changelog
+
+      - name: Commit changelog
+        if: ${{ env.VERSION_HASH == '' }}
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: Update changelog for ${{ env.VERSION_TAG }}
+          file_pattern: "changelog.md"
+          commit_user_name: CI
+          commit_user_email: nankill@nankill.xyz
