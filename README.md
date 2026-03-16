@@ -1,10 +1,10 @@
 <div align="center">
 
-# Youtube Music (NanKill Modded)
+# 🕶️ Glassy Music
 
-[![GPLv3 License](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://git.nankill.xyz/nankill/youtube-music-nankill/src/branch/master/LICENSE)
-[![eslint code style](https://img.shields.io/badge/code_style-eslint-5ed9c7.svg?style=for-the-badge)](https://git.nankill.xyz/nankill/youtube-music-nankill/src/branch/master/eslint.config.mjs)
-[![Gitea Release](https://img.shields.io/gitea/v/release/nankill/youtube-music-nankill?gitea_url=https%3A%2F%2Fgit.nankill.xyz&include_prereleases&label=version&color=orange&style=for-the-badge)](https://git.nankill.xyz/nankill/youtube-music-nankill/releases)
+[![GPLv3 License](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://github.com/NanKillBro/glassy-music-nankill/src/branch/master/LICENSE)
+[![eslint code style](https://img.shields.io/badge/code_style-eslint-5ed9c7.svg?style=for-the-badge)](https://github.com/NanKillBro/glassy-music-nankill/src/branch/master/eslint.config.mjs)
+[![Github Release](https://img.shields.io/github/v/release/NanKillBro/glassy-music-nankill?include_prereleases&label=version&color=orange&style=for-the-badge)](https://github.com/NanKillBro/glassy-music-nankill/releases)
 
 </div>
 
@@ -13,6 +13,11 @@
 **A personalized fork maintained by NanKill**
 
 ![Screenshot](web/new.png "Screenshot")
+
+<p align="center">
+    More screenshots: <a href="web/demo/screenshot.md">here</a>
+</p>
+
 <p>
     This project is enhanced with AI assistance from <b>Gemini 3 Pro, Claude Opus 4.6</b>.
 </p>
@@ -25,10 +30,10 @@
 
 Here are the key improvements and features added in this build:
 
-- 🎵 **[Better Lyrics](https://git.nankill.xyz/nankill/better-lyrics-nankill) Integration:** Added custom themes, bug fixes.
+- 🎵 **Better Lyrics Integration:** Added custom themes, bug fixes.
 - 🎨 **Better Lyrics Shader:** Enhanced visual effects with fixes.
 - 🛡️ **Built-in Adblock:** Enjoy music without interruptions.
-- ⏯️ **YouTube Non-Stop:** Bypassed the "Video paused. Continue watching?" prompt.
+- ⏯️ **Non-Stop:** Bypassed the "Video paused. Continue watching?" prompt.
 - 🌶️ **Personal Tweaks:** Added some "extra flavor" and customizations to suit my preferences.
 
 ---
@@ -61,10 +66,18 @@ Since this is a custom build, you will need to build it yourself.
 >
 > This application (extension) is provided "AS IS", and you use it at your own risk. In no event shall the developers or contributors be liable for any claim, damages, or other liability, including any legal consequences, arising from, out of, or in connection with the software or the use or other dealings in the software. The responsibility for any and all outcomes of using this software rests entirely with the user.
 
+> [!NOTE]
+> ### 🛑 Before you use or contribute:
+> 
+> **Built for me, not for everyone:** 
+This fork is heavily "opinionated" and built strictly to satisfy my personal visual preferences. I have intentionally stripped out several customization features to force a specific, out-of-the-box experience. My goal is for you to experience the exact visual aesthetic I intended without needing to configure a single thing. If you don't like the hardcoded layout or the specific styling, you are highly encouraged to fork the repo and DIY, as this project is open-source!
+> 
+> **Heavy "Vibe Coding" & AI Assistance:** 
+This project relies heavily on "vibe coding". As a result, the underlying codebase might be unoptimized, and some features may have bugs or break randomly. I spent a lot of time tweaking the AI output to make it work, but the code architecture might not be perfect. Pull Requests to fix bugs, optimize the code, or enhance features are incredibly welcome! Please be kind and constructive with your feedback or criticism.
+
 ## Content
 
 - [Features](#features)
-- [Themes](#themes)
 - [Dev](#dev)
 - [Build your own plugins](#build-your-own-plugins)
   - [Creating a plugin](#creating-a-plugin)
@@ -76,17 +89,11 @@ Since this is a custom build, you will need to build it yourself.
 - [Credits](#credits--acknowledgements)
 - [FAQ](#faq)
 
-## Themes
-
-You can load CSS files to change the look of the application (Options > Visual Tweaks > Themes).
-
-Some predefined themes are available in https://github.com/kerichdev/themes-for-ytmdesktop-player.
-
 ## Dev
 
 ```bash
-git clone https://git.nankill.xyz/nankill/youtube-music-nankill
-cd youtube-music-nankill
+git clone https://github.com/NanKillBro/glassy-music-nankill
+cd glassy-music-nankill
 pnpm install --frozen-lockfile
 pnpm dev
 ```
@@ -216,12 +223,12 @@ export default createPlugin({
 ## Build
 
 ### 🪟 Automated Build (Windows Only & Recommended)
-We provide an automated build script ([`build.bat`](https://git.nankill.xyz/nankill/youtube-music-nankill/src/branch/master/build.bat)) for Windows that handles everything from A to Z, including checking/installing prerequisites, cloning the repository, installing packages, and compiling the app.
+I provide an automated build script ([`build.bat`](https://github.com/NanKillBro/glassy-music-nankill/src/branch/master/build.bat)) for Windows that handles everything from A to Z, including checking/installing prerequisites, cloning the repository, installing packages, and compiling the app.
 
-1. Download the [`build.bat`](https://git.nankill.xyz/nankill/youtube-music-nankill/src/branch/master/build.bat) file to any folder on your computer.
+1. Download the [`build.bat`](https://github.com/NanKillBro/glassy-music-nankill/src/branch/master/build.bat) file to any folder on your computer.
 2. Double-click `build.bat` to run it. If it prompts for Administrator privileges (required to install missing NodeJS/Git/pnpm), please allow it.
 3. Follow the on-screen prompts to select your build architecture.
-4. Once completed, your compiled portable app will be located in the `youtube-music-nankill/pack` folder.
+4. Once completed, your compiled portable app will be located in the `glassy-music-nankill/pack` folder.
 
 ### 🐧🍏🪟 Manual Build (Linux, macOS, or Windows)
 
@@ -235,8 +242,8 @@ Before you begin, ensure you have the following installed on your system:
 
 1. **Clone the repository and navigate into the project folder:**
 ```bash
-git clone https://git.nankill.xyz/nankill/youtube-music-nankill
-cd youtube-music-nankill
+git clone https://github.com/NanKillBro/glassy-music-nankill
+cd glassy-music-nankill
 ```
 
 2. **Install dependencies:**
@@ -282,8 +289,8 @@ Uses [Playwright](https://playwright.dev/) to test the app.
 
 ## License
 
-- **GPL-3.0** © [nankill](https://git.nankill.xyz/nankill/youtube-music-nankill)
-- Based on [pear-desktop](https://github.com/pear-devs/pear-desktop) (MIT © pear-devs)
+- **GPL-3.0** © [nankill](https://github.com/NanKillBro/glassy-music-nankill)
+- Based on [pear-desktop](https://github.com/pear-devs/pear-desktop) ([MIT © pear-devs](NOTICE))
 
 ## Credits / Acknowledgements
 
@@ -293,13 +300,14 @@ This project is made possible thanks to the amazing work of the open-source comm
 * **[Pear Desktop](https://github.com/pear-devs/pear-desktop)**: The incredible base application that this fork is built upon.
 * **[Better Lyrics](https://github.com/better-lyrics/better-lyrics)**: For the fantastic enhanced lyrics integration.
 * **[Better Lyrics Shader](https://github.com/better-lyrics/shaders)**: For the beautiful visual effects and background shaders.
-* **[Youtube NonStop+](https://chromewebstore.google.com/detail/youtube-nonstop-ch%E1%BA%B7n-t%E1%BB%B1-%C4%91/fboblaiflnpfojmmnenhacobmckefmlh)**: The underlying logic used to bypass the "Video paused" prompts.
+* **[NonStop+](https://chromewebstore.google.com/detail/youtube-nonstop-ch%E1%BA%B7n-t%E1%BB%B1-%C4%91/fboblaiflnpfojmmnenhacobmckefmlh)**: The underlying logic used to bypass the "Video paused" prompts.
 
 ### Theme Inspirations
 Special thanks to the following creators whose work deeply inspired the **"Merge Theme"**:
 * **[chengggit](https://github.com/chengggit)**: Inspiration from the *Dynamic Background*.
 * **zobiron**: Inspiration from the *Big Blurry Slow Lyrics for TV* concept.
 * **SKMJi**: Inspiration from the *Luxurious Glass* design.
+
 ## FAQ
 
 ### Why apps menu isn't showing up?

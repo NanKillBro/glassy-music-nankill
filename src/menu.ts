@@ -399,14 +399,30 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
 
     <div class="container">
         <div class="header">
-            <h1>YouTube Music</h1>
+            <h1>Glassy Music</h1>
             <div class="version-badge">NanKill Client v${packageJson.version}</div>
-            <div class="dev-by">Developed by <strong><a href="https://nankill.xyz" target="_blank">NanKill</a>, Gemini 3 Pro</strong></div>
+            <div class="dev-by">Developed by <strong><a href="https://github.com/NanKillBro" target="_blank">NanKill</a></strong></div>
         </div>
 
         <div class="changelog-label">What's New</div>
 
         <div class="scroll-area">
+        <div class="log-entry">
+            <div class="log-header">
+                <span class="log-version">Version 3.12.4-beta</span>
+                <span class="log-tag">BETA</span>
+            </div>
+            <ul>
+                <li>Upstreamed to commit: <code style="">e3d870a</code></li>
+                <li>Updated MERGE THEME from <span style="color:#00f2fe">v17</span> to <span style="color:#00f2fe">v18</span></li>
+                <li>Added AM spring scroll effect (with selectable options)</li>
+                <li>Redesigned the in-app menu</li>
+                <li>Added linear gradient styling to the top bar</li>
+                <li>More rounded corners across the UI</li>
+                <li>Fixed Discord RPC issue with 32-character limit</li>
+                <li>Updated README documentation</li>
+            </ul>
+        </div>
         <div class="log-entry">
             <div class="log-header">
                 <span class="log-version">Version 3.12.3-beta</span>
@@ -471,7 +487,7 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
 
         <div class="credits">
             Based on <strong><a href="https://github.com/pear-devs/pear-desktop" target="_blank">pear-desktop</a></strong> by <a href="#" style="pointer-events: none;">th-ch</a>.<br>
-            Source code available at <a href="https://git.nankill.xyz/nankill/youtube-music-nankill" target="_blank">nankill/youtube-music-nankill</a>
+            Source code available at <a href="https://github.com/NanKillBro/glassy-music-nankill" target="_blank">NanKillBro/glassy-music-nankill</a>
         </div>
     </div>
 

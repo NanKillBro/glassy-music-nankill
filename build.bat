@@ -27,7 +27,7 @@ color 0B
 title NanKill Modded - Build Script
 
 call :LOG "========================================================"
-call :LOG "       YOUTUBE MUSIC (NANKILL MODDED) COMPILER"
+call :LOG "       GLASSY MUSIC (NANKILL MODDED) COMPILER"
 call :LOG "========================================================"
 call :LOG ""
 call :LOG "========================================================"
@@ -165,7 +165,7 @@ call :LOG "========================================================"
 
 if exist "package.json" goto :SKIP_CLONE
 
-set "REPO_DIR=youtube-music-nankill"
+set "REPO_DIR=glassy-music"
 
 if exist "!REPO_DIR!\package.json" goto :REPO_EXISTS
 
@@ -173,7 +173,7 @@ if exist "!REPO_DIR!\package.json" goto :REPO_EXISTS
 call :LOG ""
 call :LOG "Source code not found, cloning repository..."
 if not exist "!REPO_DIR!" (
-    call :RUN_AND_LOG git clone https://git.nankill.xyz/nankill/youtube-music-nankill
+    call :RUN_AND_LOG git clone https://github.com/NanKillBro/glassy-music-nankill
 )
 if not exist "!REPO_DIR!\package.json" goto :CLONE_FAILED
 call :LOG "[OK] Repository cloned successfully."
@@ -253,7 +253,7 @@ call :LOG ""
 call :LOG "========================================================"
 call :LOG "BUILD PROCESS COMPLETED SUCCESSFULLY."
 call :LOG "========================================================"
-call :LOG "The build file has been generated in the 'youtube-music-nankill/pack' folder."
+call :LOG "The build file has been generated in the 'glassy-music/pack' folder."
 call :LOG "A detailed log has been saved to: !LOG_FILE!"
 call :SHOW_EXIT
 exit /B 0

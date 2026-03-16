@@ -128,7 +128,7 @@ if (config.get('options.disableHardwareAcceleration')) {
 if (is.linux()) {
   // Overrides WM_CLASS for X11 to correspond to icon filename
   app.setName(
-    'nankill.xyz.youtube.music.mod',
+    'nankill.xyz.glassymusic.mod',
   );
 
   // Stops chromium from launching its own MPRIS service
@@ -363,10 +363,10 @@ async function createMainWindow() {
       ...(isTesting()
         ? undefined
         : {
-            // Sandbox is only enabled in tests for now
-            // See https://www.electronjs.org/docs/latest/tutorial/sandbox#preload-scripts
-            sandbox: false,
-          }),
+          // Sandbox is only enabled in tests for now
+          // See https://www.electronjs.org/docs/latest/tutorial/sandbox#preload-scripts
+          sandbox: false,
+        }),
     },
     ...decorations,
   };
@@ -494,7 +494,7 @@ async function createMainWindow() {
         ...defaultTitleBarOverlayOptions,
         height: Math.floor(
           defaultTitleBarOverlayOptions.height! *
-            win.webContents.getZoomFactor(),
+          win.webContents.getZoomFactor(),
         ),
       });
     }
@@ -664,7 +664,7 @@ app.whenReady().then(async () => {
   // Register appID on windows
   if (is.windows()) {
     const appID =
-      'youtube-music-nankill-mod';
+      'glassymusic-nankill-mod';
     app.setAppUserModelId(appID);
     const appLocation = process.execPath;
     const appData = app.getPath('appData');

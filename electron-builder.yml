@@ -1,5 +1,5 @@
-appId: "youtube-music-nankill-mod"
-productName: "YouTube Music (NanKill Modded)"
+appId: "glassy-music-nankill-mod"
+productName: "Glassy Music"
 files:
   - '!*'
   - dist
@@ -39,7 +39,7 @@ linux:
   category: AudioVideo
   desktop:
     entry:
-      StartupWMClass: "nankill.xyz.youtube.music.mod"
+      StartupWMClass: "nankill.xyz.glassymusic.mod"
   target:
     - target: AppImage
       arch:
@@ -72,10 +72,10 @@ linux:
         - arm64
         - armv7l
 appImage:
-  description: "YouTube Music - Custom mod by NanKill"
+  description: "Glassy Music - Custom mod by NanKill"
   category: AudioVideo
 flatpak:
-  description: "YouTube Music - Custom mod by NanKill"
+  description: "Glassy Music - Custom mod by NanKill"
   category: AudioVideo
   runtimeVersion: '24.08'
   baseVersion: '24.08'
