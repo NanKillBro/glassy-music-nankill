@@ -223,9 +223,9 @@ export default createPlugin({
 ## Build
 
 ### 🪟 Automated Build (Windows Only & Recommended)
-I provide an automated build script ([`build.bat`](https://github.com/NanKillBro/glassy-music-nankill/src/branch/master/build.bat)) for Windows that handles everything from A to Z, including checking/installing prerequisites, cloning the repository, installing packages, and compiling the app.
+I provide an automated build script ([`build.bat`](https://github.com/NanKillBro/glassy-music-nankill/blob/master/build.bat)) for Windows that handles everything from A to Z, including checking/installing prerequisites, cloning the repository, installing packages, and compiling the app.
 
-1. Download the [`build.bat`](https://github.com/NanKillBro/glassy-music-nankill/src/branch/master/build.bat) file to any folder on your computer.
+1. Download the [`build.bat`](https://github.com/NanKillBro/glassy-music-nankill/blob/master/build.bat) file to any folder on your computer.
 2. Double-click `build.bat` to run it. If it prompts for Administrator privileges (required to install missing NodeJS/Git/pnpm), please allow it.
 3. Follow the on-screen prompts to select your build architecture.
 4. Once completed, your compiled portable app will be located in the `glassy-music-nankill/pack` folder.
