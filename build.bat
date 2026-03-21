@@ -165,7 +165,7 @@ call :LOG "========================================================"
 
 if exist "package.json" goto :SKIP_CLONE
 
-set "REPO_DIR=glassy-music"
+set "REPO_DIR=glassy-music-nankill"
 
 if exist "!REPO_DIR!\package.json" goto :REPO_EXISTS
 
