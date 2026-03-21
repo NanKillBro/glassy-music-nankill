@@ -253,7 +253,7 @@ call :LOG ""
 call :LOG "========================================================"
 call :LOG "BUILD PROCESS COMPLETED SUCCESSFULLY."
 call :LOG "========================================================"
-call :LOG "The build file has been generated in the 'glassy-music/pack' folder."
+call :LOG "The build file has been generated in the 'glassy-music-nankill/pack' folder."
 call :LOG "A detailed log has been saved to: !LOG_FILE!"
 call :SHOW_EXIT
 exit /B 0

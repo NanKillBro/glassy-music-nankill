@@ -18,10 +18,6 @@
     More screenshots: <a href="web/demo/screenshot.md">here</a>
 </p>
 
-<p>
-    This project is enhanced with AI assistance from <b>Gemini 3 Pro, Claude Opus 4.6</b>.
-</p>
-
 <hr>
 
 ### ✨ What makes this version different?
@@ -44,10 +40,10 @@ This version includes heavy visual customization. **It is not recommended for ve
 - **Mac:** Runs perfectly on Apple Silicon (>M1).
 ---
 
-### 🚀 How to use?
+### How to use?
 
-Since this is a custom build, you will need to build it yourself.
-👉 **Please check the [Build](#build) section for detailed instructions.**
+- **🚀 Stable Release (Recommended):** You can download the pre-compiled version directly from the **[Releases](https://github.com/NanKillBro/glassy-music-nankill/releases)** page. 
+- **🛠️ Latest Experimental (Build from source):** Please check the [Build](#build) section for detailed instructions.
 
 ---
 
@@ -222,7 +218,7 @@ export default createPlugin({
 
 ## Build
 
-### 🪟 Automated Build (Windows Only & Recommended)
+### 🪟 Automated Build (Windows Only)
 I provide an automated build script ([`build.bat`](https://github.com/NanKillBro/glassy-music-nankill/blob/master/build.bat)) for Windows that handles everything from A to Z, including checking/installing prerequisites, cloning the repository, installing packages, and compiling the app.
 
 1. Download the [`build.bat`](https://github.com/NanKillBro/glassy-music-nankill/blob/master/build.bat) file to any folder on your computer.
