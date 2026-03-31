@@ -367,7 +367,7 @@ async function onApiLoaded() {
   }
 
   // Remove upgrade button
-  if (true) {
+  if (window.mainConfig.get('options.removeUpgradeButton')) {
     const itemsSelector = 'ytmusic-guide-section-renderer #items';
     let selector = 'ytmusic-guide-entry-renderer:last-child';
 
