@@ -1,5 +1,5 @@
 name: Feature Request
-description: Suggest an idea for Pear Desktop
+description: Suggest an idea for Glassy Music
 title: "[Feature Request]: "
 labels: "enhancement :sparkles:"
 body:
@@ -8,9 +8,9 @@ body:
     label: Preflight Checklist
     description: Please ensure you've completed all of the following.
     options:
-      - label: I use the latest version of Pear Desktop (Application).
+      - label: I use the latest version of Glassy Music (Application).
         required: true
-      - label: I have searched the [issue tracker](https://github.com/pear-devs/pear-desktop/issues) for a feature request that matches the one I want to file, without success.
+      - label: I have searched the [issue tracker](https://github.com/NanKillBro/glassy-music-nankill/issues) for a feature request that matches the one I want to file, without success.
         required: true
 - type: textarea
   attributes:

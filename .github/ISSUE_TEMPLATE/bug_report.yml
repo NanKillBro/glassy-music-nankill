@@ -1,5 +1,5 @@
 name: Bug Report
-description: Report a Pear Desktop bug
+description: Report a Glassy Music bug
 title: "[Bug]: "
 labels: "bug :beetle:"
 body:
@@ -8,17 +8,17 @@ body:
     label: Preflight Checklist
     description: Please ensure you've completed all of the following.
     options:
-      - label: I use the latest version of Pear Desktop (Application).
+      - label: I use the latest version of Glassy Music (Application).
         required: true
-      - label: I have searched the [issue tracker](https://github.com/pear-devs/pear-desktop/issues) for a bug report that matches the one I want to file, without success.
+      - label: I have searched the [issue tracker](https://github.com/NanKillBro/glassy-music-nankill/issues) for a bug report that matches the one I want to file, without success.
         required: true
-      - label: I understand that **pear-devs/pear-desktop has NO affiliation with Google or YouTube**
+      - label: I understand that **NanKillBro/glassy-music-nankill has NO affiliation with Google or YouTube**
         required: true
 - type: input
   attributes:
-    label: Pear Desktop (Application) Version
+    label: Glassy Music (Application) Version
     description: |
-      What version of the Pear Desktop Application are you using?
+      What version of the Glassy Music Application are you using?
 
       Note: Please check if this issue is reproducible with the latest stable release.
     placeholder: 2.0.0
@@ -28,7 +28,7 @@ body:
   attributes:
     label: Checklists
     options:
-      - label: I use the portable version of the Pear Desktop Application.
+      - label: I use the portable version of the Glassy Music Application.
       - label: I can reproduce this issue in the [official version of (WEB) YTM](https://music.youtube.com).
 - type: dropdown
   attributes:
@@ -60,8 +60,8 @@ body:
     required: true
 - type: input
   attributes:
-    label: Last Known Working Pear Desktop (Application) version
-    description: (If applicable) What is the last version of Pear Desktop this worked in?
+    label: Last Known Working Glassy Music (Application) version
+    description: (If applicable) What is the last version of Glassy Music this worked in?
     placeholder: 1.20.0
 - type: textarea
   attributes:
