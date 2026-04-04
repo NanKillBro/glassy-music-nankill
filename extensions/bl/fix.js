@@ -8,7 +8,6 @@
 // PHẦN 1: YOUTUBE MUSIC - SMOOTH FADE OUT ANIMATIONS
 // Mô tả: Thêm hiệu ứng fade out mượt mà khi đóng menu và dialog 
 // =========================================================================
-
 (function () {
   'use strict';
 
@@ -32,7 +31,6 @@
 
         .ytm-fade-out-dialog {
           animation: popupXuatHienNguoc 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
-          display: block !important;
           pointer-events: none !important;
         }
     `;
@@ -43,50 +41,105 @@
       const el = mutation.target;
       if (el.nodeType !== 1) return;
 
-      const isMenu = el.matches('tp-yt-iron-dropdown.ytmusic-popup-container');
+      const isMenu = el.matches('tp-yt-iron-dropdown.ytmusic-popup-container, tp-yt-iron-dropdown#dropdown, tp-yt-iron-dropdown.tp-yt-paper-menu-button');
       const isDialog = el.matches('ytmusic-add-to-playlist-renderer, ytmusic-unified-share-panel-renderer, ytmusic-dialog, ytmusic-engagement-panel-section-list-renderer, tp-yt-paper-dialog');
 
       if (!isMenu && !isDialog) return;
 
-      // Xác định trạng thái hiện tại: Đang bị ẩn đi?
-      // YouTube ẩn element bằng cách gỡ 'opened' VÀ (thêm display: none HOẶC aria-hidden='true')
+      // =====================================================================
+      // GUARD: Chỉ cho DIALOG — chặn YouTube ghi đè style khi đang fade-out
+      // Menu dùng cách cũ (CSS class) nên không cần guard
+      // =====================================================================
+      if (el.classList.contains('ytm-is-fading-out')) {
+        if (isDialog && mutation.attributeName === 'style') {
+          let needFix = false;
+          if (el.style.display !== 'block') needFix = true;
+          if (el._ytmSavedZIndex && el.style.zIndex !== el._ytmSavedZIndex) needFix = true;
+          if (el._ytmFadeAnim && !el.style.animation.includes('Fade')) needFix = true;
+
+          if (needFix) {
+            el.style.setProperty('display', 'block', 'important');
+            if (el._ytmFadeAnim) {
+              el.style.setProperty('animation', el._ytmFadeAnim, 'important');
+            }
+            if (el._ytmSavedZIndex) {
+              el.style.setProperty('z-index', el._ytmSavedZIndex, 'important');
+            }
+          }
+        }
+        return; // Đang fade-out → không xử lý gì thêm
+      }
+
+      // Xác định trạng thái hiện tại
       const isHidden = !el.hasAttribute('opened') && (el.style.display === 'none' || el.getAttribute('aria-hidden') === 'true');
       const isVisible = !isHidden;
 
       if (isVisible) {
         // --- NẾU ĐANG MỞ ---
-        // 1. Dập ngay hiệu ứng fade-out nếu đang chạy dở
         el.classList.remove('ytm-fade-out-menu', 'ytm-fade-out-dialog', 'ytm-is-fading-out');
-        if (el._ytmCloseTimer) clearTimeout(el._ytmCloseTimer);
+        if (isDialog) {
+          el._ytmSavedZIndex = null;
+          el._ytmFadeAnim = null;
+          el.style.removeProperty('animation');
+        }
+        if (el._ytmCloseTimer) {
+          clearTimeout(el._ytmCloseTimer);
+          el._ytmCloseTimer = null;
+        }
 
-        // 2. Chờ 50ms để xác nhận là nó "mở thật" (tránh các nhịp nảy chớp nhoáng của framework)
+        // Chờ 50ms để xác nhận là nó "mở thật"
         if (el.dataset.stableOpen !== 'true' && !el._ytmOpenTimer) {
           el._ytmOpenTimer = setTimeout(() => {
-            el.dataset.stableOpen = 'true'; // Đánh dấu: Đã mở ổn định
+            el.dataset.stableOpen = 'true';
             el._ytmOpenTimer = null;
           }, 50);
         }
       } else {
         // --- NẾU ĐANG ĐÓNG ---
-        // Hủy hẹn giờ mở nếu nó chưa kịp mở xong đã bị đóng lại
         if (el._ytmOpenTimer) {
           clearTimeout(el._ytmOpenTimer);
           el._ytmOpenTimer = null;
         }
 
-        // CHỈ chạy animation fade out NẾU trước đó nó đã từng "mở ổn định"
         if (el.dataset.stableOpen === 'true') {
-          el.dataset.stableOpen = 'false'; // Xóa dấu vết để không bị lặp
+          el.dataset.stableOpen = 'false';
 
-          // Kích hoạt animation NGAY LẬP TỨC (0ms delay) -> Hết chớp!
           el.classList.add('ytm-is-fading-out');
-          if (isMenu) el.classList.add('ytm-fade-out-menu');
-          else el.classList.add('ytm-fade-out-dialog');
 
-          // Dọn dẹp class sau khi animation chạy xong (300ms)
-          el._ytmCloseTimer = setTimeout(() => {
-            el.classList.remove('ytm-fade-out-menu', 'ytm-fade-out-dialog', 'ytm-is-fading-out');
-          }, 300);
+          if (isMenu) {
+            // ─── MENU: Cách cũ đơn giản — chỉ thêm CSS class ───
+            el.classList.add('ytm-fade-out-menu');
+
+            el._ytmCloseTimer = setTimeout(() => {
+              el.classList.remove('ytm-fade-out-menu', 'ytm-is-fading-out');
+            }, 300);
+          } else {
+            // ─── DIALOG: Cách mới — inline override để hoạt động ở player page ───
+            el._ytmSavedZIndex = el.style.zIndex || null;
+            if (!el._ytmSavedZIndex) {
+              const computed = getComputedStyle(el).zIndex;
+              if (computed && computed !== 'auto') el._ytmSavedZIndex = computed;
+            }
+
+            el._ytmFadeAnim = 'popupXuatHienNguoc 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards';
+
+            el.style.setProperty('display', 'block', 'important');
+            el.style.setProperty('animation', el._ytmFadeAnim, 'important');
+            if (el._ytmSavedZIndex) {
+              el.style.setProperty('z-index', el._ytmSavedZIndex, 'important');
+            }
+
+            el.classList.add('ytm-fade-out-dialog');
+
+            el._ytmCloseTimer = setTimeout(() => {
+              el.classList.remove('ytm-fade-out-dialog', 'ytm-is-fading-out');
+              el.style.setProperty('display', 'none');
+              el.style.removeProperty('z-index');
+              el.style.removeProperty('animation');
+              el._ytmSavedZIndex = null;
+              el._ytmFadeAnim = null;
+            }, 300);
+          }
         }
       }
     });
@@ -98,6 +151,7 @@
     subtree: true
   });
 })();
+
 
 // =========================================================================
 // PHẦN 2: YTM IMAGE CROSSFADE (FIXED)

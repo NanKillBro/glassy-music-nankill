@@ -1,9 +1,9 @@
 // Dán CSS theme "cucu" của bạn vào giữa 2 dấu huyền (`) ở dưới
 const MY_CUSTOM_CSS = `
 /* =================================================================================================================*/
-/* MERGED THEME V17: Major UI Update                                                                                */
-/* Adds: More rounded corner, more blur, more smooth animation,...                                                  */
-/* Fixes: Artist Page, Podcast Page,...                                                                             */
+/* MERGED THEME V19: Some UI Update                                                                                 */
+/* Adds: More smooth animation,...                                                                                  */
+/* Fixes: Nope                                                                                                      */
 /* Based on: Dynamic Background (by chengg), Big Blurry Slow Lyrics for TV (by zobiron), Luxurious Glass (by SKMJi) */
 /* Made by: Gemini 3 Pro and NanKill                                                                                */
 /* ================================================================================================================ */
@@ -915,15 +915,34 @@ tp-yt-paper-item.category-menu-item:hover {
   background-color: rgba(255, 255, 255, 0.08) !important; 
 }
 
-/* Áp dụng nền kính mờ cho các hộp thoại thả xuống (Quyền riêng tư, Chất lượng âm thanh...) */
-tp-yt-iron-dropdown .dropdown-content,
-tp-yt-paper-listbox.dropdown-content {
-  background-color: rgba(15, 15, 15, 0.7) !important;
+/* Áp dụng nền kính mờ cho các hộp thoại thả xuống (Quyền riêng tư, Chất lượng âm thanh, Ngôn ngữ...) */
+tp-yt-iron-dropdown .dropdown-content {
+  background-color: rgba(15, 15, 15, 0.6) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
   
   /* Thêm viền mỏng và shadow */
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   border-radius: 12px !important; /* Bo góc 12px cho menu nhỏ nhắn hơn */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  
+  /* Animation nhẹ khi mở thẻ */
+  animation: menuFadeIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+}
+
+/* Đảm bảo paper-listbox bên trong trong suốt để không đè lên hiệu ứng kính mờ của khung ngoài */
+tp-yt-iron-dropdown tp-yt-paper-listbox.dropdown-content {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Đảm bảo màu chữ trong các dropdown của Settings luôn trắng (nhất là thẻ span bên trong) */
+tp-yt-iron-dropdown tp-yt-paper-listbox tp-yt-paper-item,
+tp-yt-iron-dropdown tp-yt-paper-listbox tp-yt-paper-item span.ytmusic-setting-single-option-menu-renderer {
+  color: #fff !important;
+  font-family: 'Inter', 'Roboto', sans-serif !important;
 }
 
 /* Hiệu ứng sáng lên khi di chuột qua (Hover) */
@@ -931,15 +950,18 @@ tp-yt-paper-listbox ytmusic-dropdown-item-renderer:hover,
 tp-yt-paper-listbox tp-yt-paper-item.menu-item:hover {
   background-color: rgba(255, 255, 255, 0.1) !important;
   transition: background-color 0.2s ease !important;
+  border-radius: 8px !important; /* Bo tròn xíu cho các item được hover */
 }
 
 /* Hiệu ứng sáng hơn một chút cho mục đang được chọn (Selected) */
 tp-yt-paper-listbox ytmusic-dropdown-item-renderer.iron-selected,
 tp-yt-paper-listbox tp-yt-paper-item.menu-item.iron-selected {
   background-color: rgba(255, 255, 255, 0.15) !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
 }
 
-/* (Tùy chọn) Bỏ viền outline xấu xí khi click vào mục menu */
+/* Bỏ viền outline xấu xí khi click vào mục menu */
 tp-yt-paper-listbox tp-yt-paper-item:focus {
   outline: none !important;
 }
