@@ -47,11 +47,10 @@
       if (!isMenu && !isDialog) return;
 
       // =====================================================================
-      // GUARD: Chỉ cho DIALOG — chặn YouTube ghi đè style khi đang fade-out
-      // Menu dùng cách cũ (CSS class) nên không cần guard
+      // GUARD: Chặn YouTube ghi đè style khi đang fade-out (cả menu & dialog)
       // =====================================================================
       if (el.classList.contains('ytm-is-fading-out')) {
-        if (isDialog && mutation.attributeName === 'style') {
+        if (mutation.attributeName === 'style') {
           let needFix = false;
           if (el.style.display !== 'block') needFix = true;
           if (el._ytmSavedZIndex && el.style.zIndex !== el._ytmSavedZIndex) needFix = true;
@@ -77,11 +76,10 @@
       if (isVisible) {
         // --- NẾU ĐANG MỞ ---
         el.classList.remove('ytm-fade-out-menu', 'ytm-fade-out-dialog', 'ytm-is-fading-out');
-        if (isDialog) {
-          el._ytmSavedZIndex = null;
-          el._ytmFadeAnim = null;
-          el.style.removeProperty('animation');
-        }
+        el._ytmSavedZIndex = null;
+        el._ytmFadeAnim = null;
+        el.style.removeProperty('animation');
+        el.style.removeProperty('pointer-events');
         if (el._ytmCloseTimer) {
           clearTimeout(el._ytmCloseTimer);
           el._ytmCloseTimer = null;
@@ -107,11 +105,32 @@
           el.classList.add('ytm-is-fading-out');
 
           if (isMenu) {
-            // ─── MENU: Cách cũ đơn giản — chỉ thêm CSS class ───
+            // ─── MENU: Cách mới — inline override để hoạt động ở player page ───
+            el._ytmSavedZIndex = el.style.zIndex || null;
+            if (!el._ytmSavedZIndex) {
+              const computed = getComputedStyle(el).zIndex;
+              if (computed && computed !== 'auto') el._ytmSavedZIndex = computed;
+            }
+
+            el._ytmFadeAnim = 'menuFadeOut 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) forwards';
+
+            el.style.setProperty('display', 'block', 'important');
+            el.style.setProperty('animation', el._ytmFadeAnim, 'important');
+            el.style.setProperty('pointer-events', 'none', 'important');
+            if (el._ytmSavedZIndex) {
+              el.style.setProperty('z-index', el._ytmSavedZIndex, 'important');
+            }
+
             el.classList.add('ytm-fade-out-menu');
 
             el._ytmCloseTimer = setTimeout(() => {
               el.classList.remove('ytm-fade-out-menu', 'ytm-is-fading-out');
+              el.style.setProperty('display', 'none');
+              el.style.removeProperty('z-index');
+              el.style.removeProperty('animation');
+              el.style.removeProperty('pointer-events');
+              el._ytmSavedZIndex = null;
+              el._ytmFadeAnim = null;
             }, 300);
           } else {
             // ─── DIALOG: Cách mới — inline override để hoạt động ở player page ───

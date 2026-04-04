@@ -12,7 +12,7 @@ export default createPlugin({
   restartNeeded: true,
   config: {
     enabled: true,
-    lyricsScroll: 'spring',
+    lyricsScroll: 'spring-delay',
   },
   // THÊM PHẦN NÀY: Tạo menu để mở cài đặt
   menu: async ({ getConfig, setConfig }) => {
@@ -29,16 +29,22 @@ export default createPlugin({
             click: () => setConfig({ lyricsScroll: 'normal' }),
           },
           {
-            label: 'Staggered Animation',
+            label: 'Staggered Animation (v1)',
             type: 'radio',
             checked: config.lyricsScroll === 'staggered',
             click: () => setConfig({ lyricsScroll: 'staggered' }),
           },
           {
-            label: 'Spring Scroll',
+            label: 'Spring Scroll (v2)',
             type: 'radio',
             checked: config.lyricsScroll === 'spring' || !config.lyricsScroll,
             click: () => setConfig({ lyricsScroll: 'spring' }),
+          },
+          {
+            label: 'Spring Scroll Delay (v3)',
+            type: 'radio',
+            checked: config.lyricsScroll === 'spring-delay',
+            click: () => setConfig({ lyricsScroll: 'spring-delay' }),
           },
         ],
       },
@@ -89,9 +95,10 @@ export default createPlugin({
           console.error('Failed to load Better Lyrics:', err);
         });
 
-      if (config.lyricsScroll === 'staggered' || config.lyricsScroll === 'spring' || !config.lyricsScroll) {
-        const isSpring = config.lyricsScroll === 'spring' || !config.lyricsScroll;
-        const jsName = isSpring ? 'v2.js' : 'v1.js';
+      if (config.lyricsScroll === 'staggered' || config.lyricsScroll === 'spring' || config.lyricsScroll === 'spring-delay' || !config.lyricsScroll) {
+        let jsName = 'v1.js';
+        if (config.lyricsScroll === 'spring' || !config.lyricsScroll) jsName = 'v2.js';
+        else if (config.lyricsScroll === 'spring-delay') jsName = 'v3.js';
         const jsPath = path.join(basePath, 'extensions', 'bl-scroll', jsName);
 
         try {
