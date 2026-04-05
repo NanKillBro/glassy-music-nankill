@@ -13,6 +13,7 @@
 		<link href="https://api.fontshare.com/v2/css?f[]=satoshi@1&amp;display=swap" rel="stylesheet">
 		
 		
+		<style>body:not(.i18n-ready){opacity:0}</style>
 	<link rel="stylesheet" href="/pages/marketplace.css"></head>
 	<body class="marketplace-standalone">
 		<div class="marketplace-page">
@@ -81,7 +82,7 @@
 						<label class="marketplace-filter-chip">
 							<input type="radio" name="store-filter-show" value="all" checked="">
 							<span>__MSG_marketplace_showAll__</span>
-							<kbd>A</kbd>
+							<kbd>L</kbd>
 						</label>
 						<label class="marketplace-filter-chip">
 							<input type="radio" name="store-filter-show" value="installed">
@@ -138,14 +139,6 @@
 					<span class="store-error-message"></span>
 					<button id="store-retry-btn" class="store-card-btn store-card-btn-install">__MSG_marketplace_retry__</button>
 				</div>
-				<div id="store-permission" class="store-permission">
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="store-permission-icon">
-						<path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clip-rule="evenodd"></path>
-					</svg>
-					<h3 class="store-permission-title">__MSG_marketplace_permissionTitle__</h3>
-					<p class="store-permission-message">__MSG_marketplace_permissionMessage__</p>
-					<button id="store-permission-btn" class="store-card-btn store-card-btn-install">__MSG_marketplace_grantPermission__</button>
-				</div>
 				<div id="store-modal-grid" class="marketplace-grid"></div>
 				<div id="marketplace-pagination" class="marketplace-pagination" style="display: none;">
 					<button id="pagination-prev" class="marketplace-pagination-btn" aria-label="Previous page">
@@ -173,6 +166,7 @@
 						<p id="detail-author"></p>
 					</div>
 					<div class="detail-header-actions">
+						<button id="detail-apply-btn" class="store-card-btn store-card-btn-apply" style="display: none;">__MSG_marketplace_apply__</button>
 						<button id="detail-action-btn" class="store-card-btn store-card-btn-install">__MSG_marketplace_install__</button>
 						<button id="detail-modal-close" class="modal-close-btn" aria-label="Close">
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -381,7 +375,7 @@
 							<div class="shortcut-item">
 								<span class="shortcut-label">__MSG_marketplace_shortcutsShowAll__</span>
 								<div class="shortcut-keys">
-									<kbd>A</kbd>
+									<kbd>L</kbd>
 								</div>
 							</div>
 							<div class="shortcut-item">
@@ -415,6 +409,12 @@
 								<span class="shortcut-label">__MSG_marketplace_shortcutsInstallRemove__</span>
 								<div class="shortcut-keys">
 									<kbd>I</kbd>
+								</div>
+							</div>
+							<div class="shortcut-item">
+								<span class="shortcut-label">__MSG_marketplace_shortcutsApply__</span>
+								<div class="shortcut-keys">
+									<kbd>A</kbd>
 								</div>
 							</div>
 							<div class="shortcut-item">

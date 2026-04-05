@@ -1,1 +1,888 @@
-{"extensionName":{"message":"Better Lyrics (Songteksten Voor Youtube Music)","description":"The name of the extension"},"extensionDescription":{"message":"Verbeter YouTube Music met prachtige time-synced songteksten, meertalige ondersteuning, real-time vertalingen en meer","description":"The description of the extension"},"options_tab_general":{"message":"Algemeen","description":"General settings tab label"},"options_tab_display":{"message":"Weergave","description":"Display settings tab label"},"options_tab_language":{"message":"Taal","description":"Language settings tab label"},"options_tab_sources":{"message":"Bronnen","description":"Sources settings tab label"},"options_tab_identity":{"message":"Identiteit","description":"Identity settings tab label"},"options_tab_themes":{"message":"Thema's","description":"Themes settings tab label"},"options_general_title":{"message":"Algemene instellingen","description":"General settings section title"},"options_general_description":{"message":" ","description":"General settings section description"},"options_general_showLogs":{"message":"Toon logs","description":"Show logs setting label"},"options_general_autoSwitch":{"message":"Automatisch overschakelen naar songteksten tabblad","description":"Auto switch to lyrics tab setting label"},"options_general_cache":{"message":"Cache","description":"Cache section label"},"options_general_clearCache":{"message":"Verwijder Cache","description":"Clear cache button label"},"options_general_totalLyrics":{"message":"Totale songteksten in cache","description":"Total lyrics in cache label"},"options_general_cacheSize":{"message":"Cache grootte","description":"Cache size label"},"options_display_title":{"message":"Scherminstellingen","description":"Display settings section title"},"options_display_description":{"message":"Fine-tune het uiterlijk van Better Lyrics.","description":"Display settings section description"},"options_display_disableFullscreen":{"message":"Volledig scherm uitschakelen","description":"Disable fullscreen mode setting label"},"options_display_autoHideCursor":{"message":"Automatisch verbergen van de cursor in volledig scherm","description":"Auto-hide cursor setting label"},"options_display_albumArt":{"message":"Toon vervaagde albumhoes achtergrond","description":"Show album art background setting label"},"options_display_stylizedAnimations":{"message":"Toon gestylized animaties","description":"Show stylized animations setting label"},"options_language_title":{"message":"Taal Instellingen","description":"Language settings section title"},"options_language_description":{"message":"Taal- en vertaalinstellingen voor Better Lyrics.","description":"Language settings section description"},"options_language_romanization":{"message":"Somatisatie","description":"Romanization setting label"},"options_language_translate":{"message":"Vertaal songteksten","description":"Translate song lyrics setting label"},"options_language_translationLanguage":{"message":"Taal van vertaling","description":"Translation language setting label"},"options_sources_title":{"message":"Songteskt bronvoorkeur","description":"Sources settings section title"},"options_sources_description":{"message":"Sleep om prioriteit te rangschikken. Hogere bronnen worden eerst geprobeerd. Vink uit om uit te schakelen.","description":"Sources settings section description"},"options_themes_title":{"message":"Thema Instellingen","description":"Theme settings section title"},"options_themes_description":{"message":"Pas het uiterlijk van Better Lyrics aan.","description":"Theme settings section description"},"options_themes_theme":{"message":"Thema","description":"Theme label"},"options_themes_chooseTheme":{"message":"Kies een thema","description":"Choose a theme button label"},"options_themes_customStyles":{"message":"Aangepaste stijlen","description":"Custom styles label"},"options_themes_create":{"message":"Creëren","description":"Create button label"},"options_themes_marketplace":{"message":"Thema Marketplace","description":"Theme marketplace button label"},"options_themes_installedThemes":{"message":"Geïnstalleerde Thema's","description":"Installed themes button label"},"options_identity_title":{"message":"Identiteit","description":"Identity settings section title"},"options_identity_description":{"message":"Je unieke anonieme identiteit voor Better Lyrics.","description":"Identity settings section description"},"options_identity_yourIdentity":{"message":"Uw gebruikersnaam","description":"Your identity label"},"options_identity_loading":{"message":"Laden...","description":"Loading identity placeholder"},"options_identity_exportImport":{"message":"Exporteren/importeren","description":"Export/Import section label"},"options_identity_exportKey":{"message":"Exporteer Key","description":"Export key button label"},"options_identity_importKey":{"message":"Key importeren","description":"Import key button label"},"options_modal_selectTheme":{"message":"Selecteer een Thema","description":"Theme modal title"},"options_modal_cancel":{"message":"Annuleer","description":"Cancel button label"},"options_modal_confirm":{"message":"Bevestig","description":"Confirm button label"},"options_alert_cacheCleared":{"message":"Cache succesvol geleegd!","description":"Cache cleared success message"},"options_alert_cacheClearFailed":{"message":"Kon cache niet wissen!","description":"Cache clear failed message"},"options_alert_nothingToClear":{"message":"Niets te wissen!","description":"Nothing to clear message"},"options_alert_exportFailed":{"message":"Identiteit exporteren mislukt","description":"Export identity failed message"},"options_alert_fileSaveDialogOpened":{"message":"Dialoog voor identiteitsbestand opslaan geopend.","description":"File save dialog opened message"},"options_alert_fileSaveFailed":{"message":"Fout bij opslaan bestand. Probeer het opnieuw.","description":"File save failed message"},"options_alert_downloadInitiated":{"message":"Identiteitsbestand download gestart.","description":"Download initiated message"},"options_alert_importSuccess":{"message":"Identiteit succesvol geïmporteerd!","description":"Import success message"},"options_alert_identityLoadError":{"message":"Fout bij laden identiteit","description":"Identity load error message"},"options_editor_saving":{"message":"Opslaan...","description":"Saving indicator text"},"options_editor_importFile":{"message":"Importeer vanuit bestand","description":"Import from file tooltip"},"options_editor_exportFile":{"message":"Exporteren naar bestand","description":"Export to file tooltip"},"options_editor_saveAsTheme":{"message":"Opslaan als thema","description":"Save as theme tooltip"},"options_editor_openInNewTab":{"message":"Openen in nieuw tabblad","description":"Open in new tab tooltip"},"options_editor_backToSettings":{"message":"Terug naar instellingen","description":"Back to settings button label"},"options_editor_fullExperienceNote":{"message":"Voor de volledige editor ervaring, ","description":"Full editor experience note prefix"},"options_editor_openInNewTabLink":{"message":"open deze editor in een nieuw tabblad","description":"Open in new tab link text"},"options_editor_stylingGuide":{"message":"Opmaak handleiding","description":"Styling guide link text"},"options_editor_renameTheme":{"message":"Hernoem aangepast thema","description":"Rename theme button title"},"options_editor_deleteTheme":{"message":"Aangepaste thema verwijderen","description":"Delete theme button title"},"options_editor_doubleClickRename":{"message":"Dubbelklikken om te hernoemen","description":"Double-click to rename tooltip"},"options_provider_betterLyrics":{"message":"Better Lyrics","description":"Better Lyrics provider name"},"options_provider_betterLyricsLegato":{"message":"Better Lyrics Legato","description":"Better Lyrics Legato provider name"},"options_provider_musixmatch":{"message":"Musixmatch","description":"Musixmatch provider name"},"options_provider_lrclib":{"message":"LRClib","description":"LRClib provider name"},"options_provider_youtube":{"message":"YouTube","description":"Youtube provider name"},"options_provider_youtubeCaptions":{"message":"Youtube Ondertiteling","description":"Youtube Captions provider name"},"options_syncType_syllable":{"message":"Syllable","description":"Syllable sync type label"},"options_syncType_syllable_tooltip":{"message":"Markeert afzonderlijke lettergrepen terwijl ze worden gezongen. Lettergreepsynchronisatie biedt de beste ervaring.","description":"Syllable sync type tooltip"},"options_syncType_word":{"message":"Woord","description":"Word sync type label"},"options_syncType_word_tooltip":{"message":"Markeert afzonderlijke woorden terwijl ze worden gezongen. Woordsynchronisatie biedt een goede ervaring.","description":"Word sync type tooltip"},"options_syncType_line":{"message":"Regel","description":"Line sync type label"},"options_syncType_line_tooltip":{"message":"Markeert volledige regels terwijl ze worden gezongen. Regelsynchronisatie biedt een basiservaring.","description":"Line sync type tooltip"},"options_syncType_unsynced":{"message":"Niet-gesynchroniseerd","description":"Unsynced sync type label"},"options_syncType_unsynced_tooltip":{"message":"Songteksten zonder timing informatie. Ongesynchroniseerde songteksten bieden een minimale ervaring.","description":"Unsynced sync type tooltip"},"options_detail_rateTheme":{"message":"Beoordeel dit thema","description":"Rate theme label"},"options_detail_install":{"message":"Installeren","description":"Install button label"},"options_detail_viewOnGitHub":{"message":"Bekijk op GitHub","description":"View on GitHub link text"},"options_detail_shaderInfo":{"message":"Dit thema bevat een shader configuratie.","description":"Shader info text prefix"},"options_detail_downloadShader":{"message":"Download shader.json","description":"Download shader link text"},"options_detail_shaderImportSuffix":{"message":"en importeer het in","description":"Shader import suffix text before Better Lyrics Shaders link"},"marketplace_pageTitle":{"message":"Better Lyrics Thema Marketplace","description":"Page title"},"marketplace_title":{"message":"Thema Marketplace","description":"Header title"},"marketplace_subtitle":{"message":"Ontdek en installeer communitythema's","description":"Header subtitle"},"marketplace_searchPlaceholder":{"message":"Zoek thema's...","description":"Search input placeholder"},"marketplace_refresh":{"message":"Ververs","description":"Refresh button label"},"marketplace_keyboardShortcuts":{"message":"Toetsenbord snelkoppelingen","description":"Keyboard shortcuts button label"},"marketplace_sortBy":{"message":"Sorteer op","description":"Sort filter group label"},"marketplace_sortRatingDesc":{"message":"Best beoordeeld","description":"Sort by highest rating"},"marketplace_sortRatingAsc":{"message":"Laagst beoordeeld","description":"Sort by lowest rating"},"marketplace_sortDownloadsDesc":{"message":"Meest gedownload","description":"Sort by most downloads"},"marketplace_sortDownloadsAsc":{"message":"Minst gedownload","description":"Sort by least downloads"},"marketplace_sortNewest":{"message":"Nieuwst","description":"Sort by newest"},"marketplace_sortOldest":{"message":"Oudste","description":"Sort by oldest"},"marketplace_show":{"message":"Toon","description":"Show filter group label"},"marketplace_showAll":{"message":"Alle","description":"Show all themes"},"marketplace_showInstalled":{"message":"Geïnstalleerd","description":"Show installed themes"},"marketplace_showNotInstalled":{"message":"Niet geïnstalleerd","description":"Show not installed themes"},"marketplace_options":{"message":"Opties","description":"Options filter group label"},"marketplace_hasShaders":{"message":"Heeft shaders","description":"Filter for themes with shaders"},"marketplace_compatibleOnly":{"message":"Alleen geschikt","description":"Filter for compatible themes"},"marketplace_installFromUrl":{"message":"Installeren van URL","description":"Install from URL button"},"marketplace_submitTheme":{"message":"Dien thema in","description":"Submit a theme link"},"marketplace_loading":{"message":"Thema’s laden...","description":"Loading message"},"marketplace_retry":{"message":"Opnieuw","description":"Retry button"},"marketplace_noThemesMatch":{"message":"Geen thema's komen overeen met uw filters","description":"Empty state message"},"marketplace_permissionTitle":{"message":"Toestemming vereist","description":"Permission required title"},"marketplace_permissionMessage":{"message":"Om door de thema's te bladeren en te installeren, heeft Better Lyrics toestemming nodig om toegang te krijgen tot GitHub waar thema's worden gehost & de Marketplace api.","description":"Permission required message"},"marketplace_grantPermission":{"message":"Geef Toestemming","description":"Grant permission button"},"marketplace_install":{"message":"Installeren","description":"Install button"},"marketplace_remove":{"message":"Verwijderen","description":"Remove button"},"marketplace_apply":{"message":"Toepassen","description":"Apply button"},"marketplace_active":{"message":"Actief","description":"Active theme indicator"},"marketplace_shadersBadge":{"message":"Shaders","description":"Shaders badge text"},"marketplace_githubBadge":{"message":"GitHub","description":"GitHub badge text"},"marketplace_urlModalTitle":{"message":"Installeren vanaf URL","description":"URL install modal title"},"marketplace_urlModalMessage":{"message":"Voer een GitHub repository URL in om een thema direct te installeren:","description":"URL install modal message"},"marketplace_urlModalPlaceholder":{"message":"github.com/user/repo or github.com/user/repo/tree/branch","description":"URL input placeholder"},"marketplace_urlModalError":{"message":"Voer een GitHub repository URL in","description":"URL validation error"},"marketplace_cancel":{"message":"Annuleer","description":"Cancel button"},"marketplace_urlPermissionTitle":{"message":"Aanvullende toestemming vereist","description":"URL permission modal title"},"marketplace_urlPermissionWhy":{"message":"Waarom is dit nodig?","description":"URL permission explanation title"},"marketplace_urlPermissionDesc":{"message":"Het installeren van thema’s via aangepaste GitHub-URL’s vereist bredere toegang dan via de marketplace. Hierdoor kan Better Lyrics:","description":"URL permission description"},"marketplace_urlPermissionItem1":{"message":"Haal themabestanden op uit elke GitHub-repository.","description":"URL permission list item 1"},"marketplace_urlPermissionItem2":{"message":"Detecteer de standaard branch van de repository","description":"URL permission list item 2"},"marketplace_urlPermissionItem3":{"message":"Valideer de themastructuur vóór de installatie","description":"URL permission list item 3"},"marketplace_urlPermissionNote":{"message":"Deze  toestemming wordt alleen gebruikt wanneer je thema's installeert via URL. Marketplace thema's vereisen dit niet.","description":"URL permission note"},"marketplace_shortcutsTitle":{"message":"Toetsenbord sneltoetsen","description":"Shortcuts modal title"},"marketplace_shortcutsNavigation":{"message":"Navigatie","description":"Navigation shortcuts group"},"marketplace_shortcutsSearch":{"message":"Zoek thema's","description":"Search shortcut label"},"marketplace_shortcutsRefresh":{"message":"Marketplace vernieuwen","description":"Refresh shortcut label"},"marketplace_shortcutsInstallUrl":{"message":"Installeren vanaf URL","description":"Install from URL shortcut label"},"marketplace_shortcutsPrevPage":{"message":"Vorige pagina","description":"Previous page shortcut label"},"marketplace_shortcutsNextPage":{"message":"Volgende pagina","description":"Next page shortcut label"},"marketplace_shortcutsSort":{"message":"Sorteren","description":"Sort shortcuts group"},"marketplace_shortcutsSortHint":{"message":"Druk opnieuw om richting te veranderen","description":"Sort toggle hint"},"marketplace_shortcutsByRating":{"message":"Op beoordeling","description":"Sort by rating shortcut"},"marketplace_shortcutsByDownloads":{"message":"Op downloads","description":"Sort by downloads shortcut"},"marketplace_shortcutsByDate":{"message":"Op datum","description":"Sort by date shortcut"},"marketplace_shortcutsFilters":{"message":"Filters","description":"Filters shortcuts group"},"marketplace_shortcutsShowAll":{"message":"Toon alles","description":"Show all shortcut"},"marketplace_shortcutsShowInstalled":{"message":"Toon geïnstalleerd","description":"Show installed shortcut"},"marketplace_shortcutsShowNotInstalled":{"message":"Toon niet geïnstalleerd","description":"Show not installed shortcut"},"marketplace_shortcutsToggleShaders":{"message":"Schakel tussen shaders","description":"Toggle shaders shortcut"},"marketplace_shortcutsToggleCompatible":{"message":"schakel tussen geschiktheid","description":"Toggle compatible shortcut"},"marketplace_shortcutsDetails":{"message":"Thema details","description":"Theme details shortcuts group"},"marketplace_shortcutsInstallRemove":{"message":"Installeren / verwijderen","description":"Install/remove shortcut"},"marketplace_shortcutsPrevImage":{"message":"Vorige afbeelding","description":"Previous image shortcut"},"marketplace_shortcutsNextImage":{"message":"Volgende afbeelding","description":"Next image shortcut"},"marketplace_shortcutsGeneral":{"message":"Algemeen","description":"General shortcuts group"},"marketplace_shortcutsCloseModal":{"message":"Sluit venster","description":"Close modal shortcut"},"marketplace_shortcutsShowShortcuts":{"message":"Sneltoetsen tonen","description":"Show shortcuts shortcut"},"marketplace_shortcutsApplyTheme":{"message":"Thema (na installatie) toepassen","description":"Apply theme shortcut"},"marketplace_ratingFailed":{"message":"Beoordeling indienen mislukt","description":"Rating submission error"},"marketplace_shaderFetchFailed":{"message":"Fout bij het ophalen van shader configuratie","description":"Shader fetch error"},"marketplace_applyFailed":{"message":"Thema toepassen mislukt","description":"Theme apply error"},"marketplace_noThemesInstalled":{"message":"Nog geen thema's geïnstalleerd","description":"Empty installed themes message"},"marketplace_lastUpdatedOn":{"message":"Laatst bijgewerkt op $date$","description":"Tooltip showing full date when a theme was last updated","placeholders":{"date":{"content":"$1","example":"January 15, 2025, 3:42 PM"}}},"editor_pageTitle":{"message":"Better Lyrics CSS Editor","description":"Standalone editor page title"},"editor_importFromFile":{"message":"Importeer vanuit bestand","description":"Import from file button"},"editor_exportToFile":{"message":"Exporteer naar bestand","description":"Export to file button"},"editor_saveAsTheme":{"message":"Opslaan als thema","description":"Save as theme button"},"editor_stylingGuide":{"message":"Opmaak handleiding","description":"Styling guide button"},"editor_tip":{"message":"Tip: Dit is een zelfstandig tabblad, je kunt deze editor in een apart venster verplaatsen of een gesplitste schermweergave naast YouTube Music gebruiken om je veranderingen in real-time te zien. Voor meer informatie, bezoek de","description":"Editor tip text"},"editor_poweredBy":{"message":"Mogelijk gemaakt door","description":"Powered by label"},"editor_playground":{"message":"Playground","description":"Playground link text"},"editor_docs":{"message":"Documentatie","description":"Docs link text"},"lyrics_source":{"message":"Bron: ","description":"Lyrics source label"},"lyrics_addToLrclib":{"message":"Songteksten toevoegen aan LRCLib","description":"Add lyrics button text"},"lyrics_searchOnGenius":{"message":"Zoek op Genius","description":"Search on Genius button text"},"lyrics_searching":{"message":"Better Lycrics zoekt naar songteksten...","description":"Loading message while searching for lyrics"},"lyrics_stillSearching":{"message":"Zoekt nog steeds naar gesynchroniseerde songteksten...","description":"Loading message while still searching"},"lyrics_noSyncedLyrics":{"message":"Better Lyrics kon geen gesynchroniseerde songteksten vinden","description":"Message when no synced lyrics found"},"lyrics_adPlaying":{"message":"[wacht muziek]","description":"Message shown during ad playback"},"lyrics_notFound":{"message":"Geen songtekst gevonden voor dit nummer","description":"Message when no lyrics are available"},"options_language_exclusions":{"message":"Taal uitsluitingen","description":"Label for language exclusions setting"},"options_manage":{"message":"Beheer","description":"Manage button label"},"options_language_exclusionsTitle":{"message":"Taal Uitsluitingen","description":"Modal title for language exclusions"},"options_romanization_tab":{"message":"Romanisatie","description":"Romanization tab label"},"options_translation_tab":{"message":"Vertaling","description":"Translation tab label"},"options_searchLanguages":{"message":"Zoek talen...","description":"Search input placeholder"},"options_romanization_hint":{"message":"Klik de schakelaar. Uitgesloten talen worden niet geromaniseerd.","description":"Hint text for romanization exclusions"},"options_translation_hint":{"message":"Klik om te schakelen. Uitgesloten brontalen worden niet vertaald.","description":"Hint text for translation exclusions"},"options_resetToDefault":{"message":"Reset $TYPE$ naar Standaard","description":"Reset to default button label","placeholders":{"type":{"content":"$1","example":"Romanization"}}},"options_romanization_resetTitle":{"message":"Reset $TYPE$ UItsluitingen","description":"Modal title for resetting exclusions","placeholders":{"type":{"content":"$1","example":"Romanization"}}},"options_romanization_resetMessage":{"message":"Dit zal alle uitgesloten talen wissen. Doorgaan?","description":"Confirmation message for resetting exclusions"},"options_reset":{"message":"Reset","description":"Reset button label"},"options_cancel":{"message":"Annuleer","description":"Cancel button label"},"options_romanization_resetSuccess":{"message":"$TYPE$ uitsluitingen gereset naar standaard","description":"Success message after resetting exclusions","placeholders":{"type":{"content":"$1","example":"Romanization"}}}}
+{
+  "extensionName": {
+    "message": "Better Lyrics (Songteksten Voor Youtube Music)",
+    "description": "The name of the extension"
+  },
+  "extensionDescription": {
+    "message": "Verbeter YouTube Music met prachtige time-synced songteksten, meertalige ondersteuning, real-time vertalingen en meer",
+    "description": "The description of the extension"
+  },
+  "options_tab_general": {
+    "message": "Algemeen",
+    "description": "General settings tab label"
+  },
+  "options_tab_display": {
+    "message": "Weergave",
+    "description": "Display settings tab label"
+  },
+  "options_tab_language": {
+    "message": "Taal",
+    "description": "Language settings tab label"
+  },
+  "options_tab_sources": {
+    "message": "Bronnen",
+    "description": "Sources settings tab label"
+  },
+  "options_tab_identity": {
+    "message": "Identiteit",
+    "description": "Identity settings tab label"
+  },
+  "options_tab_themes": {
+    "message": "Thema's",
+    "description": "Themes settings tab label"
+  },
+  "options_general_title": {
+    "message": "Algemene instellingen",
+    "description": "General settings section title"
+  },
+  "options_general_description": {
+    "message": " ",
+    "description": "General settings section description"
+  },
+  "options_general_showLogs": {
+    "message": "Toon logs",
+    "description": "Show logs setting label"
+  },
+  "options_general_autoSwitch": {
+    "message": "Automatisch overschakelen naar songteksten tabblad",
+    "description": "Auto switch to lyrics tab setting label"
+  },
+  "options_general_cache": {
+    "message": "Cache",
+    "description": "Cache section label"
+  },
+  "options_general_clearCache": {
+    "message": "Verwijder Cache",
+    "description": "Clear cache button label"
+  },
+  "options_general_totalLyrics": {
+    "message": "Totale songteksten in cache",
+    "description": "Total lyrics in cache label"
+  },
+  "options_general_cacheSize": {
+    "message": "Cache grootte",
+    "description": "Cache size label"
+  },
+  "options_display_title": {
+    "message": "Scherminstellingen",
+    "description": "Display settings section title"
+  },
+  "options_display_description": {
+    "message": "Fine-tune het uiterlijk van Better Lyrics.",
+    "description": "Display settings section description"
+  },
+  "options_display_disableFullscreen": {
+    "message": "Volledig scherm uitschakelen",
+    "description": "Disable fullscreen mode setting label"
+  },
+  "options_display_autoHideCursor": {
+    "message": "Automatisch verbergen van de cursor in volledig scherm",
+    "description": "Auto-hide cursor setting label"
+  },
+  "options_display_albumArt": {
+    "message": "Toon vervaagde albumhoes achtergrond",
+    "description": "Show album art background setting label"
+  },
+  "options_display_stylizedAnimations": {
+    "message": "Toon gestylized animaties",
+    "description": "Show stylized animations setting label"
+  },
+  "options_language_displayLanguage": {
+    "message": "Display Language",
+    "description": "Label for the UI language selector dropdown"
+  },
+  "options_language_displayLanguageAuto": {
+    "message": "Auto",
+    "description": "Option label for automatic language detection based on browser settings"
+  },
+  "options_language_title": {
+    "message": "Taal Instellingen",
+    "description": "Language settings section title"
+  },
+  "options_language_description": {
+    "message": "Taal- en vertaalinstellingen voor Better Lyrics.",
+    "description": "Language settings section description"
+  },
+  "options_language_romanization": {
+    "message": "Romanisatie",
+    "description": "Romanization setting label"
+  },
+  "options_language_translate": {
+    "message": "Vertaal songteksten",
+    "description": "Translate song lyrics setting label"
+  },
+  "options_language_translationLanguage": {
+    "message": "Taal van vertaling",
+    "description": "Translation language setting label"
+  },
+  "options_sources_title": {
+    "message": "Songteskt bronvoorkeur",
+    "description": "Sources settings section title"
+  },
+  "options_sources_description": {
+    "message": "Sleep om prioriteit te rangschikken. Hogere bronnen worden eerst geprobeerd. Vink uit om uit te schakelen.",
+    "description": "Sources settings section description"
+  },
+  "options_themes_title": {
+    "message": "Thema Instellingen",
+    "description": "Theme settings section title"
+  },
+  "options_themes_description": {
+    "message": "Pas het uiterlijk van Better Lyrics aan.",
+    "description": "Theme settings section description"
+  },
+  "options_themes_theme": {
+    "message": "Thema",
+    "description": "Theme label"
+  },
+  "options_themes_chooseTheme": {
+    "message": "Kies een thema",
+    "description": "Choose a theme button label"
+  },
+  "options_themes_change": {
+    "message": "Change",
+    "description": "Change theme button label"
+  },
+  "options_themes_customTheme": {
+    "message": "Custom Theme",
+    "description": "Display name for unnamed custom themes"
+  },
+  "options_themes_customStyles": {
+    "message": "Aangepaste stijlen",
+    "description": "Custom styles label"
+  },
+  "options_themes_create": {
+    "message": "Creëren",
+    "description": "Create button label"
+  },
+  "options_themes_marketplace": {
+    "message": "Thema Marketplace",
+    "description": "Theme marketplace button label"
+  },
+  "options_themes_installedThemes": {
+    "message": "Geïnstalleerde Thema's",
+    "description": "Installed themes button label"
+  },
+  "options_identity_title": {
+    "message": "Identiteit",
+    "description": "Identity settings section title"
+  },
+  "options_identity_description": {
+    "message": "Je unieke anonieme identiteit voor Better Lyrics.",
+    "description": "Identity settings section description"
+  },
+  "options_identity_yourIdentity": {
+    "message": "Uw gebruikersnaam",
+    "description": "Your identity label"
+  },
+  "options_identity_loading": {
+    "message": "Laden...",
+    "description": "Loading identity placeholder"
+  },
+  "options_identity_exportImport": {
+    "message": "Exporteren/importeren",
+    "description": "Export/Import section label"
+  },
+  "options_identity_exportKey": {
+    "message": "Exporteer Key",
+    "description": "Export key button label"
+  },
+  "options_identity_importKey": {
+    "message": "Key importeren",
+    "description": "Import key button label"
+  },
+  "options_modal_selectTheme": {
+    "message": "Selecteer een Thema",
+    "description": "Theme modal title"
+  },
+  "options_modal_cancel": {
+    "message": "Annuleer",
+    "description": "Cancel button label"
+  },
+  "options_modal_confirm": {
+    "message": "Bevestig",
+    "description": "Confirm button label"
+  },
+  "options_alert_cacheCleared": {
+    "message": "Cache succesvol geleegd!",
+    "description": "Cache cleared success message"
+  },
+  "options_alert_cacheClearFailed": {
+    "message": "Kon cache niet wissen!",
+    "description": "Cache clear failed message"
+  },
+  "options_alert_nothingToClear": {
+    "message": "Niets te wissen!",
+    "description": "Nothing to clear message"
+  },
+  "options_alert_exportFailed": {
+    "message": "Identiteit exporteren mislukt",
+    "description": "Export identity failed message"
+  },
+  "options_alert_fileSaveDialogOpened": {
+    "message": "Dialoog voor identiteitsbestand opslaan geopend.",
+    "description": "File save dialog opened message"
+  },
+  "options_alert_fileSaveFailed": {
+    "message": "Fout bij opslaan bestand. Probeer het opnieuw.",
+    "description": "File save failed message"
+  },
+  "options_alert_downloadInitiated": {
+    "message": "Identiteitsbestand download gestart.",
+    "description": "Download initiated message"
+  },
+  "options_alert_importSuccess": {
+    "message": "Identiteit succesvol geïmporteerd!",
+    "description": "Import success message"
+  },
+  "options_alert_identityLoadError": {
+    "message": "Fout bij laden identiteit",
+    "description": "Identity load error message"
+  },
+  "options_editor_saving": {
+    "message": "Opslaan...",
+    "description": "Saving indicator text"
+  },
+  "options_editor_importFile": {
+    "message": "Importeer vanuit bestand",
+    "description": "Import from file tooltip"
+  },
+  "options_editor_exportFile": {
+    "message": "Exporteren naar bestand",
+    "description": "Export to file tooltip"
+  },
+  "options_editor_saveAsTheme": {
+    "message": "Opslaan als thema",
+    "description": "Save as theme tooltip"
+  },
+  "options_editor_openInNewTab": {
+    "message": "Openen in nieuw tabblad",
+    "description": "Open in new tab tooltip"
+  },
+  "options_editor_backToSettings": {
+    "message": "Terug naar instellingen",
+    "description": "Back to settings button label"
+  },
+  "options_editor_fullExperienceNote": {
+    "message": "Voor de volledige editor ervaring, ",
+    "description": "Full editor experience note prefix"
+  },
+  "options_editor_openInNewTabLink": {
+    "message": "open deze editor in een nieuw tabblad",
+    "description": "Open in new tab link text"
+  },
+  "options_editor_stylingGuide": {
+    "message": "Opmaak handleiding",
+    "description": "Styling guide link text"
+  },
+  "options_editor_renameTheme": {
+    "message": "Hernoem aangepast thema",
+    "description": "Rename theme button title"
+  },
+  "options_editor_deleteTheme": {
+    "message": "Aangepaste thema verwijderen",
+    "description": "Delete theme button title"
+  },
+  "options_editor_doubleClickRename": {
+    "message": "Dubbelklikken om te hernoemen",
+    "description": "Double-click to rename tooltip"
+  },
+  "options_provider_betterLyrics": {
+    "message": "Better Lyrics",
+    "description": "Better Lyrics provider name"
+  },
+  "options_provider_betterLyricsLegato": {
+    "message": "Better Lyrics Legato",
+    "description": "Better Lyrics Legato provider name"
+  },
+  "options_provider_musixmatch": {
+    "message": "Musixmatch",
+    "description": "Musixmatch provider name"
+  },
+  "options_provider_lrclib": {
+    "message": "LRClib",
+    "description": "LRClib provider name"
+  },
+  "options_provider_youtube": {
+    "message": "YouTube",
+    "description": "Youtube provider name"
+  },
+  "options_provider_youtubeCaptions": {
+    "message": "Youtube Ondertiteling",
+    "description": "Youtube Captions provider name"
+  },
+  "options_syncType_syllable": {
+    "message": "Syllable",
+    "description": "Syllable sync type label"
+  },
+  "options_syncType_syllable_tooltip": {
+    "message": "Markeert afzonderlijke lettergrepen terwijl ze worden gezongen. Lettergreepsynchronisatie biedt de beste ervaring.",
+    "description": "Syllable sync type tooltip"
+  },
+  "options_syncType_word": {
+    "message": "Woord",
+    "description": "Word sync type label"
+  },
+  "options_syncType_word_tooltip": {
+    "message": "Markeert afzonderlijke woorden terwijl ze worden gezongen. Woordsynchronisatie biedt een goede ervaring.",
+    "description": "Word sync type tooltip"
+  },
+  "options_syncType_line": {
+    "message": "Regel",
+    "description": "Line sync type label"
+  },
+  "options_syncType_line_tooltip": {
+    "message": "Markeert volledige regels terwijl ze worden gezongen. Regelsynchronisatie biedt een basiservaring.",
+    "description": "Line sync type tooltip"
+  },
+  "options_syncType_unsynced": {
+    "message": "Niet-gesynchroniseerd",
+    "description": "Unsynced sync type label"
+  },
+  "options_syncType_unsynced_tooltip": {
+    "message": "Songteksten zonder timing informatie. Ongesynchroniseerde songteksten bieden een minimale ervaring.",
+    "description": "Unsynced sync type tooltip"
+  },
+  "options_detail_rateTheme": {
+    "message": "Beoordeel dit thema",
+    "description": "Rate theme label"
+  },
+  "options_detail_install": {
+    "message": "Installeren",
+    "description": "Install button label"
+  },
+  "options_detail_viewOnGitHub": {
+    "message": "Bekijk op GitHub",
+    "description": "View on GitHub link text"
+  },
+  "options_detail_shaderInfo": {
+    "message": "Dit thema bevat een shader configuratie.",
+    "description": "Shader info text prefix"
+  },
+  "options_detail_downloadShader": {
+    "message": "Download shader.json",
+    "description": "Download shader link text"
+  },
+  "options_detail_shaderImportSuffix": {
+    "message": "en importeer het in",
+    "description": "Shader import suffix text before Better Lyrics Shaders link"
+  },
+  "marketplace_pageTitle": {
+    "message": "Better Lyrics Thema Marketplace",
+    "description": "Page title"
+  },
+  "marketplace_title": {
+    "message": "Thema Marketplace",
+    "description": "Header title"
+  },
+  "marketplace_subtitle": {
+    "message": "Ontdek en installeer communitythema's",
+    "description": "Header subtitle"
+  },
+  "marketplace_searchPlaceholder": {
+    "message": "Zoek thema's...",
+    "description": "Search input placeholder"
+  },
+  "marketplace_refresh": {
+    "message": "Ververs",
+    "description": "Refresh button label"
+  },
+  "marketplace_keyboardShortcuts": {
+    "message": "Toetsenbord snelkoppelingen",
+    "description": "Keyboard shortcuts button label"
+  },
+  "marketplace_sortBy": {
+    "message": "Sorteer op",
+    "description": "Sort filter group label"
+  },
+  "marketplace_sortRatingDesc": {
+    "message": "Best beoordeeld",
+    "description": "Sort by highest rating"
+  },
+  "marketplace_sortRatingAsc": {
+    "message": "Laagst beoordeeld",
+    "description": "Sort by lowest rating"
+  },
+  "marketplace_sortDownloadsDesc": {
+    "message": "Meest gedownload",
+    "description": "Sort by most downloads"
+  },
+  "marketplace_sortDownloadsAsc": {
+    "message": "Minst gedownload",
+    "description": "Sort by least downloads"
+  },
+  "marketplace_sortNewest": {
+    "message": "Nieuwst",
+    "description": "Sort by newest"
+  },
+  "marketplace_sortOldest": {
+    "message": "Oudste",
+    "description": "Sort by oldest"
+  },
+  "marketplace_show": {
+    "message": "Toon",
+    "description": "Show filter group label"
+  },
+  "marketplace_showAll": {
+    "message": "Alle",
+    "description": "Show all themes"
+  },
+  "marketplace_showInstalled": {
+    "message": "Geïnstalleerd",
+    "description": "Show installed themes"
+  },
+  "marketplace_showNotInstalled": {
+    "message": "Niet geïnstalleerd",
+    "description": "Show not installed themes"
+  },
+  "marketplace_options": {
+    "message": "Opties",
+    "description": "Options filter group label"
+  },
+  "marketplace_hasShaders": {
+    "message": "Heeft shaders",
+    "description": "Filter for themes with shaders"
+  },
+  "marketplace_compatibleOnly": {
+    "message": "Alleen geschikt",
+    "description": "Filter for compatible themes"
+  },
+  "marketplace_installFromUrl": {
+    "message": "Installeren van URL",
+    "description": "Install from URL button"
+  },
+  "marketplace_submitTheme": {
+    "message": "Dien thema in",
+    "description": "Submit a theme link"
+  },
+  "marketplace_loading": {
+    "message": "Thema’s laden...",
+    "description": "Loading message"
+  },
+  "marketplace_retry": {
+    "message": "Opnieuw",
+    "description": "Retry button"
+  },
+  "marketplace_noThemesMatch": {
+    "message": "Geen thema's komen overeen met uw filters",
+    "description": "Empty state message"
+  },
+  "marketplace_grantPermission": {
+    "message": "Geef Toestemming",
+    "description": "Grant permission button"
+  },
+  "marketplace_install": {
+    "message": "Installeren",
+    "description": "Install button"
+  },
+  "marketplace_remove": {
+    "message": "Verwijderen",
+    "description": "Remove button"
+  },
+  "marketplace_apply": {
+    "message": "Toepassen",
+    "description": "Apply button"
+  },
+  "marketplace_active": {
+    "message": "Actief",
+    "description": "Active theme indicator"
+  },
+  "marketplace_shadersBadge": {
+    "message": "Shaders",
+    "description": "Shaders badge text"
+  },
+  "marketplace_githubBadge": {
+    "message": "GitHub",
+    "description": "GitHub badge text"
+  },
+  "marketplace_urlModalTitle": {
+    "message": "Installeren vanaf URL",
+    "description": "URL install modal title"
+  },
+  "marketplace_urlModalMessage": {
+    "message": "Voer een GitHub repository URL in om een thema direct te installeren:",
+    "description": "URL install modal message"
+  },
+  "marketplace_urlModalPlaceholder": {
+    "message": "github.com/user/repo of github.com/user/repo/tree/branch",
+    "description": "URL input placeholder"
+  },
+  "marketplace_urlModalError": {
+    "message": "Voer een GitHub repository URL in",
+    "description": "URL validation error"
+  },
+  "marketplace_cancel": {
+    "message": "Annuleer",
+    "description": "Cancel button"
+  },
+  "marketplace_urlPermissionTitle": {
+    "message": "Aanvullende toestemming vereist",
+    "description": "URL permission modal title"
+  },
+  "marketplace_urlPermissionWhy": {
+    "message": "Waarom is dit nodig?",
+    "description": "URL permission explanation title"
+  },
+  "marketplace_urlPermissionDesc": {
+    "message": "Het installeren van thema’s via aangepaste GitHub-URL’s vereist bredere toegang dan via de marketplace. Hierdoor kan Better Lyrics:",
+    "description": "URL permission description"
+  },
+  "marketplace_urlPermissionItem1": {
+    "message": "Haal themabestanden op uit elke GitHub-repository.",
+    "description": "URL permission list item 1"
+  },
+  "marketplace_urlPermissionItem2": {
+    "message": "Detecteer de standaard branch van de repository",
+    "description": "URL permission list item 2"
+  },
+  "marketplace_urlPermissionItem3": {
+    "message": "Valideer de themastructuur vóór de installatie",
+    "description": "URL permission list item 3"
+  },
+  "marketplace_urlPermissionNote": {
+    "message": "Deze  toestemming wordt alleen gebruikt wanneer je thema's installeert via URL. Marketplace thema's vereisen dit niet.",
+    "description": "URL permission note"
+  },
+  "marketplace_shortcutsTitle": {
+    "message": "Toetsenbord sneltoetsen",
+    "description": "Shortcuts modal title"
+  },
+  "marketplace_shortcutsNavigation": {
+    "message": "Navigatie",
+    "description": "Navigation shortcuts group"
+  },
+  "marketplace_shortcutsSearch": {
+    "message": "Zoek thema's",
+    "description": "Search shortcut label"
+  },
+  "marketplace_shortcutsRefresh": {
+    "message": "Marketplace vernieuwen",
+    "description": "Refresh shortcut label"
+  },
+  "marketplace_shortcutsInstallUrl": {
+    "message": "Installeren vanaf URL",
+    "description": "Install from URL shortcut label"
+  },
+  "marketplace_shortcutsPrevPage": {
+    "message": "Vorige pagina",
+    "description": "Previous page shortcut label"
+  },
+  "marketplace_shortcutsNextPage": {
+    "message": "Volgende pagina",
+    "description": "Next page shortcut label"
+  },
+  "marketplace_shortcutsSort": {
+    "message": "Sorteren",
+    "description": "Sort shortcuts group"
+  },
+  "marketplace_shortcutsSortHint": {
+    "message": "Druk opnieuw om richting te veranderen",
+    "description": "Sort toggle hint"
+  },
+  "marketplace_shortcutsByRating": {
+    "message": "Op beoordeling",
+    "description": "Sort by rating shortcut"
+  },
+  "marketplace_shortcutsByDownloads": {
+    "message": "Op downloads",
+    "description": "Sort by downloads shortcut"
+  },
+  "marketplace_shortcutsByDate": {
+    "message": "Op datum",
+    "description": "Sort by date shortcut"
+  },
+  "marketplace_shortcutsFilters": {
+    "message": "Filters",
+    "description": "Filters shortcuts group"
+  },
+  "marketplace_shortcutsShowAll": {
+    "message": "Toon alles",
+    "description": "Show all shortcut"
+  },
+  "marketplace_shortcutsShowInstalled": {
+    "message": "Toon geïnstalleerd",
+    "description": "Show installed shortcut"
+  },
+  "marketplace_shortcutsShowNotInstalled": {
+    "message": "Toon niet geïnstalleerd",
+    "description": "Show not installed shortcut"
+  },
+  "marketplace_shortcutsToggleShaders": {
+    "message": "Schakel tussen shaders",
+    "description": "Toggle shaders shortcut"
+  },
+  "marketplace_shortcutsToggleCompatible": {
+    "message": "schakel tussen geschiktheid",
+    "description": "Toggle compatible shortcut"
+  },
+  "marketplace_shortcutsDetails": {
+    "message": "Thema details",
+    "description": "Theme details shortcuts group"
+  },
+  "marketplace_shortcutsInstallRemove": {
+    "message": "Installeren / verwijderen",
+    "description": "Install/remove shortcut"
+  },
+  "marketplace_shortcutsApply": {
+    "message": "Apply theme",
+    "description": "Apply theme shortcut label"
+  },
+  "marketplace_shortcutsPrevImage": {
+    "message": "Vorige afbeelding",
+    "description": "Previous image shortcut"
+  },
+  "marketplace_shortcutsNextImage": {
+    "message": "Volgende afbeelding",
+    "description": "Next image shortcut"
+  },
+  "marketplace_shortcutsGeneral": {
+    "message": "Algemeen",
+    "description": "General shortcuts group"
+  },
+  "marketplace_shortcutsCloseModal": {
+    "message": "Sluit venster",
+    "description": "Close modal shortcut"
+  },
+  "marketplace_shortcutsShowShortcuts": {
+    "message": "Sneltoetsen tonen",
+    "description": "Show shortcuts shortcut"
+  },
+  "marketplace_shortcutsApplyTheme": {
+    "message": "Thema (na installatie) toepassen",
+    "description": "Apply theme shortcut"
+  },
+  "marketplace_ratingFailed": {
+    "message": "Beoordeling indienen mislukt",
+    "description": "Rating submission error"
+  },
+  "marketplace_shaderFetchFailed": {
+    "message": "Fout bij het ophalen van shader configuratie",
+    "description": "Shader fetch error"
+  },
+  "marketplace_applyFailed": {
+    "message": "Thema toepassen mislukt",
+    "description": "Theme apply error"
+  },
+  "marketplace_noThemesInstalled": {
+    "message": "Nog geen thema's geïnstalleerd",
+    "description": "Empty installed themes message"
+  },
+  "marketplace_lastUpdatedOn": {
+    "message": "Laatst bijgewerkt op $date$",
+    "description": "Tooltip showing full date when a theme was last updated",
+    "placeholders": {
+      "date": {
+        "content": "$1",
+        "example": "January 15, 2025, 3:42 PM"
+      }
+    }
+  },
+  "editor_pageTitle": {
+    "message": "Better Lyrics CSS Editor",
+    "description": "Standalone editor page title"
+  },
+  "editor_importFromFile": {
+    "message": "Importeer vanuit bestand",
+    "description": "Import from file button"
+  },
+  "editor_exportToFile": {
+    "message": "Exporteer naar bestand",
+    "description": "Export to file button"
+  },
+  "editor_saveAsTheme": {
+    "message": "Opslaan als thema",
+    "description": "Save as theme button"
+  },
+  "editor_stylingGuide": {
+    "message": "Opmaak handleiding",
+    "description": "Styling guide button"
+  },
+  "editor_tip": {
+    "message": "Tip: Dit is een zelfstandig tabblad, je kunt deze editor in een apart venster verplaatsen of een gesplitste schermweergave naast YouTube Music gebruiken om je veranderingen in real-time te zien. Voor meer informatie, bezoek de",
+    "description": "Editor tip text"
+  },
+  "editor_poweredBy": {
+    "message": "Mogelijk gemaakt door",
+    "description": "Powered by label"
+  },
+  "editor_playground": {
+    "message": "Playground",
+    "description": "Playground link text"
+  },
+  "editor_docs": {
+    "message": "Documentatie",
+    "description": "Docs link text"
+  },
+  "lyrics_source": {
+    "message": "Bron: ",
+    "description": "Lyrics source label"
+  },
+  "lyrics_addToLrclib": {
+    "message": "Songteksten toevoegen aan LRCLib",
+    "description": "Add lyrics button text"
+  },
+  "lyrics_searchOnGenius": {
+    "message": "Zoek op Genius",
+    "description": "Search on Genius button text"
+  },
+  "lyrics_searching": {
+    "message": "Better Lycrics zoekt naar songteksten...",
+    "description": "Loading message while searching for lyrics"
+  },
+  "lyrics_stillSearching": {
+    "message": "Zoekt nog steeds naar gesynchroniseerde songteksten...",
+    "description": "Loading message while still searching"
+  },
+  "lyrics_noSyncedLyrics": {
+    "message": "Better Lyrics kon geen gesynchroniseerde songteksten vinden",
+    "description": "Message when no synced lyrics found"
+  },
+  "lyrics_adPlaying": {
+    "message": "[wacht muziek]",
+    "description": "Message shown during ad playback"
+  },
+  "lyrics_notFound": {
+    "message": "Geen songtekst gevonden voor dit nummer",
+    "description": "Message when no lyrics are available"
+  },
+  "options_language_exclusions": {
+    "message": "Taal uitsluitingen",
+    "description": "Label for language exclusions setting"
+  },
+  "options_manage": {
+    "message": "Beheer",
+    "description": "Manage button label"
+  },
+  "options_language_exclusionsTitle": {
+    "message": "Taal Uitsluitingen",
+    "description": "Modal title for language exclusions"
+  },
+  "options_romanization_tab": {
+    "message": "Romanisatie",
+    "description": "Romanization tab label"
+  },
+  "options_translation_tab": {
+    "message": "Vertaling",
+    "description": "Translation tab label"
+  },
+  "options_searchLanguages": {
+    "message": "Zoek talen...",
+    "description": "Search input placeholder"
+  },
+  "options_romanization_hint": {
+    "message": "Klik de schakelaar. Uitgesloten talen worden niet geromaniseerd.",
+    "description": "Hint text for romanization exclusions"
+  },
+  "options_translation_hint": {
+    "message": "Klik om te schakelen. Uitgesloten brontalen worden niet vertaald.",
+    "description": "Hint text for translation exclusions"
+  },
+  "options_resetToDefault": {
+    "message": "Reset $TYPE$ naar Standaard",
+    "description": "Reset to default button label",
+    "placeholders": {
+      "type": {
+        "content": "$1",
+        "example": "Romanization"
+      }
+    }
+  },
+  "options_romanization_resetTitle": {
+    "message": "Reset $TYPE$ UItsluitingen",
+    "description": "Modal title for resetting exclusions",
+    "placeholders": {
+      "type": {
+        "content": "$1",
+        "example": "Romanization"
+      }
+    }
+  },
+  "options_romanization_resetMessage": {
+    "message": "Dit zal alle uitgesloten talen wissen. Doorgaan?",
+    "description": "Confirmation message for resetting exclusions"
+  },
+  "options_reset": {
+    "message": "Reset",
+    "description": "Reset button label"
+  },
+  "options_cancel": {
+    "message": "Annuleer",
+    "description": "Cancel button label"
+  },
+  "options_romanization_resetSuccess": {
+    "message": "$TYPE$ uitsluitingen gereset naar standaard",
+    "description": "Success message after resetting exclusions",
+    "placeholders": {
+      "type": {
+        "content": "$1",
+        "example": "Romanization"
+      }
+    }
+  },
+  "symlink_applied": {
+    "message": "Applied theme: $NAME$ (Marketplace)",
+    "description": "Alert after successfully applying a symlinked theme from marketplace",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Minimal"
+      }
+    }
+  },
+  "builtin_applied": {
+    "message": "Applied theme: $NAME$",
+    "description": "Alert after successfully applying a bundled built-in theme",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Spotlight"
+      }
+    }
+  },
+  "theme_author_prefix": {
+    "message": "by $AUTHOR$",
+    "description": "Author prefix shown on theme selector button",
+    "placeholders": {
+      "author": {
+        "content": "$1",
+        "example": "boidu"
+      }
+    }
+  },
+  "theme_author_you": {
+    "message": "by You",
+    "description": "Author label for custom user themes on theme selector button"
+  },
+  "symlink_installFailed": {
+    "message": "Couldn't install theme. Check your connection and try again.",
+    "description": "Alert when a symlinked theme fails to install from marketplace"
+  },
+  "symlink_badge_marketplace": {
+    "message": "Marketplace",
+    "description": "Badge text on symlinked theme cards"
+  },
+  "symlink_badge_bundled": {
+    "message": "Bundled",
+    "description": "Badge text on non-symlinked built-in theme cards"
+  },
+  "deprecation_builtin_title": {
+    "message": "Heads up, these themes are moving!",
+    "description": "Title for the built-in themes deprecation banner in theme modal"
+  },
+  "deprecation_builtin_body": {
+    "message": "We're migrating built-in themes to the Theme Marketplace. Some already have, look for the Marketplace badge. The rest will follow in a future update, with CSS backups on GitHub and Discord.",
+    "description": "Body text for the built-in themes deprecation banner"
+  },
+  "deprecation_builtin_cta": {
+    "message": "Browse Marketplace",
+    "description": "CTA button text in the deprecation banner to open the marketplace"
+  },
+  "theme_modal_section_builtin": {
+    "message": "Built-in Themes",
+    "description": "Section title for built-in themes in the theme chooser modal"
+  },
+  "theme_modal_section_custom": {
+    "message": "Custom Themes",
+    "description": "Section title for custom themes in the theme chooser modal"
+  }
+}

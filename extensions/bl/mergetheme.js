@@ -5,7 +5,7 @@ const MY_CUSTOM_CSS = `
 /* Adds: More smooth animation, new spring scroll delay,...                                                         */
 /* Fixes: Img crossfade fix                                                                                         */
 /* Based on: Dynamic Background (by chengg), Big Blurry Slow Lyrics for TV (by zobiron), Luxurious Glass (by SKMJi) */
-/* Made by: Gemini 3 Pro and NanKill                                                                                */
+/* Made by: Gemini 3.1 Pro and NanKill                                                                                */
 /* ================================================================================================================ */
 
 /* ============================================== */

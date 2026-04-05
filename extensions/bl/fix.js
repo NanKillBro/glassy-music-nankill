@@ -1,7 +1,7 @@
 /**
  * YOUTUBE MUSIC CUSTOM ENHANCEMENTS
  * Tệp JavaScript tổng hợp các tinh chỉnh giao diện cho YouTube Music
- * Made by NanKill, Gemini 3 Pro, Claude
+ * Made by NanKill, Gemini 3.1 Pro, Claude Opus 4.6
  */
 
 // =========================================================================
