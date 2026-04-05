@@ -359,7 +359,7 @@
         attributeFilter: ['src'],
         attributeOldValue: true
       });
-      console.log("[Crossfade] V2.1 Observer Started!");
+      console.log("[Crossfade Glassy Music] V2.1 Observer Started!");
     } else {
       setTimeout(initObserver, 1000);
     }

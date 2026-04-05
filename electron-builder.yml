@@ -1,5 +1,9 @@
 appId: "glassy-music-nankill-mod"
 productName: "Glassy Music"
+publish:
+  provider: github
+  owner: NanKillBro
+  repo: glassy-music-nankill
 files:
   - '!*'
   - dist

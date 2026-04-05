@@ -269,7 +269,7 @@ export default createPlugin<
         const transitionBeforeEnd = () => {
           if (
             video.currentTime >=
-              video.duration - (this.config?.secondsBeforeEnd ?? 0) &&
+            video.duration - (this.config?.secondsBeforeEnd ?? 0) &&
             isReadyToCrossfade()
           ) {
             video.removeEventListener('timeupdate', transitionBeforeEnd);
@@ -311,8 +311,17 @@ export default createPlugin<
 
       watchVideoIDChanges(async (videoID) => {
         await waitForTransition;
-        const url = await getStreamURL(videoID);
+        let url: string | undefined;
+        try {
+          url = await getStreamURL(videoID);
+        } catch {
+          url = undefined;
+        }
         if (!url) {
+          const v = document.querySelector<HTMLVideoElement>('video');
+          if (v && v.volume === 0) {
+            v.volume = 1;
+          }
           return;
         }
 
