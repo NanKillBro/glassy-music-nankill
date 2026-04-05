@@ -2,7 +2,7 @@
   "name": "glassy-music-nankill-mod",
   "desktopName": "nankill.xyz.glassymusic.mod",
   "productName": "Glassy Music",
-  "version": "3.12.4-beta.nankill",
+  "version": "3.12.5-beta.nankill",
   "description": "Glassy Music - Custom mod by NanKill",
   "main": "./dist/main/index.js",
   "type": "module",

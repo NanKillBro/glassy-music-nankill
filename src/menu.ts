@@ -400,13 +400,29 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
     <div class="container">
         <div class="header">
             <h1>Glassy Music</h1>
-            <div class="version-badge">NanKill Client v${packageJson.version}</div>
+            <div class="version-badge">v${packageJson.version}</div>
             <div class="dev-by">Developed by <strong><a href="https://github.com/NanKillBro" target="_blank">NanKill</a></strong></div>
         </div>
 
         <div class="changelog-label">What's New</div>
 
         <div class="scroll-area">
+        <div class="log-entry">
+            <div class="log-header">
+                <span class="log-version">Version 3.12.5-beta</span>
+                <span class="log-tag">BETA</span>
+            </div>
+            <ul>
+                <li>Upstreamed to commit: <code style="">c583e90</code></li>
+                <li>Updated MERGE THEME from <span style="color:#00f2fe">v18</span> to <span style="color:#00f2fe">v19</span></li>
+                <li>Updated Better Lyrics to commit: <code style="">b8ca6de</code></li>
+                <li>Added new fixed spring scroll effect (delay)</li>
+                <li>Discord RPC Github URL changed</li>
+                <li>Fixed some part don't have animation</li>
+                <li>Fixed weird crossfade img</li>
+                <li>Fixed library button not showing up for premium users</li>
+            </ul>
+        </div>
         <div class="log-entry">
             <div class="log-header">
                 <span class="log-version">Version 3.12.4-beta</span>

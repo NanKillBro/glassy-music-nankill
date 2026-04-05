@@ -3,9 +3,9 @@ const MY_CUSTOM_CSS = `
 /* =================================================================================================================*/
 /* MERGED THEME V19: Some UI Update                                                                                 */
 /* Adds: More smooth animation, new spring scroll delay,...                                                         */
-/* Fixes: Img crossfade fix                                                                                         */
+/* Fixes: Img crossfade fix, some fix for new better lyrics update                                                  */
 /* Based on: Dynamic Background (by chengg), Big Blurry Slow Lyrics for TV (by zobiron), Luxurious Glass (by SKMJi) */
-/* Made by: Gemini 3.1 Pro and NanKill                                                                                */
+/* Made by: Gemini 3.1 Pro and NanKill                                                                              */
 /* ================================================================================================================ */
 
 /* ============================================== */
@@ -187,7 +187,7 @@ ytmusic-search-box #suggestion-list ytmusic-search-suggestions-section,
   z-index: -50;
   /* Thông số mặc định: blur 60px, bão hòa 1.5, độ sáng 0.7 */
   filter: blur(60px) saturate(1.5) brightness(0.7);
-  transition: background 0.4s ease-in-out 0.5s;
+  transition: background 0.4s ease-in-out 0.3s;
   will-change: background;
 }
 ytmusic-fullbleed-thumbnail-renderer[is-background] .image {
@@ -537,7 +537,8 @@ ytmusic-player-page[mini-player-enabled]:not([player-page-open]):not([player-ful
 
 /* STYLE LYRIC */
 .blyrics-container {
-  padding: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
   position: relative;
   z-index: 2;
   text-align: left;
@@ -611,6 +612,7 @@ ytmusic-player-page[player-fullscreened] #side-panel {
   /* Bổ sung: Xóa khoảng trống bên ngoài và giới hạn chiều cao */
   max-height: none !important; 
   height: 100% !important;
+  padding-top: 65px !important;
 }
 
 /* RESPONSIVE */
