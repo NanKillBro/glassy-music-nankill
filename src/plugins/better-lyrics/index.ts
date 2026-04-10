@@ -29,7 +29,7 @@ export default createPlugin({
         label: 'Open Settings',
         click: () => {
           const settingsWin = new BrowserWindow({
-            width: 700,
+            width: 500,
             height: 700,
             autoHideMenuBar: true,
             frame: false,
@@ -90,6 +90,7 @@ export default createPlugin({
                     display: flex;
                     flex-direction: column;
                     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.05);
+                    clip-path: inset(0 round 20px);
                     -webkit-app-region: drag;
                     z-index: 999999;
                   }

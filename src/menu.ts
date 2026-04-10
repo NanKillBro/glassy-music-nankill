@@ -167,6 +167,7 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
             align-items: center;
             -webkit-app-region: drag;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.05);
+            clip-path: inset(0 round 20px);
         }
 
         @keyframes windowAppear {

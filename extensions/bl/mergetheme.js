@@ -1,9 +1,9 @@
 // Dán CSS theme "cucu" của bạn vào giữa 2 dấu huyền (`) ở dưới
 const MY_CUSTOM_CSS = `
 /* =================================================================================================================*/
-/* MERGED THEME V19: Some UI Update                                                                                 */
-/* Adds: More smooth animation, new spring scroll delay,...                                                         */
-/* Fixes: Img crossfade fix, some fix for new better lyrics update                                                  */
+/* MERGED THEME V20: Some UI Update                                                                                 */
+/* Adds: GlassyFlow v4, new tabs UI                                                                                 */
+/* Fixes: Nope                                                                                                      */
 /* Based on: Dynamic Background (by chengg), Big Blurry Slow Lyrics for TV (by zobiron), Luxurious Glass (by SKMJi) */
 /* Made by: Gemini 3.1 Pro and NanKill                                                                              */
 /* ================================================================================================================ */
@@ -820,6 +820,134 @@ ytmusic-tabs#tabs .tab:not(.selected):hover {
     color: #ffffff !important;
 }
 
+/* CĂN CHỈNH CHO THANH TAB BÊN TRONG SIDE-PANEL (UP NEXT, LYRICS, RELATED) */
+ytmusic-player-page tp-yt-paper-tabs.tab-header-container {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important; /* Đã trả lại box-shadow mềm mại để có cảm giác nổi */
+    margin: 12px 20px !important;
+  padding: 0 6px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    min-height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    position: relative !important;
+}
+
+/* Tắt thanh gạch ngang dưới chữ */
+ytmusic-player-page tp-yt-paper-tabs.tab-header-container #selectionBar {
+    display: none !important;
+}
+
+/* Canh giữa khối tab theo trục dọc để không bị lệch lên */
+ytmusic-player-page tp-yt-paper-tabs.tab-header-container #tabsContainer,
+ytmusic-player-page tp-yt-paper-tabs.tab-header-container #tabsContent {
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Giữ cụm tab dồn về trái, chừa chỗ cho footer nằm bên phải */
+ytmusic-player-page tp-yt-paper-tabs.tab-header-container #tabsContent {
+  justify-content: flex-start !important;
+}
+
+/* Giới hạn lại kích cỡ và khoảng cách của từng tab nhỏ */
+ytmusic-player-page tp-yt-paper-tabs.tab-header-container tp-yt-paper-tab.tab-header {
+    margin: 0 4px !important;
+    padding: 0 16px !important;
+    height: 36px !important;
+    display: flex !important; /* Thêm Flex để kéo text... */
+    align-items: center !important; /* ...và canh giữa theo chiều dọc */
+    justify-content: center !important; /* Canh đều theo chiều ngang */
+  position: relative !important;
+  top: 1px !important;
+}
+
+/* Canh giữa chính phần chữ trong từng tab */
+ytmusic-player-page tp-yt-paper-tabs.tab-header-container tp-yt-paper-tab.tab-header .tab-content {
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  padding: 0 !important;
+}
+
+/* Style cho Tab đang chọn (Up Next, Lyrics, Related) */
+ytmusic-player-page tp-yt-paper-tabs.tab-header-container tp-yt-paper-tab.tab-header.iron-selected {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.4) !important;
+    transform: scale(1.02) !important;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+}
+
+/* Style cho Tab bình thường */
+ytmusic-player-page tp-yt-paper-tabs.tab-header-container tp-yt-paper-tab.tab-header:not(.iron-selected) {
+    color: rgba(255, 255, 255, 0.6) !important;
+    font-weight: 500 !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Hover cho Tab bình thường */
+ytmusic-player-page tp-yt-paper-tabs.tab-header-container tp-yt-paper-tab.tab-header:not(.iron-selected):hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: #ffffff !important;
+}
+
+/* Dock footer Better Lyrics lên thanh tab và neo sang phải */
+ytmusic-player-page tp-yt-paper-tabs.tab-header-container .nankill-blyrics-footer-in-tabs,
+ytmusic-player-page tp-yt-paper-tabs.tab-header-container .blyrics-footer__container {
+  position: absolute !important;
+  right: 8px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  margin-left: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  height: 32px !important;
+  padding: 0 14px !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.1 !important;
+  color: rgba(255, 255, 255, 0.78) !important;
+  white-space: nowrap !important;
+  width: fit-content !important;
+  min-width: 180px !important;
+  max-width: 360px !important;
+  overflow: hidden !important;
+  opacity: 0.9;
+  z-index: 3 !important;
+}
+
+ytmusic-player-page tp-yt-paper-tabs.tab-header-container .nankill-blyrics-footer-in-tabs a,
+ytmusic-player-page tp-yt-paper-tabs.tab-header-container .blyrics-footer__container a {
+  color: rgba(255, 255, 255, 0.9) !important;
+  text-decoration: none !important;
+  font-size: inherit !important;
+  line-height: 1.1 !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+ytmusic-player-page tp-yt-paper-tabs.tab-header-container .nankill-blyrics-footer-in-tabs img,
+ytmusic-player-page tp-yt-paper-tabs.tab-header-container .blyrics-footer__container img {
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
 
 .thumbnail-image-wrapper {
   /* Bo tròn các góc */
@@ -1160,6 +1288,14 @@ function injectStyles() {
   console.log("[NanKill's Skibidi Theme] Injecting MERGED THEME V17...");
   console.log("[NanKill's Skibidi Theme] Blowing ur YT Music Client...");
 
+  const existingStyle = document.getElementById('force-nankill-skibidi-theme');
+  if (existingStyle) {
+    if (existingStyle.textContent !== MY_CUSTOM_CSS) {
+      existingStyle.textContent = MY_CUSTOM_CSS;
+    }
+    return;
+  }
+
   // Tạo thẻ <style>
   const style = document.createElement('style');
   style.id = 'force-nankill-skibidi-theme';
@@ -1176,9 +1312,128 @@ function injectStyles() {
   (document.head || document.documentElement).appendChild(style);
 }
 
+const NANKILL_BLYRICS_SOURCE_LINK_ID = 'betterLyricsFooterLink';
+
+function getSourceLinkInContainer(container) {
+  return container.querySelector(`a#${NANKILL_BLYRICS_SOURCE_LINK_ID}, a[data-nankill-source-link]`);
+}
+
+function getBetterLyricsSourceContainers() {
+  return Array.from(document.querySelectorAll('.blyrics-footer__container')).filter((container) => {
+    return Boolean(getSourceLinkInContainer(container));
+  });
+}
+
+function pickPrimarySourceContainer(containers) {
+  return (
+    containers.find((container) => container.classList.contains('nankill-blyrics-footer-in-tabs')) ||
+    containers.find((container) => {
+      const link = getSourceLinkInContainer(container);
+      if (!link) {
+        return false;
+      }
+      return Boolean(link.getAttribute('href')) || link.textContent.trim().length > 0;
+    }) ||
+    containers[0]
+  );
+}
+
+function sanitizeSourceContainers({ containers, primary, tabsHost }) {
+  for (const container of containers) {
+    const sourceLink = getSourceLinkInContainer(container);
+    if (!sourceLink) {
+      continue;
+    }
+
+    if (container === primary) {
+      sourceLink.id = NANKILL_BLYRICS_SOURCE_LINK_ID;
+      sourceLink.dataset.nankillSourceLink = 'primary';
+      container.dataset.nankillSourceClone = '0';
+      container.style.removeProperty('display');
+      continue;
+    }
+
+    const isInTabsHost = tabsHost && tabsHost.contains(container);
+    if (isInTabsHost) {
+      continue;
+    }
+
+    // Better Lyrics có thể tạo lại một source footer mới sau khi đổi bài.
+    // Ẩn bản clone và gỡ id để không cướp luồng cập nhật từ bản đang dock trên tab.
+    sourceLink.removeAttribute('id');
+    sourceLink.dataset.nankillSourceLink = 'clone';
+    container.dataset.nankillSourceClone = '1';
+    container.style.setProperty('display', 'none', 'important');
+  }
+}
+
+function dockBetterLyricsFooterToTabs() {
+  const sourceContainers = getBetterLyricsSourceContainers();
+  const tabsHost = document.querySelector('ytmusic-player-page tp-yt-paper-tabs.tab-header-container');
+
+  if (!sourceContainers.length || !tabsHost) {
+    return;
+  }
+
+  const footer = pickPrimarySourceContainer(sourceContainers);
+  if (!footer) {
+    return;
+  }
+
+  // Chỉ chuyển node khi cần, tránh thao tác DOM lặp vô ích.
+  if (footer.parentElement !== tabsHost) {
+    footer.classList.add('nankill-blyrics-footer-in-tabs');
+    tabsHost.appendChild(footer);
+  }
+
+  sanitizeSourceContainers({
+    containers: sourceContainers,
+    primary: footer,
+    tabsHost,
+  });
+}
+
+let nankillFooterDockObserver;
+function setupFooterDockingObserver() {
+  let rafPending = false;
+  const scheduleDock = () => {
+    if (rafPending) {
+      return;
+    }
+    rafPending = true;
+    requestAnimationFrame(() => {
+      rafPending = false;
+      dockBetterLyricsFooterToTabs();
+    });
+  };
+
+  dockBetterLyricsFooterToTabs();
+
+  if (!nankillFooterDockObserver) {
+    nankillFooterDockObserver = new MutationObserver(scheduleDock);
+    nankillFooterDockObserver.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+    });
+  }
+
+  window.addEventListener('resize', scheduleDock);
+}
+
 // Chèn ngay lập tức
 injectStyles();
+dockBetterLyricsFooterToTabs();
+setupFooterDockingObserver();
 
 // Chèn lại lần nữa khi trang load xong (đề phòng bị extension ghi đè)
-window.addEventListener('DOMContentLoaded', injectStyles);
-window.addEventListener('load', injectStyles);
+window.addEventListener('DOMContentLoaded', () => {
+  injectStyles();
+  dockBetterLyricsFooterToTabs();
+  setupFooterDockingObserver();
+});
+
+window.addEventListener('load', () => {
+  injectStyles();
+  dockBetterLyricsFooterToTabs();
+  setupFooterDockingObserver();
+});
