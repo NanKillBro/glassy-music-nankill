@@ -1285,9 +1285,6 @@ ytmusic-multi-row-list-item-renderer.ytmusic-shelf-renderer {
 `;
 
 function injectStyles() {
-  console.log("[NanKill's Skibidi Theme] Injecting MERGED THEME V17...");
-  console.log("[NanKill's Skibidi Theme] Blowing ur YT Music Client...");
-
   const existingStyle = document.getElementById('force-nankill-skibidi-theme');
   if (existingStyle) {
     if (existingStyle.textContent !== MY_CUSTOM_CSS) {
@@ -1295,6 +1292,8 @@ function injectStyles() {
     }
     return;
   }
+
+  console.info('[GlassyUI] Booting Merged Theme...');
 
   // Tạo thẻ <style>
   const style = document.createElement('style');
@@ -1382,6 +1381,7 @@ function dockBetterLyricsFooterToTabs() {
 
   // Chỉ chuyển node khi cần, tránh thao tác DOM lặp vô ích.
   if (footer.parentElement !== tabsHost) {
+    console.info('[GlassyUI] Successfully docked lyrics footer to tabs.');
     footer.classList.add('nankill-blyrics-footer-in-tabs');
     tabsHost.appendChild(footer);
   }
@@ -1410,6 +1410,7 @@ function setupFooterDockingObserver() {
   dockBetterLyricsFooterToTabs();
 
   if (!nankillFooterDockObserver) {
+    console.info('[GlassyUI] Starting DOM observer for lyrics footer docking...');
     nankillFooterDockObserver = new MutationObserver(scheduleDock);
     nankillFooterDockObserver.observe(document.documentElement, {
       childList: true,

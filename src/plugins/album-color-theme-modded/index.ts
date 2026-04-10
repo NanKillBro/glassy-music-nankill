@@ -30,7 +30,7 @@ type Renderer = {
 export default createPlugin({
   name: () => t('plugins.album-color-theme.name'),
   description: () => t('plugins.album-color-theme.description'),
-  restartNeeded: true,
+  restartNeeded: false,
   config: {
     enabled: true,
     ratio: 0.8,
@@ -178,68 +178,68 @@ export default createPlugin({
       return `color-mix(in srgb, ${color} ${originalRatio}, ${keyColor} ${colorRatio})`;
     },
     updateColor(alpha: number) {
-// Trong hàm updateColor(alpha: number) { ...
+      // Trong hàm updateColor(alpha: number) { ...
 
-const variableMap = {
-    // --- [BẬT LẠI] CÁC BIẾN CHO THANH CÔNG CỤ & UI ---
-    // Các biến này thường được Electron App dùng để tô màu Title Bar/Menu Bar
-    '--ytmusic-color-black1': '#212121', 
-    '--ytmusic-color-black2': '#181818',
-    '--ytmusic-color-black3': '#030303',
-    '--ytmusic-color-black4': '#030303',
-    '--ytmusic-color-blackpure': '#000',
-    
-    // Biến nền cơ bản - Bật lại để các thành phần UI nhỏ (popup, card) có màu
-    '--yt-spec-base-background': '#0f0f0f', 
-    '--yt-spec-general-background-a': '#181818',
-    '--yt-spec-general-background-b': '#0f0f0f',
-    '--yt-spec-general-background-c': '#030303',
+      const variableMap = {
+        // --- [BẬT LẠI] CÁC BIẾN CHO THANH CÔNG CỤ & UI ---
+        // Các biến này thường được Electron App dùng để tô màu Title Bar/Menu Bar
+        '--ytmusic-color-black1': '#212121',
+        '--ytmusic-color-black2': '#181818',
+        '--ytmusic-color-black3': '#030303',
+        '--ytmusic-color-black4': '#030303',
+        '--ytmusic-color-blackpure': '#000',
 
-    // --- [TẮT] CÁC BIẾN NỀN TỔNG THỂ (QUAN TRỌNG) ---
-    // Hai dòng này là "kẻ thù" của Glass Theme, tuyệt đối phải tắt (comment).
-    // Nếu bật, nó sẽ phủ một lớp màu đặc lên toàn bộ body, che mất hình nền.
-    // 'background': 'rgba(3, 3, 3)',           
-    // '--ytmusic-background': 'rgba(3, 3, 3)', 
+        // Biến nền cơ bản - Bật lại để các thành phần UI nhỏ (popup, card) có màu
+        '--yt-spec-base-background': '#0f0f0f',
+        '--yt-spec-general-background-a': '#181818',
+        '--yt-spec-general-background-b': '#0f0f0f',
+        '--yt-spec-general-background-c': '#030303',
 
-    // --- CÁC PHẦN CÒN LẠI GIỮ NGUYÊN NHƯ CŨ ---
-    '--dark-theme-background-color': '#212121',
-    '--yt-spec-menu-background': '#282828',
-    '--yt-spec-raised-background': '#212121',
-    '--yt-spec-static-brand-black': '#212121',
-    '--yt-spec-static-overlay-background-solid': '#000',
-    '--yt-spec-static-overlay-background-heavy': 'rgba(0,0,0,0.8)',
-    '--yt-spec-static-overlay-background-medium': 'rgba(0,0,0,0.6)',
-    '--yt-spec-static-overlay-background-medium-light': 'rgba(0,0,0,0.3)',
-    '--yt-spec-static-overlay-background-light': 'rgba(0,0,0,0.1)',
-    '--yt-spec-snackbar-background': '#030303',
-    '--yt-spec-filled-button-text': '#030303',
-    '--yt-spec-black-1': '#282828',
-    '--yt-spec-black-2': '#1f1f1f',
-    '--yt-spec-black-3': '#161616',
-    '--yt-spec-black-4': '#0d0d0d',
-    '--yt-spec-black-pure': '#000',
-    '--yt-spec-black-pure-alpha-5': 'rgba(0,0,0,0.05)',
-    '--yt-spec-black-pure-alpha-10': 'rgba(0,0,0,0.1)',
-    '--yt-spec-black-pure-alpha-15': 'rgba(0,0,0,0.15)',
-    '--yt-spec-black-pure-alpha-30': 'rgba(0,0,0,0.3)',
-    '--yt-spec-black-pure-alpha-60': 'rgba(0,0,0,0.6)',
-    '--yt-spec-black-pure-alpha-80': 'rgba(0,0,0,0.8)',
-    '--yt-spec-black-1-alpha-98': 'rgba(40,40,40,0.98)',
-    '--yt-spec-black-1-alpha-95': 'rgba(40,40,40,0.95)',
-    '--paper-toast-background-color': '#323232',
-    '--ytmusic-search-background': '#030303',
-    '--paper-slider-knob-color': '#f03',
-    '--paper-dialog-background-color': '#212121',
-    '--paper-progress-active-color-1': '#f03',
-    '--paper-progress-active-color-2': '#ff2791',
-    '--yt-spec-inverted-background': '#f3f3f3',
-};
+        // --- [TẮT] CÁC BIẾN NỀN TỔNG THỂ (QUAN TRỌNG) ---
+        // Hai dòng này là "kẻ thù" của Glass Theme, tuyệt đối phải tắt (comment).
+        // Nếu bật, nó sẽ phủ một lớp màu đặc lên toàn bộ body, che mất hình nền.
+        // 'background': 'rgba(3, 3, 3)',           
+        // '--ytmusic-background': 'rgba(3, 3, 3)', 
 
-// Vẫn giữ nguyên việc tắt mapping background ở đây
-const colorKeyMap: Record<string, string> = {
-    // 'background': DARK_COLOR_KEY,
-    // '--ytmusic-background': DARK_COLOR_KEY,
-};
+        // --- CÁC PHẦN CÒN LẠI GIỮ NGUYÊN NHƯ CŨ ---
+        '--dark-theme-background-color': '#212121',
+        '--yt-spec-menu-background': '#282828',
+        '--yt-spec-raised-background': '#212121',
+        '--yt-spec-static-brand-black': '#212121',
+        '--yt-spec-static-overlay-background-solid': '#000',
+        '--yt-spec-static-overlay-background-heavy': 'rgba(0,0,0,0.8)',
+        '--yt-spec-static-overlay-background-medium': 'rgba(0,0,0,0.6)',
+        '--yt-spec-static-overlay-background-medium-light': 'rgba(0,0,0,0.3)',
+        '--yt-spec-static-overlay-background-light': 'rgba(0,0,0,0.1)',
+        '--yt-spec-snackbar-background': '#030303',
+        '--yt-spec-filled-button-text': '#030303',
+        '--yt-spec-black-1': '#282828',
+        '--yt-spec-black-2': '#1f1f1f',
+        '--yt-spec-black-3': '#161616',
+        '--yt-spec-black-4': '#0d0d0d',
+        '--yt-spec-black-pure': '#000',
+        '--yt-spec-black-pure-alpha-5': 'rgba(0,0,0,0.05)',
+        '--yt-spec-black-pure-alpha-10': 'rgba(0,0,0,0.1)',
+        '--yt-spec-black-pure-alpha-15': 'rgba(0,0,0,0.15)',
+        '--yt-spec-black-pure-alpha-30': 'rgba(0,0,0,0.3)',
+        '--yt-spec-black-pure-alpha-60': 'rgba(0,0,0,0.6)',
+        '--yt-spec-black-pure-alpha-80': 'rgba(0,0,0,0.8)',
+        '--yt-spec-black-1-alpha-98': 'rgba(40,40,40,0.98)',
+        '--yt-spec-black-1-alpha-95': 'rgba(40,40,40,0.95)',
+        '--paper-toast-background-color': '#323232',
+        '--ytmusic-search-background': '#030303',
+        '--paper-slider-knob-color': '#f03',
+        '--paper-dialog-background-color': '#212121',
+        '--paper-progress-active-color-1': '#f03',
+        '--paper-progress-active-color-2': '#ff2791',
+        '--yt-spec-inverted-background': '#f3f3f3',
+      };
+
+      // Vẫn giữ nguyên việc tắt mapping background ở đây
+      const colorKeyMap: Record<string, string> = {
+        // 'background': DARK_COLOR_KEY,
+        // '--ytmusic-background': DARK_COLOR_KEY,
+      };
 
       const ratioMap: Record<string, number> = {
         '--paper-progress-active-color-1': 1.75,

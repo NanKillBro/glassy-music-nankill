@@ -9,7 +9,7 @@ const EXTENSION_ID = 'effdbpeggelllpfkjppbokhmmiinhlmg';
 
 export default createPlugin({
   name: () => 'Better Lyrics',
-  restartNeeded: true,
+  restartNeeded: false,
   config: {
     enabled: true,
     enableV4Scroll: true,

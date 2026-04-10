@@ -10,8 +10,8 @@ export type BetterLyricsShadersConfig = {
 export default createPlugin({
   name: () => 'Better Lyrics Shaders',
   description: () => 'Adds shader effects to lyrics background',
-  restartNeeded: true, 
-  
+  restartNeeded: false,
+
   // 2. Config mặc định
   config: {
     enabled: true,
@@ -20,15 +20,15 @@ export default createPlugin({
   backend: {
     // 3. Sửa backend để luôn đọc folder 'bls'
     async start({ getConfig }) {
-      const config = await getConfig(); 
-      
-      const basePath = app.isPackaged 
-        ? process.resourcesPath 
+      const config = await getConfig();
+
+      const basePath = app.isPackaged
+        ? process.resourcesPath
         : path.join(__dirname, '../../../../');
 
       // Cố định thư mục là 'bls'
       const extensionPath = path.join(basePath, 'extensions', 'bls');
-      
+
       console.log(`Loading Better Lyrics Shaders from:`, extensionPath);
 
       if (config.enabled) {
