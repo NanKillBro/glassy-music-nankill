@@ -2,7 +2,19 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
-#### [3.12.4-beta.nankill](https://github.com/NanKillBro/glassy-music-nankill/compare/3.12.4-beta...3.12.4-beta.nankill)
+#### [v3.12.5-beta.nankill](https://github.com/NanKillBro/glassy-music-nankill/compare/v3.12.4-beta.nankill...v3.12.5-beta.nankill)
+
+- chore(deps): update actions/dependency-review-action digest to f5b9717 [`#4395`](https://github.com/NanKillBro/glassy-music-nankill/pull/4395)
+- refactor(taskbar-mediacontrol): Removed jimp dependency [`#4202`](https://github.com/NanKillBro/glassy-music-nankill/pull/4202)
+- chore(deps): update dependency electron to v40.8.5 [`#4342`](https://github.com/NanKillBro/glassy-music-nankill/pull/4342)
+- Fix library button not showing up for premium users. Fixes #1 [`#1`](https://github.com/NanKillBro/glassy-music-nankill/issues/1)
+- better lyrics upstream b8ca6de [`95cf566`](https://github.com/NanKillBro/glassy-music-nankill/commit/95cf5668a23858c67008d19ae67d06807eac9765)
+- Update changelog for v3.12.4-beta.nankill [`656dc8a`](https://github.com/NanKillBro/glassy-music-nankill/commit/656dc8a9719562a06e1ed5ce39ebcf11f2353cb6)
+- fix some new issue, better spring scroll [`e086773`](https://github.com/NanKillBro/glassy-music-nankill/commit/e086773da877d7b6aa6570a5c3c85fd7415a9f1f)
+
+#### [v3.12.4-beta.nankill](https://github.com/NanKillBro/glassy-music-nankill/compare/3.12.4-beta...v3.12.4-beta.nankill)
+
+> 16 March 2026
 
 - add back workflows [`a6a276a`](https://github.com/NanKillBro/glassy-music-nankill/commit/a6a276a4eca72d873bf0b0b75cdd1ef8c67b9ca5)
 - remove flatpak, snap, freebsd, armv7l build [`6085780`](https://github.com/NanKillBro/glassy-music-nankill/commit/608578059fa0feb0873166baa27c50f8e8ff2f1c)

@@ -73,7 +73,6 @@ This project relies heavily on "vibe coding". As a result, the underlying codeba
 
 ## Content
 
-- [Features](#features)
 - [Dev](#dev)
 - [Build your own plugins](#build-your-own-plugins)
   - [Creating a plugin](#creating-a-plugin)
@@ -218,7 +217,7 @@ export default createPlugin({
 
 ## Build
 
-### 🪟 Automated Build (Windows Only)
+### Automated Build (Windows Only)
 I provide an automated build script ([`build.bat`](https://github.com/NanKillBro/glassy-music-nankill/blob/master/build.bat)) for Windows that handles everything from A to Z, including checking/installing prerequisites, cloning the repository, installing packages, and compiling the app.
 
 1. Download the [`build.bat`](https://github.com/NanKillBro/glassy-music-nankill/blob/master/build.bat) file to any folder on your computer.
@@ -226,7 +225,7 @@ I provide an automated build script ([`build.bat`](https://github.com/NanKillBro
 3. Follow the on-screen prompts to select your build architecture.
 4. Once completed, your compiled portable app will be located in the `glassy-music-nankill/pack` folder.
 
-### 🐧🍏🪟 Manual Build (Linux, macOS, or Windows)
+### Manual Build (Linux, macOS, or Windows)
 
 #### 🛠️ Prerequisites
 Before you begin, ensure you have the following installed on your system:
