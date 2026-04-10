@@ -99,19 +99,27 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
   }
 
   aboutWindow = new BrowserWindow({
-    parent: parentWin, // Gắn vào cửa sổ chính
-    modal: true,       // (Tùy chọn) Chặn tương tác cửa sổ chính khi mở About
+    parent: parentWin,
+    // modal removed — prevents parent window flash on close
     width: 600,
     height: 700,
     resizable: false,
-    title: "About Glassy Music", // Hoặc "Thông tin ứng dụng"
+    title: "About Glassy Music",
     minimizable: false,
     maximizable: false,
-    autoHideMenuBar: true, // Ẩn menu mặc định của cửa sổ con
+    autoHideMenuBar: true,
+    frame: false,
+    transparent: true,
+    show: false,
+    backgroundColor: '#00000000',
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
     },
+  });
+
+  aboutWindow.once('ready-to-show', () => {
+    aboutWindow?.show();
   });
 
   // Nội dung HTML/CSS tích hợp sẵn
@@ -126,12 +134,13 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
         /* --- Reset & Base --- */
         * { box-sizing: border-box; }
         
+        html {
+            background: transparent !important;
+        }
+
         body {
             font-family: 'Baloo 2', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            /* Animated Gradient Background */
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            background: transparent !important;
             color: #ffffff;
             margin: 0;
             padding: 0;
@@ -142,7 +151,93 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
             overflow: hidden;
             user-select: none;
         }
+
+        /* --- Outer Wrapper (holds the gradient, border-radius, and drag region) --- */
+        .window-wrapper {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite, windowAppear 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-app-region: drag;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.05);
+        }
+
+        @keyframes windowAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.85) translateY(40px);
+                filter: blur(15px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0px);
+            }
+        }
+
+        @keyframes windowDisappear {
+            0% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0px);
+            }
+            40% {
+                opacity: 0.8;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.9) translateY(25px);
+                filter: blur(12px);
+            }
+        }
+
+        .window-wrapper.closing {
+            animation: gradientBG 15s ease infinite, windowDisappear 0.4s cubic-bezier(0.32, 0, 0.67, 0) forwards !important;
+            pointer-events: none;
+        }
         
+        /* Interactive elements should not be draggable */
+        .scroll-area, a, .close-btn, .container {
+            -webkit-app-region: no-drag;
+        }
+        
+        /* --- Close Button --- */
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 80, 80, 0.8);
+            transform: scale(1.1);
+        }
+        
+        .close-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: #fff;
+        }
+
         @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -160,13 +255,14 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
             -webkit-backdrop-filter: blur(25px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-top: 1px solid rgba(255, 255, 255, 0.3); /* Top highlight */
-            border-radius: 24px;
+            border-radius: 20px;
             display: flex;
             flex-direction: column;
             padding: 20px 35px;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             position: relative;
             overflow: hidden;
+            -webkit-app-region: no-drag;
         }
 
         /* --- Header Section --- */
@@ -397,6 +493,15 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
 </head>
 <body>
 
+    <div class="window-wrapper">
+
+    <!-- Close Button -->
+    <div class="close-btn" id="closeBtn" title="Đóng">
+        <svg viewBox="0 0 24 24">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+    </div>
+
     <div class="container">
         <div class="header">
             <h1>Glassy Music</h1>
@@ -506,12 +611,53 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
             Source code available at <a href="https://github.com/NanKillBro/glassy-music-nankill" target="_blank">NanKillBro/glassy-music-nankill</a>
         </div>
     </div>
+    </div> <!-- /window-wrapper -->
 
+    <script>
+        document.getElementById('closeBtn').addEventListener('click', () => {
+            const wrapper = document.querySelector('.window-wrapper');
+            if (wrapper.classList.contains('closing')) return;
+            wrapper.classList.add('closing');
+            // Signal main process to start opacity fadeout + destroy
+            setTimeout(() => {
+                document.title = '__GLASSY_CLOSE__';
+            }, 50); // small delay so CSS animation starts rendering first
+        });
+    </script>
 </body>
 </html>`
 
   // Load chuỗi HTML dưới dạng Data URI
   aboutWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(htmlContent)}`);
+
+  // Handle close animation at the Electron level (compositor, not renderer)
+  aboutWindow.webContents.on('page-title-updated', (event, title) => {
+    event.preventDefault();
+    if (title !== '__GLASSY_CLOSE__') return;
+    if (!aboutWindow || aboutWindow.isDestroyed()) return;
+
+    // Delay opacity fade by 120ms so CSS scale/blur is visible first
+    setTimeout(() => {
+      if (!aboutWindow || aboutWindow.isDestroyed()) return;
+      let opacity = 1;
+      const steps = 18;
+      const interval = 280 / steps; // faster fade since we delayed
+      const fadeTimer = setInterval(() => {
+        opacity -= 1 / steps;
+        if (opacity <= 0) {
+          clearInterval(fadeTimer);
+          if (aboutWindow && !aboutWindow.isDestroyed()) {
+            aboutWindow.destroy();
+            aboutWindow = null;
+          }
+        } else if (aboutWindow && !aboutWindow.isDestroyed()) {
+          aboutWindow.setOpacity(Math.max(0, opacity));
+        } else {
+          clearInterval(fadeTimer);
+        }
+      }, interval);
+    }, 120);
+  });
 
   aboutWindow.on('closed', () => {
     aboutWindow = null;

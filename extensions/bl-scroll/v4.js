@@ -143,7 +143,7 @@
 
         // Dynamic Speedup — tăng tốc animation khi cuộn quá nhanh
         speedupThreshold: 100,  // px — ngưỡng deferredDelta để kích hoạt speedup
-        speedupScale: 2.0,      // hệ số timeScale khi speedup kích hoạt
+        speedupScale: 2.5,      // hệ số timeScale khi speedup kích hoạt
     };
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
