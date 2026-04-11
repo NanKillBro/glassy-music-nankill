@@ -162,7 +162,7 @@
                 "force-show": "Mostrar sempre",
                 "hide": "Ocultar",
                 "label": "Botões \"Gosto\"",
-                "swap": "Inverter ordem dos botões Gosto"
+                "swap": "Trocar a ordem dos botões de like"
               },
               "remove-upgrade-button": "Remover botão \"Upgrade\"",
               "theme": {
@@ -323,7 +323,7 @@
           "label": "Nome do anfitrião"
         },
         "https": {
-          "label": "HTTPS e Certificados",
+          "label": "HTTPS e certificados",
           "submenu": {
             "cert": {
               "dialogTitle": "Selecionar arquivo do certificado HTTPS",
@@ -980,7 +980,7 @@
           }
         }
       },
-      "name": "Alternância de vídeo",
+      "name": "Alternar vídeo",
       "templates": {
         "button-song": "Música",
         "button-video": "Vídeo"
