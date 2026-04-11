@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+#### [v3.12.6-beta.nankill](https://github.com/NanKillBro/glassy-music-nankill/compare/v3.12.5-beta.nankill...v3.12.6-beta.nankill)
+
+- upstream better lyrics and shaders [`e802bf4`](https://github.com/NanKillBro/glassy-music-nankill/commit/e802bf49ed8831c5d0446060a797f609f1307c6b)
+- merge theme v20 u1, remove old scroll type, GlassyFlow v4 [`ef75aef`](https://github.com/NanKillBro/glassy-music-nankill/commit/ef75aef9a00746998d9f9289fd61adc249ce00c9)
+- mergetheme v20 u3 [`a92bb3c`](https://github.com/NanKillBro/glassy-music-nankill/commit/a92bb3ce5beb359c00453419fcc0e61c6176f1da)
+
 #### [v3.12.5-beta.nankill](https://github.com/NanKillBro/glassy-music-nankill/compare/v3.12.4-beta.nankill...v3.12.5-beta.nankill)
+
+> 5 April 2026
 
 - chore(deps): update actions/dependency-review-action digest to f5b9717 [`#4395`](https://github.com/NanKillBro/glassy-music-nankill/pull/4395)
 - refactor(taskbar-mediacontrol): Removed jimp dependency [`#4202`](https://github.com/NanKillBro/glassy-music-nankill/pull/4202)
