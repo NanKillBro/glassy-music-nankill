@@ -12,7 +12,7 @@
 
 **A personalized fork maintained by NanKill**
 
-![Screenshot](web/new.png "Screenshot")
+![Screenshot](web/new.webp "Screenshot")
 
 <p align="center">
     More screenshots: <a href="web/demo/screenshot.md">here</a>
