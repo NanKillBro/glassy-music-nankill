@@ -1,7 +1,7 @@
 /**
  * YOUTUBE MUSIC CUSTOM ENHANCEMENTS
  * Tệp JavaScript tổng hợp các tinh chỉnh giao diện cho YouTube Music
- * Made by NanKill, Gemini 3.1 Pro, Claude Opus 4.6
+ * Made by NanKill, Gemini 3.1 Pro, Claude Opus 4.6, Claude Haiku 4.5, GPT 5.3-Codex
  */
 
 // =========================================================================
@@ -189,6 +189,14 @@
   let generation = 0;          // Bộ đếm thế hệ - ngăn callback cũ ảnh hưởng state mới
   let safetyTimer = null;      // Safety timeout để thoát WAITING nếu bị kẹt
   let fadeTimer = null;        // Timer dọn dẹp sau fade
+  let videoCrossfadeState = 'IDLE'; // State riêng cho video: IDLE, WAITING, FADING
+  let activeVideoDummy = null;      // Video cũ được giữ lại để fade-out
+  let videoFadeTimer = null;        // Timer dọn dẹp video fade
+  let videoSafetyTimer = null;      // Timeout an toàn cho video WAITING
+  let videoReadyCleanup = null;     // Cleanup listener chờ video mới sẵn sàng
+  let pendingImageForVideo = null;  // Ảnh đang gắn listener chờ ready cho video fade
+  let pendingImageForVideoHandler = null;
+  let lastPlayerVideoId = null;     // Cache videoId từ event player-time để pre-hold video cũ
 
   // Hàm dọn dẹp dummy cũ ngay lập tức (dùng khi cần cancel fade/waiting giữa chừng)
   const killCurrentDummy = () => {
@@ -204,6 +212,36 @@
       activeDummy.remove();
       activeDummy = null;
     }
+  };
+
+  const clearPendingImageForVideo = () => {
+    if (pendingImageForVideo && pendingImageForVideoHandler) {
+      pendingImageForVideo.removeEventListener('load', pendingImageForVideoHandler);
+      pendingImageForVideo.removeEventListener('error', pendingImageForVideoHandler);
+    }
+    pendingImageForVideo = null;
+    pendingImageForVideoHandler = null;
+  };
+
+  const killCurrentVideoDummy = () => {
+    if (videoSafetyTimer) {
+      clearTimeout(videoSafetyTimer);
+      videoSafetyTimer = null;
+    }
+    if (videoFadeTimer) {
+      clearTimeout(videoFadeTimer);
+      videoFadeTimer = null;
+    }
+    if (videoReadyCleanup) {
+      videoReadyCleanup();
+      videoReadyCleanup = null;
+    }
+    clearPendingImageForVideo();
+    if (activeVideoDummy) {
+      activeVideoDummy.remove();
+      activeVideoDummy = null;
+    }
+    videoCrossfadeState = 'IDLE';
   };
 
   // Hàm bắt đầu hiệu ứng mờ dần
@@ -237,6 +275,34 @@
     }, 650); // Hơi dư 50ms so với transition 0.6s để đảm bảo
   };
 
+  const startVideoFade = (dummy) => {
+    if (videoCrossfadeState !== 'WAITING') return;
+    if (!dummy || dummy !== activeVideoDummy || !dummy.parentElement) return;
+
+    if (videoSafetyTimer) {
+      clearTimeout(videoSafetyTimer);
+      videoSafetyTimer = null;
+    }
+    if (videoReadyCleanup) {
+      videoReadyCleanup();
+      videoReadyCleanup = null;
+    }
+    clearPendingImageForVideo();
+
+    videoCrossfadeState = 'FADING';
+    void dummy.offsetWidth;
+    dummy.style.opacity = '0';
+
+    videoFadeTimer = setTimeout(() => {
+      if (activeVideoDummy === dummy) {
+        dummy.remove();
+        activeVideoDummy = null;
+      }
+      videoCrossfadeState = 'IDLE';
+      videoFadeTimer = null;
+    }, 650);
+  };
+
   // Hàm dọn dẹp event listener cũ để tránh lỗi gọi lặp
   const cleanupListeners = (img) => {
     if (img._cfLoad) {
@@ -266,6 +332,115 @@
 
     img.parentElement.appendChild(dummy);
     return dummy;
+  };
+
+  const createVideoDummy = (video) => {
+    const thumbnail = document.querySelector('#thumbnail');
+    if (!thumbnail || !video) return null;
+
+    killCurrentVideoDummy();
+
+    video.id = 'bls-video-crossfade-dummy';
+    Object.assign(video.style, {
+      position: 'absolute',
+      inset: '0',
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      zIndex: '6',
+      pointerEvents: 'none',
+      transition: 'opacity 0.6s ease-in-out',
+      opacity: '1'
+    });
+
+    thumbnail.appendChild(video);
+    videoCrossfadeState = 'WAITING';
+    activeVideoDummy = video;
+
+    // Giữ video cũ tiếp tục chạy trong lúc chờ artwork mới hiển thị.
+    video.play().catch(() => { });
+
+    videoSafetyTimer = setTimeout(() => {
+      if (videoCrossfadeState === 'WAITING' && activeVideoDummy === video) {
+        console.warn('[GlassyUI: Cover] Video WAITING timeout, forcing fade-out.');
+        startVideoFade(video);
+      }
+      videoSafetyTimer = null;
+    }, 6000);
+
+    return video;
+  };
+
+  const waitForNewVideoThenFade = (newVideo) => {
+    if (videoCrossfadeState !== 'WAITING' || !activeVideoDummy) return;
+    if (!newVideo || newVideo.id !== 'bls-video') return;
+
+    if (videoReadyCleanup) {
+      videoReadyCleanup();
+      videoReadyCleanup = null;
+    }
+
+    const targetDummy = activeVideoDummy;
+    const onReady = () => {
+      if (videoReadyCleanup) {
+        videoReadyCleanup();
+        videoReadyCleanup = null;
+      }
+      startVideoFade(targetDummy);
+    };
+
+    if (newVideo.readyState >= 2) {
+      requestAnimationFrame(onReady);
+      return;
+    }
+
+    newVideo.addEventListener('canplay', onReady, { once: true });
+    newVideo.addEventListener('loadeddata', onReady, { once: true });
+
+    videoReadyCleanup = () => {
+      newVideo.removeEventListener('canplay', onReady);
+      newVideo.removeEventListener('loadeddata', onReady);
+    };
+  };
+
+  const waitForImageThenFadeVideo = (img) => {
+    if (videoCrossfadeState !== 'WAITING' || !activeVideoDummy) return;
+    clearPendingImageForVideo();
+
+    const targetDummy = activeVideoDummy;
+    if (img.complete && img.naturalWidth > 0) {
+      startVideoFade(targetDummy);
+      return;
+    }
+
+    pendingImageForVideo = img;
+    pendingImageForVideoHandler = () => {
+      clearPendingImageForVideo();
+      startVideoFade(targetDummy);
+    };
+
+    img.addEventListener('load', pendingImageForVideoHandler);
+    img.addEventListener('error', pendingImageForVideoHandler);
+  };
+
+  const handlePlayerTimeForVideoCrossfade = (event) => {
+    const nextVideoId = event?.detail?.videoId;
+    if (!nextVideoId) return;
+
+    // Bỏ qua event đầu tiên để tránh hold nhầm ở lần khởi tạo.
+    if (!lastPlayerVideoId) {
+      lastPlayerVideoId = nextVideoId;
+      return;
+    }
+
+    if (nextVideoId === lastPlayerVideoId) return;
+    lastPlayerVideoId = nextVideoId;
+
+    // Pre-hold trước khi BLS remove #bls-video để tránh lộ ảnh nền giữa remove/add.
+    const currentVideo = document.getElementById('bls-video');
+    if (currentVideo) {
+      createVideoDummy(currentVideo);
+    }
   };
 
   // Hàm gắn listener chờ ảnh load xong rồi fade
@@ -311,6 +486,20 @@
 
   const observer = new MutationObserver((mutations) => {
     for (let mut of mutations) {
+      if (mut.type === 'childList') {
+        for (let node of mut.removedNodes) {
+          if (node.nodeType === 1 && node.id === 'bls-video') {
+            createVideoDummy(node);
+          }
+        }
+
+        for (let node of mut.addedNodes) {
+          if (node.nodeType === 1 && node.id === 'bls-video') {
+            waitForNewVideoThenFade(node);
+          }
+        }
+      }
+
       if (mut.type === 'attributes' && mut.attributeName === 'src') {
         const img = mut.target;
 
@@ -320,6 +509,9 @@
 
           // Bỏ qua nếu src không hợp lệ hoặc không thực sự thay đổi
           if (!oldSrc || oldSrc === newSrc || oldSrc.startsWith('data:')) continue;
+
+          // Fallback animated -> static: khi ảnh mới đổi src, cho video cũ fade khi ảnh sẵn sàng.
+          waitForImageThenFadeVideo(img);
 
           // Tăng generation → vô hiệu hóa tất cả callback cũ
           generation++;
@@ -357,6 +549,11 @@
   function initObserver() {
     const thumbnailContainer = document.querySelector('#song-image');
     if (thumbnailContainer) {
+      // Capture phase để pre-hold chạy trước listener bubbling mặc định của BLS.
+      document.removeEventListener('bls-send-player-time', handlePlayerTimeForVideoCrossfade, true);
+      document.removeEventListener('bls-send-player-time', handlePlayerTimeForVideoCrossfade);
+      document.addEventListener('bls-send-player-time', handlePlayerTimeForVideoCrossfade, { capture: true });
+
       observer.observe(thumbnailContainer, {
         childList: true,
         subtree: true,

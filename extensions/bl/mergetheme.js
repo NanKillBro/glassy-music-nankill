@@ -1,12 +1,22 @@
 // Dán CSS theme "cucu" của bạn vào giữa 2 dấu huyền (`) ở dưới
 const MY_CUSTOM_CSS = `
 /* =================================================================================================================*/
-/* MERGED THEME V20: Major UI Update                                                                                */
-/* Adds: GlassyFlow v4, new tabs UI,...                                                                             */
-/* Fixes: Fix static lyrics,...                                                                                     */
+/* MERGED THEME V21: Some UI Update                                                                                 */
+/* Adds: Crossfade animated artwork (beta), new toast UI                                                            */
+/* Fixes: Differrent text height in diffrent languages, crossfade artwork sometime not work                         */
 /* Based on: Dynamic Background (by chengg), Big Blurry Slow Lyrics for TV (by zobiron), Luxurious Glass (by SKMJi) */
 /* Made by: Gemini 3.1 Pro and NanKill                                                                              */
 /* ================================================================================================================ */
+
+:root,
+html,
+body,
+ytmusic-app {
+    --ytmusic-title-line-height-dynamic: 1.2 !important;
+    --ytmusic-body-line-height-dynamic: 1.4 !important;
+    --ytmusic-title-line-height: 1.2 !important;
+    --ytmusic-body-line-height: 1.4 !important;
+}
 
 /* ============================================== */
 /* 1. BIẾN CẤU HÌNH (ROOT VARIABLES)              */
@@ -948,7 +958,7 @@ ytmusic-player-page tp-yt-paper-tabs.tab-header-container .blyrics-footer__conta
   color: rgba(255, 255, 255, 0.78) !important;
   white-space: nowrap !important;
   width: fit-content !important;
-  min-width: 180px !important;
+  min-width: 200px !important;
   max-width: 360px !important;
   overflow: hidden !important;
   opacity: 0.9;
@@ -1521,6 +1531,64 @@ ytmusic-queue-header-renderer .text.ytmusic-chip-cloud-chip-renderer {
 /* Autoplay Indicator inside Queue List */
 div.autoplay.ytmusic-player-queue {
   padding-left: 12px !important;
+}
+
+/* =========================================================
+   GlassyUI - Toast Notifications
+   ========================================================= */
+tp-yt-paper-toast#toast {
+  /* Ép sử dụng màu Album do plugin tạo ra nhưng kèm vùng alpha để nhìn xuyên qua kính */
+  background-color: rgba(var(--ytmusic-album-color-dark, 30, 30, 30), 0.6) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Fix chữ bên trong để luôn dễ đọc trên nền glass */
+tp-yt-paper-toast#toast #label.style-scope.tp-yt-paper-toast,
+tp-yt-paper-toast#toast yt-formatted-string,
+tp-yt-paper-toast#toast .style-scope.yt-formatted-string {
+  font-weight: 500 !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Nút Action "Thay đổi", "Hoàn tác"... */
+tp-yt-paper-toast#toast yt-button-renderer button {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+  box-shadow: none !important;
+}
+
+tp-yt-paper-toast#toast yt-button-renderer button:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  transform: translateY(-1px) !important;
+}
+
+tp-yt-paper-toast#toast yt-button-renderer button .yt-spec-button-shape-next__button-text-content {
+  color: #fff !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* Nút Đóng (Close) */
+tp-yt-paper-toast#toast yt-icon-button#close-button button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 50% !important;
+  transition: all 0.2s ease !important;
+}
+
+tp-yt-paper-toast#toast yt-icon-button#close-button button:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+tp-yt-paper-toast#toast yt-icon-button#close-button yt-icon {
+  fill: #fff !important;
+  color: #fff !important;
 }
 `;
 
