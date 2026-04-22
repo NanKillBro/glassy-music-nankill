@@ -515,6 +515,23 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
         <div class="scroll-area">
         <div class="log-entry">
             <div class="log-header">
+                <span class="log-version">Version 3.12.7-beta</span>
+                <span class="log-tag">BETA</span>
+            </div>
+            <ul>
+                <li>Upstreamed to commit: <code style="">9b357b0</code></li>
+                <li>Updated Better Lyrics to commit: <code style="">0eacedd/code></li>
+                <li>Updated MERGE THEME from <span style="color:#00f2fe">v20</span> to <span style="color:#00f2fe">v21</span></li>
+                <li>New toast UI</li>
+                <li>New MacOS icons</li>
+                <li>New fullscreen lyrics without fullscreen</li>
+                <li>New Crossfade animated artwork (beta)</li>
+                <li>Fixed text alignment</li>
+                <li>Open source BL and BLS</li>
+            </ul>
+        </div>
+        <div class="log-entry">
+            <div class="log-header">
                 <span class="log-version">Version 3.12.6-beta</span>
                 <span class="log-tag">BETA</span>
             </div>

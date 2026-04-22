@@ -21,9 +21,9 @@ const migrations = {
   '>=3.10.0'(store: IStore) {
     const lyricGeniusConfig = store.get('plugins.lyrics-genius') as
       | {
-          enabled?: boolean;
-          romanizedLyrics?: boolean;
-        }
+        enabled?: boolean;
+        romanizedLyrics?: boolean;
+      }
       | undefined;
 
     if (lyricGeniusConfig) {
@@ -56,18 +56,18 @@ const migrations = {
     if (lastfmConfig) {
       let scrobblerConfig = store.get('plugins.scrobbler') as
         | {
-            enabled?: boolean;
-            scrobblers?: {
-              lastfm?: {
-                enabled?: boolean;
-                token?: string;
-                sessionKey?: string;
-                apiRoot?: string;
-                apiKey?: string;
-                secret?: string;
-              };
+          enabled?: boolean;
+          scrobblers?: {
+            lastfm?: {
+              enabled?: boolean;
+              token?: string;
+              sessionKey?: string;
+              apiRoot?: string;
+              apiKey?: string;
+              secret?: string;
             };
-          }
+          };
+        }
         | undefined;
 
       if (!scrobblerConfig) {
@@ -193,13 +193,13 @@ const migrations = {
   '>=1.12.0'(store: IStore) {
     const options = store.get('plugins.shortcuts') as
       | Record<
-          string,
-          | {
-              action: string;
-              shortcut: unknown;
-            }[]
-          | Record<string, unknown>
-        >
+        string,
+        | {
+          action: string;
+          shortcut: unknown;
+        }[]
+        | Record<string, unknown>
+      >
       | undefined;
     if (options) {
       let updated = false;
