@@ -1194,6 +1194,64 @@ export const mainMenuTemplate = async (
           label: t('main.menu.view.submenu.toggle-fullscreen'),
           role: 'togglefullscreen',
         },
+        { type: 'separator' },
+        {
+          label: 'Fullscreen lyrics without fullscreen',
+          click() {
+            const script = `
+              (function() {
+                // --- Mock the Fullscreen API so YTM updates its UI without OS fullscreen ---
+                const originalFullscreenElement = Object.getOwnPropertyDescriptor(Document.prototype, 'fullscreenElement');
+                const originalRequestFullscreen = Element.prototype.requestFullscreen;
+
+                Object.defineProperty(document, 'fullscreenElement', {
+                  get: () => document.documentElement,
+                  configurable: true,
+                });
+
+                Element.prototype.requestFullscreen = function() {
+                  document.dispatchEvent(new Event('fullscreenchange'));
+                  return Promise.resolve();
+                };
+
+                // --- Restore originals after a short delay ---
+                const restore = () => {
+                  if (originalFullscreenElement) {
+                    Object.defineProperty(document, 'fullscreenElement', originalFullscreenElement);
+                  } else {
+                    delete document.fullscreenElement;
+                  }
+                  Element.prototype.requestFullscreen = originalRequestFullscreen;
+                };
+
+                const clickFullscreen = () => {
+                  const btn = document.querySelector('yt-icon-button.fullscreen-button.ytmusic-player');
+                  if (btn) {
+                    btn.click();
+                    setTimeout(restore, 500);
+                  } else {
+                    restore();
+                  }
+                };
+
+                // --- Try clicking the fullscreen button; open the player page first if needed ---
+                const fsBtn = document.querySelector('yt-icon-button.fullscreen-button.ytmusic-player');
+                if (fsBtn) {
+                  clickFullscreen();
+                } else {
+                  const playerBar = document.querySelector('ytmusic-player-bar');
+                  if (playerBar) {
+                    playerBar.click();
+                    setTimeout(clickFullscreen, 500);
+                  } else {
+                    restore();
+                  }
+                }
+              })();
+            `;
+            win.webContents.executeJavaScript(script, true);
+          },
+        },
       ],
     },
     {

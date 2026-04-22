@@ -198,6 +198,10 @@
   let pendingImageForVideoHandler = null;
   let lastPlayerVideoId = null;     // Cache videoId từ event player-time để pre-hold video cũ
 
+  // Capture original DOM methods TRƯỚC khi monkey-patch (dùng cho internal cleanup)
+  const _origElementRemove = Element.prototype.remove;
+  const _origNodeRemoveChild = Node.prototype.removeChild;
+
   // Hàm dọn dẹp dummy cũ ngay lập tức (dùng khi cần cancel fade/waiting giữa chừng)
   const killCurrentDummy = () => {
     if (safetyTimer) {
@@ -238,7 +242,7 @@
     }
     clearPendingImageForVideo();
     if (activeVideoDummy) {
-      activeVideoDummy.remove();
+      _origElementRemove.call(activeVideoDummy);
       activeVideoDummy = null;
     }
     videoCrossfadeState = 'IDLE';
@@ -295,7 +299,7 @@
 
     videoFadeTimer = setTimeout(() => {
       if (activeVideoDummy === dummy) {
-        dummy.remove();
+        _origElementRemove.call(dummy);
         activeVideoDummy = null;
       }
       videoCrossfadeState = 'IDLE';
@@ -443,6 +447,32 @@
     }
   };
 
+  // ─── Monkey-patch: Chặn removal #bls-video để tạo dummy ĐỒNG BỘ ────────
+  // MutationObserver fire SAU khi node đã bị xoá khỏi render tree → delay
+  // 1-2 frame → lộ ảnh nền. Monkey-patch chạy ĐỒNG BỘ trong cùng call stack
+  // → dummy có sẵn ngay trước khi video biến mất → zero visual gap.
+  Element.prototype.remove = function () {
+    if (this.id === 'bls-video') {
+      console.debug('[GlassyUI: Cover] 🐒 Intercepted #bls-video.remove(), pre-holding as dummy.');
+      createVideoDummy(this);
+      return; // Không gọi origRemove — video đã được chuyển thành dummy
+    }
+    // Bảo vệ dummy đang active khỏi bị xoá bởi code bên ngoài (BLS cleanup)
+    if (this === activeVideoDummy) return;
+    return _origElementRemove.call(this);
+  };
+
+  Node.prototype.removeChild = function (child) {
+    if (child && child.id === 'bls-video') {
+      console.debug('[GlassyUI: Cover] 🐒 Intercepted removeChild(#bls-video), pre-holding as dummy.');
+      createVideoDummy(child);
+      return child; // Return child như API chuẩn, nhưng không thực sự xoá
+    }
+    // Bảo vệ dummy đang active
+    if (child === activeVideoDummy) return child;
+    return _origNodeRemoveChild.call(this, child);
+  };
+
   // Hàm gắn listener chờ ảnh load xong rồi fade
   const waitForImageThenFade = (img, dummy, gen) => {
     cleanupListeners(img);
@@ -512,6 +542,14 @@
 
           // Fallback animated -> static: khi ảnh mới đổi src, cho video cũ fade khi ảnh sẵn sàng.
           waitForImageThenFadeVideo(img);
+
+          // Skip image crossfade khi có video dummy đang che phủ thumbnail.
+          // Video dummy (z-index 6) đã cover toàn bộ → chạy image crossfade cùng lúc
+          // sẽ gây artifact "double-fade" (nhìn xuyên 2 lớp mờ dần → lộ ảnh cũ).
+          if (activeVideoDummy) {
+            cleanupListeners(img);
+            continue;
+          }
 
           // Tăng generation → vô hiệu hóa tất cả callback cũ
           generation++;

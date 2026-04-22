@@ -958,7 +958,7 @@ ytmusic-player-page tp-yt-paper-tabs.tab-header-container .blyrics-footer__conta
   color: rgba(255, 255, 255, 0.78) !important;
   white-space: nowrap !important;
   width: fit-content !important;
-  min-width: 200px !important;
+  min-width: 180px !important;
   max-width: 360px !important;
   overflow: hidden !important;
   opacity: 0.9;

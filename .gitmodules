@@ -1,0 +1,6 @@
+[submodule "extensions-src/better-lyrics"]
+	path = extensions-src/better-lyrics
+	url = https://github.com/better-lyrics/better-lyrics
+[submodule "extensions-src/shaders"]
+	path = extensions-src/shaders
+	url = https://github.com/better-lyrics/shaders

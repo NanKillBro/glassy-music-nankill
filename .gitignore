@@ -19,3 +19,10 @@ node_modules
 .extensions
 
 build_log.txt
+
+/extensions-src/better-lyrics/node_modules
+/extensions-src/better-lyrics/dist
+
+/extensions-src/shaders/node_modules
+/extensions-src/shaders/.plasmo
+/extensions-src/shaders/build
