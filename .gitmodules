@@ -1,6 +1,6 @@
-[submodule "extensions-src/better-lyrics"]
-	path = extensions-src/better-lyrics
-	url = https://github.com/better-lyrics/better-lyrics
-[submodule "extensions-src/shaders"]
-	path = extensions-src/shaders
-	url = https://github.com/better-lyrics/shaders
+[submodule "extensions-src/better-lyrics-glassy"]
+	path = extensions-src/better-lyrics-glassy
+	url = https://github.com/NanKillBro/better-lyrics-glassy
+[submodule "extensions-src/shaders-glassy"]
+	path = extensions-src/shaders-glassy
+	url = https://github.com/NanKillBro/shaders-glassy
