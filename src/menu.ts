@@ -520,7 +520,7 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
             </div>
             <ul>
                 <li>Upstreamed to commit: <code style="">9b357b0</code></li>
-                <li>Updated Better Lyrics to commit: <code style="">0eacedd/code></li>
+                <li>Updated Better Lyrics to commit: <code style="">0eacedd</code></li>
                 <li>Updated MERGE THEME from <span style="color:#00f2fe">v20</span> to <span style="color:#00f2fe">v21</span></li>
                 <li>New toast UI</li>
                 <li>New MacOS icons</li>
