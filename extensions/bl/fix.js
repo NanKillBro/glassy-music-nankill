@@ -176,9 +176,16 @@
 
 
 // =========================================================================
-// PHẦN 2: YTM IMAGE CROSSFADE (FIXED v2)
-// Mô tả: Xử lý mượt mà Crossfade kể cả khi ảnh load từ RAM Cache
+// PHẦN 2: YTM IMAGE CROSSFADE (FIXED v3)
+// Mô tả: Xử lý mượt mà Crossfade ảnh tĩnh kể cả khi ảnh load từ RAM Cache
 // Fix: Chống deadlock khi chuyển bài nhanh liên tục
+//
+// LƯU Ý QUAN TRỌNG:
+// - Video crossfade (bls-video) được xử lý BỞI animatedArtManager.ts (native).
+//   File này KHÔNG monkey-patch Element.prototype.remove hay Node.prototype.removeChild.
+// - Khi có video crossfade dummy (#bls-video-crossfade-dummy) trong DOM,
+//   image crossfade sẽ bị SKIP để tránh "double-fade" artifact.
+// - ID "bls-video-crossfade-dummy" là contract ngầm giữa source code và fix.js.
 // =========================================================================
 
 (function () {
@@ -189,18 +196,8 @@
   let generation = 0;          // Bộ đếm thế hệ - ngăn callback cũ ảnh hưởng state mới
   let safetyTimer = null;      // Safety timeout để thoát WAITING nếu bị kẹt
   let fadeTimer = null;        // Timer dọn dẹp sau fade
-  let videoCrossfadeState = 'IDLE'; // State riêng cho video: IDLE, WAITING, FADING
-  let activeVideoDummy = null;      // Video cũ được giữ lại để fade-out
-  let videoFadeTimer = null;        // Timer dọn dẹp video fade
-  let videoSafetyTimer = null;      // Timeout an toàn cho video WAITING
-  let videoReadyCleanup = null;     // Cleanup listener chờ video mới sẵn sàng
-  let pendingImageForVideo = null;  // Ảnh đang gắn listener chờ ready cho video fade
-  let pendingImageForVideoHandler = null;
-  let lastPlayerVideoId = null;     // Cache videoId từ event player-time để pre-hold video cũ
-
-  // Capture original DOM methods TRƯỚC khi monkey-patch (dùng cho internal cleanup)
-  const _origElementRemove = Element.prototype.remove;
-  const _origNodeRemoveChild = Node.prototype.removeChild;
+  let blsVideoBlocked = false;  // Flag chặn crossfade khi video đã ổn định
+  let blsVideoBlockTimer = null; // Timer 3s để set flag
 
   // Hàm dọn dẹp dummy cũ ngay lập tức (dùng khi cần cancel fade/waiting giữa chừng)
   const killCurrentDummy = () => {
@@ -216,36 +213,6 @@
       activeDummy.remove();
       activeDummy = null;
     }
-  };
-
-  const clearPendingImageForVideo = () => {
-    if (pendingImageForVideo && pendingImageForVideoHandler) {
-      pendingImageForVideo.removeEventListener('load', pendingImageForVideoHandler);
-      pendingImageForVideo.removeEventListener('error', pendingImageForVideoHandler);
-    }
-    pendingImageForVideo = null;
-    pendingImageForVideoHandler = null;
-  };
-
-  const killCurrentVideoDummy = () => {
-    if (videoSafetyTimer) {
-      clearTimeout(videoSafetyTimer);
-      videoSafetyTimer = null;
-    }
-    if (videoFadeTimer) {
-      clearTimeout(videoFadeTimer);
-      videoFadeTimer = null;
-    }
-    if (videoReadyCleanup) {
-      videoReadyCleanup();
-      videoReadyCleanup = null;
-    }
-    clearPendingImageForVideo();
-    if (activeVideoDummy) {
-      _origElementRemove.call(activeVideoDummy);
-      activeVideoDummy = null;
-    }
-    videoCrossfadeState = 'IDLE';
   };
 
   // Hàm bắt đầu hiệu ứng mờ dần
@@ -279,34 +246,6 @@
     }, 650); // Hơi dư 50ms so với transition 0.6s để đảm bảo
   };
 
-  const startVideoFade = (dummy) => {
-    if (videoCrossfadeState !== 'WAITING') return;
-    if (!dummy || dummy !== activeVideoDummy || !dummy.parentElement) return;
-
-    if (videoSafetyTimer) {
-      clearTimeout(videoSafetyTimer);
-      videoSafetyTimer = null;
-    }
-    if (videoReadyCleanup) {
-      videoReadyCleanup();
-      videoReadyCleanup = null;
-    }
-    clearPendingImageForVideo();
-
-    videoCrossfadeState = 'FADING';
-    void dummy.offsetWidth;
-    dummy.style.opacity = '0';
-
-    videoFadeTimer = setTimeout(() => {
-      if (activeVideoDummy === dummy) {
-        _origElementRemove.call(dummy);
-        activeVideoDummy = null;
-      }
-      videoCrossfadeState = 'IDLE';
-      videoFadeTimer = null;
-    }, 650);
-  };
-
   // Hàm dọn dẹp event listener cũ để tránh lỗi gọi lặp
   const cleanupListeners = (img) => {
     if (img._cfLoad) {
@@ -336,141 +275,6 @@
 
     img.parentElement.appendChild(dummy);
     return dummy;
-  };
-
-  const createVideoDummy = (video) => {
-    const thumbnail = document.querySelector('#thumbnail');
-    if (!thumbnail || !video) return null;
-
-    killCurrentVideoDummy();
-
-    video.id = 'bls-video-crossfade-dummy';
-    Object.assign(video.style, {
-      position: 'absolute',
-      inset: '0',
-      width: '100%',
-      height: '100%',
-      objectFit: 'cover',
-      zIndex: '6',
-      pointerEvents: 'none',
-      transition: 'opacity 0.6s ease-in-out',
-      opacity: '1'
-    });
-
-    thumbnail.appendChild(video);
-    videoCrossfadeState = 'WAITING';
-    activeVideoDummy = video;
-
-    // Giữ video cũ tiếp tục chạy trong lúc chờ artwork mới hiển thị.
-    video.play().catch(() => { });
-
-    videoSafetyTimer = setTimeout(() => {
-      if (videoCrossfadeState === 'WAITING' && activeVideoDummy === video) {
-        console.warn('[GlassyUI: Cover] Video WAITING timeout, forcing fade-out.');
-        startVideoFade(video);
-      }
-      videoSafetyTimer = null;
-    }, 6000);
-
-    return video;
-  };
-
-  const waitForNewVideoThenFade = (newVideo) => {
-    if (videoCrossfadeState !== 'WAITING' || !activeVideoDummy) return;
-    if (!newVideo || newVideo.id !== 'bls-video') return;
-
-    if (videoReadyCleanup) {
-      videoReadyCleanup();
-      videoReadyCleanup = null;
-    }
-
-    const targetDummy = activeVideoDummy;
-    const onReady = () => {
-      if (videoReadyCleanup) {
-        videoReadyCleanup();
-        videoReadyCleanup = null;
-      }
-      startVideoFade(targetDummy);
-    };
-
-    if (newVideo.readyState >= 2) {
-      requestAnimationFrame(onReady);
-      return;
-    }
-
-    newVideo.addEventListener('canplay', onReady, { once: true });
-    newVideo.addEventListener('loadeddata', onReady, { once: true });
-
-    videoReadyCleanup = () => {
-      newVideo.removeEventListener('canplay', onReady);
-      newVideo.removeEventListener('loadeddata', onReady);
-    };
-  };
-
-  const waitForImageThenFadeVideo = (img) => {
-    if (videoCrossfadeState !== 'WAITING' || !activeVideoDummy) return;
-    clearPendingImageForVideo();
-
-    const targetDummy = activeVideoDummy;
-    if (img.complete && img.naturalWidth > 0) {
-      startVideoFade(targetDummy);
-      return;
-    }
-
-    pendingImageForVideo = img;
-    pendingImageForVideoHandler = () => {
-      clearPendingImageForVideo();
-      startVideoFade(targetDummy);
-    };
-
-    img.addEventListener('load', pendingImageForVideoHandler);
-    img.addEventListener('error', pendingImageForVideoHandler);
-  };
-
-  const handlePlayerTimeForVideoCrossfade = (event) => {
-    const nextVideoId = event?.detail?.videoId;
-    if (!nextVideoId) return;
-
-    // Bỏ qua event đầu tiên để tránh hold nhầm ở lần khởi tạo.
-    if (!lastPlayerVideoId) {
-      lastPlayerVideoId = nextVideoId;
-      return;
-    }
-
-    if (nextVideoId === lastPlayerVideoId) return;
-    lastPlayerVideoId = nextVideoId;
-
-    // Pre-hold trước khi BLS remove #bls-video để tránh lộ ảnh nền giữa remove/add.
-    const currentVideo = document.getElementById('bls-video');
-    if (currentVideo) {
-      createVideoDummy(currentVideo);
-    }
-  };
-
-  // ─── Monkey-patch: Chặn removal #bls-video để tạo dummy ĐỒNG BỘ ────────
-  // MutationObserver fire SAU khi node đã bị xoá khỏi render tree → delay
-  // 1-2 frame → lộ ảnh nền. Monkey-patch chạy ĐỒNG BỘ trong cùng call stack
-  // → dummy có sẵn ngay trước khi video biến mất → zero visual gap.
-  Element.prototype.remove = function () {
-    if (this.id === 'bls-video') {
-      console.debug('[GlassyUI: Cover] 🐒 Intercepted #bls-video.remove(), pre-holding as dummy.');
-      createVideoDummy(this);
-      return; // Không gọi origRemove — video đã được chuyển thành dummy
-    }
-    // Bảo vệ dummy đang active khỏi bị xoá bởi code bên ngoài (BLS cleanup)
-    if (this === activeVideoDummy) return;
-    return _origElementRemove.call(this);
-  };
-
-  Node.prototype.removeChild = function (child) {
-    if (child && child.id === 'bls-video') {
-      console.debug('[GlassyUI: Cover] 🐒 Intercepted removeChild(#bls-video), pre-holding as dummy.');
-      createVideoDummy(child);
-      return child; // Return child như API chuẩn, nhưng không thực sự xoá
-    }
-    // Bảo vệ dummy đang active
-    if (child === activeVideoDummy) return child;
-    return _origNodeRemoveChild.call(this, child);
   };
 
   // Hàm gắn listener chờ ảnh load xong rồi fade
@@ -514,22 +318,10 @@
     }, 3000);
   };
 
+  // MutationObserver: Chỉ theo dõi thay đổi src của ảnh (image crossfade).
+  // Video crossfade do animatedArtManager.ts xử lý native — không cần theo dõi childList.
   const observer = new MutationObserver((mutations) => {
     for (let mut of mutations) {
-      if (mut.type === 'childList') {
-        for (let node of mut.removedNodes) {
-          if (node.nodeType === 1 && node.id === 'bls-video') {
-            createVideoDummy(node);
-          }
-        }
-
-        for (let node of mut.addedNodes) {
-          if (node.nodeType === 1 && node.id === 'bls-video') {
-            waitForNewVideoThenFade(node);
-          }
-        }
-      }
-
       if (mut.type === 'attributes' && mut.attributeName === 'src') {
         const img = mut.target;
 
@@ -540,13 +332,13 @@
           // Bỏ qua nếu src không hợp lệ hoặc không thực sự thay đổi
           if (!oldSrc || oldSrc === newSrc || oldSrc.startsWith('data:')) continue;
 
-          // Fallback animated -> static: khi ảnh mới đổi src, cho video cũ fade khi ảnh sẵn sàng.
-          waitForImageThenFadeVideo(img);
+          // Skip image crossfade khi có video đang hoạt động.
+          // - Crossfade dummy (z-index 6): luôn skip — đang giữa chuyển cảnh.
+          // - blsVideoBlocked: flag được set bởi observer riêng sau khi #bls-video
+          //   tồn tại liên tục 3 giây → chặn hoàn toàn image crossfade.
+          const videoDummy = document.getElementById('bls-video-crossfade-dummy');
 
-          // Skip image crossfade khi có video dummy đang che phủ thumbnail.
-          // Video dummy (z-index 6) đã cover toàn bộ → chạy image crossfade cùng lúc
-          // sẽ gây artifact "double-fade" (nhìn xuyên 2 lớp mờ dần → lộ ảnh cũ).
-          if (activeVideoDummy) {
+          if (videoDummy || blsVideoBlocked) {
             cleanupListeners(img);
             continue;
           }
@@ -584,22 +376,52 @@
     }
   });
 
+  // Observer riêng: theo dõi #bls-video xuất hiện/biến mất trong DOM.
+  // Sau 3 giây liên tục có video → set blsVideoBlocked = true → chặn hoàn toàn crossfade.
+  // Cơ chế này độc lập với src mutation, nên không bị ảnh hưởng bởi lag hay timing.
+  function setupVideoBlocker(container) {
+    const checkVideoPresence = () => {
+      const hasVideo = !!container.querySelector('#bls-video');
+      if (hasVideo && !blsVideoBlocked && !blsVideoBlockTimer) {
+        // Video vừa xuất hiện → bắt đầu đếm 3 giây
+        blsVideoBlockTimer = setTimeout(() => {
+          blsVideoBlocked = true;
+          blsVideoBlockTimer = null;
+          console.info('[GlassyUI: Cover] 🎬 Video stable for 3s — image crossfade blocked.');
+        }, 3000);
+      } else if (!hasVideo && (blsVideoBlocked || blsVideoBlockTimer)) {
+        // Video biến mất → reset flag và timer
+        if (blsVideoBlockTimer) {
+          clearTimeout(blsVideoBlockTimer);
+          blsVideoBlockTimer = null;
+        }
+        blsVideoBlocked = false;
+        console.info('[GlassyUI: Cover] 🎬 Video removed — image crossfade unblocked.');
+      }
+    };
+
+    const videoObserver = new MutationObserver(checkVideoPresence);
+    videoObserver.observe(container, { childList: true, subtree: true });
+
+    // Check ngay lần đầu (video có thể đã có sẵn trước khi observer start)
+    checkVideoPresence();
+  }
+
   function initObserver() {
     const thumbnailContainer = document.querySelector('#song-image');
     if (thumbnailContainer) {
-      // Capture phase để pre-hold chạy trước listener bubbling mặc định của BLS.
-      document.removeEventListener('bls-send-player-time', handlePlayerTimeForVideoCrossfade, true);
-      document.removeEventListener('bls-send-player-time', handlePlayerTimeForVideoCrossfade);
-      document.addEventListener('bls-send-player-time', handlePlayerTimeForVideoCrossfade, { capture: true });
-
+      // Theo dõi src attribute cho image crossfade
       observer.observe(thumbnailContainer, {
-        childList: true,
-        subtree: true,
         attributes: true,
         attributeFilter: ['src'],
-        attributeOldValue: true
+        attributeOldValue: true,
+        subtree: true
       });
-      console.info('[GlassyUI: Cover] Observer started. Seamless crossfade enabled.');
+
+      // Theo dõi video element cho blocking logic
+      setupVideoBlocker(thumbnailContainer);
+
+      console.info('[GlassyUI: Cover] Observer started. Seamless image crossfade enabled.');
     } else {
       setTimeout(initObserver, 1000);
     }
