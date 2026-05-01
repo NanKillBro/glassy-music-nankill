@@ -176,7 +176,7 @@ export class DiscordService {
     this.lastSongInfo = undefined;
     this.lastProgressUpdate = 0;
     this.timerManager.clearAll();
-    if (electronIs.dev()) {
+    if (is.dev()) {
       console.log(LoggerPrefix, t('plugins.discord.backend.disconnected'));
     }
   }
@@ -235,7 +235,7 @@ export class DiscordService {
    */
   connect(showErrorDialog = false): void {
     if (this.rpc.isConnected) {
-      if (electronIs.dev()) {
+      if (is.dev()) {
         console.log(
           LoggerPrefix,
           t('plugins.discord.backend.already-connected'),

@@ -2,7 +2,6 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { defineConfig } from 'electron-vite';
-import builtinModules from 'builtin-modules';
 
 import Inspect from 'vite-plugin-inspect';
 import solidPlugin from 'vite-plugin-solid';
@@ -38,16 +37,17 @@ export default defineConfig(({ mode }) => {
       __filename: 'import.meta.filename',
     },
     build: {
+      externalizeDeps: false,
       lib: {
         entry: 'src/index.ts',
         formats: ['es'],
       },
       outDir: 'dist/main',
       rolldownOptions: {
-        external: ['electron', 'custom-electron-prompt', ...builtinModules],
+        external: ['electron', 'custom-electron-prompt'],
         input: './src/index.ts',
       },
-      minify: !isDev,
+      minify: false, // WORKAROUND: rolldown minifier bug empties Node.js polyfill chunks
       cssMinify: !isDev,
       sourcemap: isDev ? 'inline' : undefined,
     },
@@ -65,6 +65,7 @@ export default defineConfig(({ mode }) => {
       }),
     ],
     build: {
+      externalizeDeps: false,
       lib: {
         entry: 'src/preload.ts',
         formats: ['cjs'],
@@ -74,7 +75,7 @@ export default defineConfig(({ mode }) => {
         ignoreDynamicRequires: true,
       },
       rolldownOptions: {
-        external: ['electron', 'custom-electron-prompt', ...builtinModules],
+        external: ['electron', 'custom-electron-prompt'],
         input: './src/preload.ts',
       },
       minify: !isDev,
@@ -106,7 +107,7 @@ export default defineConfig(({ mode }) => {
       },
       outDir: 'dist/renderer',
       rolldownOptions: {
-        external: ['electron', ...builtinModules],
+        external: ['electron'],
         input: './src/index.html',
       },
       minify: !isDev,
