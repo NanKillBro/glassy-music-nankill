@@ -35,7 +35,8 @@
         "css/themesong.css",
         "css/ytmusic/*.css",
         "pages/marketplace.html",
-        "pages/standalone-editor.html"
+        "pages/standalone-editor.html",
+        "pages/unison.html"
       ],
       "matches": [
         "*://music.youtube.com/*"

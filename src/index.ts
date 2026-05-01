@@ -351,8 +351,8 @@ async function createMainWindow() {
     icon,
     width: windowSize.width,
     height: windowSize.height,
-    minWidth: 325,
-    minHeight: 425,
+    minWidth: 1280,
+    minHeight: 720,
     backgroundColor: '#000',
     show: false,
     webPreferences: {
