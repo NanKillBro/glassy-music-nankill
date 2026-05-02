@@ -525,8 +525,9 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
                 <li>New toast UI</li>
                 <li>New MacOS icons</li>
                 <li>New fullscreen lyrics without fullscreen</li>
+                <li>New Resync Lyrics button</li>
                 <li>New Crossfade animated artwork (beta)</li>
-                <li>Fixed text alignment</li>
+                <li>Fixed text alignment on different languages</li>
                 <li>Open source BL and BLS</li>
             </ul>
         </div>
@@ -1211,7 +1212,6 @@ export const mainMenuTemplate = async (
           label: t('main.menu.view.submenu.toggle-fullscreen'),
           role: 'togglefullscreen',
         },
-        { type: 'separator' },
         {
           label: 'Fullscreen lyrics without fullscreen',
           click() {
@@ -1245,6 +1245,8 @@ export const mainMenuTemplate = async (
                   const btn = document.querySelector('yt-icon-button.fullscreen-button.ytmusic-player');
                   if (btn) {
                     btn.click();
+                    // Trigger resize event immediately to help Better Lyrics recalculate
+                    window.dispatchEvent(new Event('resize'));
                     setTimeout(restore, 500);
                   } else {
                     restore();
@@ -1268,6 +1270,13 @@ export const mainMenuTemplate = async (
             `;
             win.webContents.executeJavaScript(script, true);
           },
+        },
+        { type: 'separator' },
+        {
+          label: 'Resync Lyrics',
+          click() {
+            win.webContents.executeJavaScript(`window.dispatchEvent(new Event('resize'));`, true);
+          }
         },
       ],
     },

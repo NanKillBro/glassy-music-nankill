@@ -1569,7 +1569,9 @@ tp-yt-paper-toast#toast yt-button-renderer button:hover {
   transform: translateY(-1px) !important;
 }
 
-tp-yt-paper-toast#toast yt-button-renderer button .yt-spec-button-shape-next__button-text-content {
+tp-yt-paper-toast#toast yt-button-renderer button .yt-spec-button-shape-next__button-text-content,
+tp-yt-paper-toast#toast yt-button-renderer button .ytSpecButtonShapeNextButtonTextContent,
+tp-yt-paper-toast#toast yt-button-renderer button span {
   color: #fff !important;
   font-weight: 600 !important;
   letter-spacing: 0.3px !important;
