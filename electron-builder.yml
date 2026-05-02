@@ -18,12 +18,14 @@ files:
 asarUnpack:
   - assets
 mac:
+  identity: null
   target:
-    - target: zip   # Khuyên dùng: Build thêm .zip để dễ debug hoặc gửi file thô nếu dmg lỗi
+    - target: dmg
       arch:
         - x64
         - arm64
-  icon: assets/generated/icons/mac/icon.icns # LƯU Ý: Phải là đuôi .icns chuẩn
+  icon: assets/generated/icons/mac/icon.icns
+  compression: maximum
 win:
   icon: assets/generated/icons/win/icon.ico
   target:
