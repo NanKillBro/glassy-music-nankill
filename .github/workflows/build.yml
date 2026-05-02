@@ -74,6 +74,21 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           pnpm release:win
+          
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.os }}
+          retention-days: 3
+          path: |
+            pack/*.exe
+            pack/*.zip
+            pack/*.dmg
+            pack/*.AppImage
+            pack/*.deb
+            pack/*.rpm
+            pack/*.yml
+            pack/*.blockmap
 
       - name: Test
         uses: coactions/setup-xvfb@b6b4fcfb9f5a895edadc3bc76318fae0ac17c8b3
