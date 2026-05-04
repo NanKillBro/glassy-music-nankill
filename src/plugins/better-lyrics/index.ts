@@ -276,7 +276,7 @@ export default createPlugin({
       const config = await getConfig();
       const basePath = app.isPackaged
         ? process.resourcesPath
-        : path.join(__dirname, '../../../../');
+        : path.join(__dirname, '../../');
 
       const extensionPath = path.join(basePath, 'extensions', 'bl');
 

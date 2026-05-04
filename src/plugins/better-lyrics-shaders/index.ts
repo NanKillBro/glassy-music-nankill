@@ -24,7 +24,7 @@ export default createPlugin({
 
       const basePath = app.isPackaged
         ? process.resourcesPath
-        : path.join(__dirname, '../../../../');
+        : path.join(__dirname, '../../');
 
       // Cố định thư mục là 'bls'
       const extensionPath = path.join(basePath, 'extensions', 'bls');
