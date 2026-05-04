@@ -25,3 +25,5 @@ build_log.txt
 /extensions-src/shaders-glassy/node_modules
 /extensions-src/shaders-glassy/.plasmo
 /extensions-src/shaders-glassy/build
+/extensions/bl
+/extensions/bls
