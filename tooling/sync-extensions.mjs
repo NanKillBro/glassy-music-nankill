@@ -72,7 +72,7 @@ async function installDependencies(packageDir) {
     return;
   }
 
-  runNpm(['ci'], packageDir);
+  runNpm(['install'], packageDir);
 }
 
 async function buildExtension(job) {
