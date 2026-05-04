@@ -7,9 +7,6 @@ import { fileURLToPath } from 'node:url';
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(scriptDir, '..');
 const stagingRoot = join(repoRoot, 'pack', '.sync-extension-staging');
-const nodeExecutable = process.execPath;
-const npmCli = join(dirname(nodeExecutable), 'node_modules', 'npm', 'bin', 'npm-cli.js');
-
 const extensionJobs = [
   {
     name: 'better-lyrics-glassy',
@@ -43,10 +40,10 @@ function run(command, args, cwd) {
 }
 
 function runNpm(args, cwd) {
-  const result = spawnSync(nodeExecutable, [npmCli, ...args], {
+  const result = spawnSync('npm', args, {
     cwd,
     env: process.env,
-    shell: false,
+    shell: true,
     stdio: 'inherit',
   });
 
