@@ -43,7 +43,7 @@ This version includes heavy visual customization. **It is not recommended for ve
 ### How to use?
 
 - **🚀 Stable Release (Recommended):** You can download the pre-compiled version directly from the **[Releases](https://github.com/NanKillBro/glassy-music-nankill/releases)** page. 
-- **🛠️ Latest Experimental (Build from source):** Please check the [Build](#build) section for detailed instructions.
+- **🛠️ Latest Experimental:** You can download the latest automated build artifacts from **[GitHub Actions](https://github.com/NanKillBro/glassy-music-nankill/actions)**, or build it from source yourself by following the [Build](#build) section.
 
 ---
 
