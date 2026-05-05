@@ -120,8 +120,8 @@ export default createPlugin({
         if (albumColor) {
           const target = Color(albumColor.hex);
 
-          this.darkColor = target.darken(0.3).rgb();
-          this.color = target.darken(0.15).rgb();
+          this.darkColor = target.darken(0.6).rgb();
+          this.color = target.darken(0.3).rgb();
 
           while (this.color.luminosity() > 0.5) {
             this.color = this.color?.darken(0.05);
