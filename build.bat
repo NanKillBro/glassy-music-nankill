@@ -5,110 +5,126 @@ setlocal EnableDelayedExpansion
 :: =======================================
 :: STATUS CODE REFERENCE
 :: =======================================
-:: Moi buoc trong script duoc gan mot Status Code (SC) rieng.
-:: SC chi duoc ghi vao build_log.txt, KHONG hien thi tren man hinh.
-:: Dung de tracking flow va debug khi xem lai log.
+:: Each step in the script is assigned a unique Status Code (SC).
+:: SC is only logged to build_log.txt, NOT displayed on the screen.
+:: Used for tracking the flow and debugging when reviewing the log.
 ::
 :: --- INIT (SC-001 ~ SC-004) ---
-:: SC-001  : Script started - bat dau chay script
-:: SC-002  : Admin privileges confirmed - da co quyen admin
-:: SC-003  : Working directory - thu muc lam viec hien tai
-:: SC-004  : Log file initialized - file log da duoc tao
+:: SC-001  : Script started
+:: SC-002  : Admin privileges confirmed
+:: SC-003  : Working directory
+:: SC-004  : Log file initialized
 ::
 :: --- DEPENDENCY CHECK (SC-010 ~ SC-019) ---
-:: SC-010  : Begin dependency check phase - bat dau kiem tra dependencies
-:: SC-011  : Check NodeJS - ket qua kiem tra NodeJS
-:: SC-012  : Check Git - ket qua kiem tra Git
-:: SC-013  : Check PNPM - ket qua kiem tra PNPM
-:: SC-014  : Dependency check result - tong ket kiem tra (MISSING=1 hoac rong)
-:: SC-015  : All dependencies found - tat ca dependencies da co
-:: SC-016  : Some dependencies missing - co dependency thieu
-:: SC-017  : Displaying install prompt - hien thi cau hoi cai dat
-:: SC-018  : User input for install prompt - nguoi dung nhap lua chon
-:: SC-019  : User accepted install - nguoi dung dong y cai dat
+:: SC-010  : Begin dependency check phase
+:: SC-011  : Check NodeJS
+:: SC-012  : Check Git
+:: SC-013  : Check PNPM
+:: SC-014  : Dependency check result
+:: SC-015  : All dependencies found
+:: SC-016  : Some dependencies missing
+:: SC-017  : Displaying install prompt
+:: SC-018  : User input for install prompt
+:: SC-019  : User accepted install
 ::
 :: --- ALL DEPS MET (SC-020 ~ SC-023) ---
-:: SC-020  : Entered ALL_DEPS_MET - vao nhanh du dependencies
-:: SC-021  : Displaying compile prompt - hien thi cau hoi compile
-:: SC-022  : User input for compile prompt - nguoi dung nhap lua chon
-:: SC-023  : User accepted compile - nguoi dung dong y compile
+:: SC-020  : Entered ALL_DEPS_MET
+:: SC-021  : Displaying compile prompt
+:: SC-022  : User input for compile prompt
+:: SC-023  : User accepted compile
 ::
 :: --- INSTALL DEPENDENCIES (SC-030 ~ SC-039) ---
-:: SC-030  : Entered DO_INSTALL - bat dau quy trinh cai dat
-:: SC-031  : Winget check - kiem tra winget co san khong
-:: SC-032  : Calling INSTALL_NODE - goi ham cai NodeJS
-:: SC-033  : INSTALL_NODE returned - cai NodeJS xong
-:: SC-034  : Calling INSTALL_GIT - goi ham cai Git
-:: SC-035  : INSTALL_GIT returned - cai Git xong
-:: SC-036  : Calling INSTALL_PNPM - goi ham cai PNPM
-:: SC-037  : INSTALL_PNPM returned - cai PNPM xong
-:: SC-038  : All dependency installations completed - cai dat xong tat ca
-:: SC-039  : Displaying restart notice - hien thi thong bao khoi dong lai
+:: SC-030  : Entered DO_INSTALL
+:: SC-031  : Winget check
+:: SC-032  : Calling INSTALL_NODE
+:: SC-033  : INSTALL_NODE returned
+:: SC-034  : Calling INSTALL_GIT
+:: SC-035  : INSTALL_GIT returned
+:: SC-036  : Calling INSTALL_PNPM
+:: SC-037  : INSTALL_PNPM returned
+:: SC-038  : All dependency installations completed
+:: SC-039  : Displaying restart notice
 ::
 :: --- COMPILE: CLONE/PULL (SC-040 ~ SC-04D) ---
-:: SC-040  : Entered COMPILE - bat dau quy trinh compile
-:: SC-041  : package.json found, skip clone - da co source, bo qua clone
-:: SC-042  : package.json not found - khong tim thay source code
-:: SC-043  : Repo dir exists, branch to REPO_EXISTS - da co thu muc repo
-:: SC-044  : Repo not found, starting clone - bat dau clone repo moi
-:: SC-045  : Running git clone - dang chay git clone
-:: SC-046  : git clone finished - git clone hoan tat
-:: SC-047  : Clone verified successfully - xac nhan clone thanh cong
-:: SC-048  : Entered REPO_EXISTS - vao nhanh repo da co
-:: SC-049  : Running git pull - dang chay git pull
-:: SC-04A  : git pull finished - git pull hoan tat
-:: SC-04B  : Entering repo directory - dang vao thu muc repo
-:: SC-04C  : Log file path updated - cap nhat duong dan log
-:: SC-04D  : Clone FAILED - clone that bai (sau 2 lan thu)
+:: SC-040  : Entered COMPILE
+:: SC-041  : package.json found, skip clone
+:: SC-042  : package.json not found
+:: SC-043  : Repo dir exists, branch to REPO_EXISTS
+:: SC-044  : Repo not found, starting clone
+:: SC-045  : Running git clone
+:: SC-046  : git clone finished
+:: SC-047  : Clone verified successfully
+:: SC-048  : Entered REPO_EXISTS
+:: SC-049  : Running git pull
+:: SC-04A  : git pull finished
+:: SC-04B  : Entering repo directory
+:: SC-04C  : Log file path updated
+:: SC-04D  : Clone FAILED
 :: SC-04E  : Clone attempt 1 failed, deleting dir for retry
 :: SC-04F  : Delete failed, cannot retry clone
-:: SC-04G  : Clone attempt 2 (retry) - thu clone lan 2
+:: SC-04G  : Clone attempt 2 (retry)
 ::
 :: --- COMPILE: PNPM INSTALL (SC-050 ~ SC-058) ---
-:: SC-050  : Entered SKIP_CLONE, starting pnpm install - bat dau cai node modules
-:: SC-051  : Running pnpm install - dang chay pnpm install
-:: SC-052  : pnpm install finished - pnpm install hoan tat
-:: SC-053  : Checking pnpm install exit code - kiem tra exit code
-:: SC-054  : pnpm install verified OK (exit code 0) - pnpm install OK
-:: SC-055  : pnpm install FAILED (sau 2 lan thu) - pnpm install that bai
-:: SC-056  : pnpm install OK, displaying arch prompt - hien thi chon kien truc
-:: SC-057  : User input for arch prompt - nguoi dung chon kien truc
-:: SC-058  : pnpm install attempt 1 failed, retrying - thu lai pnpm install
+:: SC-050  : Entered SKIP_CLONE, starting pnpm install
+:: SC-051  : Running pnpm install
+:: SC-052  : pnpm install finished
+:: SC-053  : Checking pnpm install exit code
+:: SC-054  : pnpm install verified OK (exit code 0)
+:: SC-055  : pnpm install FAILED
+:: SC-056  : pnpm install OK, displaying arch prompt
+:: SC-057  : User input for arch prompt
+:: SC-058  : pnpm install attempt 1 failed, retrying
 ::
 :: --- COMPILE: BUILD (SC-060 ~ SC-066) ---
-:: SC-060  : Build target: x64 only - chon build x64
-:: SC-061  : Build target: x64 + arm64 - chon build x64 + arm64
-:: SC-062  : Running build command - dang chay lenh build
-:: SC-063  : Build command finished - lenh build hoan tat
-:: SC-064  : Checking pack folder - kiem tra thu muc pack
-:: SC-065  : pack folder verified OK - thu muc pack OK
-:: SC-066  : Build FAILED - build that bai
+:: SC-060  : Build target: x64 only
+:: SC-061  : Build target: x64 + arm64
+:: SC-062  : Running build command
+:: SC-063  : Build command finished
+:: SC-064  : Checking pack folder
+:: SC-065  : pack folder verified OK
+:: SC-066  : Build FAILED
 ::
 :: --- FINISH (SC-070 ~ SC-071) ---
-:: SC-070  : Build completed successfully - build thanh cong
-:: SC-071  : Script finishing normally - script ket thuc binh thuong
+:: SC-070  : Build completed successfully
+:: SC-071  : Script finishing normally
 ::
 :: --- INSTALL SUBROUTINES (SC-I01 ~ SC-I23) ---
-:: SC-I01  : INSTALL_NODE started - bat dau cai NodeJS
-:: SC-I02  : Installing NodeJS via winget - cai NodeJS bang winget
-:: SC-I03  : Downloading NodeJS MSI - tai file MSI NodeJS
-:: SC-I04  : Running NodeJS MSI installer - chay trinh cai MSI
-:: SC-I05  : INSTALL_NODE finished - cai NodeJS xong
-:: SC-I10  : INSTALL_GIT started - bat dau cai Git
-:: SC-I11  : Installing Git via winget - cai Git bang winget
-:: SC-I12  : Downloading Git installer - tai file cai Git
-:: SC-I13  : Running Git silent installer - chay trinh cai Git
-:: SC-I14  : INSTALL_GIT finished - cai Git xong
-:: SC-I20  : INSTALL_PNPM started - bat dau cai PNPM
-:: SC-I21  : Running PNPM install script - chay script cai PNPM
-:: SC-I22  : PNPM PATH updated - da cap nhat PATH cho PNPM
-:: SC-I23  : INSTALL_PNPM finished - cai PNPM xong
+:: SC-I01  : INSTALL_NODE started
+:: SC-I02  : Installing NodeJS via winget
+:: SC-I03  : Downloading NodeJS MSI
+:: SC-I04  : Running NodeJS MSI installer
+:: SC-I05  : INSTALL_NODE finished
+:: SC-I10  : INSTALL_GIT started
+:: SC-I11  : Installing Git via winget
+:: SC-I12  : Downloading Git installer
+:: SC-I13  : Running Git silent installer
+:: SC-I14  : INSTALL_GIT finished
+:: SC-I20  : INSTALL_PNPM started
+:: SC-I21  : Running PNPM install script
+:: SC-I22  : PNPM PATH updated
+:: SC-I23  : INSTALL_PNPM finished
 ::
 :: --- SPECIAL CODES ---
-:: SC-RUN  : Executing command - dang chay mot lenh (tu dong boi RUN_AND_LOG)
-:: SC-RET  : Command exit code - ma thoat cua lenh vua chay
-:: SC-EXIT : Showing exit prompt - hien thi "Press any key to exit"
-:: SC-099  : Process canceled by user - nguoi dung huy bo
+:: SC-RUN  : Executing command
+:: SC-RET  : Command exit code
+:: SC-EXIT : Showing exit prompt
+:: SC-099  : Process canceled by user
+::
+:: --- DEBUG MARKERS (DBG-xxx) ---
+:: DBG-000  : Log file cleared, starting fresh
+:: DBG-020  : ALL_DEPS_MET reached
+:: DBG-050  : SKIP_CLONE reached
+:: DBG-051a : Before RUN_AND_LOG pnpm install attempt 1
+:: DBG-051b : After RUN_AND_LOG returned, CMD_EXIT
+:: DBG-051c : Before RUN_AND_LOG pnpm install attempt 2
+:: DBG-051d : After RUN_AND_LOG returned (attempt 2), CMD_EXIT
+:: DBG-055  : Both attempts failed, going to PNPM_FAILED
+:: DBG-071  : About to SHOW_EXIT and terminate
+:: DBG-072  : After SHOW_EXIT, about to exit /B 0
+:: DBG-073  : !!! THIS SHOULD NEVER APPEAR - exit /B 0 failed !!!
+:: DBG-RUN-A: About to call command
+:: DBG-RUN-B: call returned, errorlevel
+:: DBG-RUN-C: About to exit /B from RUN_AND_LOG
 :: =======================================
 
 :: =======================================
@@ -131,6 +147,7 @@ cd /d "%~dp0"
 
 set "LOG_FILE=%~dp0build_log.txt"
 type nul > "!LOG_FILE!"
+echo [%TIME%] [DBG-000] Log file cleared, starting fresh >> "!LOG_FILE!"
 
 color 0B
 title Glassy Music - Build Script
@@ -205,6 +222,7 @@ goto :DO_INSTALL
 :: --- All deps are available ---
 :ALL_DEPS_MET
 call :SC "SC-020" "Entered ALL_DEPS_MET"
+echo [%TIME%] [DBG-020] ALL_DEPS_MET reached >> "!LOG_FILE!"
 call :LOG "[+] All system requirements (NodeJS, Git, PNPM) are met."
 call :LOG ""
 
@@ -384,13 +402,16 @@ exit /B 1
 
 :SKIP_CLONE
 call :SC "SC-050" "Entered SKIP_CLONE, starting pnpm install"
+echo [%TIME%] [DBG-050] SKIP_CLONE reached >> "!LOG_FILE!"
 call :LOG ""
 call :LOG "Installing project Node modules (pnpm install)..."
 call :LOG "This process may take a few minutes, please wait. Check build_log.txt for details..."
 
 :: --- pnpm install attempt 1 ---
 call :SC "SC-051" "Running pnpm install --frozen-lockfile (attempt 1)"
+echo [%TIME%] [DBG-051a] Before RUN_AND_LOG pnpm install attempt 1 >> "!LOG_FILE!"
 call :RUN_AND_LOG pnpm install --frozen-lockfile
+echo [%TIME%] [DBG-051b] After RUN_AND_LOG returned, CMD_EXIT=!CMD_EXIT! >> "!LOG_FILE!"
 call :SC "SC-052" "pnpm install finished (attempt 1), exit code: !CMD_EXIT!"
 
 :: Check exit code
@@ -412,13 +433,16 @@ if exist "node_modules" (
 
 :: --- pnpm install attempt 2 ---
 call :SC "SC-051" "Running pnpm install --frozen-lockfile (attempt 2 - retry)"
+echo [%TIME%] [DBG-051c] Before RUN_AND_LOG pnpm install attempt 2 >> "!LOG_FILE!"
 call :RUN_AND_LOG pnpm install --frozen-lockfile
+echo [%TIME%] [DBG-051d] After RUN_AND_LOG returned (attempt 2), CMD_EXIT=!CMD_EXIT! >> "!LOG_FILE!"
 call :SC "SC-052" "pnpm install finished (attempt 2), exit code: !CMD_EXIT!"
 
 if !CMD_EXIT! equ 0 (
     call :SC "SC-054" "pnpm install verified OK on retry (exit code 0)"
     goto :PNPM_OK
 )
+echo [%TIME%] [DBG-055] Both attempts failed, going to PNPM_FAILED >> "!LOG_FILE!"
 goto :PNPM_FAILED
 
 :PNPM_FAILED
@@ -478,8 +502,11 @@ call :LOG "========================================================"
 call :LOG "The build file has been generated in the 'glassy-music-nankill/pack' folder."
 call :LOG "A detailed log has been saved to: !LOG_FILE!"
 call :SC "SC-071" "Script finishing normally"
+echo [%TIME%] [DBG-071] About to SHOW_EXIT and terminate >> "!LOG_FILE!"
 call :SHOW_EXIT
+echo [%TIME%] [DBG-072] After SHOW_EXIT, about to exit /B 0 >> "!LOG_FILE!"
 exit /B 0
+echo [%TIME%] [DBG-073] !!! THIS SHOULD NEVER APPEAR - exit /B 0 failed !!! >> "!LOG_FILE!"
 
 :: =======================================
 :: SUBROUTINES
@@ -503,9 +530,12 @@ exit /B
 :RUN_AND_LOG
 call :SC "SC-RUN" "Executing: %*"
 echo [%TIME%] Running command: %* >> "!LOG_FILE!"
+echo [%TIME%] [DBG-RUN-A] About to call: %* >> "!LOG_FILE!"
 call %* >> "!LOG_FILE!" 2>&1
 set "CMD_EXIT=!errorlevel!"
+echo [%TIME%] [DBG-RUN-B] call returned, errorlevel=!CMD_EXIT! >> "!LOG_FILE!"
 call :SC "SC-RET" "Exit code: !CMD_EXIT! for: %*"
+echo [%TIME%] [DBG-RUN-C] About to exit /B from RUN_AND_LOG >> "!LOG_FILE!"
 exit /B
 
 :SHOW_EXIT
