@@ -2,7 +2,23 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+#### [v3.12.7-beta.nankill](https://github.com/NanKillBro/glassy-music-nankill/compare/v3.12.6-beta.nankill...v3.12.7-beta.nankill)
+
+- Upload builds to action artifacts [`#3`](https://github.com/NanKillBro/glassy-music-nankill/pull/3)
+- update new liquid glass icon for macOS [`#2`](https://github.com/NanKillBro/glassy-music-nankill/pull/2)
+- chore(deps): update dependency ts-morph to v28 [`#4423`](https://github.com/NanKillBro/glassy-music-nankill/pull/4423)
+- fix(deps): update dependency virtua to v0.49.1 [`#4340`](https://github.com/NanKillBro/glassy-music-nankill/pull/4340)
+- chore(deps): update dependency builtin-modules to v5.1.0 [`#4421`](https://github.com/NanKillBro/glassy-music-nankill/pull/4421)
+- chore(deps): update dependency pinyin-pro to v3.28.1 [`#4414`](https://github.com/NanKillBro/glassy-music-nankill/pull/4414)
+- chore(deps): update dependency @babel/runtime to v7.29.2 [`#4415`](https://github.com/NanKillBro/glassy-music-nankill/pull/4415)
+- fix: migrate custom element from ES5 to ES6 [`#4416`](https://github.com/NanKillBro/glassy-music-nankill/issues/4416)
+- Extensions must now be built from source rather than using pre-compiled versions. Additionally, build.bat now includes status codes for easier debugging and provides better error handling. [`a3370b2`](https://github.com/NanKillBro/glassy-music-nankill/commit/a3370b231cbc8c6d65a5c8e4f9c21582626e412e)
+- some changes, upstream submodule: better-lyrics-glassy [`6bdbab1`](https://github.com/NanKillBro/glassy-music-nankill/commit/6bdbab1623bc638a898e8ad31b06fc3c69c43f47)
+- upstream make the app unusable so no 3.12.7-beta for now [`8219cb3`](https://github.com/NanKillBro/glassy-music-nankill/commit/8219cb33e8a3377491d6766e371a31d4001e01dc)
+
 #### [v3.12.6-beta.nankill](https://github.com/NanKillBro/glassy-music-nankill/compare/v3.12.5-beta.nankill...v3.12.6-beta.nankill)
+
+> 11 April 2026
 
 - upstream better lyrics and shaders [`e802bf4`](https://github.com/NanKillBro/glassy-music-nankill/commit/e802bf49ed8831c5d0446060a797f609f1307c6b)
 - merge theme v20 u1, remove old scroll type, GlassyFlow v4 [`ef75aef`](https://github.com/NanKillBro/glassy-music-nankill/commit/ef75aef9a00746998d9f9289fd61adc249ce00c9)
