@@ -519,7 +519,7 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
                 <span class="log-tag">BETA</span>
             </div>
             <ul>
-                <li>Upstreamed to commit: <code style="">9b357b0</code></li>
+                <li>Upstreamed to commit: <code style="">0b3dab6</code></li>
                 <li>Updated Better Lyrics to <code>v2.3.0-canary 1</code></li>
                 <li>Updated MERGE THEME from <span style="color:#00f2fe">v20</span> to <span style="color:#00f2fe">v21</span></li>
                 <li>New share UI and toast UI</li>
@@ -527,11 +527,10 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
                 <li>New MacOS icons</li>
                 <li>New fullscreen lyrics without fullscreen</li>
                 <li>New Resync Lyrics button</li>
-                <li>New Crossfade animated artwork (beta)</li>
+                <li>New Crossfade animated artwork</li>
                 <li>Fixed text alignment on different languages</li>
                 <li>Fixed share menu and add to playlist menu doesn't have animation</li>
-                <li>Fixed crossfade artwork sometime not work</li>
-                <li>Open source BL and BLS</li>
+                <li>Fixed crossfade artwork sometime not work or weird behavior</li>
             </ul>
         </div>
         <div class="log-entry">
