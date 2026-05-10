@@ -134,7 +134,9 @@ jobs:
 
       - name: Get version
         run: |
-          echo "VERSION_TAG=v$(node -pe "require('./package.json').version")" >> $GITHUB_ENV
+          VERSION_NUM=$(node -pe "require('./package.json').version")
+          echo "VERSION_NUM=$VERSION_NUM" >> $GITHUB_ENV
+          echo "VERSION_TAG=v$VERSION_NUM" >> $GITHUB_ENV
 
       - name: Check if version already exists in tags
         run: |
@@ -165,6 +167,19 @@ jobs:
           replacebody: true
           body: |
             See [changelog](https://github.com/NanKillBro/glassy-music-nankill/blob/master/changelog.md#${{ env.CHANGELOG_ANCHOR }}) for the list of updates and the full diff.
+
+            ## 📥 Download Glassy Music
+
+            | OS | x86-64 (Intel/AMD) | ARM64 (Snapdragon / Apple Silicon) |
+            | :--- | :--- | :--- |
+            | **Windows** | [Portable (Universal .exe)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/Glassy-Music-${{ env.VERSION_NUM }}.exe)<br>[Web Setup (Universal)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/Glassy-Music-Web-Setup-${{ env.VERSION_NUM }}.exe)<br>[Portable (.7z)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/glassy-music-nankill-mod-${{ env.VERSION_NUM }}-x64.nsis.7z) | [Portable (Universal .exe)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/Glassy-Music-${{ env.VERSION_NUM }}.exe)<br>[Web Setup (Universal)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/Glassy-Music-Web-Setup-${{ env.VERSION_NUM }}.exe)<br>[Portable (.7z)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/glassy-music-nankill-mod-${{ env.VERSION_NUM }}-arm64.nsis.7z) |
+            | **macOS** | [Intel Mac (.dmg)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/Glassy-Music-${{ env.VERSION_NUM }}.dmg) | [Apple Silicon (.dmg)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/Glassy-Music-${{ env.VERSION_NUM }}-arm64.dmg) |
+            | **Linux (Universal)** | [Portable (.tar.gz)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/glassy-music-nankill-mod-${{ env.VERSION_NUM }}.tar.gz) | [Portable (.tar.gz)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/glassy-music-nankill-mod-${{ env.VERSION_NUM }}-arm64.tar.gz) |
+            | **Linux (AppImage)** | [Download](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/Glassy-Music-${{ env.VERSION_NUM }}.AppImage) | [Download](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/Glassy-Music-${{ env.VERSION_NUM }}-arm64.AppImage) |
+            | **Linux (Debian/Ubuntu)**| [.deb](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/glassy-music-nankill-mod_${{ env.VERSION_NUM }}_amd64.deb) | [.deb](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/glassy-music-nankill-mod_${{ env.VERSION_NUM }}_arm64.deb) |
+            | **Linux (RedHat/Fedora)**| [.rpm](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/glassy-music-nankill-mod-${{ env.VERSION_NUM }}.x86_64.rpm) | [.rpm](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/glassy-music-nankill-mod-${{ env.VERSION_NUM }}.aarch64.rpm) |
+
+            ---
 
             Thanks to all contributors! 🏅
 

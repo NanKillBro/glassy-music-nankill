@@ -1,6 +1,6 @@
 /**
  * ════════════════════════════════════════════════════════════════════════
- *  GlassyFlow v4 — Animation-busy gating + deferred delta
+ *  GlassyFlow v5 — Animation-busy gating + deferred delta
  *                             + configurable scroll delay
  *                             + Dynamic Speedup (timeScale)
  * ════════════════════════════════════════════════════════════════════════
@@ -31,6 +31,14 @@
  *
  *  Kết quả: Animation luôn mượt, không conflict, không offset.
  *
+ *  [Update v5]: Tự động tính toán lookBehind và lookAhead
+ *  Thay vì hardcode số lượng dòng để animate (ví dụ: lookBehind: 5, lookAhead: 9),
+ *  phiên bản v5 tính toán kích thước thực tế của viewport (khung nhìn) và kích thước
+ *  từng dòng lyrics (offsetHeight). Nhờ đó:
+ *   - Các dòng lyrics dài (wrap thành nhiều dòng) sẽ được tính chính xác kích thước.
+ *   - Nếu người dùng thay đổi kích thước cửa sổ (resize), script sẽ tự động đo lại
+ *     và tính toán lại (invalidate cache) để luôn animate đủ số dòng đang nhìn thấy
+ *     cộng thêm 1 dòng đệm (buffer) để tránh bị cắt chữ.
  * ════════════════════════════════════════════════════════════════════════
  */
 
@@ -133,8 +141,13 @@
      * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
     const CFG = {
         staggerStep: 40,
-        lookBehind: 5,
-        lookAhead: 9,
+        // lookBehind / lookAhead: computed dynamically — see getLookBehind(), getLookAhead()
+        lookBehindRatio: 0.35,  // fraction of visible lines allocated above ref
+        lookAheadRatio: 0.65,   // fraction of visible lines allocated below ref
+        lookBehindMin: 3,       // minimum lookBehind regardless of viewport
+        lookBehindMax: 15,      // maximum lookBehind
+        lookAheadMin: 5,        // minimum lookAhead regardless of viewport
+        lookAheadMax: 25,       // maximum lookAhead
         minDelta: 2,
         stiffness: 110,
         damping: 15,
@@ -145,6 +158,97 @@
         speedupThreshold: 100,  // px — ngưỡng deferredDelta để kích hoạt speedup
         speedupScale: 2.5,      // hệ số timeScale khi speedup kích hoạt
     };
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     *  DYNAMIC LOOK-BEHIND / LOOK-AHEAD
+     *
+     *  Tính số dòng visible trong viewport rồi phân bổ cho lookBehind
+     *  và lookAhead theo tỷ lệ. Cache kết quả 500ms để tránh đo DOM
+     *  quá thường xuyên.
+     * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    let _viewportCache = { visibleLines: 14, ts: 0 }; // fallback = 14 lines
+    const _VIEWPORT_CACHE_TTL = 500; // ms
+
+    function _measureVisibleLines() {
+        const now = Date.now();
+        if (now - _viewportCache.ts < _VIEWPORT_CACHE_TTL) {
+            return _viewportCache.visibleLines;
+        }
+
+        if (!container) return _viewportCache.visibleLines;
+
+        // ── Viewport height ──
+        // Priority: tab-renderer (BL's actual scroll viewport) → scroll parent → container
+        let viewportH = 0;
+        const tabRenderer = document.querySelector(
+            'ytmusic-tab-renderer[page-type="MUSIC_PAGE_TYPE_TRACK_LYRICS"]'
+        );
+        if (tabRenderer) {
+            viewportH = tabRenderer.clientHeight;
+        } else if (scrollParent) {
+            viewportH = scrollParent.clientHeight;
+        } else {
+            viewportH = container.clientHeight;
+        }
+
+        if (viewportH <= 0) {
+            return _viewportCache.visibleLines;
+        }
+
+        // ── Count lines that fit in viewport ──
+        // Sample lines around current ref → accumulate their ACTUAL heights
+        // until we exceed the viewport. This correctly handles long/wrapped lines.
+        const lines = container.querySelectorAll('.blyrics--line, .blyrics-footer');
+        if (!lines.length) return _viewportCache.visibleLines;
+
+        const allLines = Array.from(lines);
+        const ref = getRefIndex(allLines);
+
+        // Count forward from ref (how many lines fit below)
+        let accH = 0, countFwd = 0;
+        for (let i = ref; i < allLines.length; i++) {
+            const h = allLines[i].offsetHeight;
+            if (h <= 0) continue;
+            countFwd++;          // count BEFORE overflow check → partially visible lines included
+            accH += h;
+            if (accH >= viewportH) break;
+        }
+
+        // Count backward from ref (how many lines fit above)
+        accH = 0;
+        let countBwd = 0;
+        for (let i = ref - 1; i >= 0; i--) {
+            const h = allLines[i].offsetHeight;
+            if (h <= 0) continue;
+            countBwd++;          // count BEFORE overflow check
+            accH += h;
+            if (accH >= viewportH) break;
+        }
+
+        // +1 buffer on each direction to cover edge lines that just enter the viewport
+        const visible = Math.max(countFwd + 1, countBwd + 1, 4);
+
+        if (_viewportCache.visibleLines !== visible || _viewportCache.ts === 0) {
+            const lb = Math.max(CFG.lookBehindMin, Math.min(CFG.lookBehindMax, Math.round(visible * CFG.lookBehindRatio)));
+            const la = Math.max(CFG.lookAheadMin, Math.min(CFG.lookAheadMax, Math.round(visible * CFG.lookAheadRatio)));
+            console.info(`[GlassyFlow v5] Viewport updated: ~${visible} visible lines. lookBehind: ${lb}, lookAhead: ${la}`);
+        }
+
+        _viewportCache = { visibleLines: visible, ts: now };
+        return visible;
+    }
+
+    function getLookBehind() {
+        const v = _measureVisibleLines();
+        const raw = Math.round(v * CFG.lookBehindRatio);
+        return Math.max(CFG.lookBehindMin, Math.min(CFG.lookBehindMax, raw));
+    }
+
+    function getLookAhead() {
+        const v = _measureVisibleLines();
+        const raw = Math.round(v * CFG.lookAheadRatio);
+        return Math.max(CFG.lookAheadMin, Math.min(CFG.lookAheadMax, raw));
+    }
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      *  STATE
@@ -321,7 +425,7 @@
             // ── Reset timeScale khi tất cả spring đã settled ──
             if (timeScale !== 1.0) {
                 console.info(
-                    `[GlassyFlow v4] ⚡ Speedup reset — timeScale ${timeScale} → 1.0`
+                    `[GlassyFlow v5] ⚡ Speedup reset — timeScale ${timeScale} → 1.0`
                 );
                 timeScale = 1.0;
             }
@@ -346,8 +450,10 @@
         if (!lines.length) return;
 
         const ref = getRefIndex(lines);
-        const start = Math.max(0, ref - CFG.lookBehind);
-        const end = Math.min(lines.length, ref + CFG.lookAhead);
+        const lookBehind = getLookBehind();
+        const lookAhead = getLookAhead();
+        const start = Math.max(0, ref - lookBehind);
+        const end = Math.min(lines.length, ref + lookAhead);
 
         let aheadCount = 0;
 
@@ -415,14 +521,14 @@
             if (shouldSpeedup && timeScale < CFG.speedupScale) {
                 timeScale = CFG.speedupScale;
                 console.info(
-                    `[GlassyFlow v4] ⚡ Dynamic Speedup activated! ` +
+                    `[GlassyFlow v5] ⚡ Dynamic Speedup activated! ` +
                     `timeScale → ${timeScale} ` +
                     `(deferred: ${deferredDelta.toFixed(1)}px)`
                 );
             }
 
             console.debug(
-                `[GlassyFlow v4] Busy — deferred ${delta.toFixed(1)}px ` +
+                `[GlassyFlow v5] Busy — deferred ${delta.toFixed(1)}px ` +
                 `(total: ${deferredDelta.toFixed(1)}px, timeScale: ${timeScale})`
             );
         } else {
@@ -433,7 +539,7 @@
             const combined = delta + deferredDelta;
             if (Math.abs(deferredDelta) > 0.5) {
                 console.debug(
-                    `[GlassyFlow v4] Flushing deferred: ${deferredDelta.toFixed(1)}px ` +
+                    `[GlassyFlow v5] Flushing deferred: ${deferredDelta.toFixed(1)}px ` +
                     `+ new: ${delta.toFixed(1)}px = ${combined.toFixed(1)}px`
                 );
             }
@@ -502,7 +608,7 @@
         setContainerCompensation(delayedDelta + deferredDelta);
 
         console.debug(
-            `[GlassyFlow v4] Delay queued ${delta.toFixed(1)}px ` +
+            `[GlassyFlow v5] Delay queued ${delta.toFixed(1)}px ` +
             `(pending: ${delayedDelta.toFixed(1)}px, wait: ${CFG.scrollDelay}ms)`
         );
 
@@ -520,7 +626,7 @@
             setContainerCompensation(deferredDelta);
 
             console.debug(
-                `[GlassyFlow v4] Delay fired — executing ${totalDelayed.toFixed(1)}px`
+                `[GlassyFlow v5] Delay fired — executing ${totalDelayed.toFixed(1)}px`
             );
 
             _executeScroll(totalDelayed);
@@ -573,7 +679,7 @@
             attributeFilter: ['style'],
         });
 
-        console.info('[GlassyFlow v4] Style observer installed on', el);
+        console.info('[GlassyFlow v5] Style observer installed on', el);
     }
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -630,7 +736,7 @@
      * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
     function attach(el) {
         if (el === container) return;
-        console.info('[GlassyFlow v4] Attaching to new container', el);
+        console.info('[GlassyFlow v5] Attaching to new container', el);
         cleanupAllSprings();
 
         container = el;
@@ -649,7 +755,7 @@
     }
 
     function boot() {
-        console.info('[GlassyFlow v4] Booting spring scroll extension...');
+        console.info('[GlassyFlow v5] Booting spring scroll extension...');
         const existing = document.querySelector('.blyrics-container');
         if (existing) attach(existing);
 
@@ -662,7 +768,7 @@
                 domCheckQueued = false;
                 const el = document.querySelector('.blyrics-container');
                 if (el && el !== container) {
-                    console.info('[GlassyFlow v4] New container detected (song change)');
+                    console.info('[GlassyFlow v5] New container detected (song change)');
                     attach(el);
                 }
             });
@@ -710,11 +816,11 @@
             // Disable scroll: cho BL tự scroll bình thường
             setScrollOverride(false);
             cleanupAllSprings();
-            console.info('[GlassyFlow v4] 🔇 No-sync detected (all lines data-duration=0) — spring scroll disabled.');
+            console.info('[GlassyFlow v5] 🔇 No-sync detected (all lines data-duration=0) — spring scroll disabled.');
         } else {
             // Re-enable scroll
             setScrollOverride(true);
-            console.info('[GlassyFlow v4] 🎵 Synced lyrics detected (data-duration > 0 found) — spring scroll re-enabled.');
+            console.info('[GlassyFlow v5] 🎵 Synced lyrics detected (data-duration > 0 found) — spring scroll re-enabled.');
         }
     }
 
@@ -784,6 +890,7 @@
         isAnimationBusy = false;
         timeScale = 1.0;
         lastRefIndex = -1;
+        _viewportCache.ts = 0; // Invalidate → recalculate lookBehind/lookAhead after resize
         if (scrollDelayTimer !== null) {
             clearTimeout(scrollDelayTimer);
             scrollDelayTimer = null;
@@ -795,7 +902,7 @@
         resizeTimer = setTimeout(() => {
             isScriptEnabled = true;
             setScrollOverride(true);
-            console.info('[GlassyFlow v4] Re-enabled after resize.');
+            console.info('[GlassyFlow v5] Re-enabled after resize.');
         }, 1500);
     });
 })();

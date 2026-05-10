@@ -292,7 +292,7 @@ export default createPlugin({
         });
 
       if (config.enableV4Scroll !== false) {
-        const jsPath = path.join(basePath, 'extensions', 'bl-scroll', 'v4.js');
+        const jsPath = path.join(basePath, 'extensions', 'bl-scroll', 'glassyflow.js');
 
         try {
           const jsCode = fs.readFileSync(jsPath, 'utf8');

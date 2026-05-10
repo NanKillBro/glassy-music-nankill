@@ -64,7 +64,7 @@ linux:
         - x64
         - arm64
 appImage:
-  description: "Glassy Music - Custom mod by NanKill"
+  description: "Glassy Music is extension for music player "
   category: AudioVideo
 deb:
   depends:
