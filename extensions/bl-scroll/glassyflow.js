@@ -142,11 +142,11 @@
     const CFG = {
         staggerStep: 40,
         // lookBehind / lookAhead: computed dynamically — see getLookBehind(), getLookAhead()
-        lookBehindRatio: 0.35,  // fraction of visible lines allocated above ref
-        lookAheadRatio: 0.65,   // fraction of visible lines allocated below ref
-        lookBehindMin: 3,       // minimum lookBehind regardless of viewport
+        lookBehindRatio: 0.30,  // fraction of visible lines allocated above ref
+        lookAheadRatio: 0.60,   // fraction of visible lines allocated below ref
+        lookBehindMin: 2,       // minimum lookBehind regardless of viewport
         lookBehindMax: 15,      // maximum lookBehind
-        lookAheadMin: 5,        // minimum lookAhead regardless of viewport
+        lookAheadMin: 4,        // minimum lookAhead regardless of viewport
         lookAheadMax: 25,       // maximum lookAhead
         minDelta: 2,
         stiffness: 110,
@@ -157,6 +157,12 @@
         // Dynamic Speedup — tăng tốc animation khi cuộn quá nhanh
         speedupThreshold: 100,  // px — ngưỡng deferredDelta để kích hoạt speedup
         speedupScale: 2.5,      // hệ số timeScale khi speedup kích hoạt
+
+        // Delta-Adaptive LookAhead — mở rộng phạm vi animation khi scroll delta lớn
+        // Khi chuyển từ 2 dòng lyrics cùng lúc sang 2 dòng tiếp theo, delta lớn hơn
+        // bình thường → cần thêm lines vào lookAhead để tránh skip animation.
+        deltaAdaptiveEnabled: true,
+        avgLineHeightFallback: 48,  // px — fallback nếu không đo được chiều cao dòng
     };
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -248,6 +254,35 @@
         const v = _measureVisibleLines();
         const raw = Math.round(v * CFG.lookAheadRatio);
         return Math.max(CFG.lookAheadMin, Math.min(CFG.lookAheadMax, raw));
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     *  DELTA-ADAPTIVE LOOKAHEAD HELPER
+     *
+     *  Ước tính chiều cao trung bình của lyrics lines bằng cách sample
+     *  ~5 dòng xung quanh ref. Dùng để tính số extra lines cần thêm
+     *  vào lookAhead khi scroll delta lớn.
+     * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    let _avgLineHeightCache = { value: 48, ts: 0 };
+
+    function _estimateAvgLineHeight(lines, ref) {
+        const now = Date.now();
+        // Reuse viewport cache TTL to avoid extra DOM reads
+        if (now - _avgLineHeightCache.ts < _VIEWPORT_CACHE_TTL) {
+            return _avgLineHeightCache.value;
+        }
+
+        let totalH = 0, count = 0;
+        const sampleStart = Math.max(0, ref - 2);
+        const sampleEnd = Math.min(lines.length, ref + 3);
+        for (let i = sampleStart; i < sampleEnd; i++) {
+            const h = lines[i].offsetHeight;
+            if (h > 0) { totalH += h; count++; }
+        }
+
+        const avg = count > 0 ? totalH / count : CFG.avgLineHeightFallback;
+        _avgLineHeightCache = { value: avg, ts: now };
+        return avg;
     }
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -451,9 +486,35 @@
 
         const ref = getRefIndex(lines);
         const lookBehind = getLookBehind();
-        const lookAhead = getLookAhead();
+        let lookAhead = getLookAhead();
+
+        // ── Delta-Adaptive LookAhead ──
+        // Khi scroll delta lớn (ví dụ: chuyển từ 2 dòng lyrics cùng lúc sang
+        // 2 dòng tiếp theo), mở rộng lookAhead để cover các line sẽ scroll
+        // vào viewport. Extra lines = ceil(|delta| / avgLineHeight).
+        // Bài hát bình thường (delta nhỏ) → extraLines ≈ 0-1 → không ảnh hưởng.
+        if (CFG.deltaAdaptiveEnabled) {
+            const avgH = _estimateAvgLineHeight(lines, ref);
+            const extraLines = Math.round(Math.abs(delta) / avgH);
+            if (extraLines > 1) {
+                const baseLookAhead = lookAhead;
+                lookAhead = Math.min(lookAhead + extraLines, lines.length - ref);
+                console.info(
+                    `[GlassyFlow v5] 🔮 Delta-Adaptive: |delta|=${Math.abs(delta).toFixed(0)}px, ` +
+                    `avgH=${avgH.toFixed(0)}px, extra=+${extraLines} → ` +
+                    `lookAhead ${baseLookAhead} → ${lookAhead}`
+                );
+            }
+        }
+
         const start = Math.max(0, ref - lookBehind);
         const end = Math.min(lines.length, ref + lookAhead);
+
+        console.info(
+            `[GlassyFlow v5] applyStagger: delta=${delta.toFixed(1)}px, ` +
+            `ref=${ref}, range=[${start},${end}), ` +
+            `behind=${lookBehind}, ahead=${lookAhead}, lines=${end - start}`
+        );
 
         let aheadCount = 0;
 
@@ -891,6 +952,7 @@
         timeScale = 1.0;
         lastRefIndex = -1;
         _viewportCache.ts = 0; // Invalidate → recalculate lookBehind/lookAhead after resize
+        _avgLineHeightCache.ts = 0; // Invalidate → recalculate avg line height after resize
         if (scrollDelayTimer !== null) {
             clearTimeout(scrollDelayTimer);
             scrollDelayTimer = null;
