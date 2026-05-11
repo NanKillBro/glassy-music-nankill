@@ -8,6 +8,20 @@ export interface WindowPositionConfig {
   y: number;
 }
 
+export interface FontSettingConfig {
+  enabled: boolean;
+  useGoogleFont?: boolean;
+  family: string;
+  size: number;
+  sizeUnit: 'px' | 'rem';
+  weight: number;
+}
+
+export interface CustomFontsConfig {
+  youtubeUI: FontSettingConfig;
+  lyrics: FontSettingConfig;
+}
+
 export interface DefaultConfig {
   'window-size': WindowSizeConfig;
   'window-maximized': boolean;
@@ -37,6 +51,7 @@ export interface DefaultConfig {
     usePodcastParticipantAsArtist: boolean;
     themes: string[];
     customWindowTitle?: string;
+    customFonts: CustomFontsConfig;
   };
   'plugins': Record<string, unknown>;
 }
@@ -73,6 +88,10 @@ export const defaultConfig: DefaultConfig = {
     overrideUserAgent: false,
     usePodcastParticipantAsArtist: false,
     themes: [],
+    customFonts: {
+      youtubeUI: { enabled: false, useGoogleFont: false, family: 'Inter', size: 14, sizeUnit: 'px', weight: 400 },
+      lyrics: { enabled: false, useGoogleFont: false, family: 'Satoshi', size: 3, sizeUnit: 'rem', weight: 700 },
+    },
   },
   'plugins': {},
 };

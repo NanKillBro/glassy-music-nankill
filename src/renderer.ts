@@ -416,6 +416,102 @@ async function onApiLoaded() {
 
     document.head.appendChild(style);
   }
+
+  // Custom Fonts injection
+  {
+    const fontStyleId = 'glassy-custom-fonts';
+    let fontStyle = document.getElementById(fontStyleId) as HTMLStyleElement | null;
+    if (!fontStyle) {
+      fontStyle = document.createElement('style');
+      fontStyle.id = fontStyleId;
+      document.head.appendChild(fontStyle);
+    }
+
+    const applyCustomFonts = (cfg: {
+      youtubeUI: { enabled: boolean; useGoogleFont?: boolean; family: string; size: number; sizeUnit: string; weight: number };
+      lyrics: { enabled: boolean; useGoogleFont?: boolean; family: string; size: number; sizeUnit: string; weight: number };
+    } | null) => {
+      if (!fontStyle) return;
+      if (!cfg) {
+        fontStyle.textContent = '';
+        return;
+      }
+
+      const yt = cfg.youtubeUI;
+      const ly = cfg.lyrics;
+
+      // Sanitize font family names (strip dangerous chars)
+      const sanitize = (s: string) => s.replace(/[<>{};"]/g, '');
+      const getGoogleUrl = (fam: string, wght: number) => {
+        const name = fam.trim().replace(/ /g, '+');
+        return `@import url('https://fonts.googleapis.com/css2?family=${name}:wght@${wght}&display=swap');`;
+      };
+
+      let css = '';
+      let imports = '';
+
+      if (yt?.enabled) {
+        const family = sanitize(yt.family || 'Inter');
+        const size = (Number.isFinite(yt.size) && yt.size > 0) ? yt.size : 14;
+        const unit = yt.sizeUnit === 'rem' ? 'rem' : 'px';
+        const weight = (Number.isFinite(yt.weight) && yt.weight >= 100 && yt.weight <= 900) ? yt.weight : 400;
+
+        if (yt.useGoogleFont) {
+          imports += getGoogleUrl(family, weight) + '\n';
+        }
+
+        css += `
+        /* Custom Font — YouTube Music UI & Song Info */
+        yt-formatted-string, input, label, button, h2,
+        tp-yt-paper-item, #title, #icon-label,
+        .ytmusic-player-bar, .dialog-title, .title,
+        .subtitle, .tab-content, .promo-title, [role="text"],
+        #blyrics-song-info p {
+          font-family: "${family}" !important;
+          font-weight: ${weight} !important;
+        }
+
+        /* Apply the custom size ONLY to the Song Info text, not global UI */
+        #blyrics-song-info p {
+          font-size: ${size}${unit} !important;
+        }
+        `;
+      }
+
+      if (ly?.enabled) {
+        const family = sanitize(ly.family || 'Satoshi');
+        const size = (Number.isFinite(ly.size) && ly.size > 0) ? ly.size : 3;
+        const unit = ly.sizeUnit === 'rem' ? 'rem' : 'px';
+        const weight = (Number.isFinite(ly.weight) && ly.weight >= 100 && ly.weight <= 900) ? ly.weight : 700;
+
+        if (ly.useGoogleFont) {
+          imports += getGoogleUrl(family, weight) + '\n';
+        }
+
+        css += `
+        /* Custom Font — Lyrics (Better Lyrics) */
+        :root {
+          --blyrics-font-family: "${family}" !important;
+          --blyrics-font-size: ${size}${unit} !important;
+          --blyrics-font-weight: ${weight} !important;
+          --blyrics-footer-font-family: "${family}" !important;
+          --blyrics-footer-font-weight: ${weight} !important;
+        }
+        `;
+      }
+
+      fontStyle.textContent = imports + css;
+    };
+
+    // Apply on load
+    applyCustomFonts(window.mainConfig.get('options.customFonts'));
+
+    // Listen for live updates from main process
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    window.ipcRenderer.on('peard:custom-fonts-changed', (_: unknown, data: any) => {
+      applyCustomFonts(data);
+    });
+  }
 }
 
 const definePearTransElements = () => {
