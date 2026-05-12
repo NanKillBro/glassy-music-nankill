@@ -766,6 +766,25 @@ export default createPlugin({
                   .position-cell[data-selected="true"]:before {
                     background: #23d5ab !important;
                   }
+
+                  /* Fix Toast Notification Overlay */
+                  #status, #status-css {
+                    top: 42px !important;
+                    z-index: 10001 !important;
+                    border-radius: 0 0 16px 16px !important;
+                    width: auto !important;
+                    min-width: 250px !important;
+                    max-width: 80% !important;
+                    background: rgba(30, 31, 34, 0.95) !important;
+                    backdrop-filter: blur(25px) !important;
+                    -webkit-backdrop-filter: blur(25px) !important;
+                    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                    border-top: none !important;
+                    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4) !important;
+                    padding: 0.75rem 1.5rem !important;
+                    font-size: 0.95rem !important;
+                    font-weight: 500 !important;
+                  }
                 \`;
                 document.head.appendChild(style);
 
