@@ -143,7 +143,7 @@
         staggerStep: 40,
         // lookBehind / lookAhead: computed dynamically — see getLookBehind(), getLookAhead()
         lookBehindRatio: 0.30,  // fraction of visible lines allocated above ref
-        lookAheadRatio: 0.60,   // fraction of visible lines allocated below ref
+        lookAheadRatio: 0.70,   // fraction of visible lines allocated below ref
         lookBehindMin: 2,       // minimum lookBehind regardless of viewport
         lookBehindMax: 15,      // maximum lookBehind
         lookAheadMin: 4,        // minimum lookAhead regardless of viewport

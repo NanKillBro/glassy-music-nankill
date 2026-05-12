@@ -1123,6 +1123,48 @@ const openFontSettingsWindow = (parentWin: BrowserWindow) => {
         .toast.success {
             background: rgba(80,200,120,0.9);
         }
+
+        /* Google Font status */
+        .gf-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 6px;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .gf-status .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .gf-status.idle { display: none; }
+        .gf-status.checking {
+            color: rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.05);
+        }
+        .gf-status.checking .dot {
+            background: rgba(255,255,255,0.4);
+            animation: pulse 0.8s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        .gf-status.ok {
+            color: #6ee7b7;
+            background: rgba(110,231,183,0.08);
+        }
+        .gf-status.ok .dot { background: #6ee7b7; }
+        .gf-status.error {
+            color: #fca5a5;
+            background: rgba(252,165,165,0.08);
+        }
+        .gf-status.error .dot { background: #f87171; }
     </style>
 </head>
 <body>
@@ -1161,15 +1203,18 @@ const openFontSettingsWindow = (parentWin: BrowserWindow) => {
                         <label>Family</label>
                         <input type="text" id="ytFamily" value="${currentFonts.youtubeUI.family}" placeholder="Inter, Arial, ...">
                     </div>
-                    <div class="field" style="justify-content: space-between; background: rgba(167,139,250,0.05); border: 1px solid rgba(167,139,250,0.1); padding: 10px 12px; border-radius: 10px; margin-top: -2px; margin-bottom: 14px;">
+                    <div class="field" style="flex-wrap: wrap; justify-content: space-between; background: rgba(167,139,250,0.05); border: 1px solid rgba(167,139,250,0.1); padding: 10px 12px; border-radius: 10px; margin-top: -2px; margin-bottom: 14px;">
                         <div style="display:flex; align-items:center; gap:6px;" title="Type exact font name from fonts.google.com. We will download it automatically!">
                             <span style="font-size:13px; color:#a78bfa;">Load from Google Fonts</span>
                             <span style="display:inline-flex; align-items:center; justify-content:center; width:14px; height:14px; border-radius:50%; background:rgba(167,139,250,0.2); color:#a78bfa; font-size:10px; font-weight:bold; cursor:help;">i</span>
                         </div>
-                        <label class="switch small">
-                            <input type="checkbox" id="ytGoogleFont" ${currentFonts.youtubeUI.useGoogleFont ? 'checked' : ''}>
-                            <span class="slider"></span>
-                        </label>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="gf-status idle" id="ytGfStatus"><span class="dot"></span><span class="msg"></span></span>
+                            <label class="switch small">
+                                <input type="checkbox" id="ytGoogleFont" ${currentFonts.youtubeUI.useGoogleFont ? 'checked' : ''}>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
                     </div>
                     <div class="field">
                         <label style="display:flex; align-items:center; gap:4px;" title="This size only applies to the Song Info text (title & artist) to preserve YouTube Music's default visual hierarchy.">
@@ -1210,15 +1255,18 @@ const openFontSettingsWindow = (parentWin: BrowserWindow) => {
                         <label>Family</label>
                         <input type="text" id="lyricsFamily" value="${currentFonts.lyrics.family}" placeholder="Satoshi, ...">
                     </div>
-                    <div class="field" style="justify-content: space-between; background: rgba(167,139,250,0.05); border: 1px solid rgba(167,139,250,0.1); padding: 10px 12px; border-radius: 10px; margin-top: -2px; margin-bottom: 14px;">
+                    <div class="field" style="flex-wrap: wrap; justify-content: space-between; background: rgba(167,139,250,0.05); border: 1px solid rgba(167,139,250,0.1); padding: 10px 12px; border-radius: 10px; margin-top: -2px; margin-bottom: 14px;">
                         <div style="display:flex; align-items:center; gap:6px;" title="Type exact font name from fonts.google.com. We will download it automatically!">
                             <span style="font-size:13px; color:#a78bfa;">Load from Google Fonts</span>
                             <span style="display:inline-flex; align-items:center; justify-content:center; width:14px; height:14px; border-radius:50%; background:rgba(167,139,250,0.2); color:#a78bfa; font-size:10px; font-weight:bold; cursor:help;">i</span>
                         </div>
-                        <label class="switch small">
-                            <input type="checkbox" id="lyricsGoogleFont" ${currentFonts.lyrics.useGoogleFont ? 'checked' : ''}>
-                            <span class="slider"></span>
-                        </label>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="gf-status idle" id="lyricsGfStatus"><span class="dot"></span><span class="msg"></span></span>
+                            <label class="switch small">
+                                <input type="checkbox" id="lyricsGoogleFont" ${currentFonts.lyrics.useGoogleFont ? 'checked' : ''}>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
                     </div>
                     <div class="field">
                         <label>Size</label>
@@ -1257,6 +1305,56 @@ const openFontSettingsWindow = (parentWin: BrowserWindow) => {
         ytToggle.addEventListener('change', () => {
             ytBody.classList.toggle('disabled', !ytToggle.checked);
         });
+        // Google Fonts status check
+        async function checkGoogleFont(fontFamily, weight, statusEl) {
+            if (!fontFamily || !fontFamily.trim()) {
+                statusEl.className = 'gf-status idle';
+                return;
+            }
+            statusEl.className = 'gf-status checking';
+            statusEl.querySelector('.msg').textContent = 'Checking...';
+            try {
+                const name = fontFamily.trim().replace(/ /g, '+');
+                const url = 'https://fonts.googleapis.com/css2?family=' + name + ':wght@' + weight + '&display=swap';
+                const res = await fetch(url, { method: 'HEAD' });
+                if (res.ok) {
+                    statusEl.className = 'gf-status ok';
+                    statusEl.querySelector('.msg').textContent = '✓ Found';
+                } else {
+                    statusEl.className = 'gf-status error';
+                    statusEl.querySelector('.msg').textContent = '✗ ' + (res.status === 400 || res.status === 404 ? 'Not Found' : res.status);
+                }
+            } catch (e) {
+                statusEl.className = 'gf-status error';
+                statusEl.querySelector('.msg').textContent = navigator.onLine ? '✗ Not Found' : '✗ Offline';
+            }
+        }
+
+        let ytGfTimer = null, lyGfTimer = null;
+        function scheduleGfCheck(familyId, statusId, timerKey) {
+            const toggle = document.getElementById(familyId.replace('Family', 'GoogleFont'));
+            const statusEl = document.getElementById(statusId);
+            if (!toggle.checked) { statusEl.className = 'gf-status idle'; return; }
+            const weightInput = document.getElementById(familyId.replace('Family', 'Weight'));
+            const weight = weightInput ? (weightInput.value || 400) : 400;
+            const familyVal = document.getElementById(familyId).value;
+            if (timerKey === 'yt') { clearTimeout(ytGfTimer); ytGfTimer = setTimeout(() => checkGoogleFont(familyVal, weight, statusEl), 1000); }
+            else { clearTimeout(lyGfTimer); lyGfTimer = setTimeout(() => checkGoogleFont(familyVal, weight, statusEl), 1000); }
+        }
+
+        // Wire up Google Font toggle + family/weight input events
+        document.getElementById('ytGoogleFont').addEventListener('change', () => scheduleGfCheck('ytFamily', 'ytGfStatus', 'yt'));
+        document.getElementById('ytFamily').addEventListener('input', () => { if (document.getElementById('ytGoogleFont').checked) scheduleGfCheck('ytFamily', 'ytGfStatus', 'yt'); });
+        document.getElementById('ytWeight').addEventListener('input', () => { if (document.getElementById('ytGoogleFont').checked) scheduleGfCheck('ytFamily', 'ytGfStatus', 'yt'); });
+
+        document.getElementById('lyricsGoogleFont').addEventListener('change', () => scheduleGfCheck('lyricsFamily', 'lyricsGfStatus', 'ly'));
+        document.getElementById('lyricsFamily').addEventListener('input', () => { if (document.getElementById('lyricsGoogleFont').checked) scheduleGfCheck('lyricsFamily', 'lyricsGfStatus', 'ly'); });
+        document.getElementById('lyricsWeight').addEventListener('input', () => { if (document.getElementById('lyricsGoogleFont').checked) scheduleGfCheck('lyricsFamily', 'lyricsGfStatus', 'ly'); });
+
+        // Auto-check on load if Google Font is enabled
+        if (document.getElementById('ytGoogleFont').checked) scheduleGfCheck('ytFamily', 'ytGfStatus', 'yt');
+        if (document.getElementById('lyricsGoogleFont').checked) scheduleGfCheck('lyricsFamily', 'lyricsGfStatus', 'ly');
+
         lyricsToggle.addEventListener('change', () => {
             lyricsBody.classList.toggle('disabled', !lyricsToggle.checked);
         });
@@ -1271,6 +1369,7 @@ const openFontSettingsWindow = (parentWin: BrowserWindow) => {
                     input.value = btn.dataset.val;
                     group.querySelectorAll('button').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
+                    input.dispatchEvent(new Event('input'));
                 });
             });
             input.addEventListener('input', () => {
