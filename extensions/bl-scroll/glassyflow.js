@@ -3,6 +3,8 @@
  *  GlassyFlow v5 — Animation-busy gating + deferred delta
  *                             + configurable scroll delay
  *                             + Dynamic Speedup (timeScale)
+ *                             + Dynamic lookBehind and lookAhead
+ *                             + Delta-Adaptive LookAhead
  * ════════════════════════════════════════════════════════════════════════
  *
  *  Dựa trên v6.0, thêm cơ chế "scroll delay":
@@ -39,6 +41,11 @@
  *   - Nếu người dùng thay đổi kích thước cửa sổ (resize), script sẽ tự động đo lại
  *     và tính toán lại (invalidate cache) để luôn animate đủ số dòng đang nhìn thấy
  *     cộng thêm 1 dòng đệm (buffer) để tránh bị cắt chữ.
+ *
+ *  [Delta-Adaptive LookAhead]:
+ *  Tự động mở rộng phạm vi dòng được animate (lookAhead) tỷ lệ thuận với
+ *  khoảng cách cuộn (scroll delta). Giải quyết triệt để hiện tượng "skip animation"
+ *  khi BetterLyrics nhảy qua nhiều dòng cùng lúc (các đoạn hát đồng thanh/nhiều dòng).
  * ════════════════════════════════════════════════════════════════════════
  */
 

@@ -1179,7 +1179,7 @@ const openFontSettingsWindow = (parentWin: BrowserWindow) => {
 
             <!-- Help Docs -->
             <details class="help-box">
-                <summary>ℹ️ How to use — click to expand</summary>
+                <summary>How to use — click to expand</summary>
                 <p><strong>Font Family:</strong> Enter a font name installed on your computer.</p>
                 <ul>
                     <li>Common: <code>Inter</code>, <code>Arial</code>, <code>Segoe UI</code>, <code>Roboto</code></li>

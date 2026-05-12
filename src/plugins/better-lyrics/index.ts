@@ -20,7 +20,7 @@ export default createPlugin({
 
     return [
       {
-        label: 'GlassyFlow v4 (Restart Required)',
+        label: 'GlassyFlow v5 (Restart Required)',
         type: 'checkbox',
         checked: config.enableV4Scroll !== false,
         click: () => setConfig({ enableV4Scroll: config.enableV4Scroll === false ? true : false }),
