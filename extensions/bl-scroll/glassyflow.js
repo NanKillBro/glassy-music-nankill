@@ -150,7 +150,7 @@
         staggerStep: 40,
         // lookBehind / lookAhead: computed dynamically — see getLookBehind(), getLookAhead()
         lookBehindRatio: 0.30,  // fraction of visible lines allocated above ref
-        lookAheadRatio: 0.70,   // fraction of visible lines allocated below ref
+        lookAheadRatio: 0.60,   // fraction of visible lines allocated below ref
         lookBehindMin: 2,       // minimum lookBehind regardless of viewport
         lookBehindMax: 15,      // maximum lookBehind
         lookAheadMin: 4,        // minimum lookAhead regardless of viewport
@@ -239,7 +239,7 @@
         }
 
         // +1 buffer on each direction to cover edge lines that just enter the viewport
-        const visible = Math.max(countFwd + 1, countBwd + 1, 4);
+        const visible = Math.max(countFwd, countBwd + 1, 4);
 
         if (_viewportCache.visibleLines !== visible || _viewportCache.ts === 0) {
             const lb = Math.max(CFG.lookBehindMin, Math.min(CFG.lookBehindMax, Math.round(visible * CFG.lookBehindRatio)));
@@ -515,7 +515,7 @@
         }
 
         const start = Math.max(0, ref - lookBehind);
-        const end = Math.min(lines.length, ref + lookAhead);
+        const end = Math.min(lines.length, ref + lookAhead + 1);
 
         console.info(
             `[GlassyFlow v5] applyStagger: delta=${delta.toFixed(1)}px, ` +
