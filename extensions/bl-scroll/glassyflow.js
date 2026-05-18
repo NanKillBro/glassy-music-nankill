@@ -46,6 +46,11 @@
  *  Tự động mở rộng phạm vi dòng được animate (lookAhead) tỷ lệ thuận với
  *  khoảng cách cuộn (scroll delta). Giải quyết triệt để hiện tượng "skip animation"
  *  khi BetterLyrics nhảy qua nhiều dòng cùng lúc (các đoạn hát đồng thanh/nhiều dòng).
+ *
+ *  [Fast Transition Dynamic Config]:
+ *  Phát hiện khoảng cách thời gian giữa dòng lyrics hiện tại và các dòng tiếp theo.
+ *  Nếu gap quá ngắn (ví dụ: rap, đồng ca), sẽ tự động áp dụng config riêng
+ *  (staggerStep, stiffness, damping, mass) để animation chuyển cảnh nhanh và dứt khoát hơn.
  * ════════════════════════════════════════════════════════════════════════
  */
 
@@ -150,7 +155,7 @@
         staggerStep: 40,
         // lookBehind / lookAhead: computed dynamically — see getLookBehind(), getLookAhead()
         lookBehindRatio: 0.30,  // fraction of visible lines allocated above ref
-        lookAheadRatio: 0.60,   // fraction of visible lines allocated below ref
+        lookAheadRatio: 0.70,   // fraction of visible lines allocated below ref
         lookBehindMin: 2,       // minimum lookBehind regardless of viewport
         lookBehindMax: 15,      // maximum lookBehind
         lookAheadMin: 4,        // minimum lookAhead regardless of viewport
@@ -170,6 +175,14 @@
         // bình thường → cần thêm lines vào lookAhead để tránh skip animation.
         deltaAdaptiveEnabled: true,
         avgLineHeightFallback: 48,  // px — fallback nếu không đo được chiều cao dòng
+
+        // Fast Transition Dynamic Config (Gap ngắn)
+        fastTransitionEnabled: true,
+        fastTransitionThreshold: 1.5, // giây
+        fastStaggerStep: 30,          // Stagger nhanh hơn
+        fastStiffness: 120,           // Lò xo cứng hơn
+        fastDamping: 18,              // Ít ma sát hơn
+        fastMass: 1,                // Khối lượng nhẹ hơn
     };
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -181,6 +194,36 @@
      * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
     let _viewportCache = { visibleLines: 14, ts: 0 }; // fallback = 14 lines
     const _VIEWPORT_CACHE_TTL = 500; // ms
+
+    /**
+     * _getLineFullHeight — đo chiều cao thực tế đầy đủ của 1 dòng lyrics,
+     * bao gồm padding, nội dung translated/romanized, và margin.
+     *
+     * Với .blyrics--line: đo parent wrapper div (.blyrics-container > div)
+     *   → offsetHeight bao gồm: blyrics--line + translated + romanized + padding
+     *   → cộng thêm marginTop + marginBottom (CSS margin không nằm trong offsetHeight)
+     *
+     * Với .blyrics-footer hoặc element khác: đo chính nó + margin.
+     */
+    function _getLineFullHeight(lineEl) {
+        let target;
+        if (lineEl.classList.contains('blyrics--line')) {
+            // .blyrics--line nằm trong wrapper div → đo wrapper
+            target = lineEl.parentElement;
+            // Safety: nếu parent là container thay vì wrapper → fallback
+            if (!target || target === container) {
+                target = lineEl;
+            }
+        } else {
+            // .blyrics-footer hoặc element trực tiếp → đo chính nó
+            target = lineEl;
+        }
+
+        const oh = target.offsetHeight;
+        if (oh <= 0) return 0;
+        const style = getComputedStyle(target);
+        return oh + parseFloat(style.marginTop) + parseFloat(style.marginBottom);
+    }
 
     function _measureVisibleLines() {
         const now = Date.now();
@@ -204,6 +247,21 @@
             viewportH = container.clientHeight;
         }
 
+        // ── Clamp to actually visible area ──
+        // Khi #side-panel có padding-top (vd: fullscreen 65px), viewport element
+        // có thể tràn ra ngoài cạnh dưới màn hình → diện tích thực tế nhỏ hơn
+        // clientHeight. Dùng getBoundingClientRect để clamp chính xác.
+        const vpEl = tabRenderer || scrollParent || container;
+        if (vpEl) {
+            const rect = vpEl.getBoundingClientRect();
+            const visibleTop = Math.max(rect.top, 0);
+            const visibleBottom = Math.min(rect.bottom, window.innerHeight);
+            const actualVisibleH = visibleBottom - visibleTop;
+            if (actualVisibleH > 0 && actualVisibleH < viewportH) {
+                viewportH = actualVisibleH;
+            }
+        }
+
         if (viewportH <= 0) {
             return _viewportCache.visibleLines;
         }
@@ -217,11 +275,14 @@
         const allLines = Array.from(lines);
         const ref = getRefIndex(allLines);
 
+        let debugHeights = []; // Dùng để log thông tin debug
+
         // Count forward from ref (how many lines fit below)
         let accH = 0, countFwd = 0;
         for (let i = ref; i < allLines.length; i++) {
-            const h = allLines[i].offsetHeight;
+            const h = _getLineFullHeight(allLines[i]);
             if (h <= 0) continue;
+            debugHeights.push(`[${i}]: ${h.toFixed(1)}px`);
             countFwd++;          // count BEFORE overflow check → partially visible lines included
             accH += h;
             if (accH >= viewportH) break;
@@ -231,8 +292,9 @@
         accH = 0;
         let countBwd = 0;
         for (let i = ref - 1; i >= 0; i--) {
-            const h = allLines[i].offsetHeight;
+            const h = _getLineFullHeight(allLines[i]);
             if (h <= 0) continue;
+            debugHeights.unshift(`[${i}]: ${h.toFixed(1)}px`);
             countBwd++;          // count BEFORE overflow check
             accH += h;
             if (accH >= viewportH) break;
@@ -244,7 +306,10 @@
         if (_viewportCache.visibleLines !== visible || _viewportCache.ts === 0) {
             const lb = Math.max(CFG.lookBehindMin, Math.min(CFG.lookBehindMax, Math.round(visible * CFG.lookBehindRatio)));
             const la = Math.max(CFG.lookAheadMin, Math.min(CFG.lookAheadMax, Math.round(visible * CFG.lookAheadRatio)));
-            console.info(`[GlassyFlow v5] Viewport updated: ~${visible} visible lines. lookBehind: ${lb}, lookAhead: ${la}`);
+            console.info(`[GlassyFlow v5] 📏 Viewport Measurement:
+  - Viewport Height: ${viewportH.toFixed(1)}px
+  - Measured Lines (around ref ${ref}): ${debugHeights.join(', ')}
+  - Result: ~${visible} visible lines (lookBehind: ${lb}, lookAhead: ${la})`);
         }
 
         _viewportCache = { visibleLines: visible, ts: now };
@@ -283,13 +348,38 @@
         const sampleStart = Math.max(0, ref - 2);
         const sampleEnd = Math.min(lines.length, ref + 3);
         for (let i = sampleStart; i < sampleEnd; i++) {
-            const h = lines[i].offsetHeight;
+            const h = _getLineFullHeight(lines[i]);
             if (h > 0) { totalH += h; count++; }
         }
 
         const avg = count > 0 ? totalH / count : CFG.avgLineHeightFallback;
         _avgLineHeightCache = { value: avg, ts: now };
         return avg;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     *  FAST TRANSITION CHECKER
+     * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    function _checkFastTransition(lines, ref) {
+        if (!CFG.fastTransitionEnabled) return false;
+
+        if (ref + 1 < lines.length) {
+            const time1 = parseFloat(lines[ref].getAttribute('data-time') || 0);
+            const time2 = parseFloat(lines[ref + 1].getAttribute('data-time') || 0);
+
+            if (time2 - time1 > 0 && time2 - time1 < CFG.fastTransitionThreshold) {
+                return true;
+            }
+
+            // Check gap between ref+1 and ref+2 to prepare early
+            if (ref + 2 < lines.length) {
+                const time3 = parseFloat(lines[ref + 2].getAttribute('data-time') || 0);
+                if (time3 - time2 > 0 && time3 - time2 < CFG.fastTransitionThreshold) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -525,11 +615,26 @@
 
         let aheadCount = 0;
 
+        const isFast = _checkFastTransition(lines, ref);
+        const currentStaggerStep = isFast ? CFG.fastStaggerStep : CFG.staggerStep;
+        const currentStiffness = isFast ? CFG.fastStiffness : CFG.stiffness;
+        const currentDamping = isFast ? CFG.fastDamping : CFG.damping;
+        const currentMass = isFast ? CFG.fastMass : CFG.mass;
+
+        if (isFast) {
+            console.info(`[GlassyFlow v5] ⚡ Fast Transition triggered (Gap < ${CFG.fastTransitionThreshold}s)`);
+        }
+
         for (let i = start; i < end; i++) {
             const line = lines[i];
-            const delay = i >= ref ? (aheadCount++) * CFG.staggerStep : 0;
+            const delay = i >= ref ? (aheadCount++) * currentStaggerStep : 0;
 
             const data = getOrCreateSpring(line);
+
+            // Cập nhật cấu hình lò xo trực tiếp
+            data.spring.stiffness = currentStiffness;
+            data.spring.damping = currentDamping;
+            data.spring.mass = currentMass;
 
             if (activeLines.has(line)) {
                 data.spring.nudge(delta);
@@ -606,7 +711,7 @@
             // ╚══════════════════════════════════════════════════════════╝
             const combined = delta + deferredDelta;
             if (Math.abs(deferredDelta) > 0.5) {
-                console.debug(
+                console.info(
                     `[GlassyFlow v5] Flushing deferred: ${deferredDelta.toFixed(1)}px ` +
                     `+ new: ${delta.toFixed(1)}px = ${combined.toFixed(1)}px`
                 );
