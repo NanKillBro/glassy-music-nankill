@@ -156,6 +156,16 @@ Special thanks to the following creators whose work deeply inspired the **"Merge
 * **zobiron**: Inspiration from the *Big Blurry Slow Lyrics for TV* concept.
 * **SKMJi**: Inspiration from the *Luxurious Glass* design.
 
+## Star History
+
+<a href="https://star-history.com/#NanKillBro/glassy-music-nankill&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=NanKillBro/glassy-music-nankill&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=NanKillBro/glassy-music-nankill&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=NanKillBro/glassy-music-nankill&type=Date" />
+ </picture>
+</a>
+
 ## FAQ
 
 ### Why apps menu isn't showing up?
