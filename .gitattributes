@@ -1,4 +1,3 @@
 * text=auto eol=lf
 *.js text
-*.bat text eol=crlf
-*.cmd text eol=crlf
+*.bat -text diff

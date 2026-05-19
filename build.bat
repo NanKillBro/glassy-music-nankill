@@ -582,10 +582,21 @@ exit /B
 call :SC "SC-I20" "INSTALL_PNPM started"
 call :LOG ""
 call :LOG "> Installing PNPM..."
-call :SC "SC-I21" "Running PNPM install script"
-call :RUN_AND_LOG powershell -ExecutionPolicy Bypass -Command "Invoke-WebRequest 'https://get.pnpm.io/install.ps1' -UseBasicParsing | Invoke-Expression"
-set "PNPM_HOME=%LOCALAPPDATA%\pnpm"
-set "PATH=%LOCALAPPDATA%\pnpm;%LOCALAPPDATA%\pnpm\.tools\pnpm-exe;!PATH!"
-call :SC "SC-I22" "PNPM PATH updated: !PNPM_HOME!"
+if defined HAS_WINGET (
+    call :SC "SC-I21" "Installing PNPM via winget"
+    call :RUN_AND_LOG winget install -e --id pnpm.pnpm -e --accept-package-agreements --accept-source-agreements
+) else (
+    where npm >nul 2>&1
+    if !errorlevel! equ 0 (
+        call :SC "SC-I21" "Installing PNPM via npm"
+        call :RUN_AND_LOG npm install -g pnpm@latest-11
+    ) else (
+        call :SC "SC-I21" "npm not available, prompt restart"
+        call :LOG "[WARN] npm is not available yet (environment not updated)."
+        call :LOG "PNPM installation is skipped."
+        call :SC "SC-I23" "INSTALL_PNPM aborted"
+        exit /B
+    )
+)
 call :SC "SC-I23" "INSTALL_PNPM finished"
 exit /B
