@@ -658,6 +658,40 @@
 
         isAnimationBusy = activeLines.size > 0;
         ensureLoopRunning();
+
+        // Mark past lines — deferred hiding until scroll occurs
+        markPastLines(lines, ref);
+    }
+
+    /* ── Past Lines Marker ──
+     * Gắn class blyrics--gf-past lên các dòng đã hát xong.
+     * Chỉ được gọi từ applyStagger() → chỉ đánh dấu khi scroll thực sự xảy ra.
+     * CSS sẽ target class này để ẩn dòng past với transition mượt.
+     */
+    function markPastLines(lines, ref) {
+        // Tìm dòng active cuối cùng (dòng mới nhất đang hát)
+        // Dùng blyrics--active vì nó chính xác hơn blyrics--animating
+        // (blyrics--animating có thể tồn tại trên dòng cũ do overlap timing)
+        let lastActive = -1;
+        for (let i = lines.length - 1; i >= 0; i--) {
+            if (lines[i].classList.contains('blyrics--active')) {
+                lastActive = i;
+                break;
+            }
+        }
+
+        // Nếu không có dòng active nào → không mark (tránh ẩn sai khi chưa có lyrics active)
+        if (lastActive < 0) return;
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            if (!line.classList.contains('blyrics--line')) continue;
+            if (i < lastActive) {
+                line.classList.add('blyrics--gf-past');
+            } else {
+                line.classList.remove('blyrics--gf-past');
+            }
+        }
     }
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -913,6 +947,7 @@
         cleanupAllSprings();
 
         container = el;
+        el.classList.add('blyrics--gf-managed');
         pendingDelta = 0;
         deferredDelta = 0;
         isAnimationBusy = false;
@@ -972,6 +1007,13 @@
         timeScale = 1.0;
         lastRefIndex = -1;
         setContainerCompensation(0);
+
+        // Clean up GlassyFlow past markers
+        if (container) {
+            container.querySelectorAll('.blyrics--gf-past').forEach(el => {
+                el.classList.remove('blyrics--gf-past');
+            });
+        }
     }
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -989,10 +1031,12 @@
             // Disable scroll: cho BL tự scroll bình thường
             setScrollOverride(false);
             cleanupAllSprings();
+            if (container) container.classList.remove('blyrics--gf-managed');
             console.info('[GlassyFlow v5] 🔇 No-sync detected (all lines data-duration=0) — spring scroll disabled.');
         } else {
             // Re-enable scroll
             setScrollOverride(true);
+            if (container) container.classList.add('blyrics--gf-managed');
             console.info('[GlassyFlow v5] 🎵 Synced lyrics detected (data-duration > 0 found) — spring scroll re-enabled.');
         }
     }
@@ -1071,11 +1115,20 @@
         }
         setScrollOverride(false);
         cleanupAllSprings();
+        if (container) container.classList.remove('blyrics--gf-managed');
 
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
             isScriptEnabled = true;
             setScrollOverride(true);
+            if (container && !isNoSyncMode) {
+                container.classList.add('blyrics--gf-managed');
+                // Re-mark past lines ngay lập tức để tránh flash sáng
+                const lines = getLines();
+                if (lines.length) {
+                    markPastLines(lines, getRefIndex(lines));
+                }
+            }
             console.info('[GlassyFlow v5] Re-enabled after resize.');
         }, 1500);
     });
