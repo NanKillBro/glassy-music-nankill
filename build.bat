@@ -432,9 +432,9 @@ if exist "node_modules" (
 )
 
 :: --- pnpm install attempt 2 ---
-call :SC "SC-051" "Running pnpm install --frozen-lockfile (attempt 2 - retry)"
+call :SC "SC-051" "Running pnpm install --no-frozen-lockfile (attempt 2 - retry)"
 echo [%TIME%] [DBG-051c] Before RUN_AND_LOG pnpm install attempt 2 >> "!LOG_FILE!"
-call :RUN_AND_LOG pnpm install --frozen-lockfile
+call :RUN_AND_LOG pnpm install --no-frozen-lockfile
 echo [%TIME%] [DBG-051d] After RUN_AND_LOG returned (attempt 2), CMD_EXIT=!CMD_EXIT! >> "!LOG_FILE!"
 call :SC "SC-052" "pnpm install finished (attempt 2), exit code: !CMD_EXIT!"
 
