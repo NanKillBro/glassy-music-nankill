@@ -66,10 +66,27 @@ This version includes heavy visual customization. **It is not recommended for ve
 > ### 🛑 Before you use or contribute:
 > 
 > **Built for me, not for everyone:** 
-This fork is heavily "opinionated" and built strictly to satisfy my personal visual preferences. I have intentionally stripped out several customization features to force a specific, out-of-the-box experience. My goal is for you to experience the exact visual aesthetic I intended without needing to configure a single thing. If you don't like the hardcoded layout or the specific styling, you are highly encouraged to fork the repo and DIY, as this project is open-source!
+> This fork is heavily "opinionated" and built strictly to satisfy my personal
+> visual preferences. I have intentionally stripped out several customization
+> features to force a specific, out-of-the-box experience. My goal is for you
+> to experience the exact visual aesthetic I intended without needing to
+> configure a single thing. If you don't like the hardcoded layout or the
+> specific styling, you are highly encouraged to fork the repo and DIY, as
+> this project is open-source!
+> 
+> If you want to tweak the UI, feel free to open a PR! Just make sure to
+> include some screenshots or a quick video demo so I can see how it looks.
+> I'll review it, and if it matches the vibe I'm going for, I'd love to merge
+> it. If it doesn't quite fit, I'll share my thoughts so we can polish it
+> together, but please don't be discouraged if it doesn't end up making it in.
 > 
 > **Heavy "Vibe Coding" & AI Assistance:** 
-This project relies heavily on "vibe coding". As a result, the underlying codebase might be unoptimized, and some features may have bugs or break randomly. I spent a lot of time tweaking the AI output to make it work, but the code architecture might not be perfect. Pull Requests to fix bugs, optimize the code, or enhance features are incredibly welcome! Please be kind and constructive with your feedback or criticism.
+> This project relies heavily on "vibe coding". As a result, the underlying
+> codebase might be unoptimized, and some features may have bugs or break
+> randomly. I spent a lot of time tweaking the AI output to make it work, but
+> the code architecture might not be perfect. Pull Requests to fix bugs,
+> optimize the code, or enhance features are incredibly welcome! Please be
+> kind and constructive with your feedback or criticism.
 
 ## Content
 
