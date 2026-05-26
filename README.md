@@ -169,9 +169,11 @@ This project is made possible thanks to the amazing work of the open-source comm
 
 ### Theme Inspirations
 Special thanks to the following creators whose work deeply inspired the **"Merge Theme"**:
-* **[chengggit](https://github.com/chengggit)**: Inspiration from the *Dynamic Background*.
+* **[chengggit](https://github.com/chengggit)**: Inspiration from the *Dynamic Background* ([YouTube-Music-Dynamic-Theme](https://github.com/chengggit/YouTube-Music-Dynamic-Theme)).
 * **zobiron**: Inspiration from the *Big Blurry Slow Lyrics for TV* concept.
 * **SKMJi**: Inspiration from the *Luxurious Glass* design.
+* **[tposejank](https://github.com/tposejank)**: Inspiration for the lyrics style from the *[Apple Music theme for Better Lyrics](https://github.com/tposejank/blyrics-am-theme)*.
+* **[WolfTheE](https://github.com/WolfTheE)**: Inspiration from the *[Better-YTM](https://github.com/WolfTheE/better-ytm)* theme.
 
 ## Star History
 
