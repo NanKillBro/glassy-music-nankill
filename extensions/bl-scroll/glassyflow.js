@@ -151,6 +151,8 @@
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      *  CONFIG
      * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    const DEBUG = false; // Set true to enable hot-path logging
+
     const CFG = {
         staggerStep: 40,
         // lookBehind / lookAhead: computed dynamically — see getLookBehind(), getLookAhead()
@@ -275,14 +277,11 @@
         const allLines = Array.from(lines);
         const ref = getRefIndex(allLines);
 
-        let debugHeights = []; // Dùng để log thông tin debug
-
         // Count forward from ref (how many lines fit below)
         let accH = 0, countFwd = 0;
         for (let i = ref; i < allLines.length; i++) {
             const h = _getLineFullHeight(allLines[i]);
             if (h <= 0) continue;
-            debugHeights.push(`[${i}]: ${h.toFixed(1)}px`);
             countFwd++;          // count BEFORE overflow check → partially visible lines included
             accH += h;
             if (accH >= viewportH) break;
@@ -294,7 +293,6 @@
         for (let i = ref - 1; i >= 0; i--) {
             const h = _getLineFullHeight(allLines[i]);
             if (h <= 0) continue;
-            debugHeights.unshift(`[${i}]: ${h.toFixed(1)}px`);
             countBwd++;          // count BEFORE overflow check
             accH += h;
             if (accH >= viewportH) break;
@@ -303,12 +301,11 @@
         // +1 buffer on each direction to cover edge lines that just enter the viewport
         const visible = Math.max(countFwd, countBwd + 1, 4);
 
-        if (_viewportCache.visibleLines !== visible || _viewportCache.ts === 0) {
+        if (DEBUG && (_viewportCache.visibleLines !== visible || _viewportCache.ts === 0)) {
             const lb = Math.max(CFG.lookBehindMin, Math.min(CFG.lookBehindMax, Math.round(visible * CFG.lookBehindRatio)));
             const la = Math.max(CFG.lookAheadMin, Math.min(CFG.lookAheadMax, Math.round(visible * CFG.lookAheadRatio)));
             console.info(`[GlassyFlow v5] 📏 Viewport Measurement:
   - Viewport Height: ${viewportH.toFixed(1)}px
-  - Measured Lines (around ref ${ref}): ${debugHeights.join(', ')}
   - Result: ~${visible} visible lines (lookBehind: ${lb}, lookAhead: ${la})`);
         }
 
@@ -438,21 +435,30 @@
         return 0;
     }
 
+    let _linesCache = { lines: null, ts: 0 };
+    const _LINES_CACHE_TTL = 16; // ms — ~1 frame
+
     function getLines() {
+        const now = performance.now();
+        if (_linesCache.lines && now - _linesCache.ts < _LINES_CACHE_TTL) {
+            return _linesCache.lines;
+        }
         if (!container) return [];
-        return Array.from(container.querySelectorAll('.blyrics--line, .blyrics-footer'));
+        const lines = Array.from(container.querySelectorAll('.blyrics--line, .blyrics-footer'));
+        _linesCache = { lines, ts: now };
+        return lines;
     }
 
     function getRefIndex(lines) {
+        let preAnimIdx = -1, currentIdx = -1;
         for (let i = 0; i < lines.length; i++) {
-            if (lines[i].classList.contains('blyrics--animating')) return i;
+            const cl = lines[i].classList;
+            if (cl.contains('blyrics--animating')) return i;
+            if (preAnimIdx < 0 && cl.contains('blyrics--pre-animating')) preAnimIdx = i;
+            if (currentIdx < 0 && cl.contains('blyrics-current-lyric')) currentIdx = i;
         }
-        for (let i = 0; i < lines.length; i++) {
-            if (lines[i].classList.contains('blyrics--pre-animating')) return i;
-        }
-        for (let i = 0; i < lines.length; i++) {
-            if (lines[i].classList.contains('blyrics-current-lyric')) return i;
-        }
+        if (preAnimIdx >= 0) return preAnimIdx;
+        if (currentIdx >= 0) return currentIdx;
         return Math.floor(lines.length / 5);
     }
 
@@ -556,7 +562,7 @@
 
             // ── Reset timeScale khi tất cả spring đã settled ──
             if (timeScale !== 1.0) {
-                console.info(
+                if (DEBUG) console.info(
                     `[GlassyFlow v5] ⚡ Speedup reset — timeScale ${timeScale} → 1.0`
                 );
                 timeScale = 1.0;
@@ -596,7 +602,7 @@
             if (extraLines > 1) {
                 const baseLookAhead = lookAhead;
                 lookAhead = Math.min(lookAhead + extraLines, lines.length - ref);
-                console.info(
+                if (DEBUG) console.info(
                     `[GlassyFlow v5] 🔮 Delta-Adaptive: |delta|=${Math.abs(delta).toFixed(0)}px, ` +
                     `avgH=${avgH.toFixed(0)}px, extra=+${extraLines} → ` +
                     `lookAhead ${baseLookAhead} → ${lookAhead}`
@@ -607,7 +613,7 @@
         const start = Math.max(0, ref - lookBehind);
         const end = Math.min(lines.length, ref + lookAhead + 1);
 
-        console.info(
+        if (DEBUG) console.info(
             `[GlassyFlow v5] applyStagger: delta=${delta.toFixed(1)}px, ` +
             `ref=${ref}, range=[${start},${end}), ` +
             `behind=${lookBehind}, ahead=${lookAhead}, lines=${end - start}`
@@ -621,7 +627,7 @@
         const currentDamping = isFast ? CFG.fastDamping : CFG.damping;
         const currentMass = isFast ? CFG.fastMass : CFG.mass;
 
-        if (isFast) {
+        if (DEBUG && isFast) {
             console.info(`[GlassyFlow v5] ⚡ Fast Transition triggered (Gap < ${CFG.fastTransitionThreshold}s)`);
         }
 
@@ -667,7 +673,11 @@
      * Gắn class blyrics--gf-past lên các dòng đã hát xong.
      * Chỉ được gọi từ applyStagger() → chỉ đánh dấu khi scroll thực sự xảy ra.
      * CSS sẽ target class này để ẩn dòng past với transition mượt.
+     *
+     * Incremental: chỉ update dòng thay đổi giữa boundary cũ và mới.
      */
+    let _lastMarkedActive = -1;
+
     function markPastLines(lines, ref) {
         // Tìm dòng active cuối cùng (dòng mới nhất đang hát)
         // Dùng blyrics--active vì nó chính xác hơn blyrics--animating
@@ -682,8 +692,13 @@
 
         // Nếu không có dòng active nào → không mark (tránh ẩn sai khi chưa có lyrics active)
         if (lastActive < 0) return;
+        // Boundary không thay đổi → skip
+        if (lastActive === _lastMarkedActive) return;
 
-        for (let i = 0; i < lines.length; i++) {
+        // Chỉ update dòng trong vùng thay đổi giữa old và new boundary
+        const from = _lastMarkedActive < 0 ? 0 : Math.min(_lastMarkedActive, lastActive);
+        const to = _lastMarkedActive < 0 ? lines.length - 1 : Math.max(_lastMarkedActive, lastActive);
+        for (let i = from; i <= to; i++) {
             const line = lines[i];
             if (!line.classList.contains('blyrics--line')) continue;
             if (i < lastActive) {
@@ -692,6 +707,7 @@
                 line.classList.remove('blyrics--gf-past');
             }
         }
+        _lastMarkedActive = lastActive;
     }
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -727,14 +743,14 @@
             const shouldSpeedup = _checkSpeedupCondition();
             if (shouldSpeedup && timeScale < CFG.speedupScale) {
                 timeScale = CFG.speedupScale;
-                console.info(
+                if (DEBUG) console.info(
                     `[GlassyFlow v5] ⚡ Dynamic Speedup activated! ` +
                     `timeScale → ${timeScale} ` +
                     `(deferred: ${deferredDelta.toFixed(1)}px)`
                 );
             }
 
-            console.debug(
+            if (DEBUG) console.debug(
                 `[GlassyFlow v5] Busy — deferred ${delta.toFixed(1)}px ` +
                 `(total: ${deferredDelta.toFixed(1)}px, timeScale: ${timeScale})`
             );
@@ -744,7 +760,7 @@
             // ║  Gỡ container translate trước, rồi apply combined.     ║
             // ╚══════════════════════════════════════════════════════════╝
             const combined = delta + deferredDelta;
-            if (Math.abs(deferredDelta) > 0.5) {
+            if (DEBUG && Math.abs(deferredDelta) > 0.5) {
                 console.info(
                     `[GlassyFlow v5] Flushing deferred: ${deferredDelta.toFixed(1)}px ` +
                     `+ new: ${delta.toFixed(1)}px = ${combined.toFixed(1)}px`
@@ -814,7 +830,7 @@
         delayedDelta += delta;
         setContainerCompensation(delayedDelta + deferredDelta);
 
-        console.debug(
+        if (DEBUG) console.debug(
             `[GlassyFlow v5] Delay queued ${delta.toFixed(1)}px ` +
             `(pending: ${delayedDelta.toFixed(1)}px, wait: ${CFG.scrollDelay}ms)`
         );
@@ -832,7 +848,7 @@
             // Gỡ compensation cho phần delayed (deferred vẫn giữ nếu busy)
             setContainerCompensation(deferredDelta);
 
-            console.debug(
+            if (DEBUG) console.debug(
                 `[GlassyFlow v5] Delay fired — executing ${totalDelayed.toFixed(1)}px`
             );
 
@@ -988,6 +1004,8 @@
      *  CLEANUP HELPER
      * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
     function cleanupAllSprings() {
+        _linesCache = { lines: null, ts: 0 };
+        _lastMarkedActive = -1;
         for (const line of activeLines) {
             line.style.translate = '';
         }
@@ -1077,6 +1095,8 @@
         isAnimationBusy = false;
         timeScale = 1.0;
         lastRefIndex = -1;
+        _lastMarkedActive = -1;
+        _linesCache = { lines: null, ts: 0 };
         if (scrollDelayTimer !== null) {
             clearTimeout(scrollDelayTimer);
             scrollDelayTimer = null;
