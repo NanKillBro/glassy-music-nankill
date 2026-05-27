@@ -412,7 +412,7 @@
 
     // v4: No-sync detection — tự disable khi lyrics tĩnh
     let isNoSyncMode = false;
-    let noSyncClassObserver = null;
+    let noSyncRetryTimer = null;
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      *  HELPERS
@@ -869,8 +869,32 @@
 
             const transformVal = el.style.transform;
             if (transformVal === lastTransform) return;
-            lastTransform = transformVal;
 
+            // Early return: BL đôi khi chỉ thay đổi transition/style khác
+            // mà không đổi transform → skip nhanh
+            if (!transformVal || transformVal === 'none') {
+                // transform bị clear (BL set 'none' hoặc remove)
+                // Chỉ xử lý nếu đang có pendingDelta
+                if (pendingDelta !== 0) {
+                    lastTransform = transformVal;
+                    const delta = pendingDelta;
+                    pendingDelta = 0;
+
+                    suppressTransform = true;
+                    el.style.transition = 'none';
+                    el.style.transform = 'none';
+                    lastTransform = 'none';
+                    suppressTransform = false;
+
+                    handleNewDelta(delta);
+                    lastFlipTime = Date.now();
+                } else {
+                    lastTransform = transformVal;
+                }
+                return;
+            }
+
+            lastTransform = transformVal;
             const y = parseTranslateY(transformVal);
 
             if (Math.abs(y) > CFG.minDelta) {
@@ -985,19 +1009,22 @@
 
         domObserver?.disconnect();
         let domCheckQueued = false;
+        // Narrow scope: observe #side-panel thay vì toàn bộ body
+        // — lyrics container luôn nằm trong side-panel
+        const observeTarget = document.querySelector('#side-panel') || document.body;
         domObserver = new MutationObserver(() => {
             if (domCheckQueued) return;
             domCheckQueued = true;
             queueMicrotask(() => {
                 domCheckQueued = false;
-                const el = document.querySelector('.blyrics-container');
+                const el = observeTarget.querySelector('.blyrics-container');
                 if (el && el !== container) {
                     console.info('[GlassyFlow v5] New container detected (song change)');
                     attach(el);
                 }
             });
         });
-        domObserver.observe(document.body, { childList: true, subtree: true });
+        domObserver.observe(observeTarget, { childList: true, subtree: true });
     }
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1060,28 +1087,28 @@
     }
 
     function startNoSyncDetection(el) {
-        // Cleanup previous
-        if (noSyncClassObserver) {
-            noSyncClassObserver.disconnect();
-            noSyncClassObserver = null;
+        // Cleanup previous retry timer
+        if (noSyncRetryTimer !== null) {
+            clearTimeout(noSyncRetryTimer);
+            noSyncRetryTimer = null;
         }
         isNoSyncMode = false;
 
-        // Check ngay lập tức
-        const hasSyncedLine = el.querySelector('.blyrics--line[data-duration]:not([data-duration="0"])');
-        setNoSyncState(!hasSyncedLine);
-
-        // Observer: theo dõi khi nội dung thay đổi (lines được thêm/xóa khi đổi bài)
-        noSyncClassObserver = new MutationObserver(() => {
-            if (!el.isConnected) return;
-            const synced = el.querySelector('.blyrics--line[data-duration]:not([data-duration="0"])');
-            setNoSyncState(!synced);
-        });
-
-        noSyncClassObserver.observe(el, {
-            childList: true,
-            subtree: true,
-        });
+        // One-shot check: data-duration được BL set 1 lần khi inject lyrics,
+        // không bao giờ thay đổi. Khi đổi bài, BL tạo container mới →
+        // domObserver detect → attach() → startNoSyncDetection() lại.
+        const _check = () => {
+            if (!el.isConnected || el !== container) return;
+            const lines = el.querySelectorAll('.blyrics--line');
+            if (lines.length === 0) {
+                // Lines chưa inject — retry sau 500ms
+                noSyncRetryTimer = setTimeout(_check, 500);
+                return;
+            }
+            const hasSynced = el.querySelector('.blyrics--line[data-duration]:not([data-duration="0"])');
+            setNoSyncState(!hasSynced);
+        };
+        _check();
     }
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1100,6 +1127,10 @@
         if (scrollDelayTimer !== null) {
             clearTimeout(scrollDelayTimer);
             scrollDelayTimer = null;
+        }
+        if (noSyncRetryTimer !== null) {
+            clearTimeout(noSyncRetryTimer);
+            noSyncRetryTimer = null;
         }
         styleObserver?.disconnect();
         removeScrollFallback();

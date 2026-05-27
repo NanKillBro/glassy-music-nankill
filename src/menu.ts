@@ -1384,7 +1384,7 @@ const openFontSettingsWindow = (parentWin: BrowserWindow) => {
             const toast = document.getElementById('toast');
             toast.textContent = msg;
             toast.className = 'toast show' + (isSuccess ? ' success' : '');
-            setTimeout(() => { toast.className = 'toast'; }, 2500);
+            setTimeout(() => { toast.className = 'toast'; }, 4000);
         }
 
         // Validation helpers
@@ -1456,7 +1456,7 @@ const openFontSettingsWindow = (parentWin: BrowserWindow) => {
                 lyrics: { enabled: lyricsToggle.checked, useGoogleFont: document.getElementById('lyricsGoogleFont').checked, family: lyF, size: lyS, sizeUnit: document.getElementById('lyricsSizeUnit').value, weight: lyW },
             };
             document.title = '__FONT_SAVE__' + JSON.stringify(data);
-            showToast('✅ Saved & Applied!', true);
+            showToast('✅ Saved! Some display issues may occur, please restart the app for best results.', true);
         });
     </script>
 </body>
