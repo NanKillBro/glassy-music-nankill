@@ -515,6 +515,25 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
         <div class="scroll-area">
         <div class="log-entry">
             <div class="log-header">
+                <span class="log-version">Version 3.12.8-beta</span>
+                <span class="log-tag">BETA</span>
+            </div>
+            <ul>
+                <li>Upstreamed to commit: <code style="">49130f8</code></li>
+                <li>Updated Better Lyrics to commit <code>0b34557</code></li>
+                <li>Updated MERGE THEME from <span style="color:#00f2fe">v21</span> to <span style="color:#00f2fe">v22</span></li>
+                <li>New GlassyFlow v5</li>
+                <li>New Better Lyrics Settings UI</li>
+                <li>New Fonts and Size settings</li>
+                <li>New AM Lyrics effect</li>
+                <li>New redesign search box, user menu, settings menu</li>
+                <li>Fixed in-app-menu turn off by default on Linux</li>
+                <li>Fixed Better Lyrics export identity doesn't work</li>
+                <li>Fixed crossfade artwork on cover and backgroud only works sometime</li>
+            </ul>
+        </div>
+        <div class="log-entry">
+            <div class="log-header">
                 <span class="log-version">Version 3.12.7-beta</span>
                 <span class="log-tag">BETA</span>
             </div>
