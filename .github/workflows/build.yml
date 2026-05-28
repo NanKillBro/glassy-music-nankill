@@ -97,7 +97,9 @@ jobs:
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         with:
-          run: pnpm test:debug
+          run: |
+            pnpm rebuild electron
+            pnpm test:debug
 
 
   release:
