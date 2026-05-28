@@ -843,11 +843,22 @@
       },
       "menu": {
         "convert-chinese-character": {
+          "label": "중국어 변환",
           "submenu": {
             "disabled": {
-              "label": "비활성화됨"
+              "label": "비활성화됨",
+              "tooltip": "중국어 변환 비활성화"
+            },
+            "simplified-to-traditional": {
+              "label": "간체에서 번체로",
+              "tooltip": "중국어 간체에서 번체로 번역"
+            },
+            "traditional-to-simplified": {
+              "label": "번체에서 간체",
+              "tooltip": "번체에서 간체로 변환"
             }
-          }
+          },
+          "tooltip": "중국어 간체 또는 번체로 변환하기"
         },
         "default-text-string": {
           "label": "가사 사이에 표시할 문자",
