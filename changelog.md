@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+#### [v3.12.8-beta](https://github.com/NanKillBro/glassy-music-nankill/compare/v3.12.7-beta.nankill...v3.12.8-beta)
+
+- some build.bat fix [`1dabaa2`](https://github.com/NanKillBro/glassy-music-nankill/commit/1dabaa2c1561416e406467656918dd4b77b853e7)
+- font and size update [`f70af73`](https://github.com/NanKillBro/glassy-music-nankill/commit/f70af732fdd851f9c36bf60ca31f2fdbf072d3ae)
+- better lyrics settings redesign [`1163826`](https://github.com/NanKillBro/glassy-music-nankill/commit/116382639469f7578da2a9785b21a62e5c708d99)
+
 #### [v3.12.7-beta.nankill](https://github.com/NanKillBro/glassy-music-nankill/compare/v3.12.6-beta.nankill...v3.12.7-beta.nankill)
+
+> 6 May 2026
 
 - Upload builds to action artifacts [`#3`](https://github.com/NanKillBro/glassy-music-nankill/pull/3)
 - update new liquid glass icon for macOS [`#2`](https://github.com/NanKillBro/glassy-music-nankill/pull/2)
