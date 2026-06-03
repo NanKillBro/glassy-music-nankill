@@ -46,6 +46,7 @@ jobs:
       - name: Install dependencies
         run: |
           pnpm install --frozen-lockfile
+          pnpm rebuild electron
 
       # Only vite build without release if it is a fork, or it is a pull-request
       - name: Vite Build
@@ -97,6 +98,7 @@ jobs:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         with:
           run: |
+            pnpm rebuild electron
             pnpm test:debug
 
 
@@ -134,6 +136,7 @@ jobs:
       - name: Install dependencies
         run: |
           pnpm install --frozen-lockfile
+          pnpm rebuild electron
 
       - name: Get version
         run: |
