@@ -97,9 +97,6 @@ jobs:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         with:
           run: |
-            rm -rf node_modules/electron
-            pnpm install --frozen-lockfile
-            pnpm rebuild electron
             pnpm test:debug
 
 
