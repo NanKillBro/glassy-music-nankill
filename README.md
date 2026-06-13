@@ -44,6 +44,7 @@ This version includes heavy visual customization. **It is not recommended for ve
 
 - **🚀 Stable Release (Recommended):** You can download the pre-compiled version directly from the **[Releases](https://github.com/NanKillBro/glassy-music-nankill/releases)** page. 
 - **🛠️ Latest Experimental:** You can download the latest automated build artifacts from **[GitHub Actions](https://github.com/NanKillBro/glassy-music-nankill/actions)**, or build it from source yourself by following the [Build](#build) section.
+- **🐧 Arch Linux (AUR):** You can install the experimental package from AUR using `yay` or `paru`: `yay -S glassy-music-nankill-git` (or `paru -S glassy-music-nankill-git`). Note: A stable package is currently unavailable.
 
 ---
 

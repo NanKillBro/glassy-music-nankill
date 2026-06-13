@@ -33,10 +33,6 @@ win:
       arch:
         - x64
         - arm64
-    - target: portable
-      arch:
-        - x64
-        - arm64
   compression: maximum
 nsisWeb:
   runAfterFinish: false

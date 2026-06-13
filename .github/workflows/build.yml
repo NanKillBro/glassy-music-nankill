@@ -175,7 +175,7 @@ jobs:
 
             | OS | x86-64 (Intel/AMD) | ARM64 (Snapdragon / Apple Silicon) |
             | :--- | :--- | :--- |
-            | **Windows** | [Portable (Universal .exe)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/Glassy-Music-${{ env.VERSION_NUM }}.exe)<br>[Web Setup (Universal)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/Glassy-Music-Web-Setup-${{ env.VERSION_NUM }}.exe)<br>[Portable (.7z)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/glassy-music-nankill-mod-${{ env.VERSION_NUM }}-x64.nsis.7z) | [Portable (Universal .exe)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/Glassy-Music-${{ env.VERSION_NUM }}.exe)<br>[Web Setup (Universal)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/Glassy-Music-Web-Setup-${{ env.VERSION_NUM }}.exe)<br>[Portable (.7z)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/glassy-music-nankill-mod-${{ env.VERSION_NUM }}-arm64.nsis.7z) |
+            | **Windows** | [Web Setup (Universal)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/Glassy-Music-Web-Setup-${{ env.VERSION_NUM }}.exe)<br>[Portable (.7z)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/glassy-music-nankill-mod-${{ env.VERSION_NUM }}-x64.nsis.7z) | [Web Setup (Universal)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/Glassy-Music-Web-Setup-${{ env.VERSION_NUM }}.exe)<br>[Portable (.7z)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/glassy-music-nankill-mod-${{ env.VERSION_NUM }}-arm64.nsis.7z) |
             | **macOS** | [Intel Mac (.dmg)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/Glassy-Music-${{ env.VERSION_NUM }}.dmg) | [Apple Silicon (.dmg)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/Glassy-Music-${{ env.VERSION_NUM }}-arm64.dmg) |
             | **Linux (Universal)** | [Portable (.tar.gz)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/glassy-music-nankill-mod-${{ env.VERSION_NUM }}.tar.gz) | [Portable (.tar.gz)](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/glassy-music-nankill-mod-${{ env.VERSION_NUM }}-arm64.tar.gz) |
             | **Linux (AppImage)** | [Download](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/Glassy-Music-${{ env.VERSION_NUM }}.AppImage) | [Download](https://github.com/NanKillBro/glassy-music-nankill/releases/download/${{ env.VERSION_TAG }}/Glassy-Music-${{ env.VERSION_NUM }}-arm64.AppImage) |
@@ -186,7 +186,7 @@ jobs:
 
             Thanks to all contributors! 🏅
 
-            (Note for Windows: `Glassy-Music-Web-Setup-${{ env.VERSION_TAG }}.exe` is an installer, and `Glassy-Music-${{ env.VERSION_TAG }}.exe` is a portable version)
+            (Note for Windows: `Glassy-Music-Web-Setup-${{ env.VERSION_TAG }}.exe` is an installer. ⚠️ Warning: The `.exe` portable version is buggy and has been removed.)
 
       - name: Update changelog
         if: ${{ env.VERSION_HASH == '' }}
