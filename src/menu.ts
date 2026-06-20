@@ -31,7 +31,7 @@ export type MenuTemplate = Electron.MenuItemConstructorOptions[];
 // True only if in-app-menu was loaded on launch
 const inAppMenuActive = await config.plugins.isEnabled('in-app-menu');
 
-const LOCKED_PLUGINS = ['better-lyrics', 'better-lyrics-shaders', 'album-color-theme-modded'];
+const LOCKED_PLUGINS = ['better-lyrics'];
 
 const pluginEnabledMenu = async (
   plugin: string,

@@ -1,7 +1,9 @@
-import { session, app, BrowserWindow } from 'electron';
+import { session, app, BrowserWindow, ipcMain, dialog } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { createPlugin } from '@/utils';
+import * as config from '@/config';
+import { restart } from '@/providers/app-controls';
 
 // ID này lấy từ manifest key bạn cung cấp, hoặc bạn xem log cũ (mjfeakl...)
 // Nếu build xong mở không lên thì check log xem ID thực tế là gì rồi thay vào đây
@@ -13,6 +15,7 @@ export default createPlugin({
   config: {
     enabled: true,
     enableV4Scroll: true,
+    activeTheme: 'glassy-merge-theme' as string,
   },
   // THÊM PHẦN NÀY: Tạo menu để mở cài đặt
   menu: async ({ getConfig, setConfig }) => {
@@ -20,14 +23,19 @@ export default createPlugin({
 
     return [
       {
-        label: 'GlassyFlow v5 (Restart Required)',
-        type: 'checkbox',
-        checked: config.enableV4Scroll !== false,
-        click: () => setConfig({ enableV4Scroll: config.enableV4Scroll === false ? true : false }),
-      },
-      {
         label: 'Open Settings',
         click: () => {
+          // Create a temp preload script for the settings window
+          const preloadCode = `
+            const { contextBridge, ipcRenderer } = require('electron');
+            contextBridge.exposeInMainWorld('electronBL', {
+              getActiveTheme: () => ipcRenderer.invoke('bl-get-active-theme'),
+              setActiveTheme: (name) => ipcRenderer.invoke('bl-set-active-theme', name),
+            });
+          `;
+          const preloadPath = path.join(app.getPath('temp'), 'bl-settings-preload.js');
+          fs.writeFileSync(preloadPath, preloadCode);
+
           const settingsWin = new BrowserWindow({
             width: 600,
             height: 700,
@@ -40,6 +48,7 @@ export default createPlugin({
             webPreferences: {
               nodeIntegration: false,
               contextIsolation: true,
+              preload: preloadPath,
             },
           });
 
@@ -906,37 +915,145 @@ export default createPlugin({
     ];
   },
   backend: {
-    async start({ getConfig, window }) {
-      const config = await getConfig();
+    async start({ getConfig, setConfig, window }) {
+      const pluginConfig = await getConfig();
       const basePath = app.isPackaged
         ? process.resourcesPath
         : path.join(__dirname, '../../');
 
       const extensionPath = path.join(basePath, 'extensions', 'bl');
+      const isGlassyTheme = pluginConfig.activeTheme === 'glassy-merge-theme' || !pluginConfig.activeTheme;
+
+      console.log('[BetterLyrics] Active theme:', pluginConfig.activeTheme || 'glassy-merge-theme (default)');
+
+      // --- Manage album-color-theme-modded based on active theme ---
+      if (isGlassyTheme) {
+        config.plugins.setOptions('album-color-theme-modded', { enabled: true }, []);
+        console.log('[BetterLyrics] Glassy theme active → album-color-theme-modded enabled');
+      } else {
+        config.plugins.setOptions('album-color-theme-modded', { enabled: false }, []);
+        console.log('[BetterLyrics] Non-Glassy theme active → album-color-theme-modded disabled');
+      }
 
       console.log('Loading Better Lyrics from:', extensionPath);
 
       session.defaultSession.loadExtension(extensionPath)
         .then((ext) => {
           console.log('Better Lyrics loaded! ID:', ext.id);
-          // Nếu ID in ra khác với ID bạn điền ở trên, hãy sửa lại biến EXTENSION_ID nhé
         })
         .catch((err) => {
           console.error('Failed to load Better Lyrics:', err);
         });
 
-      if (config.enableV4Scroll !== false) {
-        const jsPath = path.join(basePath, 'extensions', 'bl-scroll', 'glassyflow.js');
+      // --- Conditionally inject merge theme components ---
+      if (isGlassyTheme) {
+        // Inject mergetheme.js and fix.js (merge theme CSS + UI enhancements)
+        const mergeThemeFiles = ['mergetheme.js', 'fix.js'];
+        const blExtRoot = path.join(basePath, 'extensions', 'bl');
 
-        try {
-          const jsCode = fs.readFileSync(jsPath, 'utf8');
-          window.webContents.on('dom-ready', () => {
-            window.webContents.executeJavaScript(jsCode).catch(console.error);
-          });
-        } catch (err) {
-          console.error('Failed to load lyrics scroll script:', err);
+        for (const fileName of mergeThemeFiles) {
+          try {
+            const jsPath = path.join(blExtRoot, fileName);
+            const jsCode = fs.readFileSync(jsPath, 'utf8');
+            window.webContents.on('dom-ready', () => {
+              window.webContents.executeJavaScript(jsCode).catch((err: Error) => {
+                console.error(`[BetterLyrics] Failed to execute ${fileName}:`, err);
+              });
+            });
+            console.log(`[BetterLyrics] Queued merge theme file: ${fileName}`);
+          } catch (err) {
+            console.error(`[BetterLyrics] Failed to load merge theme file ${fileName}:`, err);
+          }
         }
+
+        // Inject glassyflow.js (scroll animation) if enabled
+        if (pluginConfig.enableV4Scroll !== false) {
+          const jsPath = path.join(basePath, 'extensions', 'bl-scroll', 'glassyflow.js');
+
+          try {
+            const jsCode = fs.readFileSync(jsPath, 'utf8');
+            window.webContents.on('dom-ready', () => {
+              window.webContents.executeJavaScript(jsCode).catch(console.error);
+            });
+            console.log('[BetterLyrics] Queued glassyflow.js');
+          } catch (err) {
+            console.error('[BetterLyrics] Failed to load glassyflow.js:', err);
+          }
+        }
+      } else {
+        console.log('[BetterLyrics] Non-Glassy theme → skipping merge theme and glassyflow injection');
       }
+
+      // --- Fix 2: Block BL custom styles in Glassy mode ---
+      if (isGlassyTheme) {
+        const blockBLStylesScript = `
+          (function() {
+            // Remove any existing BL custom style tag
+            var existing = document.getElementById('blyrics-custom-style');
+            if (existing) {
+              existing.remove();
+              console.log('[BL-GlassyBlock] Removed existing blyrics-custom-style');
+            }
+
+            // Watch for new BL custom style tags and remove them
+            var observer = new MutationObserver(function(mutations) {
+              for (var i = 0; i < mutations.length; i++) {
+                var addedNodes = mutations[i].addedNodes;
+                for (var j = 0; j < addedNodes.length; j++) {
+                  var node = addedNodes[j];
+                  if (node.id === 'blyrics-custom-style') {
+                    node.remove();
+                    console.log('[BL-GlassyBlock] Blocked blyrics-custom-style injection');
+                  }
+                }
+              }
+            });
+
+            observer.observe(document.head, { childList: true });
+            console.log('[BL-GlassyBlock] MutationObserver active, blocking BL custom styles');
+          })();
+        `;
+
+        window.webContents.on('dom-ready', () => {
+          window.webContents.executeJavaScript(blockBLStylesScript).catch((err: Error) => {
+            console.error('[BetterLyrics] Failed to inject Glassy style blocker:', err);
+          });
+        });
+        console.log('[BetterLyrics] Queued Glassy style blocker');
+      }
+
+      // --- IPC handler for theme changes from BL settings UI ---
+      ipcMain.removeHandler('bl-set-active-theme');
+      ipcMain.handle('bl-set-active-theme', async (_event, themeName: string) => {
+        const currentTheme = (await getConfig()).activeTheme || 'glassy-merge-theme';
+        if (currentTheme === themeName) return { changed: false };
+
+        await setConfig({ activeTheme: themeName });
+        console.log(`[BetterLyrics] Theme changed: ${currentTheme} → ${themeName}`);
+
+        // Show restart dialog
+        const result = await dialog.showMessageBox(window, {
+          type: 'info',
+          title: 'Theme Changed',
+          message: 'Theme has been changed. The app needs to restart to apply the new theme.',
+          buttons: ['Restart Now', 'Later'],
+          defaultId: 0,
+          cancelId: 1,
+        });
+
+        if (result.response === 0) {
+          restart();
+        }
+
+        return { changed: true, theme: themeName };
+      });
+
+      // --- IPC handler to get current theme ---
+      ipcMain.removeHandler('bl-get-active-theme');
+      ipcMain.handle('bl-get-active-theme', async () => {
+        const cfg = await getConfig();
+        return cfg.activeTheme || 'glassy-merge-theme';
+      });
     },
   },
 });
