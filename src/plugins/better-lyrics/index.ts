@@ -926,10 +926,11 @@ export default createPlugin({
 
       console.log('[BetterLyrics] Active theme:', pluginConfig.activeTheme || 'glassy-merge-theme (default)');
 
-      // --- Manage album-color-theme-modded based on active theme ---
+      // --- Manage album-color-theme-modded and better-lyrics-shaders based on active theme ---
       if (isGlassyTheme) {
         config.plugins.setOptions('album-color-theme-modded', { enabled: true }, []);
-        console.log('[BetterLyrics] Glassy theme active → album-color-theme-modded enabled');
+        config.plugins.setOptions('better-lyrics-shaders', { enabled: true }, []);
+        console.log('[BetterLyrics] Glassy theme active → album-color-theme-modded and better-lyrics-shaders enabled');
       } else {
         config.plugins.setOptions('album-color-theme-modded', { enabled: false }, []);
         console.log('[BetterLyrics] Non-Glassy theme active → album-color-theme-modded disabled');

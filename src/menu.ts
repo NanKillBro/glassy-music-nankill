@@ -31,8 +31,6 @@ export type MenuTemplate = Electron.MenuItemConstructorOptions[];
 // True only if in-app-menu was loaded on launch
 const inAppMenuActive = await config.plugins.isEnabled('in-app-menu');
 
-const LOCKED_PLUGINS = ['better-lyrics'];
-
 const pluginEnabledMenu = async (
   plugin: string,
   label = '',
@@ -41,8 +39,16 @@ const pluginEnabledMenu = async (
   hasSubmenu = false,
   refreshMenu: (() => void) | undefined = undefined,
 ): Promise<Electron.MenuItemConstructorOptions> => {
+  const betterLyricsConfig = config.plugins.getOptions<{ activeTheme?: string }>('better-lyrics');
+  const isGlassyTheme = betterLyricsConfig?.activeTheme === 'glassy-merge-theme' || !betterLyricsConfig?.activeTheme;
+
+  const lockedPlugins = ['better-lyrics'];
+  if (isGlassyTheme) {
+    lockedPlugins.push('album-color-theme-modded', 'better-lyrics-shaders');
+  }
+
   // 1. Kiểm tra xem plugin này có nằm trong danh sách bị khóa không
-  const isLocked = LOCKED_PLUGINS.includes(plugin);
+  const isLocked = lockedPlugins.includes(plugin);
 
   // 2. Logic "Hardcore": Nếu bị khóa, ép config luôn bật ngay lập tức
   // (Đề phòng trường hợp file config.json cũ đang lưu là false)
@@ -55,6 +61,7 @@ const pluginEnabledMenu = async (
     sublabel: isNew ? t('main.menu.plugins.new') : undefined,
     toolTip: description,
     type: 'checkbox',
+    visible: (!isGlassyTheme && plugin === 'album-color-theme-modded') ? false : true,
 
     // 3. Hiển thị dấu tích: Nếu Locked thì luôn True, ngược lại thì lấy theo config
     checked: isLocked ? true : await config.plugins.isEnabled(plugin),
