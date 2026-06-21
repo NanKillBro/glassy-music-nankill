@@ -946,44 +946,7 @@ export default createPlugin({
           console.error('Failed to load Better Lyrics:', err);
         });
 
-      // --- Conditionally inject merge theme components ---
-      if (isGlassyTheme) {
-        // Inject mergetheme.js and fix.js (merge theme CSS + UI enhancements)
-        const mergeThemeFiles = ['mergetheme.js', 'fix.js'];
-        const blExtRoot = path.join(basePath, 'extensions', 'bl');
-
-        for (const fileName of mergeThemeFiles) {
-          try {
-            const jsPath = path.join(blExtRoot, fileName);
-            const jsCode = fs.readFileSync(jsPath, 'utf8');
-            window.webContents.on('dom-ready', () => {
-              window.webContents.executeJavaScript(jsCode).catch((err: Error) => {
-                console.error(`[BetterLyrics] Failed to execute ${fileName}:`, err);
-              });
-            });
-            console.log(`[BetterLyrics] Queued merge theme file: ${fileName}`);
-          } catch (err) {
-            console.error(`[BetterLyrics] Failed to load merge theme file ${fileName}:`, err);
-          }
-        }
-
-        // Inject glassyflow.js (scroll animation) if enabled
-        if (pluginConfig.enableV4Scroll !== false) {
-          const jsPath = path.join(basePath, 'extensions', 'bl-scroll', 'glassyflow.js');
-
-          try {
-            const jsCode = fs.readFileSync(jsPath, 'utf8');
-            window.webContents.on('dom-ready', () => {
-              window.webContents.executeJavaScript(jsCode).catch(console.error);
-            });
-            console.log('[BetterLyrics] Queued glassyflow.js');
-          } catch (err) {
-            console.error('[BetterLyrics] Failed to load glassyflow.js:', err);
-          }
-        }
-      } else {
-        console.log('[BetterLyrics] Non-Glassy theme → skipping merge theme and glassyflow injection');
-      }
+      // (The merge theme and glassyflow scripts have been moved to the preload script for instant execution without IPC delay)
 
       // --- Fix 2: Block BL custom styles in Glassy mode ---
       if (isGlassyTheme) {
@@ -1057,4 +1020,61 @@ export default createPlugin({
       });
     },
   },
+  preload: {
+    async start({ getConfig }) {
+      const pluginConfig = await getConfig();
+      const isGlassyTheme = pluginConfig.activeTheme === 'glassy-merge-theme' || !pluginConfig.activeTheme;
+
+      if (isGlassyTheme) {
+        // Safe require since this runs in the preload context
+        const fs = require('fs');
+        const path = require('path');
+        const { webFrame } = require('electron');
+        
+        let basePath = path.join(__dirname, '../../');
+        if (!fs.existsSync(path.join(basePath, 'extensions', 'bl'))) {
+           basePath = process.resourcesPath;
+        }
+
+        const blExtRoot = path.join(basePath, 'extensions', 'bl');
+        const mergeThemeFiles = ['mergetheme.js', 'fix.js'];
+        const scriptsToInject: string[] = [];
+
+        // 1. Eagerly read files from disk while the browser is still parsing the HTML
+        for (const fileName of mergeThemeFiles) {
+          try {
+            const jsPath = path.join(blExtRoot, fileName);
+            if (fs.existsSync(jsPath)) {
+              scriptsToInject.push(fs.readFileSync(jsPath, 'utf8'));
+            }
+          } catch (err) {
+            console.error(`[BetterLyrics Preload] Failed to read ${fileName}:`, err);
+          }
+        }
+
+        if (pluginConfig.enableV4Scroll !== false) {
+          try {
+            const jsPath = path.join(basePath, 'extensions', 'bl-scroll', 'glassyflow.js');
+            if (fs.existsSync(jsPath)) {
+              scriptsToInject.push(fs.readFileSync(jsPath, 'utf8'));
+            }
+          } catch (err) {
+            console.error('[BetterLyrics Preload] Failed to read glassyflow.js:', err);
+          }
+        }
+
+        // 2. Inject natively via webFrame instantly upon DOMContentLoaded
+        window.addEventListener('DOMContentLoaded', async () => {
+          for (const scriptCode of scriptsToInject) {
+             try {
+                await webFrame.executeJavaScript(scriptCode);
+             } catch (err) {
+                console.error('[BetterLyrics Preload] Failed to execute injected script via webFrame:', err);
+             }
+          }
+          console.log('[BetterLyrics Preload] Successfully injected theme scripts securely via webFrame.');
+        });
+      }
+    }
+  }
 });
