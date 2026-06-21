@@ -14,8 +14,6 @@
     "url": "https://nankill.xyz"
   },
   "scripts": {
-    "test": "pnpm playwright test",
-    "test:debug": "pnpm cross-env DEBUG=pw:*,-pw:test:protocol playwright test",
     "sync:extensions": "node tooling/sync-extensions.mjs",
     "prebuild": "pnpm sync:extensions",
     "predev": "pnpm sync:extensions",
@@ -151,7 +149,6 @@
     "@electron-toolkit/tsconfig": "2.0.0",
     "@eslint/js": "9.39.4",
     "@malept/flatpak-bundler": "0.4.0",
-    "@playwright/test": "1.59.1",
     "@stylistic/eslint-plugin": "5.10.0",
     "@total-typescript/ts-reset": "0.6.1",
     "@types/electron-localshortcut": "3.1.3",

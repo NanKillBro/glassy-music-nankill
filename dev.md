@@ -137,10 +137,3 @@ export default createPlugin({
 pnpm start
 ```
 
-## Tests
-
-```bash
-pnpm test
-```
-
-Uses [Playwright](https://playwright.dev/) to test the app.
