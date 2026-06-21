@@ -47,8 +47,6 @@ const titleStyle = cacheNoArgs(
     font-size: 12px;
     padding: 4px 4px 4px var(--offset-left, 4px);
     background-color: color-mix(in srgb, var(--titlebar-background-color, #030303) 60%, transparent);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -102,8 +100,6 @@ const windowControlContainerStyle = cacheNoArgs(
     color: #f1f1f1;
     padding: 4px;
     background-color: color-mix(in srgb, var(--titlebar-background-color, #030303) 60%, transparent);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
