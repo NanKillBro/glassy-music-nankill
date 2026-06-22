@@ -351,8 +351,7 @@ async function createMainWindow() {
     icon,
     width: windowSize.width,
     height: windowSize.height,
-    minWidth: 1280,
-    minHeight: 720,
+    ...(config.get('options.disableMinSize') ? {} : { minWidth: 1280, minHeight: 720 }),
     backgroundColor: '#000',
     show: false,
     webPreferences: {

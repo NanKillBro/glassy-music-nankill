@@ -52,6 +52,7 @@ export interface DefaultConfig {
     themes: string[];
     customWindowTitle?: string;
     customFonts: CustomFontsConfig;
+    disableMinSize?: boolean;
   };
   'plugins': Record<string, unknown>;
 }
@@ -92,6 +93,7 @@ export const defaultConfig: DefaultConfig = {
       youtubeUI: { enabled: false, useGoogleFont: false, family: 'Inter', size: 14, sizeUnit: 'px', weight: 400 },
       lyrics: { enabled: false, useGoogleFont: false, family: 'Satoshi', size: 3, sizeUnit: 'rem', weight: 700 },
     },
+    disableMinSize: false,
   },
   'plugins': {},
 };

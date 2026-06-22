@@ -1950,6 +1950,41 @@ export const mainMenuTemplate = async (
               },
             },
             {
+              label: 'Disable Minimum Window Size',
+              type: 'checkbox',
+              checked: config.get('options.disableMinSize'),
+              click(item: MenuItem) {
+                if (item.checked) {
+                  dialog.showMessageBox(win, {
+                    type: 'warning',
+                    title: 'Disable Minimum Window Size',
+                    message: 'Disabling this can make the app freely adjust window size, but making the window size too small can cause layout breaking and may require restarting the app to fix the issue. Only turn this off if you know what you are doing.',
+                    buttons: ['Cancel', 'Turn Off'],
+                    defaultId: 0,
+                    cancelId: 0,
+                  }).then(({ response }) => {
+                    if (response === 1) {
+                      config.setMenuOption('options.disableMinSize', true);
+                      dialog.showMessageBox(win, {
+                        type: 'info',
+                        title: 'Restart Required',
+                        message: 'A restart is required for this setting to apply.',
+                      });
+                    } else {
+                      item.checked = false;
+                    }
+                  });
+                } else {
+                  config.setMenuOption('options.disableMinSize', false);
+                  dialog.showMessageBox(win, {
+                    type: 'info',
+                    title: 'Restart Required',
+                    message: 'A restart is required for this setting to apply.',
+                  });
+                }
+              },
+            },
+            {
               label: t(
                 'main.menu.options.submenu.advanced-options.submenu.restart-on-config-changes',
               ),
