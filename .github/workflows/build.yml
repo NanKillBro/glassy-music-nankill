@@ -82,15 +82,15 @@ jobs:
           name: build-${{ matrix.os }}
           retention-days: 3
           path: |
-            pack/*.exe
-            pack/*.zip
-            pack/*.dmg
-            pack/*.AppImage
-            pack/*.deb
-            pack/*.rpm
-            pack/*.yml
-            pack/*.blockmap
-
+            pack/**/*.exe
+            pack/**/*.zip
+            pack/**/*.dmg
+            pack/**/*.AppImage
+            pack/**/*.deb
+            pack/**/*.rpm
+            pack/**/*.7z
+            pack/**/*.yml
+            pack/**/*.blockmap
 
   release:
     permissions:
