@@ -1,0 +1,30 @@
+{
+   "action": {
+      "default_icon": "/Images/icon16.png",
+      "default_popup": "popup.html"
+   },
+   "author": "Michael Ren",
+   "background": {
+      "service_worker": "background.js"
+   },
+   "content_scripts": [ {
+      "js": [ "content_loader.js" ],
+      "matches": [ "https://www.youtube.com/*", "https://music.youtube.com/*" ]
+   } ],
+   "description": "An extension used to create a detailed rich presence for YouTube videos on Discord.",
+   "icons": {
+      "128": "/Images/icon128.png",
+      "16": "/Images/icon16.png",
+      "48": "/Images/icon48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnAEsUOAR+8RY5cMVi8M/zBwuVRtY9bFY9B9VqXqn9avPV7HOIrmG7y6iLLvfj2X6QVqK+vAl+PMh1zb8duAQbKyLluyFQsO8zFS9xj4dh6M/iGCpXVq8h8AA3CHvN5Ihi1zkHWYA3YOH9gSgXsApGKJCDIoGK3S1BmX9i+H0L29xkOfhMZ+eeKwZEdNCytuJnl5zGNrgsRygrBLFG91lMGjnTr9XiHesM51F8Mnieppa6HolfWBxXkmmPUXzTAd0guNTKZ9i3zbzRkeWM7NSD4VnGMWsRHK2+SihfJ3DPl8X9uxpFlOpyitMvQfl63+k8xawIcG0BhykloKmzeZx3wIDAQAB",
+   "manifest_version": 3,
+   "name": "YouTubeDiscordPresence",
+   "permissions": [ "nativeMessaging", "background", "storage", "tabs" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "1.7.0",
+   "web_accessible_resources": [ {
+      "matches": [ "https://www.youtube.com/*", "https://music.youtube.com/*" ],
+      "resources": [ "content.js", "warning.html" ]
+   } ]
+}

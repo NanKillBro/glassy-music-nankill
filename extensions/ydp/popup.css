@@ -1,0 +1,566 @@
+/*
+Copyright (c) 2022–Present Michael Ren
+Licensing and distribution info can be found at the GitHub repository
+https://github.com/XFG16/YouTubeDiscordPresence
+*/
+
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+html,
+body {
+    width: 404px;
+    height: 600px;
+    background-color: rgb(40, 40, 40);
+    margin: 0px;
+    display: block;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgb(128, 128, 128);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgb(215, 215, 215);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(170, 170, 170);
+}
+
+#ytdpSettingsTitle {
+    width: 100%;
+    height: auto;
+    margin: 1px;
+    margin-bottom: -3.5px;
+}
+
+#clientErrorContainer, #osIncompatibleContainer {
+    background-color: rgb(214, 40, 40);
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: rgb(240, 240, 240);
+    font-size: 16px;
+}
+
+#clientErrorContainer h1, #osIncompatibleContainer h1 {
+    font-size: 19px;
+    padding-bottom: 6px;
+    border-bottom: solid 2px white;
+    margin-bottom: 5px;
+    width: fit-content;
+}
+
+#clientErrorContainer h6, #osIncompatibleContainer h6 {
+    margin-top: 10px;
+    text-align: right;
+    font-size: 12px;
+    font-family: monospace;
+}
+
+#clientErrorContainer a, #osIncompatibleContainer a {
+    display: inline-block;
+    color: rgb(205, 223, 255);
+    transition: color 200ms ease-in-out;
+    font-weight: 500;
+}
+
+#clientErrorContainer a:hover, #osIncompatibleContainer a:hover {
+    color: rgb(90, 225, 255);
+}
+
+#updateMessageContainer {
+    width: 100%;
+    margin-bottom: 5px;
+    background-color: rgb(254, 115, 46);
+}
+
+#updateMessageContainer h1 {
+    padding-top: 15px;
+    padding-left: 20px;
+    padding-bottom: 5px;
+    color: white;
+    font-size: 20px;
+}
+
+#updateMessageContainer p {
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: rgb(240, 240, 240);
+    font-size: 16px;
+}
+
+#updateMessageContainer a {
+    color: rgb(215, 240, 255);
+    transition: color 200ms ease-in-out;
+}
+
+#updateMessageContainer a:hover {
+    color: rgb(90, 225, 255);
+}
+
+#updateMessageContainer h6 {
+    border-top: solid 2px white;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 5px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    color: white;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+#updateMessageContainer .returnBack {
+    color: white;
+    border-color: white;
+    margin-top: 15px;
+    margin-right: 15px;
+}
+
+#updateMessageContainer .returnBack:hover {
+    opacity: 0.7;
+}
+
+#versionWarningContainer {
+    width: 100%;
+    margin-bottom: 5px;
+    background-color: rgb(190, 93, 11);
+}
+
+#versionWarningContainer h1 {
+    padding-top: 15px;
+    padding-left: 20px;
+    padding-bottom: 5px;
+    color: white;
+    font-size: 18px;
+}
+
+#versionWarningContainer p {
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: rgb(240, 240, 240);
+    font-size: 14px;
+}
+
+#versionWarningContainer a {
+    color: rgb(215, 240, 255);
+    transition: color 200ms ease-in-out;
+}
+
+#versionWarningContainer a:hover {
+    color: rgb(90, 225, 255);
+}
+
+#versionWarningContainer h6 {
+    border-top: solid 2px white;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    color: white;
+    font-weight: 400;
+    font-size: 12px;
+}
+
+#versionWarningContainer .returnBack {
+    color: white;
+    border-color: white;
+    margin-top: 15px;
+    margin-right: 20px;
+}
+
+#versionWarningContainer .returnBack:hover {
+    opacity: 0.7;
+}
+
+.pageOutside {
+    margin-top: 4px;
+    width: 100%;
+    height: 436px;
+    display: flex;
+}
+
+.pageBody {
+    align-self: center;
+    width: 92%;
+    height: 92%;
+    margin: 2%;
+    background-color: rgb(50, 50, 50);
+    border-radius: 5px;
+    padding-right: 4%;
+    padding-left: 4%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#exclusionsOutside {
+    display: none;
+}
+
+#inclusionsOutside {
+    display: none;
+}
+
+#editPresenceOutside {
+    display: none;
+}
+
+@keyframes flashOrangeAnim {
+    50% {
+        background-color: rgb(124, 87, 47);
+    }
+}
+
+.flashOrange {
+    animation: flashOrangeAnim 2s ease-in-out 0s infinite;
+}
+
+div {
+    vertical-align: top;
+    border: 0%;
+    margin: 0%;
+}
+
+.settingsCategory {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    margin: 0px;
+    margin-left: 2px;
+    margin-top: 14px;
+    margin-bottom: 4px;
+    color: rgb(128, 128, 128);
+}
+
+.returnBack {
+    float: right;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    margin: 0px;
+    margin-top: 6px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
+    border: 1px;
+    border-style: solid;
+    border-radius: 100%;
+    color: rgb(128, 128, 128);
+}
+
+.returnBack:hover {
+    color: rgb(207, 207, 207);
+    cursor: pointer;
+}
+
+.settingsOption {
+    display: block;
+    text-decoration: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: rgb(210, 210, 210);
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    border-bottom: solid;
+    border-width: 1px;
+    border-color: rgb(111, 111, 111);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    margin: 0px;
+}
+
+.settingsOption a {
+    color: rgb(210, 210, 210);
+    text-decoration: none;
+}
+
+.ieListInput {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgb(210, 210, 210);
+    margin: 3px;
+    padding-top: 10px;
+    padding-bottom: 9px;
+    padding-left: 7px;
+    padding-right: 7px;
+    border-radius: 5px;
+    border-style: none;
+    background-color: rgb(70, 70, 70);
+    width: 270px;
+}
+
+:root {
+    --videoExclusionsInputButtonBackgroundColor: rgb(60, 60, 60);
+    --videoExclusionsInputButtonTextColor: rgb(90, 90, 90);
+    --videoExclusionsInputButtonBackgroundColorHover: rgb(60, 60, 60);
+    --keywordExclusionsInputButtonBackgroundColor: rgb(60, 60, 60);
+    --keywordExclusionsInputButtonTextColor: rgb(90, 90, 90);
+    --keywordExclusionsInputButtonBackgroundColorHover: rgb(60, 60, 60);
+
+    --videoInclusionsInputButtonBackgroundColor: rgb(60, 60, 60);
+    --videoInclusionsInputButtonTextColor: rgb(90, 90, 90);
+    --videoInclusionsInputButtonBackgroundColorHover: rgb(60, 60, 60);
+    --keywordInclusionsInputButtonBackgroundColor: rgb(60, 60, 60);
+    --keywordInclusionsInputButtonTextColor: rgb(90, 90, 90);
+    --keywordInclusionsInputButtonBackgroundColorHover: rgb(60, 60, 60);
+}
+
+.ieInputButton {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 9px;
+    border: solid;
+    border-style: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#videoExclusionInputButton {
+    background-color: var(--videoExclusionsInputButtonBackgroundColor);
+    color: var(--videoExclusionsInputButtonTextColor);
+}
+
+#videoExclusionInputButton:hover {
+    background-color: var(--videoExclusionsInputButtonBackgroundColorHover);
+}
+
+#keywordExclusionInputButton {
+    background-color: var(--keywordExclusionsInputButtonBackgroundColor);
+    color: var(--keywordExclusionsInputButtonTextColor);
+}
+
+#keywordExclusionInputButton:hover {
+    background-color: var(--keywordExclusionsInputButtonBackgroundColorHover);
+}
+
+#videoInclusionInputButton {
+    background-color: var(--videoInclusionsInputButtonBackgroundColor);
+    color: var(--videoInclusionsInputButtonTextColor);
+}
+
+#videoInclusionInputButton:hover {
+    background-color: var(--videoInclusionsInputButtonBackgroundColorHover);
+}
+
+#keywordInclusionInputButton {
+    background-color: var(--keywordInclusionsInputButtonBackgroundColor);
+    color: var(--keywordInclusionsInputButtonTextColor);
+}
+
+#keywordInclusionInputButton:hover {
+    background-color: var(--keywordInclusionsInputButtonBackgroundColorHover);
+}
+
+.separator {
+    margin: 10px;
+}
+
+.ieListBody {
+    /* ie is abbreviation for includeExclude */
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-left: 3px;
+    margin-right: 3px;
+    background-color: rgb(56, 56, 56);
+    border-radius: 5px;
+    padding: 0px;
+    height: 90px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.ieList {
+    color: rgb(210, 210, 210);
+    list-style-type: none;
+    margin-bottom: 8px;
+    padding-top: 0px;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 14px;
+}
+
+li {
+    background-color: rgb(50, 45, 50);
+    border-radius: 3px;
+    padding: 8px;
+    width: 100%;
+    max-width: 300px;
+    overflow-wrap: break-word;
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+div::-webkit-scrollbar {
+    width: 5px;
+}
+
+div::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+div::-webkit-scrollbar-thumb {
+    background: rgb(210, 210, 210);
+    border-radius: 4px;
+}
+
+div::-webkit-scrollbar-thumb:hover {
+    background: rgb(177, 177, 177);
+}
+
+.removeIeButton {
+    position: relative;
+    font-size: 10px;
+    color: rgb(128, 128, 128);
+    margin-left: 1px;
+    margin-top: 4px;
+}
+
+.urlDetails {
+    position: relative;
+    font-size: 10px;
+    color: rgb(170, 170, 170);
+    margin-left: 1px;
+    margin-top: 4px;
+}
+
+.removeIeButton:hover {
+    cursor: pointer;
+    color: red;
+    font-weight: 500;
+}
+
+.switchStatus {
+    float: right;
+    position: relative;
+    margin: 6px;
+    margin-right: 8px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.triangle {
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-left: 10px solid white;
+    border-bottom: 5px solid transparent;
+}
+
+.subpageButton {
+    float: right;
+    position: relative;
+    margin: 6px;
+    margin-right: 8px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.subpageButtonBody:hover {
+    background-color: rgb(40, 40, 40);
+    cursor: pointer;
+}
+
+.switch {
+    float: right;
+    position: relative;
+    vertical-align: middle;
+    width: 45px;
+    height: 22px;
+    margin: 0px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(149, 149, 149);
+    transition: 0.2s;
+    transition: 0.2s;
+}
+
+.slider::before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.2s;
+    transition: 0.2s;
+}
+
+input:checked+.slider {
+    background-color: #2ab045;
+}
+
+input:focus+.slider {
+    box-shadow: 0 0 1px #2ab045;
+}
+
+input:checked+.slider::before {
+    transform: translateX(22px);
+}
+
+.slider.round {
+    border-radius: 22px;
+}
+
+.slider.round::before {
+    border-radius: 50%;
+}
+
+#versionInfo {
+    width: 100%;
+    background-color: rgb(30, 30, 30);
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: rgb(150, 150, 150);
+    border-top: 1px solid rgb(60, 60, 60);
+    box-sizing: border-box;
+    margin-top: 5px;
+}
+
+#versionInfo span {
+    font-weight: 500;
+}
+
+#extensionVersion {
+    color: rgb(120, 180, 255);
+}
+
+#desktopVersion {
+    color: rgb(120, 255, 180);
+}
