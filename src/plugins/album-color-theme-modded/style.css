@@ -11,7 +11,8 @@ yt-page-navigation-progress {
    Đoạn này giúp các icon, thời gian bài hát chuyển sang màu trắng mờ 
    để dễ nhìn trên mọi loại nền --- */
 
-.duration.ytmusic-player-queue-item, .byline.ytmusic-player-queue-item {
+.duration.ytmusic-player-queue-item,
+.byline.ytmusic-player-queue-item {
   color: rgba(255, 255, 255, 0.5) !important;
   --yt-endpoint-color: rgba(255, 255, 255, 0.5) !important;
   --yt-endpoint-hover-color: rgba(255, 255, 255, 0.5) !important;
@@ -34,7 +35,8 @@ ytmusic-player-bar {
   color: rgba(255, 255, 255, 0.5) !important;
 }
 
-.volume-slider.ytmusic-player-bar, .expand-volume-slider.ytmusic-player-bar {
+.volume-slider.ytmusic-player-bar,
+.expand-volume-slider.ytmusic-player-bar {
   --paper-slider-container-color: rgba(255, 255, 255, 0.5) !important;
 }
 
@@ -49,9 +51,15 @@ ytmusic-fullbleed-thumbnail-renderer img {
    Giữ lại đoạn này để thanh tua nhạc có màu gradient đẹp theo bìa album 
    (Nó lấy biến --paper-progress-active-color-1/2 từ index.ts) --- */
 .seekbar-theme #progress-bar.ytmusic-player-bar {
-  --paper-slider-active-color: linear-gradient(to right, var(--paper-progress-active-color-1) 80%, var(--paper-progress-active-color-2) 100%) !important;
+  --paper-slider-active-color: linear-gradient(
+    to right,
+    var(--paper-progress-active-color-1) 80%,
+    var(--paper-progress-active-color-2) 100%
+  ) !important;
   --paper-slider-knob-color: var(--paper-progress-active-color-1) !important;
-  --paper-slider-knob-start-color: var(--paper-progress-active-color-2) !important;
+  --paper-slider-knob-start-color: var(
+    --paper-progress-active-color-2
+  ) !important;
 }
 
 tp-yt-paper-toast {

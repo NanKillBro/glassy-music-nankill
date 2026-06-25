@@ -1,7 +1,6 @@
 import Store from 'electron-store';
 
 import { defaultConfig as defaults } from './defaults';
-
 import { DefaultPresetList, type Preset } from '@/plugins/downloader/types';
 
 import type { SyncedLyricsPluginConfig } from '@/plugins/synced-lyrics/types';
@@ -234,7 +233,7 @@ const migrations = {
     }
 
     // Include custom options
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // oxlint-disable-next-line typescript/no-explicit-any
     const plugins: Record<string, any> = {
       adblocker: {
         enabled: true,
@@ -249,7 +248,7 @@ const migrations = {
     };
 
     for (const enabledPlugin of enabledPlugins) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      // oxlint-disable-next-line typescript/no-unsafe-assignment
       plugins[enabledPlugin] = {
         ...plugins[enabledPlugin],
         enabled: true,
