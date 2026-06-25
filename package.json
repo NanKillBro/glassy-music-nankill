@@ -15,6 +15,8 @@
   },
   "scripts": {
     "postinstall": "pnpm install-electron",
+    "test": "pnpm playwright test",
+    "test:debug": "pnpm cross-env DEBUG=pw:*,-pw:test:protocol playwright test",
     "sync:extensions": "node tooling/sync-extensions.mjs",
     "prebuild": "pnpm sync:extensions",
     "predev": "pnpm sync:extensions",

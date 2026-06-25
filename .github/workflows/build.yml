@@ -91,6 +91,14 @@ jobs:
             pack/**/*.7z
             pack/**/*.yml
             pack/**/*.blockmap
+      - name: Test
+        uses: coactions/setup-xvfb@b6b4fcfb9f5a895edadc3bc76318fae0ac17c8b3
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+        with:
+          run: |
+            pnpm test:debug
+
 
   release:
     permissions:
