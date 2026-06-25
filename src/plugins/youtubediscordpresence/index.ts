@@ -69,29 +69,61 @@ export default createPlugin({
                     #glassy-wrapper {
                       position: fixed;
                       inset: 0;
-                      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-                      background-size: 400% 400%;
-                      animation: glassyGradient 15s ease infinite, glassyAppear 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-                      border-radius: 20px;
-                      border: 1px solid rgba(255, 255, 255, 0.18);
+                      background: radial-gradient(circle at top left, rgba(30, 30, 40, 0.85), rgba(15, 15, 18, 0.95));
+                      backdrop-filter: blur(40px) saturate(180%);
+                      -webkit-backdrop-filter: blur(40px) saturate(180%);
+                      border-radius: 16px;
+                      border: 1px solid rgba(255, 255, 255, 0.12);
                       overflow: hidden;
                       display: flex;
                       flex-direction: column;
-                      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.05);
-                      clip-path: inset(0 round 20px);
+                      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+                      clip-path: inset(0 round 16px);
                       -webkit-app-region: drag;
                       z-index: 999999;
+                      animation: glassyAppear 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
                     }
 
                     #glassy-wrapper.closing {
-                      animation: glassyGradient 15s ease infinite, glassyDisappear 0.4s cubic-bezier(0.32, 0, 0.67, 0) forwards !important;
+                      animation: glassyDisappear 0.4s cubic-bezier(0.32, 0, 0.67, 0) forwards !important;
                       pointer-events: none;
                     }
 
-                    @keyframes glassyGradient {
-                      0% { background-position: 0% 50%; }
-                      50% { background-position: 100% 50%; }
-                      100% { background-position: 0% 50%; }
+                    #glassy-wrapper::before {
+                      content: "";
+                      position: absolute;
+                      top: -15%;
+                      left: -15%;
+                      width: 70%;
+                      height: 70%;
+                      background: radial-gradient(circle, rgba(123, 97, 255, 0.18) 0%, rgba(123, 97, 255, 0) 70%);
+                      z-index: -1;
+                      pointer-events: none;
+                      filter: blur(40px);
+                    }
+
+                    #glassy-wrapper::after {
+                      content: "";
+                      position: absolute;
+                      bottom: -15%;
+                      right: -15%;
+                      width: 70%;
+                      height: 70%;
+                      background: radial-gradient(circle, rgba(0, 242, 254, 0.12) 0%, rgba(0, 242, 254, 0) 70%);
+                      z-index: -1;
+                      pointer-events: none;
+                      filter: blur(40px);
+                    }
+
+                    @keyframes glassyGlowPulse {
+                      0% {
+                        opacity: 0.7;
+                        transform: scale(0.95) translate(0, 0);
+                      }
+                      100% {
+                        opacity: 1;
+                        transform: scale(1.05) translate(5%, 5%);
+                      }
                     }
 
                     @keyframes glassyAppear {
@@ -172,13 +204,11 @@ export default createPlugin({
                       flex: 1;
                       overflow: auto;
                       -webkit-app-region: no-drag;
-                      border-radius: 0 0 20px 20px;
+                      border-radius: 0 0 16px 16px;
                       padding: 1.25rem 2rem 1rem !important;
                       box-sizing: border-box;
-                      background: rgba(30, 31, 34, 0.75);
-                      backdrop-filter: blur(25px) saturate(180%);
-                      -webkit-backdrop-filter: blur(25px) saturate(180%);
-                      border-top: 1px solid rgba(255,255,255,0.05);
+                      background: rgba(20, 20, 25, 0.5);
+                      border-top: 1px solid rgba(255,255,255,0.08);
                     }
                   \`;
                   document.head.appendChild(style);

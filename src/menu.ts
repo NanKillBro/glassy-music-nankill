@@ -785,22 +785,59 @@ const openFontSettingsWindow = (parentWin: BrowserWindow) => {
             overflow: hidden;
             user-select: none;
         }
-
         .window-wrapper {
             position: absolute;
             inset: 0;
-            background: linear-gradient(-45deg, #667eea, #764ba2, #6B8DD6, #8E37D7);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite, windowAppear 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: radial-gradient(circle at top left, rgba(30, 30, 40, 0.85), rgba(15, 15, 18, 0.95));
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
             -webkit-app-region: drag;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
-            clip-path: inset(0 round 20px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            clip-path: inset(0 round 16px);
+            animation: windowAppear 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .window-wrapper::before {
+            content: "";
+            position: absolute;
+            top: -15%;
+            left: -15%;
+            width: 70%;
+            height: 70%;
+            background: radial-gradient(circle, rgba(123, 97, 255, 0.18) 0%, rgba(123, 97, 255, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+            filter: blur(40px);
+        }
+
+        .window-wrapper::after {
+            content: "";
+            position: absolute;
+            bottom: -15%;
+            right: -15%;
+            width: 70%;
+            height: 70%;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.12) 0%, rgba(0, 242, 254, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+            filter: blur(40px);
+        }
+
+        @keyframes glowPulse {
+            0% {
+                opacity: 0.7;
+                transform: scale(0.95) translate(0, 0);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1.05) translate(5%, 5%);
+            }
         }
 
         @keyframes windowAppear {
@@ -814,14 +851,8 @@ const openFontSettingsWindow = (parentWin: BrowserWindow) => {
         }
 
         .window-wrapper.closing {
-            animation: gradientBG 15s ease infinite, windowDisappear 0.4s cubic-bezier(0.32, 0, 0.67, 0) forwards !important;
+            animation: windowDisappear 0.4s cubic-bezier(0.32, 0, 0.67, 0) forwards !important;
             pointer-events: none;
-        }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
 
         .container, .close-btn, button, input, select, label {
@@ -852,18 +883,15 @@ const openFontSettingsWindow = (parentWin: BrowserWindow) => {
         .close-btn svg { width: 14px; height: 14px; fill: #fff; }
 
         .container {
-            width: calc(100% - 50px);
-            height: calc(100% - 50px);
-            background: rgba(20, 20, 20, 0.65);
-            backdrop-filter: blur(25px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-top: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
+            width: 100%;
+            height: 100%;
+            background: rgba(20, 20, 25, 0.5);
             display: flex;
             flex-direction: column;
-            padding: 28px 30px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            padding: 35px 40px;
+            position: relative;
             overflow-y: auto;
+            box-sizing: border-box;
         }
 
         .container::-webkit-scrollbar { width: 5px; }
