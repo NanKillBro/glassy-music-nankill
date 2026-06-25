@@ -555,7 +555,7 @@ if defined HAS_WINGET (
     call :RUN_AND_LOG winget install OpenJS.NodeJS -e --accept-package-agreements --accept-source-agreements
 ) else (
     call :SC "SC-I03" "Downloading NodeJS MSI"
-    call :RUN_AND_LOG powershell -Command "Write-Host 'Downloading NodeJS...'; Invoke-WebRequest -Uri 'https://nodejs.org/dist/v24.14.0/node-v24.14.0-x64.msi' -OutFile '%temp%\nodejs.msi'"
+    call :RUN_AND_LOG powershell -Command "Write-Host 'Downloading NodeJS v26.4.0...'; Invoke-WebRequest -Uri 'https://nodejs.org/dist/v26.4.0/node-v26.4.0-x64.msi' -OutFile '%temp%\nodejs.msi'"
     call :SC "SC-I04" "Running NodeJS MSI installer"
     call :RUN_AND_LOG msiexec /i "%temp%\nodejs.msi" /quiet /norestart
 )
