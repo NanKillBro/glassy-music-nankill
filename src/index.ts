@@ -155,11 +155,11 @@ electronDebug({
   showDevTools: false, // Disable automatic devTools on new window
 });
 
-let icon = 'assets/icon.png';
+let icon = path.join(__dirname, '..', '..', 'assets', 'icon.png');
 if (process.platform === 'win32') {
-  icon = 'assets/generated/icons/win/icon.ico';
+  icon = path.join(__dirname, '..', '..', 'assets', 'generated', 'icons', 'win', 'icon.ico');
 } else if (process.platform === 'darwin') {
-  icon = 'assets/generated/icons/mac/icon.icns';
+  icon = path.join(__dirname, '..', '..', 'assets', 'generated', 'icons', 'mac', 'icon.icns');
 }
 
 function onClosed() {
@@ -655,7 +655,7 @@ app.whenReady().then(async () => {
   // Register appID on windows
   if (is.windows()) {
     const appID =
-      'glassymusic-nankill-mod';
+      'glassy-music-nankill-mod';
     app.setAppUserModelId(appID);
     const appLocation = process.execPath;
     const appData = app.getPath('appData');
