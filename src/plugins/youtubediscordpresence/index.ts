@@ -1,5 +1,7 @@
 import { session, app, BrowserWindow } from 'electron';
 import path from 'path';
+
+import { Platform } from '@/types/plugins';
 import { createPlugin } from '@/utils';
 
 // ID này lấy từ manifest key của ydp
@@ -9,6 +11,7 @@ export default createPlugin({
   name: () => 'Discord Rich Presence (XFG16)',
   description: () => 'An alternative version of the default Discord Rich Presence plugin, made by XFG16. It requires setting up some additional things to work, details at https://github.com/XFG16/YouTubeDiscordPresence.',
   restartNeeded: true,
+  platform: Platform.Windows,
   config: {
     enabled: false,
   },

@@ -5,7 +5,6 @@ import { blockers } from '@/plugins/do-not-track/types';
 import { DefaultPresetList, type Preset } from '@/plugins/downloader/types';
 
 import type { TrackerBlockerConfig } from '@/plugins/do-not-track';
-import type { SyncedLyricsPluginConfig } from '@/plugins/synced-lyrics/types';
 
 export type IStore = InstanceType<
   typeof import('conf').default<Record<string, unknown>>
@@ -32,7 +31,7 @@ const migrations = {
 
     if (lyricGeniusConfig) {
       const syncedLyricsConfig = store.get('plugins.synced-lyrics') as
-        | SyncedLyricsPluginConfig
+        | { enabled: boolean; [key: string]: unknown }
         | undefined;
 
       if (

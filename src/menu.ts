@@ -518,6 +518,28 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
         <div class="scroll-area">
         <div class="log-entry">
             <div class="log-header">
+                <span class="log-version">Version 3.12.9-beta</span>
+                <span class="log-tag">BETA</span>
+            </div>
+            <ul>
+                <li>Upstreamed to commit <code>0c42c82</code></li>
+                <li>Updated Better Lyrics to commit <code>fdd3848</code></li>
+                <li>Updated Better Lyrics Shaders to commit <code>6b80f7f</code></li>
+                <li>Updated MERGE THEME from <span style="color:#00f2fe">v22</span> to <span style="color:#00f2fe">v23</span></li>
+                <li>New option that allows users to customize themes in Better Lyrics Settings</li>
+                <li>New option that allows users to disable the minimum window size</li>
+                <li>New settings UI for some plugins and components</li>
+                <li>New plugin: YouTubeDiscordPresence (XFG16)</li>
+                <li>Replaced the adblocker plugin with do-not-track</li>
+                <li>Fixed the Unison dock</li>
+                <li>Fixed some toasts looking different</li>
+                <li>Fixed the big button for some users with the Comments tab</li>
+                <li>Fixed the source dock overlapping issue</li>
+                <li>Fixed blurry icons (I guess)</li>
+            </ul>
+        </div>
+        <div class="log-entry">
+            <div class="log-header">
                 <span class="log-version">Version 3.12.8-beta</span>
                 <span class="log-tag">BETA</span>
             </div>
