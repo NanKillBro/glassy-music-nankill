@@ -66,14 +66,15 @@ This version includes heavy visual customization. **It is not recommended for ve
 > [!NOTE]
 > ### 🛑 Before you use or contribute:
 > 
-> **Built for me, not for everyone:** 
-> This fork is heavily "opinionated" and built strictly to satisfy my personal
-> visual preferences. I have intentionally stripped out several customization
-> features to force a specific, out-of-the-box experience. My goal is for you
-> to experience the exact visual aesthetic I intended without needing to
-> configure a single thing. If you don't like the hardcoded layout or the
-> specific styling, you are highly encouraged to fork the repo and DIY, as
-> this project is open-source!
+> **Built for me, not for everyone (but customizable!):** 
+> This fork's default experience is heavily "opinionated" and built strictly to satisfy my personal
+> visual preferences. My goal is for you to experience the exact visual aesthetic I intended out-of-the-box
+> without needing to configure a single thing. 
+> 
+> However, I know everyone has different tastes, so **support for custom themes is now available!** You can
+> customize the appearance in the settings if you prefer a different look. And as always, if you don't like
+> the hardcoded layout or want to make deeper changes, you are highly encouraged to fork the repo and DIY,
+> as this project is open-source!
 > 
 > If you want to tweak the UI, feel free to open a PR! Just make sure to
 > include some screenshots or a quick video demo so I can see how it looks.
