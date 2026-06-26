@@ -2,7 +2,36 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+#### [v3.12.9-beta](https://github.com/NanKillBro/glassy-music-nankill/compare/v3.12.8-beta...v3.12.9-beta)
+
+- feat(transparent-player): Added Linux and macOS support [`#4199`](https://github.com/NanKillBro/glassy-music-nankill/pull/4199)
+- feat(api-server): add websocket authorization [`#3854`](https://github.com/NanKillBro/glassy-music-nankill/pull/3854)
+- fix(deps): update dependency youtubei.js to v17.2.0 [`#4503`](https://github.com/NanKillBro/glassy-music-nankill/pull/4503)
+- fixed download Type error [`#4472`](https://github.com/NanKillBro/glassy-music-nankill/pull/4472)
+- chore(deps): update babel monorepo (major) [`#4499`](https://github.com/NanKillBro/glassy-music-nankill/pull/4499)
+- chore(deps): update dependency youtubei.js to v17.1.0 [`#4500`](https://github.com/NanKillBro/glassy-music-nankill/pull/4500)
+- fix(deps): update dependency youtubei.js to v17.1.0 [`#4498`](https://github.com/NanKillBro/glassy-music-nankill/pull/4498)
+- chore(deps): update oxlint monorepo [`#4497`](https://github.com/NanKillBro/glassy-music-nankill/pull/4497)
+- chore(deps): update babel monorepo [`#4487`](https://github.com/NanKillBro/glassy-music-nankill/pull/4487)
+- chore(deps): update dependency @electron/universal to v3.0.4 [`#4488`](https://github.com/NanKillBro/glassy-music-nankill/pull/4488)
+- chore(deps): update dependency electron to v42.5.0 [`#4495`](https://github.com/NanKillBro/glassy-music-nankill/pull/4495)
+- chore(deps): update dependency oxfmt to v0.56.0 [`#4496`](https://github.com/NanKillBro/glassy-music-nankill/pull/4496)
+- chore(deps): update dependency @typescript/native-preview to v7.0.0-dev.20260623.1 [`#4489`](https://github.com/NanKillBro/glassy-music-nankill/pull/4489)
+- chore(deps): update playwright monorepo [`#4492`](https://github.com/NanKillBro/glassy-music-nankill/pull/4492)
+- fix(deps): update dependency hono to v4.12.27 [`#4490`](https://github.com/NanKillBro/glassy-music-nankill/pull/4490)
+- fix(deps): update dependency node-html-parser to v8.0.3 [`#4493`](https://github.com/NanKillBro/glassy-music-nankill/pull/4493)
+- chore(deps): update dependency @xmldom/xmldom@&lt;0.8.12 to v0.8.13 [security] [`#4434`](https://github.com/NanKillBro/glassy-music-nankill/pull/4434)
+- fix(rolldown): fix bundling [`#4462`](https://github.com/NanKillBro/glassy-music-nankill/issues/4462)
+- feat(websocket): handle player state on app quit [`#4381`](https://github.com/NanKillBro/glassy-music-nankill/issues/4381)
+- add a option that allow user to disable minimum window size. Fixes #7 [`#7`](https://github.com/NanKillBro/glassy-music-nankill/issues/7)
+- lmao google doing a/b test. Fixes #8 [`#8`](https://github.com/NanKillBro/glassy-music-nankill/issues/8)
+- feat: migrate from eslint to oxlint [`de90bbc`](https://github.com/NanKillBro/glassy-music-nankill/commit/de90bbc79211ee6de8278e28830976c4884480bb)
+- chore: update dependencies and remove unused code [`220b105`](https://github.com/NanKillBro/glassy-music-nankill/commit/220b10520ed4c094db62242aa7136fb2ff804558)
+- added YouTubeDiscordPresence (XFG16) [`944de14`](https://github.com/NanKillBro/glassy-music-nankill/commit/944de1456513edbab0d2d0baf8a1dcd0d5273368)
+
 #### [v3.12.8-beta](https://github.com/NanKillBro/glassy-music-nankill/compare/v3.12.7-beta.nankill...v3.12.8-beta)
+
+> 28 May 2026
 
 - some build.bat fix [`1dabaa2`](https://github.com/NanKillBro/glassy-music-nankill/commit/1dabaa2c1561416e406467656918dd4b77b853e7)
 - font and size update [`f70af73`](https://github.com/NanKillBro/glassy-music-nankill/commit/f70af732fdd851f9c36bf60ca31f2fdbf072d3ae)
