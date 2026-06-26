@@ -9,6 +9,7 @@ import { cors } from 'hono/cors';
 import { jwt } from 'hono/jwt';
 import { WebSocketServer } from 'ws';
 
+import { API_VERSION } from './api-version';
 import { registerAuth, registerControl, registerWebsocket } from './routes';
 import { JWTPayloadSchema } from './scheme';
 import { APPLICATION_NAME } from '@/i18n';
@@ -90,6 +91,10 @@ export const backend = createBackend<BackendType, APIServerConfig>({
 
     // middlewares
     const jwtGuard: MiddlewareHandler = async (ctx, next) => {
+      if (ctx.req.path.endsWith(`${API_VERSION}/ws`)) {
+        return await next();
+      }
+
       const config = await backendCtx.getConfig();
 
       if (config.authStrategy !== AuthStrategy.NONE) {
@@ -102,6 +107,10 @@ export const backend = createBackend<BackendType, APIServerConfig>({
     };
     this.app.use('/api/*', jwtGuard);
     this.app.use('/api/*', async (ctx, next) => {
+      if (ctx.req.path.endsWith(`${API_VERSION}/ws`)) {
+        return await next();
+      }
+
       const result = await JWTPayloadSchema.spa(await ctx.get('jwtPayload'));
       const config = await backendCtx.getConfig();
 

@@ -8,7 +8,7 @@ import { app, type BrowserWindow, dialog, ipcMain } from 'electron';
 import is from 'electron-is';
 import filenamify from 'filenamify';
 import lazyVar from 'lazy-var';
-import * as NodeID3 from 'node-id3';
+import NodeID3 from 'node-id3';
 import {
   Innertube,
   UniversalCache,
