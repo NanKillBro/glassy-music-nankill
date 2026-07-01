@@ -4,8 +4,6 @@ import { defaultConfig as defaults } from './defaults';
 import { blockers } from '@/plugins/do-not-track/types';
 import { DefaultPresetList, type Preset } from '@/plugins/downloader/types';
 
-import { defaultConfig as defaults } from './defaults';
-
 import type { TrackerBlockerConfig } from '@/plugins/do-not-track';
 
 export type IStore = InstanceType<
