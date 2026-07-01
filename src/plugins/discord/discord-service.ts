@@ -2,6 +2,9 @@ import { Client as DiscordClient } from '@xhayper/discord-rpc';
 import { ActivityType } from 'discord-api-types/v10';
 import is from 'electron-is';
 
+import { t } from '@/i18n';
+import { LoggerPrefix } from '@/utils';
+
 import { clientId, PROGRESS_THROTTLE_MS, TimerKey } from './constants';
 import { TimerManager } from './timer-manager';
 import {
@@ -10,8 +13,6 @@ import {
   sanitizeActivityText,
   isSeek,
 } from './utils';
-import { t } from '@/i18n';
-import { LoggerPrefix } from '@/utils';
 
 import type { DiscordPluginConfig } from './index';
 import type { SongInfo } from '@/providers/song-info';
@@ -135,10 +136,10 @@ export class DiscordService {
       songInfo.songDuration > 0 &&
       typeof songInfo.elapsedSeconds === 'number'
     ) {
-      const songStartTime = Date.now() - songInfo.elapsedSeconds * 1000;
+      const songStartTime = Date.now() - (songInfo.elapsedSeconds * 1000);
       activityInfo.startTimestamp = Math.floor(songStartTime / 1000);
       activityInfo.endTimestamp = Math.floor(
-        (songStartTime + songInfo.songDuration * 1000) / 1000,
+        (songStartTime + (songInfo.songDuration * 1000)) / 1000,
       );
     }
 

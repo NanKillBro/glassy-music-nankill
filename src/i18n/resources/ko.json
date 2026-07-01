@@ -497,6 +497,13 @@
         }
       }
     },
+    "do-not-track": {
+      "description": "트래커를 차단합니다",
+      "menu": {
+        "blocker": "차단기"
+      },
+      "name": "추적 금지"
+    },
     "downloader": {
       "backend": {
         "dialog": {
@@ -936,9 +943,14 @@
           "label": "종류",
           "submenu": {
             "acrylic": "아크릴",
+            "content": "컨텐츠",
+            "fullscreen-ui": "전체화면 UI",
             "mica": "미카",
             "none": "없음",
-            "tabbed": "탭"
+            "tabbed": "탭",
+            "under-page": "페이지 밑",
+            "under-window": "창 밑",
+            "window": "창"
           }
         }
       },

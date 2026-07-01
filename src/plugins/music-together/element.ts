@@ -1,6 +1,7 @@
+import { ElementFromHtml } from '@/plugins/utils/renderer';
+
 import itemHTML from './templates/item.html?raw';
 import popupHTML from './templates/popup.html?raw';
-import { ElementFromHtml } from '@/plugins/utils/renderer';
 
 type Placement =
   | 'top'

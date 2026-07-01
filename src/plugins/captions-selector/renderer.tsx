@@ -1,9 +1,10 @@
 import { createSignal, Show } from 'solid-js';
 import { render } from 'solid-js/web';
 
-import { CaptionsSettingButton } from './templates/captions-settings-template';
 import { t } from '@/i18n';
 import { createRenderer } from '@/utils';
+
+import { CaptionsSettingButton } from './templates/captions-settings-template';
 
 import type { MusicPlayer } from '@/types/music-player';
 import type { AppElement } from '@/types/queue';

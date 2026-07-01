@@ -1,14 +1,15 @@
 import { createSignal, Show } from 'solid-js';
 import { render } from 'solid-js/web';
 
-import buttonSwitcherStyle from './button-switcher.css?inline';
-import forceHideStyle from './force-hide.css?inline';
-import { VideoSwitchButton } from './templates/video-switch-button';
 import { t } from '@/i18n';
 import { type MenuTemplate } from '@/menu';
 import { moveVolumeHud as preciseVolumeMoveVolumeHud } from '@/plugins/precise-volume/renderer';
 import { type ThumbnailElement } from '@/types/get-player-response';
 import { createPlugin } from '@/utils';
+
+import buttonSwitcherStyle from './button-switcher.css?inline';
+import forceHideStyle from './force-hide.css?inline';
+import { VideoSwitchButton } from './templates/video-switch-button';
 
 export type VideoTogglePluginConfig = {
   enabled: boolean;

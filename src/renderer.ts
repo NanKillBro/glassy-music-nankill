@@ -3,6 +3,12 @@ import { setTheme } from 'mdui/functions/setTheme.js';
 import 'mdui/mdui.css';
 import 'mdui';
 
+import { loadI18n, setLanguage, t as i18t } from '@/i18n';
+import {
+  defaultTrustedTypePolicy,
+  registerWindowDefaultTrustedTypePolicy,
+} from '@/utils/trusted-types';
+
 import {
   createContext,
   forceLoadRendererPlugin,
@@ -13,11 +19,6 @@ import {
 } from './loader/renderer';
 import { startingPages } from './providers/extracted-data';
 import { setupSongInfo } from './providers/song-info-front';
-import { loadI18n, setLanguage, t as i18t } from '@/i18n';
-import {
-  defaultTrustedTypePolicy,
-  registerWindowDefaultTrustedTypePolicy,
-} from '@/utils/trusted-types';
 
 import type { MusicPlayer } from '@/types/music-player';
 import type { MusicPlayerAppElement } from '@/types/music-player-app-element';

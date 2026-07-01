@@ -1,8 +1,9 @@
 import is from 'electron-is';
 
-import { sortSegments } from './segments';
 import { t } from '@/i18n';
 import { createPlugin } from '@/utils';
+
+import { sortSegments } from './segments';
 
 import type { Segment, SkipSegment } from './types';
 import type { GetPlayerResponse } from '@/types/get-player-response';

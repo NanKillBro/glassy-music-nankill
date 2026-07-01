@@ -1,7 +1,6 @@
 import { createSignal } from 'solid-js';
 import { render } from 'solid-js/web';
 
-import { DownloadButton } from './templates/download';
 import { defaultConfig } from '@/config/defaults';
 import { t } from '@/i18n';
 import {
@@ -10,6 +9,8 @@ import {
 } from '@/plugins/utils/renderer/check';
 import { getSongMenu } from '@/providers/dom-elements';
 import { getSongInfo } from '@/providers/song-info-front';
+
+import { DownloadButton } from './templates/download';
 
 import type { DownloaderPluginConfig } from './index';
 import type { RendererContext } from '@/types/contexts';

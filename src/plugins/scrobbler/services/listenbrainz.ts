@@ -1,7 +1,8 @@
 import { net } from 'electron';
 
-import { ScrobblerBase } from './base';
 import { APPLICATION_NAME } from '@/i18n';
+
+import { ScrobblerBase } from './base';
 
 import type { ScrobblerPluginConfig } from '../index';
 import type { SetConfType } from '../main';

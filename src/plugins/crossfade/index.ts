@@ -2,11 +2,12 @@ import prompt from 'custom-electron-prompt';
 import { Howl } from 'howler';
 import { Innertube } from '\u0079\u006f\u0075\u0074\u0075\u0062\u0065i.js';
 
-import { VolumeFader } from './fader';
 import { t } from '@/i18n';
 import { getNetFetchAsFetch } from '@/plugins/utils/main';
 import promptOptions from '@/providers/prompt-options';
 import { createPlugin } from '@/utils';
+
+import { VolumeFader } from './fader';
 
 import type { RendererContext } from '@/types/contexts';
 import type { BrowserWindow } from 'electron';

@@ -1,6 +1,3 @@
-// Local oxlint JS plugin providing the `camelcase` core rule, which oxlint does
-// not implement natively. Loaded via `jsPlugins` in .oxlintrc.json.
-
 const isUnderscored = (name) => {
   const stripped = name.replace(/^_+|_+$/g, '');
   if (!stripped.includes('_')) return false;

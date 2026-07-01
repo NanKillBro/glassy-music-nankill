@@ -2,8 +2,9 @@ import { type BrowserWindow, globalShortcut } from 'electron';
 import is from 'electron-is';
 import { register as registerElectronLocalShortcut } from 'electron-localshortcut';
 
-import { registerMPRIS } from './mpris';
 import { getSongControls } from '@/providers/song-controls';
+
+import { registerMPRIS } from './mpris';
 
 import type { ShortcutMappingType, ShortcutsPluginConfig } from './index';
 import type { BackendContext } from '@/types/contexts';

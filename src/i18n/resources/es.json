@@ -497,6 +497,13 @@
         }
       }
     },
+    "do-not-track": {
+      "description": "Bloquea todo el rastreo de forma predeterminada",
+      "menu": {
+        "blocker": "Bloqueador"
+      },
+      "name": "No rastrear"
+    },
     "downloader": {
       "backend": {
         "dialog": {
@@ -936,9 +943,14 @@
           "label": "Tipo",
           "submenu": {
             "acrylic": "Acrílico",
+            "content": "Contenido",
+            "fullscreen-ui": "Interfaz en pantalla completa",
             "mica": "Mica",
             "none": "Ninguno",
-            "tabbed": "Con pestañas"
+            "tabbed": "Con pestañas",
+            "under-page": "Pié de pagina",
+            "under-window": "Debajo de ventana",
+            "window": "Ventana"
           }
         }
       },

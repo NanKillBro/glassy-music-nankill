@@ -5,6 +5,10 @@ const ignored = {
   types: ['mousewheel', 'keydown', 'keyup'],
 } as const;
 
+type CustomElementPrototype = typeof Element.prototype & {
+  _addEventListener?: typeof Element.prototype.addEventListener;
+};
+
 function overrideAddEventListener() {
   // YO WHAT ARE YOU DOING NOW?!?!
   // Save native addEventListener
@@ -18,8 +22,7 @@ function overrideAddEventListener() {
     useCapture = false,
   ) {
     if (!(ignored.id.includes(this.id) && ignored.types.includes(type))) {
-      // oxlint-disable-next-line typescript/no-explicit-any,typescript/no-unsafe-call,typescript/no-unsafe-member-access
-      (this as any)._addEventListener(type, listener, useCapture);
+      (this as CustomElementPrototype)._addEventListener!(type, listener, useCapture);
     } else if (window.electronIs.dev()) {
       console.log(`Ignoring event: "${this.id}.${type}()"`);
     }
@@ -32,12 +35,10 @@ export const overrideListener = () => {
   window.addEventListener(
     'load',
     () => {
-      /* oxlint-disable typescript/no-unsafe-assignment,typescript/no-explicit-any,typescript/no-unsafe-member-access */
       Element.prototype.addEventListener = (
-        Element.prototype as any
-      )._addEventListener;
-      (Element.prototype as any)._addEventListener = undefined;
-      /* eslint-enable @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-member-access */
+        Element.prototype as CustomElementPrototype
+      )._addEventListener!;
+      (Element.prototype as CustomElementPrototype)._addEventListener = undefined;
     },
     { once: true },
   );

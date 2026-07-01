@@ -1,8 +1,9 @@
 import { Show } from 'solid-js';
 import { css } from 'solid-styled-components';
 
-import { IconButton } from './IconButton';
 import { cacheNoArgs } from '@/providers/decorators';
+
+import { IconButton } from './IconButton';
 
 const containerStyle = cacheNoArgs(
   () => css`

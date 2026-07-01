@@ -1,11 +1,12 @@
 import prompt from 'custom-electron-prompt';
 import { StatusDisplayType } from 'discord-api-types/v10';
 
-import { discordService } from './main';
 import { setMenuOptions } from '@/config/plugins';
 import { APPLICATION_NAME, t } from '@/i18n';
 import { singleton } from '@/providers/decorators';
 import promptOptions from '@/providers/prompt-options';
+
+import { discordService } from './main';
 
 import type { DiscordPluginConfig } from './index';
 import type { MenuTemplate } from '@/menu';

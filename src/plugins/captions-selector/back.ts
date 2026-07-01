@@ -28,6 +28,6 @@ export default createBackend({
     );
   },
   stop({ ipc: { removeHandler } }) {
-    removeHandler('captionsSelector');
+    removeHandler('peard:captions-selector');
   },
 });

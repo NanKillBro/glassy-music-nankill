@@ -4,7 +4,6 @@ import playIcon from '@assets/media-icons-black/play.png?asset&asarUnpack';
 import previousIcon from '@assets/media-icons-black/previous.png?asset&asarUnpack';
 import { app, type BrowserWindow, Notification } from 'electron';
 
-import { notificationImage, secondsToMinutes, ToastStyles } from './utils';
 import {
   APP_PROTOCOL,
   changeProtocolHandler,
@@ -17,6 +16,8 @@ import {
 } from '@/providers/song-info';
 import { setTrayOnClick, setTrayOnDoubleClick } from '@/tray';
 import { mediaIcons } from '@/types/media-icons';
+
+import { notificationImage, secondsToMinutes, ToastStyles } from './utils';
 
 import type { NotificationsPluginConfig } from './index';
 import type { BackendContext } from '@/types/contexts';

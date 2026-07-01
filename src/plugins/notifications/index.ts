@@ -1,7 +1,8 @@
-import { onConfigChange, onMainLoad } from './main';
-import { onMenu } from './menu';
 import { t } from '@/i18n';
 import { createPlugin } from '@/utils';
+
+import { onConfigChange, onMainLoad } from './main';
+import { onMenu } from './menu';
 
 export interface NotificationsPluginConfig {
   enabled: boolean;

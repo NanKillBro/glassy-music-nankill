@@ -5,7 +5,6 @@ import MprisPlayer, {
   type Position,
   type Track,
 } from '@jellybrick/mpris-service';
-import * as MprisMeta from '@jellybrick/mpris-service';
 import { type BrowserWindow, ipcMain } from 'electron';
 
 import * as config from '@/config';
@@ -26,12 +25,11 @@ class YTPlayer extends MprisPlayer {
    * @type {number} The current position in microseconds
    * @private
    */
-  private currentPosition: number;
+  private currentPosition: number = 0;
+  canUsePlayerControls: boolean = false;
 
   constructor(opts: PlayerOptions) {
     super(opts);
-
-    this.currentPosition = 0;
   }
 
   setPosition(t: number) {
@@ -47,15 +45,15 @@ class YTPlayer extends MprisPlayer {
   }
 
   isPlaying(): boolean {
-    return this.playbackStatus === MprisMeta.PLAYBACK_STATUS_PLAYING;
+    return this.playbackStatus === MprisPlayer.PLAYBACK_STATUS_PLAYING;
   }
 
   isPaused(): boolean {
-    return this.playbackStatus === MprisMeta.PLAYBACK_STATUS_PAUSED;
+    return this.playbackStatus === MprisPlayer.PLAYBACK_STATUS_PAUSED;
   }
 
   isStopped(): boolean {
-    return this.playbackStatus === MprisMeta.PLAYBACK_STATUS_STOPPED;
+    return this.playbackStatus === MprisPlayer.PLAYBACK_STATUS_STOPPED;
   }
 
   setPlaybackStatus(status: PlayBackStatus) {
@@ -140,15 +138,15 @@ export function registerMPRIS(win: BrowserWindow) {
     ipcMain.on('peard:repeat-changed', (_, mode: RepeatMode) => {
       switch (mode) {
         case 'NONE': {
-          player.setLoopStatus(MprisMeta.LOOP_STATUS_NONE);
+          player.setLoopStatus(MprisPlayer.LOOP_STATUS_NONE);
           break;
         }
         case 'ONE': {
-          player.setLoopStatus(MprisMeta.LOOP_STATUS_TRACK);
+          player.setLoopStatus(MprisPlayer.LOOP_STATUS_TRACK);
           break;
         }
         case 'ALL': {
-          player.setLoopStatus(MprisMeta.LOOP_STATUS_PLAYLIST);
+          player.setLoopStatus(MprisPlayer.LOOP_STATUS_PLAYLIST);
           // No default
           break;
         }
@@ -211,7 +209,7 @@ export function registerMPRIS(win: BrowserWindow) {
       let hasNext: boolean;
       if (queue.autoPlaying) {
         hasNext = true;
-      } else if (player.loopStatus === MprisMeta.LOOP_STATUS_PLAYLIST) {
+      } else if (player.loopStatus === MprisPlayer.LOOP_STATUS_PLAYLIST) {
         hasNext = true;
       } else {
         // Example: currentPosition = 0, queue.items.length = 29 -> hasNext = true
@@ -224,9 +222,9 @@ export function registerMPRIS(win: BrowserWindow) {
     player.on('loopStatus', (status: LoopStatus) => {
       // SwitchRepeat cycles between states in that order
       const switches = [
-        MprisMeta.LOOP_STATUS_NONE,
-        MprisMeta.LOOP_STATUS_PLAYLIST,
-        MprisMeta.LOOP_STATUS_TRACK,
+        MprisPlayer.LOOP_STATUS_NONE,
+        MprisPlayer.LOOP_STATUS_PLAYLIST,
+        MprisPlayer.LOOP_STATUS_TRACK,
       ];
       const currentIndex = switches.indexOf(player.loopStatus);
       const targetIndex = switches.indexOf(status);
@@ -251,21 +249,21 @@ export function registerMPRIS(win: BrowserWindow) {
 
     player.on('play', () => {
       if (!player.isPlaying()) {
-        player.setPlaybackStatus(MprisMeta.PLAYBACK_STATUS_PLAYING);
+        player.setPlaybackStatus(MprisPlayer.PLAYBACK_STATUS_PLAYING);
         playPause();
       }
     });
     player.on('pause', () => {
       if (!player.isPaused()) {
-        player.setPlaybackStatus(MprisMeta.PLAYBACK_STATUS_PAUSED);
+        player.setPlaybackStatus(MprisPlayer.PLAYBACK_STATUS_PAUSED);
         playPause();
       }
     });
     player.on('playpause', () => {
       player.setPlaybackStatus(
         player.isPlaying()
-          ? MprisMeta.PLAYBACK_STATUS_PAUSED
-          : MprisMeta.PLAYBACK_STATUS_PLAYING,
+          ? MprisPlayer.PLAYBACK_STATUS_PAUSED
+          : MprisPlayer.PLAYBACK_STATUS_PLAYING,
       );
       playPause();
     });
@@ -352,8 +350,8 @@ export function registerMPRIS(win: BrowserWindow) {
 
         player.setPlaybackStatus(
           songInfo.isPaused
-            ? MprisMeta.PLAYBACK_STATUS_PAUSED
-            : MprisMeta.PLAYBACK_STATUS_PLAYING,
+            ? MprisPlayer.PLAYBACK_STATUS_PAUSED
+            : MprisPlayer.PLAYBACK_STATUS_PLAYING,
         );
       }
       requestQueueInformation();

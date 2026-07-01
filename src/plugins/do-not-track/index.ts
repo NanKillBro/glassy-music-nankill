@@ -1,4 +1,7 @@
-import { contextBridge, webFrame } from 'electron';
+import { contextBridge, webFrame, type BrowserWindow } from 'electron';
+
+import { t } from '@/i18n';
+import { createPlugin } from '@/utils';
 
 import {
   isBlockerEnabled,
@@ -8,10 +11,6 @@ import {
 import { inject, isInjected } from './injectors/inject';
 import injectCliqzPreload from './injectors/inject-cliqz-preload';
 import { blockers } from './types';
-import { t } from '@/i18n';
-import { createPlugin } from '@/utils';
-
-import type { BrowserWindow } from 'electron';
 
 export interface TrackerBlockerConfig {
   /**

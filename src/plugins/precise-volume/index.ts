@@ -1,12 +1,13 @@
 import prompt, { type KeybindOptions } from 'custom-electron-prompt';
 import { globalShortcut, type MenuItem } from 'electron';
 
-import { overrideListener } from './override';
-import { onConfigChange, onPlayerApiReady } from './renderer';
-import hudStyle from './volume-hud.css?inline';
 import { t } from '@/i18n';
 import promptOptions from '@/providers/prompt-options';
 import { createPlugin } from '@/utils';
+
+import { overrideListener } from './override';
+import { onConfigChange, onPlayerApiReady } from './renderer';
+import hudStyle from './volume-hud.css?inline';
 
 export type PreciseVolumePluginConfig = {
   enabled: boolean;

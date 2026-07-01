@@ -1,8 +1,9 @@
+import { t } from '@/i18n';
+import { createPlugin } from '@/utils';
+
 import { backend } from './backend';
 import { defaultAPIServerConfig } from './config';
 import { onMenu } from './menu';
-import { t } from '@/i18n';
-import { createPlugin } from '@/utils';
 
 export default createPlugin({
   name: () => t('plugins.api-server.name'),

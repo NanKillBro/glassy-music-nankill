@@ -6,8 +6,9 @@ import { Portal } from 'solid-js/web';
 import { css } from 'solid-styled-components';
 import { Transition } from 'solid-transition-group';
 
-import { Panel } from './Panel';
 import { cacheNoArgs } from '@/providers/decorators';
+
+import { Panel } from './Panel';
 
 const itemStyle = cacheNoArgs(
   () => css`

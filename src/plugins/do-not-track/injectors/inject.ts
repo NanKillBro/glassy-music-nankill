@@ -172,10 +172,12 @@ export const inject = (contextBridge: ContextBridge): void => {
         }
 
         if (odesc.get instanceof Function) {
+          // oxlint-disable-next-line typescript/unbound-method
           previousGetter = odesc.get;
         }
 
         if (odesc.set instanceof Function) {
+          // oxlint-disable-next-line typescript/unbound-method
           previousSetter = odesc.set;
         }
       }

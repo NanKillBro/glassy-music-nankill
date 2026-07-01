@@ -20,12 +20,6 @@ import {
   type Types,
 } from '\u0079\u006f\u0075\u0074\u0075\u0062\u0065i.js';
 
-import {
-  cropMaxWidth,
-  getFolder,
-  sendFeedback as sendFeedback_,
-  setBadge,
-} from './utils';
 import { t } from '@/i18n';
 import { getNetFetchAsFetch } from '@/plugins/utils/main';
 import {
@@ -36,6 +30,13 @@ import {
   type SongInfo,
   SongInfoEvent,
 } from '@/providers/song-info';
+
+import {
+  cropMaxWidth,
+  getFolder,
+  sendFeedback as sendFeedback_,
+  setBadge,
+} from './utils';
 
 import { DefaultPresetList, type Preset, VideoFormatList } from '../types';
 
@@ -229,8 +230,8 @@ export const onConfigChange = (newConfig: DownloaderPluginConfig) => {
 
 export async function downloadSong(
   url: string,
-  playlistFolder: string | undefined = undefined,
-  trackId: string | undefined = undefined,
+  playlistFolder?: string ,
+  trackId?: string ,
   increasePlaylistProgress: (value: number) => void = () => {},
 ) {
   let resolvedName;
@@ -250,8 +251,8 @@ export async function downloadSong(
 
 export async function downloadSongFromId(
   id: string,
-  playlistFolder: string | undefined = undefined,
-  trackId: string | undefined = undefined,
+  playlistFolder?: string ,
+  trackId?: string ,
   increasePlaylistProgress: (value: number) => void = () => {},
 ) {
   let resolvedName;
@@ -328,8 +329,8 @@ async function downloadSongUnsafe(
   isId: boolean,
   idOrUrl: string,
   setName: (name: string) => void,
-  playlistFolder: string | undefined = undefined,
-  trackId: string | undefined = undefined,
+  playlistFolder?: string ,
+  trackId?: string ,
   increasePlaylistProgress: (value: number) => void = () => {},
 ) {
   const sendFeedback = (message: unknown, progress?: number) => {
@@ -377,7 +378,7 @@ async function downloadSongUnsafe(
   setName(name);
 
   let playabilityStatus = info.playability_status;
-  let bypassedResult = null;
+  let bypassedResult: YT.VideoInfo;
   if (playabilityStatus?.status === 'LOGIN_REQUIRED') {
     // Try to bypass the age restriction
     bypassedResult = await getAndroidTvInfo(id);
@@ -555,7 +556,7 @@ async function iterableStreamToProcessedUint8Array(
           }),
           ratio,
         );
-        increasePlaylistProgress(0.15 + ratio * 0.85);
+        increasePlaylistProgress(0.15 + (ratio * 0.85));
       });
 
       const safeVideoNameWithExtension = `${safeVideoName}.${extension}`;
@@ -779,7 +780,7 @@ export async function downloadPlaylist(givenUrl?: string | URL) {
 
   const increaseProgress = (itemPercentage: number) => {
     const currentProgress = (counter - 1) / (items.length ?? 1);
-    const newProgress = currentProgress + progressStep * itemPercentage;
+    const newProgress = currentProgress + (progressStep * itemPercentage);
     win.setProgressBar(newProgress);
   };
 
@@ -849,7 +850,9 @@ const getPlaylistID = (aURL?: URL): string | null | undefined => {
 };
 
 const getVideoId = (url: URL | string): string | null => {
-  return new URL(url).searchParams.get('v');
+  const parsedUrl = URL.parse(url);
+  if (!parsedUrl) return null;
+  return parsedUrl.searchParams.get('v');
 };
 
 const getMetadata = (info: YTMusic.TrackInfo): CustomSongInfo => ({

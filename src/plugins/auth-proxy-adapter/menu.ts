@@ -1,8 +1,9 @@
 import prompt from 'custom-electron-prompt';
 
-import { type AuthProxyConfig, defaultAuthProxyConfig } from './config';
 import { t } from '@/i18n';
 import promptOptions from '@/providers/prompt-options';
+
+import { type AuthProxyConfig, defaultAuthProxyConfig } from './config';
 
 import type { MenuTemplate } from '@/menu';
 import type { MenuContext } from '@/types/contexts';

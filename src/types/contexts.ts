@@ -31,10 +31,11 @@ export interface MenuContext<
   refresh: () => Promise<void> | void;
 }
 
-// oxlint-disable-next-line typescript/no-empty-object-type
+/* oxlint-disable typescript/no-empty-object-type */
 export interface PreloadContext<
   Config extends PluginConfig,
 > extends BaseContext<Config> {}
+/* oxlint-enable typescript/no-empty-object-type */
 
 export interface RendererContext<
   Config extends PluginConfig,

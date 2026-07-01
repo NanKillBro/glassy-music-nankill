@@ -1,11 +1,12 @@
+import { t } from '@/i18n';
+import { createPlugin } from '@/utils';
+
 import {
   defaultPresets,
   presetConfigs,
   type Preset,
   type FilterConfig,
 } from './presets';
-import { t } from '@/i18n';
-import { createPlugin } from '@/utils';
 
 import type { MenuTemplate } from '@/menu';
 import type { MenuContext } from '@/types/contexts';

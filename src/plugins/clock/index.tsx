@@ -1,11 +1,12 @@
 import { createSignal, onMount } from 'solid-js';
 import { render } from 'solid-js/web';
 
-import style from './style.css?inline';
-import { type ClockPluginConfig } from './types';
 import { t } from '@/i18n';
 import { type MenuTemplate } from '@/menu';
 import { createPlugin } from '@/utils';
+
+import style from './style.css?inline';
+import { type ClockPluginConfig } from './types';
 
 const defaultConfig: ClockPluginConfig = {
   enabled: false,

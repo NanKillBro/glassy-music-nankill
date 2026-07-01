@@ -39,6 +39,7 @@ nsisWeb:
 linux:
   icon: assets/generated/icons/png
   category: AudioVideo
+  syncDesktopName: true
   desktop:
     entry:
       StartupWMClass: "nankill.xyz.glassymusic.mod"

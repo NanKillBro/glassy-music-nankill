@@ -1,7 +1,8 @@
-import { createStatus } from './status';
 import { t } from '@/i18n';
 import { Popup } from '@/plugins/music-together/element';
 import { ElementFromHtml } from '@/plugins/utils/renderer';
+
+import { createStatus } from './status';
 
 import IconConnect from '../icons/connect.svg?raw';
 import IconMusicCast from '../icons/music-cast.svg?raw';

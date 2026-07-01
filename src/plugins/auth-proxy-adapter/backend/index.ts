@@ -15,7 +15,8 @@ import type { BackendContext } from '@/types/contexts';
 const parseSocksUrl = (socksUrl: string) => {
   // Format: socks5://username:password@your_server_ip:port
 
-  const url = new URL(socksUrl);
+  const url = URL.parse(socksUrl);
+  if (!url) return null;
   return {
     host: url.hostname,
     port: parseInt(url.port, 10),

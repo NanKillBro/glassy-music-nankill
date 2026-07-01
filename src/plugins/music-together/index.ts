@@ -1,5 +1,10 @@
 import prompt from 'custom-electron-prompt';
 
+import { t } from '@/i18n';
+import promptOptions from '@/providers/prompt-options';
+import { createPlugin } from '@/utils';
+import { waitForElement } from '@/utils/wait-for-element';
+
 import { Connection, type ConnectionEventUnion } from './connection';
 import { Queue } from './queue';
 import style from './style.css?inline';
@@ -13,10 +18,6 @@ import {
 import { createGuestPopup } from './ui/guest';
 import { createHostPopup } from './ui/host';
 import { createSettingPopup } from './ui/setting';
-import { t } from '@/i18n';
-import promptOptions from '@/providers/prompt-options';
-import { createPlugin } from '@/utils';
-import { waitForElement } from '@/utils/wait-for-element';
 
 import type { RendererContext } from '@/types/contexts';
 import type { MusicPlayer } from '@/types/music-player';

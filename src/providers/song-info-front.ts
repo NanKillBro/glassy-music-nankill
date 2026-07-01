@@ -1,5 +1,6 @@
-import { singleton } from './decorators';
 import { LikeType, type GetState } from '@/types/datahost-get-state';
+
+import { singleton } from './decorators';
 
 import type { SongInfo } from './song-info';
 import type { MusicPlayer } from '@/types/music-player';

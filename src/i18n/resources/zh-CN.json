@@ -497,6 +497,13 @@
         }
       }
     },
+    "do-not-track": {
+      "description": "默认拦截所有跟踪",
+      "menu": {
+        "blocker": "拦截器"
+      },
+      "name": "Do Not Track"
+    },
     "downloader": {
       "backend": {
         "dialog": {
@@ -936,9 +943,14 @@
           "label": "类型",
           "submenu": {
             "acrylic": "亚克力",
+            "content": "内容",
+            "fullscreen-ui": "全屏用户界面",
             "mica": "云母",
             "none": "无",
-            "tabbed": "标签"
+            "tabbed": "标签",
+            "under-page": "页面下",
+            "under-window": "窗口下",
+            "window": "窗口"
           }
         }
       },
