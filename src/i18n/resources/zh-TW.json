@@ -497,6 +497,13 @@
         }
       }
     },
+    "do-not-track": {
+      "description": "啟動時阻擋所有追蹤",
+      "menu": {
+        "blocker": "內容阻擋器"
+      },
+      "name": "請勿追蹤"
+    },
     "downloader": {
       "backend": {
         "dialog": {
@@ -936,9 +943,14 @@
           "label": "樣式",
           "submenu": {
             "acrylic": "壓克力(Acrylic)",
+            "content": "內容",
+            "fullscreen-ui": "全螢幕界面",
             "mica": "雲母(Mica)",
             "none": "無",
-            "tabbed": "分頁式(Tabbed)"
+            "tabbed": "分頁式(Tabbed)",
+            "under-page": "在頁面底下",
+            "under-window": "在視窗底下",
+            "window": "視窗"
           }
         }
       },
