@@ -2,7 +2,19 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+#### [v3.12.10-beta](https://github.com/NanKillBro/glassy-music-nankill/compare/v3.12.9-beta...v3.12.10-beta)
+
+- fix(deps): update dependency pinyin-pro to v3.28.1 [`#4504`](https://github.com/NanKillBro/glassy-music-nankill/pull/4504)
+- Remove compact sidebar plugin [`#4123`](https://github.com/NanKillBro/glassy-music-nankill/pull/4123)
+- fix: enhance connection error handling and reconnection logic [`#3688`](https://github.com/NanKillBro/glassy-music-nankill/issues/3688)
+- fix: update WM_CLASS for improved compatibility [`#2647`](https://github.com/NanKillBro/glassy-music-nankill/issues/2647) [`#3312`](https://github.com/NanKillBro/glassy-music-nankill/issues/3312) [`#3725`](https://github.com/NanKillBro/glassy-music-nankill/issues/3725) [`#4439`](https://github.com/NanKillBro/glassy-music-nankill/issues/4439)
+- fix(mpris): bump mpris-service version to 2.2.0 [`1fea879`](https://github.com/NanKillBro/glassy-music-nankill/commit/1fea879566db60b892011828838646aab0703ea9)
+- Update changelog for 3.12.0 [`0bf89fc`](https://github.com/NanKillBro/glassy-music-nankill/commit/0bf89fc58f50e7612d867b5a63985fe9c14cece7)
+- fix: update oxlint config [`5ddba08`](https://github.com/NanKillBro/glassy-music-nankill/commit/5ddba083ca85ee395b8180fa536ae7ec7b15fb1f)
+
 #### [v3.12.9-beta](https://github.com/NanKillBro/glassy-music-nankill/compare/v3.12.8-beta...v3.12.9-beta)
+
+> 26 June 2026
 
 - feat(transparent-player): Added Linux and macOS support [`#4199`](https://github.com/NanKillBro/glassy-music-nankill/pull/4199)
 - feat(api-server): add websocket authorization [`#3854`](https://github.com/NanKillBro/glassy-music-nankill/pull/3854)
