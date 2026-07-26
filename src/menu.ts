@@ -519,6 +519,20 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
         <div class="scroll-area">
         <div class="log-entry">
             <div class="log-header">
+                <span class="log-version">Version 3.12.10-beta</span>
+                <span class="log-tag">BETA</span>
+            </div>
+            <ul>
+                <li>Upstreamed to commit <code>1a84f1d</code></li>
+                <li>Updated Better Lyrics to commit <code>8ec28ef</code></li>
+                <li>Updated MERGE THEME from <span style="color:#00f2fe">v23</span> to <span style="color:#00f2fe">v24</span></li>
+                <li>Added new fullscreen UI</li>
+                <li>Added new Better Lyrics dock</li>
+                <li>Fixed issue where the artwork frame was stretched</li>
+            </ul>
+        </div>
+        <div class="log-entry">
+            <div class="log-header">
                 <span class="log-version">Version 3.12.9-beta</span>
                 <span class="log-tag">BETA</span>
             </div>
