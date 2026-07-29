@@ -4,3 +4,7 @@
 [submodule "extensions-src/shaders-glassy"]
 	path = extensions-src/shaders-glassy
 	url = https://github.com/NanKillBro/shaders-glassy
+[submodule "extensions-src/better-lyrics-glassy-dev"]
+	path = extensions-src/better-lyrics-glassy-dev
+	url = https://github.com/NanKillBro/better-lyrics-glassy
+	branch = dev

@@ -15,6 +15,12 @@ const extensionJobs = [
     targetDir: join(repoRoot, 'extensions', 'bl'),
   },
   {
+    name: 'better-lyrics-glassy-dev',
+    sourceDir: join(repoRoot, 'extensions-src', 'better-lyrics-glassy-dev'),
+    outputDir: join(repoRoot, 'extensions-src', 'better-lyrics-glassy-dev', 'dist', 'chrome'),
+    targetDir: join(repoRoot, 'extensions', 'bl-dev'),
+  },
+  {
     name: 'shaders-glassy',
     sourceDir: join(repoRoot, 'extensions-src', 'shaders-glassy'),
     outputDir: join(repoRoot, 'extensions-src', 'shaders-glassy', 'build', 'chrome-mv3-prod'),
