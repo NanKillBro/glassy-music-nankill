@@ -1,5 +1,3 @@
-import { APPLICATION_NAME } from '@/i18n';
-
 import { HANGUL_FILLER } from './constants';
 
 import type { DiscordPluginConfig } from './index';

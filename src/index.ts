@@ -104,9 +104,10 @@ app.commandLine.appendSwitch('ozone-platform-hint', 'auto');
 // OverlayScrollbar: Required for overlay scrollbars
 // UseOzonePlatform: Required for Wayland support
 // WaylandWindowDecorations: Required for Wayland decorations
+// DocumentPictureInPictureAPI, DocumentPictureInPicture: Required for Picture-in-Picture window support
 app.commandLine.appendSwitch(
   'enable-features',
-  'OverlayScrollbar,SharedArrayBuffer,UseOzonePlatform,WaylandWindowDecorations',
+  'OverlayScrollbar,SharedArrayBuffer,UseOzonePlatform,WaylandWindowDecorations,DocumentPictureInPictureAPI,DocumentPictureInPicture',
 );
 
 // Disable Fluent Scrollbar (for OverlayScrollbar)
@@ -382,6 +383,50 @@ async function createMainWindow() {
   };
 
   const win = new BrowserWindow(electronWindowSettings);
+
+  win.webContents.setWindowOpenHandler((details) => {
+    console.log(LoggerPrefix, '[BL-PiP Main] setWindowOpenHandler intercept:', {
+      url: details.url,
+      frameName: details.frameName,
+      features: details.features,
+      disposition: details.disposition,
+    });
+
+    if (details.frameName === 'BetterLyricsPiP' || details.features.includes('alwaysOnTop')) {
+      return {
+        action: 'allow',
+        overrideBrowserWindowOptions: {
+          width: 540,
+          height: 200,
+          alwaysOnTop: true,
+          autoHideMenuBar: true,
+          frame: true,
+        },
+      };
+    }
+
+    if (!details.url || details.url === 'about:blank') {
+      return { action: 'allow' };
+    }
+
+    return {
+      action: 'allow',
+      overrideBrowserWindowOptions: {
+        autoHideMenuBar: true,
+      },
+    };
+  });
+
+  win.webContents.on('did-create-window', (childWindow, details) => {
+    console.log(LoggerPrefix, '[BL-PiP Main] did-create-window event on mainWindow:', {
+      url: details.url,
+      frameName: details.frameName,
+      options: details.options,
+    });
+    childWindow.on('closed', () => {
+      console.log(LoggerPrefix, '[BL-PiP Main] Child window closed event triggered');
+    });
+  });
 
   await initHook(win);
   initTheme(win);
