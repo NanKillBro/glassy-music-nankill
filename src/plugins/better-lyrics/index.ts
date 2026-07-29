@@ -1293,6 +1293,7 @@ export default createPlugin({
         }
 
         const isGlassyFlow =
+          !isNewEngine ||
           (pluginConfig.scrollingMode ?? 'glassyflow') === 'glassyflow';
 
         if (pluginConfig.enableV4Scroll !== false && isGlassyFlow) {
