@@ -529,6 +529,8 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
                 <li>Added new fullscreen UI</li>
                 <li>Added new Better Lyrics dock</li>
                 <li>Fixed issue where the artwork frame was stretched</li>
+                <li>Fixed crossfade recently not working</li>
+                <li>Fixed unison dock too low</li>
             </ul>
         </div>
         <div class="log-entry">
