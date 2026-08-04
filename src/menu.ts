@@ -1276,6 +1276,7 @@ const openFontSettingsWindow = (parentWin: BrowserWindow) => {
                 </ul>
                 <p><strong>Font Size:</strong> Numbers only. <code>px</code> = fixed, <code>rem</code> = relative.</p>
                 <p><strong>Font Weight:</strong> 100 (thin) → 900 (black). Common: 400 (regular), 700 (bold).</p>
+                <p><strong>Note: Only Merge Theme is supported.</strong></p>
             </details>
 
             <!-- YouTube Music UI Section -->

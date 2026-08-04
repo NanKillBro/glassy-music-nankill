@@ -970,6 +970,9 @@ export default createPlugin({
         submenu: [
           {
             label: 'Old engine',
+            sublabel: 'Legacy CSS/JS engine (Rich visuals, Glassy Music updates only)',
+            toolTip:
+              'Uses the legacy CSS & JS animation engine. Stable with rich visuals, but performance is heavier with known unfixable limitations. Only receives Glassy Music updates and supports GlassyFlow scrolling.',
             type: 'radio',
             checked: currentEngine === 'old',
             click: async () => {
@@ -993,6 +996,9 @@ export default createPlugin({
           },
           {
             label: 'New engine (Beta)',
+            sublabel: 'New WAAPI engine (High performance, active upstream updates)',
+            toolTip:
+              'Uses the new WAAPI animation engine. Delivers higher performance, better sync/seek handling, and supports both Smooth & GlassyFlow scrolling. Actively updated from upstream Better Lyrics.',
             type: 'radio',
             checked: currentEngine === 'new',
             click: async () => {
@@ -1026,6 +1032,9 @@ export default createPlugin({
         submenu: [
           {
             label: 'Smooth Scrolling',
+            sublabel: 'Native WAAPI scrolling (Lightweight & responsive)',
+            toolTip:
+              'Uses the native WAAPI scrolling algorithm for clean, lightweight, and responsive line transitions.',
             type: 'radio',
             checked: currentScrolling === 'smooth',
             click: async () => {
@@ -1049,6 +1058,9 @@ export default createPlugin({
           },
           {
             label: 'GlassyFlow Scrolling',
+            sublabel: 'Signature fluid scrolling (Custom spring physics & motion)',
+            toolTip:
+              "Injects Glassy Music's custom GlassyFlow engine featuring dynamic spring physics and signature fluid motion curves.",
             type: 'radio',
             checked: currentScrolling === 'glassyflow',
             click: async () => {
