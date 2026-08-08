@@ -13,6 +13,7 @@ import {
 
 import * as config from '@/config';
 import { restart } from '@/providers/app-controls';
+import { openFontSettingsWindow } from '@/providers/font-settings';
 import { createPlugin } from '@/utils';
 
 // ID này lấy từ manifest key bạn cung cấp, hoặc bạn xem log cũ (mjfeakl...)
@@ -963,6 +964,12 @@ export default createPlugin({
               }, interval);
             }, 120);
           });
+        },
+      },
+      {
+        label: 'Change Fonts...',
+        click: () => {
+          openFontSettingsWindow(window);
         },
       },
       {
