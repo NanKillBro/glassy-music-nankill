@@ -1348,4 +1348,119 @@ export default createPlugin({
       }
     },
   },
+  renderer: {
+    observer: null as MutationObserver | null,
+    onPlayerApiReady() {
+      const setupButton = () => {
+        const topRow = document.querySelector('.top-row-buttons.ytmusic-player');
+        if (!topRow) return;
+
+        if (topRow.querySelector('.fullscreen-lyrics-button')) return;
+
+        const btn = document.createElement('yt-icon-button');
+        btn.className = 'fullscreen-lyrics-button style-scope ytmusic-player';
+        btn.setAttribute('title', 'Fullscreen lyrics without fullscreen');
+        btn.setAttribute('role', 'button');
+        btn.setAttribute('tabindex', '0');
+        btn.setAttribute('aria-label', 'Fullscreen lyrics without fullscreen');
+
+        btn.innerHTML = `
+          <button id="button" class="style-scope yt-icon-button" aria-label="Fullscreen lyrics without fullscreen" style="color: inherit; background: transparent; border: none; padding: 0; cursor: pointer;">
+            <span class="yt-icon-shape style-scope yt-icon yt-spec-icon-shape" style="width: 24px; height: 24px; display: block; fill: currentColor; color: inherit;">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" focusable="false" aria-hidden="true" style="pointer-events: none; display: block; width: 100%; height: 100%; fill: currentColor;">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 8h6v2H7V8zm0 4h4v2H7v-2zm0 4h7v2H7v-2zm9-9v4.55c-.39-.24-.85-.38-1.34-.38-1.47 0-2.66 1.19-2.66 2.66s1.19 2.66 2.66 2.66 2.66-1.19 2.66-2.66V9h2V7h-3z"></path>
+              </svg>
+            </span>
+          </button>
+          <yt-interaction id="interaction" class="circular style-scope yt-icon-button">
+            <div class="stroke style-scope yt-interaction"></div>
+            <div class="fill style-scope yt-interaction"></div>
+          </yt-interaction>
+        `;
+
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const originalFullscreenElement = Object.getOwnPropertyDescriptor(
+            Document.prototype,
+            'fullscreenElement',
+          );
+          const originalRequestFullscreen = Element.prototype.requestFullscreen;
+
+          Object.defineProperty(document, 'fullscreenElement', {
+            get: () => document.documentElement,
+            configurable: true,
+          });
+
+          Element.prototype.requestFullscreen = function () {
+            document.dispatchEvent(new Event('fullscreenchange'));
+            return Promise.resolve();
+          };
+
+          const restore = () => {
+            if (originalFullscreenElement) {
+              Object.defineProperty(
+                document,
+                'fullscreenElement',
+                originalFullscreenElement,
+              );
+            } else {
+              delete (document as any).fullscreenElement;
+            }
+            Element.prototype.requestFullscreen = originalRequestFullscreen;
+          };
+
+          const clickFullscreen = () => {
+            const fsBtn = document.querySelector<HTMLElement>(
+              'yt-icon-button.fullscreen-button.ytmusic-player',
+            );
+            if (fsBtn) {
+              fsBtn.click();
+              window.dispatchEvent(new Event('resize'));
+              setTimeout(restore, 500);
+            } else {
+              restore();
+            }
+          };
+
+          const fsBtn = document.querySelector<HTMLElement>(
+            'yt-icon-button.fullscreen-button.ytmusic-player',
+          );
+          if (fsBtn) {
+            clickFullscreen();
+          } else {
+            const playerBar = document.querySelector<HTMLElement>(
+              'ytmusic-player-bar',
+            );
+            if (playerBar) {
+              playerBar.click();
+              setTimeout(clickFullscreen, 500);
+            } else {
+              restore();
+            }
+          }
+        });
+
+        const fsBtn = topRow.querySelector('.fullscreen-button');
+        if (fsBtn) {
+          topRow.insertBefore(btn, fsBtn);
+        } else {
+          topRow.appendChild(btn);
+        }
+      };
+
+      setupButton();
+
+      this.observer = new MutationObserver(() => {
+        setupButton();
+      });
+
+      const target = document.querySelector('.top-row-buttons.ytmusic-player') || document.body;
+      this.observer.observe(target, { childList: true, subtree: true });
+    },
+    stop() {
+      this.observer?.disconnect();
+      document.querySelector('.fullscreen-lyrics-button')?.remove();
+    },
+  },
 });
+
