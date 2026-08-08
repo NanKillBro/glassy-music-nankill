@@ -189,7 +189,19 @@ Special thanks to the following creators whose work deeply inspired the **"Merge
 
 ## FAQ
 
-### Why apps menu isn't showing up?
+### Why isn't the app menu showing up?
 
-If `Hide Menu` option is on - you can show the menu with the <kbd>alt</kbd> key (or <kbd>\`</kbd> [backtick] if using
-the in-app-menu plugin)
+If the `Hide Menu` option is on, you can show the menu by pressing the <kbd>Alt</kbd> key (or <kbd>\`</kbd> [backtick] if you're using the in-app-menu plugin).
+
+### Why is the minimum window size locked at 1280x720?
+This app isn't designed for small screen or mobile window sizes, so it's locked at 1280x720 by default. If you'd like to turn this off, go to **Options** → **Advanced options** → **Disable Minimum Window Size**.
+
+### Why is performance poor?
+Ngl, I feel it too! But there isn't an easy way to optimize it further right now. It shouldn't be a problem if you have a decent PC, but if your system is on the lower end, you might experience some lag.
+
+### What is the update schedule?
+I update the app in my free time or whenever necessary. Generally, expect about one update per month (sometimes two!).
+
+### Can I customize it?
+Yes, absolutely! You can already change fonts or add custom CSS directly in the Better Lyrics settings.
+
