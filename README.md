@@ -179,11 +179,11 @@ Special thanks to the following creators whose work deeply inspired the **"Merge
 
 ## Star History
 
-<a href="https://star-history.com/#NanKillBro/glassy-music-nankill&Date">
+<a href="https://www.star-history.com/?repos=NanKillBro%2Fglassy-music-nankill&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=NanKillBro/glassy-music-nankill&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=NanKillBro/glassy-music-nankill&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=NanKillBro/glassy-music-nankill&type=Date" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=NanKillBro/glassy-music-nankill&type=date&theme=dark&legend=top-left&sealed_token=5HGmyr2uA5eOfZ9zdc0QjlV5smfWvNfr6P6Dh5P09W-mpO0-deewORk-1PZfFP-0FSHNAp69Irs_COw3XdqpgAezkkRcBSRJ519qaAERmtkw6wrhK-DHyneQggLKF5ANe89AI2LoSiBKfIfJCqlHIoAKGR1e0zXgxsxE26btXiqAVPBShrqK2UU7njkn" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=NanKillBro/glassy-music-nankill&type=date&legend=top-left&sealed_token=5HGmyr2uA5eOfZ9zdc0QjlV5smfWvNfr6P6Dh5P09W-mpO0-deewORk-1PZfFP-0FSHNAp69Irs_COw3XdqpgAezkkRcBSRJ519qaAERmtkw6wrhK-DHyneQggLKF5ANe89AI2LoSiBKfIfJCqlHIoAKGR1e0zXgxsxE26btXiqAVPBShrqK2UU7njkn" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=NanKillBro/glassy-music-nankill&type=date&legend=top-left&sealed_token=5HGmyr2uA5eOfZ9zdc0QjlV5smfWvNfr6P6Dh5P09W-mpO0-deewORk-1PZfFP-0FSHNAp69Irs_COw3XdqpgAezkkRcBSRJ519qaAERmtkw6wrhK-DHyneQggLKF5ANe89AI2LoSiBKfIfJCqlHIoAKGR1e0zXgxsxE26btXiqAVPBShrqK2UU7njkn" />
  </picture>
 </a>
 
