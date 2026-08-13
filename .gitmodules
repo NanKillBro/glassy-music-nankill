@@ -8,3 +8,6 @@
 	path = extensions-src/better-lyrics-glassy-dev
 	url = https://github.com/NanKillBro/better-lyrics-glassy
 	branch = dev
+[submodule "extensions-src/tacet-glassy"]
+	path = extensions-src/tacet-glassy
+	url = https://github.com/NanKillBro/tacet-glassy
