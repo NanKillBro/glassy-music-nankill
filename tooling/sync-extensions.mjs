@@ -26,6 +26,12 @@ const extensionJobs = [
     outputDir: join(repoRoot, 'extensions-src', 'shaders-glassy', 'build', 'chrome-mv3-prod'),
     targetDir: join(repoRoot, 'extensions', 'bls'),
   },
+  {
+    name: 'tacet-glassy',
+    sourceDir: join(repoRoot, 'extensions-src', 'tacet-glassy'),
+    outputDir: join(repoRoot, 'extensions-src', 'tacet-glassy', 'build', 'chrome-mv3-prod'),
+    targetDir: join(repoRoot, 'extensions', 'tacet'),
+  },
 ];
 
 function run(command, args, cwd) {
@@ -84,6 +90,11 @@ async function installDependencies(packageDir) {
 async function buildExtension(job) {
   console.log(`\n[extensions] Building ${job.name}...`);
   await installDependencies(job.sourceDir);
+  
+  if (job.name === 'tacet-glassy') {
+    runNpm(['run', 'sync:ort'], job.sourceDir);
+  }
+  
   runNpm(['run', 'build'], job.sourceDir);
 
   const sourceStats = await stat(job.outputDir);

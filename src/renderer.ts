@@ -314,6 +314,14 @@ async function onApiLoaded() {
   const audioSource = audioContext.createMediaElementSource(video);
   audioSource.connect(audioContext.destination);
 
+  // Expose the audio bus for Better Lyrics and Tacet extensions
+  (window as any).__blyricsAudio = {
+    version: 1,
+    context: audioContext,
+    source: audioSource,
+    element: video
+  };
+
   for (const [id, plugin] of Object.entries(getAllLoadedRendererPlugins())) {
     if (typeof plugin.renderer !== 'function') {
       await plugin.renderer?.onPlayerApiReady?.call(
