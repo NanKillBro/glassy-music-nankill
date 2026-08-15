@@ -51,8 +51,9 @@ function run(command, args, cwd) {
   }
 }
 
-function runNpm(args, cwd) {
-  const result = spawnSync('npm', args, {
+function runPackageManager(args, cwd, isPnpm = false) {
+  const cmd = isPnpm ? 'pnpm' : 'npm';
+  const result = spawnSync(cmd, args, {
     cwd,
     env: process.env,
     shell: true,
@@ -66,6 +67,10 @@ function runNpm(args, cwd) {
   if (result.status !== 0) {
     process.exit(result.status ?? 1);
   }
+}
+
+function runNpm(args, cwd) {
+  runPackageManager(args, cwd, false);
 }
 
 async function exists(path) {
@@ -84,18 +89,20 @@ async function installDependencies(packageDir) {
     return;
   }
 
-  runNpm(['install'], packageDir);
+  const isPnpm = await exists(join(packageDir, 'pnpm-lock.yaml'));
+  runPackageManager(['install'], packageDir, isPnpm);
 }
 
 async function buildExtension(job) {
   console.log(`\n[extensions] Building ${job.name}...`);
   await installDependencies(job.sourceDir);
+  const isPnpm = await exists(join(job.sourceDir, 'pnpm-lock.yaml'));
   
   if (job.name === 'tacet-glassy') {
-    runNpm(['run', 'sync:ort'], job.sourceDir);
+    runPackageManager(['run', 'sync:ort'], job.sourceDir, isPnpm);
   }
   
-  runNpm(['run', 'build'], job.sourceDir);
+  runPackageManager(['run', 'build'], job.sourceDir, isPnpm);
 
   const sourceStats = await stat(job.outputDir);
   if (!sourceStats.isDirectory()) {
