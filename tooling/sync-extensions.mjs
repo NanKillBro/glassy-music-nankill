@@ -90,7 +90,11 @@ async function installDependencies(packageDir) {
   }
 
   const isPnpm = await exists(join(packageDir, 'pnpm-lock.yaml'));
-  runPackageManager(['install'], packageDir, isPnpm);
+  const args = ['install'];
+  if (isPnpm) {
+    args.push('--ignore-workspace');
+  }
+  runPackageManager(args, packageDir, isPnpm);
 }
 
 async function buildExtension(job) {
