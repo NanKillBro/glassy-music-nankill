@@ -688,6 +688,65 @@ export default createPlugin({
                     height: 1.25rem !important;
                   }
 
+                  /* Offset Stepper Buttons Fix */
+                  .offset-stepper {
+                    display: inline-flex !important;
+                    align-items: center !important;
+                    gap: 0.35rem !important;
+                    background: rgba(0, 0, 0, 0.25) !important;
+                    padding: 4px 6px !important;
+                    border-radius: 12px !important;
+                    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+                  }
+
+                  button.offset-stepper__btn,
+                  .offset-stepper__btn {
+                    width: 28px !important;
+                    height: 28px !important;
+                    min-width: 28px !important;
+                    max-width: 28px !important;
+                    min-height: 28px !important;
+                    max-height: 28px !important;
+                    padding: 0 !important;
+                    margin: 0 !important;
+                    display: inline-flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    background: rgba(255, 255, 255, 0.08) !important;
+                    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+                    border-radius: 8px !important;
+                    color: rgba(255, 255, 255, 0.9) !important;
+                    cursor: pointer !important;
+                    box-shadow: none !important;
+                    transform: none !important;
+                    transition: all 0.2s ease !important;
+                  }
+
+                  button.offset-stepper__btn:hover,
+                  .offset-stepper__btn:hover {
+                    background: rgba(255, 255, 255, 0.2) !important;
+                    color: #23d5ab !important;
+                    transform: scale(1.08) !important;
+                  }
+
+                  .offset-stepper__btn svg {
+                    width: 14px !important;
+                    height: 14px !important;
+                    fill: currentColor !important;
+                    display: block !important;
+                    pointer-events: none !important;
+                  }
+
+                  .offset-stepper__value {
+                    min-width: 3.5rem !important;
+                    text-align: center !important;
+                    font-size: 0.9rem !important;
+                    font-weight: 600 !important;
+                    font-family: 'JetBrains Mono', monospace !important;
+                    color: #23d5ab !important;
+                    user-select: none !important;
+                  }
+
                   /* Miscellaneous */
                   .text-group {
                     background: rgba(0, 0, 0, 0.2) !important;
