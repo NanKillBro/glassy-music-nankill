@@ -104,10 +104,14 @@ app.commandLine.appendSwitch('ozone-platform-hint', 'auto');
 // OverlayScrollbar: Required for overlay scrollbars
 // UseOzonePlatform: Required for Wayland support
 // WaylandWindowDecorations: Required for Wayland decorations
+// WebGPU: Required for Tacet ONNX Runtime vocal separation
 app.commandLine.appendSwitch(
   'enable-features',
   'OverlayScrollbar,SharedArrayBuffer,UseOzonePlatform,WaylandWindowDecorations',
 );
+
+// WebGPU: Required for Tacet's ONNX Runtime vocal separation (navigator.gpu)
+app.commandLine.appendSwitch('enable-unsafe-webgpu');
 
 // Disable Fluent Scrollbar (for OverlayScrollbar)
 const disabledFeatures = ['FluentScrollbar'];
