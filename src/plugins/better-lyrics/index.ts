@@ -917,7 +917,7 @@ export default createPlugin({
                 titlebar.innerHTML = \`
                   <span id="glassy-titlebar-label">Better Lyrics Settings${
                     isNewEngine
-                      ? ' <span style="font-size: 0.7rem; background: rgba(255, 170, 0, 0.2); color: #ffbb33; border: 1px solid rgba(255, 170, 0, 0.4); padding: 1px 6px; border-radius: 8px; margin-left: 6px; font-weight: 600; vertical-align: middle;">Experimental Engine</span>'
+                      ? ' <span style="font-size: 0.7rem; background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); padding: 1px 6px; border-radius: 8px; margin-left: 6px; font-weight: 600; vertical-align: middle;">Beta Engine</span>'
                       : ''
                   }</span>
                   <div id="glassy-close-btn">
@@ -939,8 +939,8 @@ export default createPlugin({
                   isNewEngine
                     ? `
                 const expBanner = document.createElement('div');
-                expBanner.style.cssText = 'background: rgba(255, 170, 0, 0.12); border: 1px solid rgba(255, 170, 0, 0.3); color: #ffcc66; padding: 10px 14px; border-radius: 12px; margin-bottom: 1rem; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(10px);';
-                expBanner.innerHTML = '⚠️ <span><strong>Experimental Engine Active:</strong> You are using the new WAAPI animation engine. This feature is experimental and under active development.</span>';
+                expBanner.style.cssText = 'background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25); color: #93c5fd; padding: 10px 14px; border-radius: 12px; margin-bottom: 1rem; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(10px);';
+                expBanner.innerHTML = '✨ <span><strong>New Engine (Beta):</strong> You are using the new WAAPI animation engine. This feature is in active development with continuous improvements.</span>';
                 contentArea.insertBefore(expBanner, contentArea.firstChild);
                 `
                     : ''
@@ -1076,10 +1076,10 @@ export default createPlugin({
             },
           },
           {
-            label: 'New engine (Experimental)',
+            label: 'New engine (Beta)',
             sublabel: 'New WAAPI engine (High performance)',
             toolTip:
-              'Uses the new WAAPI animation engine. Delivers higher performance, better sync/seek handling, and supports both Smooth & GlassyFlow scrolling. Note: This engine is currently experimental and under active development.',
+              'Uses the new WAAPI animation engine. Delivers higher performance, better sync/seek handling, and supports both Smooth & GlassyFlow scrolling. Note: This engine is currently in Beta and under active development.',
             type: 'radio',
             checked: currentEngine === 'new',
             click: async () => {
@@ -1090,7 +1090,7 @@ export default createPlugin({
                 type: 'info',
                 title: 'Engine Changed',
                 message:
-                  'Better Lyrics engine has been changed to New engine (Experimental). The app needs to restart to apply the change.',
+                  'Better Lyrics engine has been changed to New engine (Beta). The app needs to restart to apply the change.',
                 buttons: ['Restart Now', 'Later'],
                 defaultId: 0,
                 cancelId: 1,
@@ -1186,7 +1186,7 @@ export default createPlugin({
 
       console.log(
         '[BetterLyrics] Engine:',
-        isNewEngine ? 'New engine (Experimental) [bl-dev]' : 'Old engine [bl]',
+        isNewEngine ? 'New engine (Beta) [bl-dev]' : 'Old engine [bl]',
       );
       console.log(
         '[BetterLyrics] Active theme:',
@@ -1329,7 +1329,7 @@ export default createPlugin({
         const result = await dialog.showMessageBox(window, {
           type: 'info',
           title: 'Engine Changed',
-          message: `Better Lyrics engine has been changed to ${engine === 'new' ? 'New engine (Experimental)' : 'Old engine'}. The app needs to restart to apply the change.`,
+          message: `Better Lyrics engine has been changed to ${engine === 'new' ? 'New engine (Beta)' : 'Old engine'}. The app needs to restart to apply the change.`,
           buttons: ['Restart Now', 'Later'],
           defaultId: 0,
           cancelId: 1,
