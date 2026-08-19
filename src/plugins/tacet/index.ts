@@ -244,7 +244,7 @@ export default createPlugin({
           }
 
           popupWindow = new BrowserWindow({
-            width: 400,
+            width: 450,
             height: 600,
             autoHideMenuBar: true,
             webPreferences: {
