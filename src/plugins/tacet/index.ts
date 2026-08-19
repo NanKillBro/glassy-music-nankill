@@ -17,6 +17,181 @@ let tacetExtensionId: string | null = null;
 let popupWindow: BrowserWindow | null = null;
 let offscreenWindow: BrowserWindow | null = null;
 
+// -- Keeping the process mortal ---------------------------------------------
+
+// Electron holds the process open until every BrowserWindow is gone, and the
+// hidden offscreen window is one of them. So the app's own 'window-all-closed'
+// never fires, app.quit() is never reached, and the process outlives the window
+// the listener closed — forever, with a separation worker still in it. What
+// follows is that event, counted over the windows the app opened rather than the
+// ones this plugin did.
+const watchedWindows = new WeakSet<BrowserWindow>();
+let watchingAppWindows = false;
+let windowsReleased = false;
+
+function isPluginWindow(window: BrowserWindow): boolean {
+  return window === offscreenWindow || window === popupWindow;
+}
+
+function releaseWindowsIfAppIsGone(): void {
+  // 'closed' can arrive while the window is still listed, so the count is taken
+  // on the next tick.
+  setImmediate(() => {
+    if (windowsReleased || !tacetExtensionId) return;
+    if (BrowserWindow.getAllWindows().some((window) => !isPluginWindow(window))) {
+      return;
+    }
+    windowsReleased = true;
+    console.log(
+      '[Tacet] The app has no windows of its own left, closing this plugin\'s so the process can exit',
+    );
+    cancelOffscreenRestart();
+    destroyWindow('offscreen');
+    destroyWindow('popup');
+  });
+}
+
+function watchWindow(window: BrowserWindow): void {
+  if (watchedWindows.has(window)) return;
+  watchedWindows.add(window);
+  window.once('closed', releaseWindowsIfAppIsGone);
+}
+
+function watchAppWindows(): void {
+  for (const window of BrowserWindow.getAllWindows()) watchWindow(window);
+  if (watchingAppWindows) return;
+  watchingAppWindows = true;
+  app.on('browser-window-created', (_event, window) => watchWindow(window));
+}
+
+function destroyWindow(which: 'offscreen' | 'popup'): void {
+  const window = which === 'offscreen' ? offscreenWindow : popupWindow;
+  if (which === 'offscreen') offscreenWindow = null;
+  else popupWindow = null;
+  if (!window) return;
+  try {
+    if (!window.isDestroyed()) window.destroy();
+  } catch (err) {
+    console.error(`[Tacet] Error destroying the ${which} window:`, err);
+  }
+}
+
+// The offscreen document is where separation actually happens, and it is the one
+// context with no window a listener can open devtools on — so without this its
+// console goes nowhere. The extension gates its own logging behind a setting, so
+// this stays quiet unless that setting is on.
+function forwardConsole(window: BrowserWindow, label: string): void {
+  window.webContents.on('console-message', (details) => {
+    const line = `[Tacet][${label}] ${details.message}`;
+    if (details.level === 'error') console.error(line);
+    else if (details.level === 'warning') console.warn(line);
+    else console.log(line);
+  });
+}
+
+// A crashed renderer leaves the feature dead until the app restarts, so it gets
+// rebuilt. The delay grows so that a fault which reappears immediately — a driver
+// that cannot allocate, a model that will not compile — stops rather than spins.
+const OFFSCREEN_RESTART_DELAYS_MS = [2_000, 10_000, 30_000];
+let offscreenRestarts = 0;
+let offscreenRestartTimer: NodeJS.Timeout | null = null;
+
+function cancelOffscreenRestart(): void {
+  if (offscreenRestartTimer) clearTimeout(offscreenRestartTimer);
+  offscreenRestartTimer = null;
+}
+
+async function createOffscreenWindow(forceWasm: boolean): Promise<void> {
+  if (!tacetExtensionId) {
+    console.error('[Tacet] Cannot create the offscreen window without an extension id');
+    return;
+  }
+
+  // Starting twice — which happens on macOS when the window is closed and the app
+  // reactivated — must not leave the first one holding a session behind.
+  destroyWindow('offscreen');
+
+  try {
+    const created = new BrowserWindow({
+      show: false,
+      width: 1,
+      height: 1,
+      webPreferences: {
+        // contextIsolation must be false so the offscreen page can use
+        // chrome.runtime.sendMessage to communicate with the background
+        // service worker (the extension's internal messaging).
+        contextIsolation: false,
+        nodeIntegration: false,
+        sandbox: false,
+        // Enable WebGL/WebGPU for ONNX Runtime
+        webgl: true,
+        // Prevent Chromium from throttling the hidden window's timers/workers
+        backgroundThrottling: false,
+      },
+    });
+    offscreenWindow = created;
+
+    created.webContents.session.setSpellCheckerEnabled(false);
+    forwardConsole(created, 'offscreen');
+
+    // The execution provider has to be settled before the page builds its first
+    // inference session, so it travels in the url rather than through storage,
+    // which the page only reads after it has already started.
+    const query = forceWasm ? '?forceWasm=1' : '';
+    if (forceWasm) {
+      console.log('[Tacet] forceWasm mode enabled — ONNX will use the WASM (CPU) backend');
+    }
+
+    // Watch for crashes before the load, so a fault during startup is caught too.
+    created.webContents.on('render-process-gone', (_event, details) => {
+      if (offscreenWindow === created) offscreenWindow = null;
+      if (!created.isDestroyed()) created.destroy();
+
+      // A window we tore down on purpose is not a crash to recover from.
+      if (details.reason === 'clean-exit' || details.reason === 'killed') return;
+      if (!tacetExtensionId) return;
+
+      console.error('[Tacet] Offscreen window renderer crashed:', details.reason);
+      if (details.reason === 'oom') {
+        console.error('[Tacet] Out of memory! Consider enabling forceWasm mode.');
+      }
+
+      const delayMs = OFFSCREEN_RESTART_DELAYS_MS[offscreenRestarts];
+      if (delayMs === undefined) {
+        console.error(
+          `[Tacet] Offscreen window crashed ${offscreenRestarts} times, not rebuilding it again`,
+        );
+        return;
+      }
+      offscreenRestarts++;
+      console.log(`[Tacet] Rebuilding the offscreen window in ${delayMs / 1000}s`);
+      cancelOffscreenRestart();
+      offscreenRestartTimer = setTimeout(() => {
+        offscreenRestartTimer = null;
+        if (!tacetExtensionId) return;
+        createOffscreenWindow(forceWasm).catch((err) => {
+          console.error('[Tacet] Failed to rebuild the offscreen window:', err);
+        });
+      }, delayMs);
+    });
+
+    created.webContents.on('unresponsive', () => {
+      console.warn('[Tacet] Offscreen window became unresponsive');
+    });
+
+    created.webContents.on('responsive', () => {
+      console.log('[Tacet] Offscreen window recovered');
+    });
+
+    await created.loadURL(
+      `chrome-extension://${tacetExtensionId}/assets/offscreen.html${query}`,
+    );
+    console.log('[Tacet] Offscreen window created and loaded');
+  } catch (err) {
+    console.error('[Tacet] Failed to create offscreen window:', err);
+  }
+}
+
 // Domains from the extension's host_permissions that need to be accessible
 const ALLOWED_HOSTS = [
   'music.youtube.com',
@@ -77,6 +252,7 @@ export default createPlugin({
               nodeIntegration: false,
             },
           });
+          forwardConsole(popupWindow, 'settings');
 
           popupWindow.loadURL(`chrome-extension://${tacetExtensionId}/popup.html`);
 
@@ -91,7 +267,14 @@ export default createPlugin({
         checked: config.forceWasm,
         click: async (menuItem) => {
           await setConfig({ forceWasm: menuItem.checked });
-          console.log(`[Tacet] forceWasm set to ${menuItem.checked} (restart required)`);
+          console.log(`[Tacet] forceWasm set to ${menuItem.checked}`);
+          // The offscreen page settles its execution provider at load, so the new
+          // value only means anything to a fresh one.
+          if (tacetExtensionId) {
+            cancelOffscreenRestart();
+            offscreenRestarts = 0;
+            await createOffscreenWindow(menuItem.checked);
+          }
         },
       },
     ];
@@ -220,117 +403,19 @@ export default createPlugin({
       // Electron doesn't support chrome.offscreen, so we manually create a hidden
       // BrowserWindow that loads the extension's offscreen.html page.
       // This window hosts the separation pipeline (SeparationHost + separator Worker).
-      try {
-        offscreenWindow = new BrowserWindow({
-          show: false,
-          width: 1,
-          height: 1,
-          webPreferences: {
-            // contextIsolation must be false so the offscreen page can use
-            // chrome.runtime.sendMessage to communicate with the background
-            // service worker (the extension's internal messaging).
-            contextIsolation: false,
-            nodeIntegration: false,
-            sandbox: false,
-            // Enable WebGL/WebGPU for ONNX Runtime
-            webgl: true,
-            // Prevent Chromium from throttling the hidden window's timers/workers
-            backgroundThrottling: false,
-          },
-        });
-
-        // Set a reasonable memory limit for the offscreen renderer process
-        // to prevent unbounded heap growth that crashes the app
-        offscreenWindow.webContents.session.setSpellCheckerEnabled(false);
-
-        const offscreenUrl = `chrome-extension://${tacetExtensionId}/assets/offscreen.html`;
-        await offscreenWindow.loadURL(offscreenUrl);
-        console.log('[Tacet] Offscreen window created and loaded');
-
-        // Inject forceWasm setting into the offscreen context if needed.
-        // The extension reads settings from chrome.storage.local via the
-        // background service worker relay. We write the preference directly
-        // so the separator worker picks it up.
-        if (config.forceWasm) {
-          console.log('[Tacet] forceWasm mode enabled — ONNX will use WASM (CPU) backend');
-          // Write the modelVariant to storage so the extension uses WASM
-          // The extension's settings have a modelVariant field that controls
-          // which execution provider to use. We set it via chrome.storage.local
-          // from the offscreen window's context.
-          await offscreenWindow.webContents.executeJavaScript(`
-            try {
-              // Signal to the separator that it should use WASM instead of WebGPU.
-              // The extension's separation-host.ts reads forceWasm from the init command.
-              // We monkey-patch the Worker constructor to intercept the separator init
-              // and inject forceWasm: true.
-              const OriginalWorker = self.Worker;
-              self.Worker = class PatchedWorker extends OriginalWorker {
-                constructor(url, options) {
-                  super(url, options);
-                  const originalPostMessage = this.postMessage.bind(this);
-                  this.postMessage = function(message, transfer) {
-                    if (message && message.type === 'separate-init') {
-                      message.forceWasm = true;
-                      console.log('[Tacet] Injected forceWasm=true into separate-init command');
-                    }
-                    originalPostMessage(message, transfer);
-                  };
-                }
-              };
-              console.log('[Tacet] Worker patched for forceWasm mode');
-              true;
-            } catch (e) {
-              console.error('[Tacet] Failed to patch Worker for forceWasm:', e);
-              false;
-            }
-          `);
-        }
-
-        // Monitor the offscreen window for crashes
-        offscreenWindow.webContents.on('render-process-gone', (_event, details) => {
-          console.error('[Tacet] Offscreen window renderer crashed:', details.reason);
-          if (details.reason === 'oom') {
-            console.error('[Tacet] Out of memory! Consider enabling forceWasm mode.');
-          }
-          // Try to recover by recreating the offscreen window
-          offscreenWindow = null;
-        });
-
-        offscreenWindow.webContents.on('unresponsive', () => {
-          console.warn('[Tacet] Offscreen window became unresponsive');
-        });
-
-        offscreenWindow.webContents.on('responsive', () => {
-          console.log('[Tacet] Offscreen window recovered');
-        });
-
-      } catch (err) {
-        console.error('[Tacet] Failed to create offscreen window:', err);
-      }
+      windowsReleased = false;
+      watchAppWindows();
+      await createOffscreenWindow(config.forceWasm);
     },
     stop({ setConfig }) {
       setConfig({ warningAccepted: false });
-      if (offscreenWindow) {
-        try {
-          if (!offscreenWindow.isDestroyed()) {
-            offscreenWindow.destroy();
-          }
-        } catch (err) {
-          console.error('[Tacet] Error destroying offscreen window:', err);
-        }
-        offscreenWindow = null;
-      }
-      if (popupWindow) {
-        try {
-          if (!popupWindow.isDestroyed()) {
-            popupWindow.destroy();
-          }
-        } catch (err) {
-          console.error('[Tacet] Error destroying popup window:', err);
-        }
-        popupWindow = null;
-      }
+      // Cleared first: the crash handler treats a missing id as "the plugin is
+      // gone" and will not rebuild the window we are about to tear down.
       tacetExtensionId = null;
+      cancelOffscreenRestart();
+      offscreenRestarts = 0;
+      destroyWindow('offscreen');
+      destroyWindow('popup');
     },
   },
 });
