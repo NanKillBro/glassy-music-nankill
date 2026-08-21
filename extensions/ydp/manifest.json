@@ -5,13 +5,22 @@
    },
    "author": "Michael Ren",
    "background": {
+      "scripts": [ "background.js" ],
       "service_worker": "background.js"
+   },
+   "browser_specific_settings": {
+      "gecko": {
+         "data_collection_permissions": {
+            "required": [ "browsingActivity", "websiteContent", "websiteActivity" ]
+         },
+         "id": "@youtubediscordpresence"
+      }
    },
    "content_scripts": [ {
       "js": [ "content_loader.js" ],
       "matches": [ "https://www.youtube.com/*", "https://music.youtube.com/*" ]
    } ],
-   "description": "An extension used to create a detailed rich presence for YouTube videos on Discord.",
+   "description": "An extension used to create a detailed rich presence for YouTube and YouTube Music activity on Discord.",
    "icons": {
       "128": "/Images/icon128.png",
       "16": "/Images/icon16.png",
@@ -22,7 +31,7 @@
    "name": "YouTubeDiscordPresence",
    "permissions": [ "nativeMessaging", "background", "storage", "tabs" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "1.7.0",
+   "version": "1.8.1",
    "web_accessible_resources": [ {
       "matches": [ "https://www.youtube.com/*", "https://music.youtube.com/*" ],
       "resources": [ "content.js", "warning.html" ]

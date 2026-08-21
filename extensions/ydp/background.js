@@ -19,7 +19,7 @@ const NMF = Object.freeze({ // NMF = NATIVE_MESSAGE_FORMAT (FOR HANDLING BY YTDP
 const NORMAL_MESSAGE_DELAY = 1000;
 const LIVESTREAM_TIME_ID = -1;
 const UPDATE_PRESENCE_MESSAGE = "UPDATE_PRESENCE_DATA";
-const REQUIRED_NATIVE_VERSION = "1.6.1";
+const REQUIRED_NATIVE_VERSION = "1.7.0";
 
 let nativeVersionStatus = -2;
 let currentMessage = new Object();
@@ -115,6 +115,12 @@ function versionCompare(v1, v2, options) { // CHECKS IF V1 IS GREATER THAN (1), 
 // NODE.JS APPLICATION HANDLER
 
 const handleNativeMessage = (message) => {
+    if (!isNativeConnected) {
+        isNativeConnected = true;
+        previousMessage = {};
+        saveStorageKey("isNativeConnected", true);
+    }
+
     if (LOGGING && message.data) {
         if (message.data.toLowerCase().includes("error")) {
             console.error(`Received from application:\n    ${message.data}`);
@@ -136,41 +142,55 @@ const handleNativeMessage = (message) => {
 // CONNECTING TO DESKTOP APP
 
 let isNativeConnected = false;
-let nativePort = {};
+let nativePort = null;
 
-function assertNativeExistence(callback = null) {
-    if (!isNativeConnected) {
-        if (nativePort.disconnect) nativePort.disconnect();
-        nativePort = chrome.runtime.connectNative("com.ytdp.discord.presence");
+function handleNativeDisconnect(port, error = null) {
+    if (nativePort != port) return;
 
-        isNativeConnected = true;
-        nativePort.onDisconnect.addListener(() => {
-            if (chrome.runtime.lastError) {
-                isNativeConnected = false;
-                saveStorageKey("isNativeConnected", false);
-                console.log("The YouTubeDiscordPresence desktop component was not properly installed.\nVisit https://github.com/XFG16/YouTubeDiscordPresence#installation");
-            }
-        });
+    let portError = error || port.error || chrome.runtime.lastError;
+    nativePort = null;
+    isNativeConnected = false;
+    saveStorageKey("isNativeConnected", false);
+    console.log(`The YouTubeDiscordPresence desktop component was not properly installed${portError ? `: ${portError.message}` : "."}\nVisit https://github.com/XFG16/YouTubeDiscordPresence#installation`);
+}
 
-        setTimeout(() => {
-            if (isNativeConnected) {
-                saveStorageKey("isNativeConnected", true);
-                nativePort.onMessage.addListener(handleNativeMessage);
-                if (callback) callback();
-            }
-        }, 1000);
+function sendNativeMessage(message) {
+    if (!nativePort) return false;
+
+    let port = nativePort;
+    try {
+        port.postMessage(message);
+        return true;
     }
-    else if (callback) {
-        callback();
+    catch (error) {
+        handleNativeDisconnect(port, error);
+        return false;
     }
 }
 
-assertNativeExistence(() => {
-    nativePort.postMessage({ getNativeVersion: true });
-    setTimeout(() => {
-        if (nativeVersionStatus == -2) saveStorageKey("nativeVersionStatus", -1);
-    }, 1000);
-});
+function connectNative() {
+    if (nativePort) return;
+
+    let port = chrome.runtime.connectNative("com.ytdp.discord.presence");
+    nativePort = port;
+    port.onMessage.addListener((message) => {
+        if (nativePort == port) handleNativeMessage(message);
+    });
+    port.onDisconnect.addListener(() => {
+        handleNativeDisconnect(port);
+    });
+    sendNativeMessage({ getNativeVersion: true });
+}
+
+function assertNativeExistence(callback = null) {
+    connectNative();
+    if (callback && isNativeConnected) callback();
+}
+
+assertNativeExistence();
+setTimeout(() => {
+    if (nativeVersionStatus == -2) saveStorageKey("nativeVersionStatus", -1);
+}, 1000);
 setInterval(() => {
     assertNativeExistence();
 }, 3000);
@@ -295,6 +315,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             currentMessage.scriptId = sender.tab.id;
             currentMessage.title = message.title;
             currentMessage.author = message.author;
+            currentMessage.album = message.album;
             currentMessage.timeLeft = message.timeLeft;
             currentMessage.duration = message.duration;
             currentMessage.videoId = message.videoId;
@@ -319,7 +340,7 @@ const IDLE_DATA_OBJECT = {
 
 function idleCallback() {
     if (LOGGING) console.log("Idle data sent:\n    #*IDLE*#");
-    nativePort.postMessage(IDLE_DATA_OBJECT);
+    sendNativeMessage(IDLE_DATA_OBJECT);
 
     currentMessage.scriptId = null;
     previousMessage = {};
@@ -340,13 +361,14 @@ function generatePresenceData() {
 
     // large_text and details must be >1 char long, pad with zws
     let paddedTitle = currentMessage.title.padEnd(2, '\u200b');
+    let largeHoverText = (currentMessage.album ? currentMessage.album.padEnd(2, '\u200b') : paddedTitle).substring(0, 128);
 
     let assetsData = {
         large_image: "youtube3",
-        large_text: paddedTitle.substring(0, 128)
+        large_text: largeHoverText
     };
     if (currentMessage.applicationType == "youtubeMusic") {
-        activityType = 2;
+        activityType = 2; // Activity: Listening
         
         if (settings.useThumbnailIcon) {
             assetsData.large_image = currentMessage.thumbnailUrl;
@@ -415,6 +437,9 @@ function generatePresenceData() {
         timestamps: timeStampsData,
         type: activityType,
     };
+    if (currentMessage.applicationType == "youtubeMusic") {
+        presenceData.status_display_type = 2; // Show song name as status instead of "YouTube Music"
+    }
     if (buttonsData.length > 0) {
         presenceData.buttons = buttonsData;
     }
@@ -427,6 +452,7 @@ function updateCallback() {
         cppData: NMF.TITLE + currentMessage.title + NMF.AUTHOR + currentMessage.author + NMF.TIME_LEFT + Math.round(currentMessage.timeLeft) + NMF.END,
         jsTitle: currentMessage.title,
         jsAuthor: currentMessage.author,
+        jsAlbum: currentMessage.album,
         jsTimeLeft: currentMessage.timeLeft,
         jsVideoUrl: currentMessage.videoUrl,
         jsChannelUrl: currentMessage.channelUrl,
@@ -442,7 +468,7 @@ function updateCallback() {
     };
 
     if (LOGGING) console.log("Presence data:", dataObject);
-    nativePort.postMessage(dataObject);
+    sendNativeMessage(dataObject);
 }
 
 let pipeInterval = setInterval(function () {
@@ -465,10 +491,10 @@ let pipeInterval = setInterval(function () {
     if (previousMessage.timeLeft >= currentMessage.timeLeft && ((1000 * (previousMessage.timeLeft - currentMessage.timeLeft) < 2 * NORMAL_MESSAGE_DELAY) || (previousMessage.timeLeft == LIVESTREAM_TIME_ID && currentMessage.timeLeft != LIVESTREAM_TIME_ID))) {
         skipMessage = true;
     }
-    if (!(previousMessage.title == currentMessage.title && previousMessage.author == currentMessage.author && previousMessage.thumbnailUrl == currentMessage.thumbnailUrl && skipMessage)) {
+    if (!(previousMessage.title == currentMessage.title && previousMessage.author == currentMessage.author && previousMessage.album == currentMessage.album && previousMessage.thumbnailUrl == currentMessage.thumbnailUrl && skipMessage)) {
         if (nativeVersionStatus < 0) {
             function getNativeVersion() {
-                nativePort.postMessage({ getNativeVersion: true });
+                sendNativeMessage({ getNativeVersion: true });
             }
             assertNativeExistence(getNativeVersion);
         }
@@ -477,6 +503,7 @@ let pipeInterval = setInterval(function () {
 
     previousMessage.title = currentMessage.title;
     previousMessage.author = currentMessage.author;
+    previousMessage.album = currentMessage.album;
     previousMessage.timeLeft = currentMessage.timeLeft;
     previousMessage.thumbnailUrl = currentMessage.thumbnailUrl;
     isIdle = false;
