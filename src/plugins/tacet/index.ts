@@ -287,11 +287,10 @@ function isAllowedHost(urlString: string): boolean {
 // Deliberately not listed, each checked rather than assumed: precise-volume and
 // exponential-volume (they set the element's volume, upstream of the source, so
 // it scales the stems too), custom-output-device (it moves the shared context,
-// which Tacet follows), pitch-shift (it never touches the audio graph),
-// skip-silences (its analyser is a tap that never reaches the destination —
-// though its seeking desyncs the stem deck, which then restarts at the playhead)
-// and better-lyrics-shaders (it reads the bus the renderer published instead of
-// building its own).
+// which Tacet follows), skip-silences (its analyser is a tap that never reaches
+// the destination — though its seeking desyncs the stem deck, which then restarts
+// at the playhead) and better-lyrics-shaders (it reads the bus the renderer
+// published instead of building its own).
 //
 // Strings only here, and no function. Everything that acts on this list lives
 // inside backend.start, because module-scope code in a plugin file is bundled
@@ -315,6 +314,12 @@ const CONFLICTING_PLUGINS = [
     nameKey: 'plugins.equalizer.name',
     reason:
       'connects the player straight to the speakers through its filters (source → filter → destination), a second path the karaoke mix does not control, so the vocals stay audible.',
+  },
+  {
+    id: 'pitch-shift',
+    nameKey: 'plugins.pitch-shift.name',
+    reason:
+      'claims the same media element source, cutting its direct line to the speakers and routing it through a pitch-shifting worklet instead. Whichever of the two attaches last takes the source away from the other, so one of them is left playing nothing.',
   },
 ] as const;
 

@@ -315,7 +315,7 @@ async function onApiLoaded() {
   audioSource.connect(audioContext.destination);
 
   // Expose the audio bus for Better Lyrics and Tacet extensions
-  (window as any).__blyricsAudio = {
+  window.__blyricsAudio = {
     version: 1,
     context: audioContext,
     source: audioSource,

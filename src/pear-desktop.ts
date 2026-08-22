@@ -20,6 +20,13 @@ declare module '*.svg?raw' {
 
   export default html;
 }
+// AudioWorklet sources are imported as text and handed to addModule via a Blob URL:
+// the renderer builds as one IIFE, so there is no stable chunk URL to point at.
+declare module '*.js?raw' {
+  const source: string;
+
+  export default source;
+}
 declare module '*.png' {
   const element: HTMLImageElement;
 

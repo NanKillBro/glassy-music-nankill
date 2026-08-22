@@ -10,29 +10,62 @@ import { getSongMenu } from '@/providers/dom-elements';
 
 import { PlaybackSpeedSlider } from './components/slider';
 
+import type { PlaybackSpeedPluginConfig } from './index';
+import type { RendererContext } from '@/types/contexts';
+import type { MusicPlayer } from '@/types/music-player';
+
 const MIN_PLAYBACK_SPEED = 0.07;
 const MAX_PLAYBACK_SPEED = 16;
 
+/**
+ * Chromium already defaults `preservesPitch` to true, so speed changes keep the
+ * original key. Setting it explicitly makes that intentional rather than inherited,
+ * and re-asserts it on every rate change in case something else flips it.
+ *
+ * With it true, this plugin and pitch-shift are independent: Chromium's WSOLA hands
+ * the pitch worklet samples that are already pitch-correct, so speed and key can be
+ * set separately. (At extreme rates the two stretchers' artifacts compound.)
+ */
+const applyRateSettings = (videoElement: HTMLVideoElement) => {
+  const wantsPreservedPitch = !vinylMode();
+  if (videoElement.preservesPitch !== wantsPreservedPitch) {
+    videoElement.preservesPitch = wantsPreservedPitch;
+  }
+  if (videoElement.playbackRate !== speed()) {
+    videoElement.playbackRate = speed();
+  }
+};
+
 const forcePlaybackRate = (e: Event) => {
   if (e.target instanceof HTMLVideoElement) {
-    const videoElement = e.target;
-    if (videoElement.playbackRate !== speed()) {
-      videoElement.playbackRate = speed();
-    }
+    applyRateSettings(e.target);
   }
 };
 
 const roundToTwo = (n: number) => Math.round(n * 1e2) / 1e2;
 
 const [speed, setSpeed] = createSignal(1);
+const [vinylMode, setVinylMode] = createSignal(false);
 const sliderContainer = document.createElement('div');
 
-export const onPlayerApiReady = () => {
+export const onConfigChange = (newConfig: PlaybackSpeedPluginConfig) => {
+  setVinylMode(newConfig.vinylMode);
+
+  const videoElement = document.querySelector<HTMLVideoElement>('video');
+  if (videoElement) applyRateSettings(videoElement);
+};
+
+export const onPlayerApiReady = async (
+  _playerApi: MusicPlayer,
+  { getConfig }: RendererContext<PlaybackSpeedPluginConfig>,
+) => {
+  setVinylMode((await getConfig()).vinylMode);
+
   const observePopupContainer = () => {
     const updatePlayBackSpeed = () => {
       const videoElement = document.querySelector<HTMLVideoElement>('video');
       if (videoElement) {
-        videoElement.playbackRate = speed();
+        applyRateSettings(videoElement);
       }
 
       setSpeed(speed());

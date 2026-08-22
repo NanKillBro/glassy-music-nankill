@@ -1,0 +1,85 @@
+/* Player-bar pitch control. Colours come from YouTube Music's own custom properties
+   so the control tracks the app's theme instead of hardcoding light or dark. */
+
+.pitch-shift-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 32px;
+  margin: 0 4px;
+  padding: 0 2px;
+  border-radius: 16px;
+  background: var(
+    --ytmusic-menu-item-hover-background-color,
+    rgba(255 255 255 / 8%)
+  );
+  font-family: var(--ytmusic-font-body, Roboto, sans-serif);
+  user-select: none;
+  flex: none;
+}
+
+.pitch-shift-control button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--ytmusic-text-primary, #fff);
+  font: inherit;
+  cursor: pointer;
+  border-radius: 50%;
+  transition:
+    opacity 0.1s ease,
+    background 0.1s ease;
+}
+
+.pitch-shift-step {
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0.75;
+}
+
+.pitch-shift-step:hover:not(:disabled) {
+  opacity: 1;
+  background: var(
+    --ytmusic-menu-item-hover-background-color,
+    rgba(255 255 255 / 12%)
+  );
+}
+
+.pitch-shift-step:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.pitch-shift-value {
+  min-width: 30px;
+  height: 24px;
+  padding: 0 4px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  opacity: 0.75;
+}
+
+.pitch-shift-value:hover {
+  opacity: 1;
+  background: var(
+    --ytmusic-menu-item-hover-background-color,
+    rgba(255 255 255 / 12%)
+  );
+}
+
+/* Shifted playback is a non-default state the listener should be able to spot. */
+.pitch-shift-value.pitch-shift-active {
+  opacity: 1;
+  color: var(--ytmusic-play-button-foreground-color, #000);
+  background: var(--ytmusic-play-button-background-color, #fff);
+}
+
+.pitch-shift-control button:focus-visible {
+  outline: 2px solid var(--ytmusic-text-primary, #fff);
+  outline-offset: 1px;
+}

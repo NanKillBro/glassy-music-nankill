@@ -721,8 +721,31 @@
         "button": "Picture-in-picture"
       }
     },
+    "pitch-shift": {
+      "description": "Change a song's key without changing its speed. Transpose up or down by up to 12 semitones, with [ and ] to step and \\ to reset. Adds about 60 ms of audio latency, which may nudge lyrics slightly out of sync",
+      "menu": {
+        "down": "Pitch Down (−1 semitone)",
+        "original-key": "Original Key",
+        "phase-locking": "High-quality phase locking",
+        "reset": "Reset to Original Key",
+        "semitones": "{{value}} semitones",
+        "set": {
+          "label": "Set Key"
+        },
+        "show-player-bar-control": "Show control in player bar",
+        "up": "Pitch Up (+1 semitone)"
+      },
+      "name": "Pitch Shift",
+      "templates": {
+        "control": "Pitch (semitones)",
+        "reset": "Reset pitch to original key"
+      }
+    },
     "playback-speed": {
       "description": "Listen fast, listen slow! Adds a slider that controls song speed",
+      "menu": {
+        "vinyl-mode": "Vinyl mode (speed also changes pitch)"
+      },
       "name": "Playback Speed",
       "templates": {
         "button": "Speed"

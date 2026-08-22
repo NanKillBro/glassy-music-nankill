@@ -13,6 +13,19 @@ declare global {
     audioContext: AudioContext;
   }
 
+  /**
+   * The shared audio bus renderer.ts publishes for the Better Lyrics and Tacet
+   * extensions, which live in the page world and cannot call
+   * createMediaElementSource themselves — only one source per media element is
+   * ever possible, so everything downstream has to share this one.
+   */
+  interface BlyricsAudioBus {
+    version: number;
+    context: AudioContext;
+    source: MediaElementAudioSourceNode;
+    element: HTMLVideoElement;
+  }
+
   interface DocumentEventMap {
     'peard:audio-can-play': CustomEvent<Compressor>;
     'videodatachange': CustomEvent<VideoDataChanged>;
@@ -24,6 +37,7 @@ declare global {
     mainConfig: typeof config;
     electronIs: typeof is;
     ELECTRON_RENDERER_URL: string | undefined;
+    __blyricsAudio?: BlyricsAudioBus;
     /**
      * Internal variable (Last interaction time)
      */
