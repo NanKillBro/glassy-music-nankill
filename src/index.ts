@@ -104,17 +104,29 @@ app.commandLine.appendSwitch('ozone-platform-hint', 'auto');
 // OverlayScrollbar: Required for overlay scrollbars
 // UseOzonePlatform: Required for Wayland support
 // WaylandWindowDecorations: Required for Wayland decorations
-// WebGPU: Required for Tacet ONNX Runtime vocal separation
-app.commandLine.appendSwitch(
-  'enable-features',
-  'OverlayScrollbar,SharedArrayBuffer,UseOzonePlatform,WaylandWindowDecorations',
-);
-
-// WebGPU: Required for Tacet's ONNX Runtime vocal separation (navigator.gpu)
-app.commandLine.appendSwitch('enable-unsafe-webgpu');
+// Kept as an array because appendSwitch('enable-features', ...) overwrites
+// rather than merges — a second call anywhere would silently drop all of these.
+const enabledFeatures = [
+  'OverlayScrollbar',
+  'SharedArrayBuffer',
+  'UseOzonePlatform',
+  'WaylandWindowDecorations',
+];
 
 // Disable Fluent Scrollbar (for OverlayScrollbar)
 const disabledFeatures = ['FluentScrollbar'];
+
+// WebGPU: required for Tacet's ONNX Runtime vocal separation (navigator.gpu).
+// What this switch actually does is *permit Chromium's SwiftShader fallback
+// adapter*. Measured on CachyOS / Mesa / Iris Xe: with it there is a software
+// WebGPU adapter, without it there is no adapter at all — neither is hardware,
+// which would need the Vulkan backend, and that crashes the GPU process on
+// Wayland. So this was never a route to the GPU in either direction. It stays
+// unconditional because on platforms that do have hardware WebGPU it is what
+// enables it, and because Tacet's worker now refuses a software adapter by name
+// rather than trusting a command-line switch to mean anything about the hardware.
+app.commandLine.appendSwitch('enable-unsafe-webgpu');
+
 let disableHardwareAcceleration = config.get(
   'options.disableHardwareAcceleration',
 );
@@ -146,10 +158,24 @@ if (is.linux()) {
 
 if (disableHardwareAcceleration) {
   if (is.dev()) console.log('Disabling hardware acceleration');
+  // Process-global, with no per-window opt-out, so this also decides Tacet's
+  // execution provider: WebGPU still resolves, to a CPU fallback adapter, which
+  // is *slower* than the wasm provider rather than faster. The worker rejects
+  // that adapter on its own, so separation lands on multi-threaded wasm — worth
+  // saying, because "hardware acceleration off" does not read like it should have
+  // any bearing on an ONNX graph.
+  if (await config.plugins.isEnabled('tacet')) {
+    console.warn(
+      '[GPU] Hardware acceleration is disabled, so WebGPU can only offer a ' +
+        'software adapter. Tacet will refuse it and run vocal separation on ' +
+        'multi-threaded CPU wasm instead.',
+    );
+  }
   app.disableHardwareAcceleration();
 }
 
-// Apply disabled features
+// Apply features
+app.commandLine.appendSwitch('enable-features', enabledFeatures.join(','));
 app.commandLine.appendSwitch('disable-features', disabledFeatures.join(','));
 
 if (config.get('options.proxy')) {
@@ -649,6 +675,51 @@ const getDefaultLocale = async (locale: string) =>
   Object.keys(await languageResources()).includes(locale) ? locale : null;
 
 app.whenReady().then(async () => {
+  // Nothing in this app has ever stated whether the GPU was actually being used,
+  // which is how a run on Chromium's software renderer passed for a working GPU
+  // path for a long time. Two lines close that gap.
+  //
+  // A GPU-process death otherwise only reaches raw Chromium stderr, which a
+  // packaged launch discards; this puts it in the app's own log with the exit
+  // code intact (133 = 128+5 = SIGTRAP = a deliberate CHECK/LOG(FATAL) abort).
+  app.on('child-process-gone', (_event, details) => {
+    if (details.type !== 'GPU') return;
+    console.error(
+      `${LoggerPrefix} GPU process gone: reason=${details.reason} exitCode=${details.exitCode}`,
+    );
+  });
+
+  // Answers "is hardware WebGPU actually on" as a fact rather than an inference —
+  // but only when it is read at the right moment, which is not here. Chromium
+  // answers "disabled" for *every* feature while the GPU process has not reported
+  // back yet (SafeGetFeatureStatus treats uninitialised gpu_feature_info as
+  // disabled), so reading it straight after whenReady() prints a full page of
+  // `disabled_software` / `disabled_off` on a perfectly healthy GPU.
+  //
+  // Measured on Electron 42: at whenReady() both `webgl` and `webgpu` read
+  // `disabled_off`; ~100 ms later, on the first gpu-info-update, both read
+  // `enabled`. The first version of this logged that first snapshot, and the
+  // output was fiction — it was read as "the whole app is on software rendering".
+  // So wait for the event, and if it never comes say that instead of guessing.
+  let gpuStatusLogged = false;
+  const logGpuFeatureStatus = (when: string) => {
+    if (gpuStatusLogged) return;
+    gpuStatusLogged = true;
+    try {
+      console.log(
+        `${LoggerPrefix} GPU feature status (${when}):`,
+        JSON.stringify(app.getGPUFeatureStatus()),
+      );
+    } catch (error) {
+      console.warn(`${LoggerPrefix} Could not read GPU feature status:`, error);
+    }
+  };
+  app.on('gpu-info-update', () => logGpuFeatureStatus('gpu-info-update'));
+  setTimeout(
+    () => logGpuFeatureStatus('no gpu-info-update within 10s — GPU process may be absent'),
+    10_000,
+  );
+
   if (!config.get('options.language')) {
     const locale = await getDefaultLocale(app.getLocale());
     if (locale) {

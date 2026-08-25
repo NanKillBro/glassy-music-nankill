@@ -81,6 +81,23 @@ function destroyWindow(which: 'offscreen' | 'popup'): void {
   }
 }
 
+// Writes one forwarded line to the main-process console. Kept trivial on
+// purpose: it dispatches to the matching console method and swallows any failure.
+// The write is wrapped because this runs inside Electron `console-message`
+// handlers — a throw here (which is exactly what an undefined reference did
+// before) escapes back into an event handler, and a packaged Linux app launched
+// from a `.desktop` entry can have no usable stdout, so the write itself can
+// EPIPE. Losing a diagnostic line must never take a handler down with it.
+function emitForwarded(level: 'error' | 'warn' | 'log', line: string): void {
+  try {
+    if (level === 'error') console.error(line);
+    else if (level === 'warn') console.warn(line);
+    else console.log(line);
+  } catch {
+    // Nothing we can do if even logging fails; do not let it propagate.
+  }
+}
+
 // The offscreen document is where separation actually happens, and it is the one
 // context with no window a listener can open devtools on — so without this its
 // console goes nowhere. The extension gates its own logging behind a setting, so
@@ -198,7 +215,17 @@ async function createOffscreenWindow(forceWasm: boolean): Promise<void> {
     // The execution provider has to be settled before the page builds its first
     // inference session, so it travels in the url rather than through storage,
     // which the page only reads after it has already started.
-    const query = forceWasm ? '?forceWasm=1' : '';
+    // `owner=host` marks the window *this plugin* created. Electron 42 does
+    // implement chrome.offscreen — measured, contrary to an earlier note here —
+    // but hasDocument() answers false while this plain BrowserWindow is loaded,
+    // because a window is not registered with the offscreen document manager.
+    // So the extension's own ensureOffscreenDocument() used to create a *second*
+    // live copy of the page on top of this one, and every track was separated
+    // twice. The extension side no longer creates one (patch 11
+    // `host-owns-offscreen-document`); this marker stays because without it the
+    // two are indistinguishable in the devtools target list — same url, same
+    // <title>. Anything appearing WITHOUT the marker was not created here.
+    const query = `?owner=host${forceWasm ? '&forceWasm=1' : ''}`;
     if (forceWasm) {
       console.log('[Tacet] forceWasm mode enabled — ONNX will use the WASM (CPU) backend');
     }
