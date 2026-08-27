@@ -26,7 +26,13 @@ export default createPlugin({
   config: {
     enabled: true,
     enableV4Scroll: true,
-    scrollingMode: 'glassyflow' as 'glassyflow' | 'smooth',
+    // Turbo is the default: same spring motion as 'glassyflow', but baked into
+    // WAAPI keyframes so it runs on the compositor instead of writing style
+    // every frame. 'glassyflow' stays available as a fallback.
+    scrollingMode: 'glassyflow-turbo' as
+      | 'glassyflow'
+      | 'glassyflow-turbo'
+      | 'smooth',
     activeTheme: 'glassy-merge-theme' as string,
     engine: 'old' as 'old' | 'new',
   },
@@ -1053,7 +1059,7 @@ export default createPlugin({
             label: 'Old engine (Stable)',
             sublabel: 'Legacy CSS/JS engine (Rich visuals)',
             toolTip:
-              'Uses the legacy CSS & JS animation engine. Stable with rich visuals, but performance is heavier with known unfixable limitations. Only receives Glassy Music updates and supports GlassyFlow scrolling.',
+              'Uses the legacy CSS & JS animation engine. Stable with rich visuals, but performance is heavier with known unfixable limitations. Only receives Glassy Music updates. Supports all three scrolling modes.',
             type: 'radio',
             checked: currentEngine === 'old',
             click: async () => {
@@ -1079,7 +1085,7 @@ export default createPlugin({
             label: 'New engine (Beta)',
             sublabel: 'New WAAPI engine (High performance)',
             toolTip:
-              'Uses the new WAAPI animation engine. Delivers higher performance, better sync/seek handling, and supports both Smooth & GlassyFlow scrolling. Note: This engine is currently in Beta and under active development.',
+              'Uses the new WAAPI animation engine. Delivers higher performance, better sync/seek handling, and supports all three scrolling modes. Note: This engine is currently in Beta and under active development.',
             type: 'radio',
             checked: currentEngine === 'new',
             click: async () => {
@@ -1105,67 +1111,96 @@ export default createPlugin({
       },
     ];
 
-    const currentScrolling = pluginConfig.scrollingMode || 'glassyflow';
+    const currentScrolling = pluginConfig.scrollingMode || 'glassyflow-turbo';
 
-    if (isNewEngine) {
-      menuItems.push({
-        label: 'Scrolling',
-        submenu: [
-          {
-            label: 'Smooth Scrolling',
-            sublabel: 'Native WAAPI scrolling (Lightweight & responsive)',
-            toolTip:
-              'Uses the native WAAPI scrolling algorithm for clean, lightweight, and responsive line transitions.',
-            type: 'radio',
-            checked: currentScrolling === 'smooth',
-            click: async () => {
-              if (currentScrolling === 'smooth') return;
-              await setConfig({ scrollingMode: 'smooth' });
-              await refresh?.();
-              const result = await dialog.showMessageBox(window, {
-                type: 'info',
-                title: 'Scrolling Mode Changed',
-                message:
-                  'Scrolling mode has been changed to Smooth Scrolling. The app needs to restart to apply the change.',
-                buttons: ['Restart Now', 'Later'],
-                defaultId: 0,
-                cancelId: 1,
-              });
+    // Both engines can pick any of the three modes. 'smooth' means "let the
+    // engine do its own scrolling" — the new engine's built-in WAAPI scroll, or
+    // BetterLyrics' native CSS scroll on the legacy engine — and injects no
+    // scroll script at all.
+    menuItems.push({
+      label: 'Scrolling',
+      submenu: [
+        {
+          label: 'Smooth Scrolling',
+          sublabel: "Engine's built-in scrolling (Lightweight & responsive)",
+          toolTip:
+            'Leaves line transitions to the lyrics engine itself — no scroll script is injected. The lightest option, and the most responsive.',
+          type: 'radio',
+          checked: currentScrolling === 'smooth',
+          click: async () => {
+            if (currentScrolling === 'smooth') return;
+            await setConfig({ scrollingMode: 'smooth' });
+            await refresh?.();
+            const result = await dialog.showMessageBox(window, {
+              type: 'info',
+              title: 'Scrolling Mode Changed',
+              message:
+                'Scrolling mode has been changed to Smooth Scrolling. The app needs to restart to apply the change.',
+              buttons: ['Restart Now', 'Later'],
+              defaultId: 0,
+              cancelId: 1,
+            });
 
-              if (result.response === 0) {
-                restart();
-              }
-            },
+            if (result.response === 0) {
+              restart();
+            }
           },
-          {
-            label: 'GlassyFlow Scrolling',
-            sublabel: 'Signature fluid scrolling (Custom spring physics & motion)',
-            toolTip:
-              "Injects Glassy Music's custom GlassyFlow engine featuring dynamic spring physics and signature fluid motion curves.",
-            type: 'radio',
-            checked: currentScrolling === 'glassyflow',
-            click: async () => {
-              if (currentScrolling === 'glassyflow') return;
-              await setConfig({ scrollingMode: 'glassyflow' });
-              await refresh?.();
-              const result = await dialog.showMessageBox(window, {
-                type: 'info',
-                title: 'Scrolling Mode Changed',
-                message:
-                  'Scrolling mode has been changed to GlassyFlow Scrolling. The app needs to restart to apply the change.',
-                buttons: ['Restart Now', 'Later'],
-                defaultId: 0,
-                cancelId: 1,
-              });
+        },
+        {
+          label: 'GlassyFlow Scrolling',
+          sublabel:
+            'Signature fluid scrolling (Custom spring physics & motion)',
+          toolTip:
+            "Injects Glassy Music's custom GlassyFlow engine featuring dynamic spring physics and signature fluid motion curves.",
+          type: 'radio',
+          checked: currentScrolling === 'glassyflow',
+          click: async () => {
+            if (currentScrolling === 'glassyflow') return;
+            await setConfig({ scrollingMode: 'glassyflow' });
+            await refresh?.();
+            const result = await dialog.showMessageBox(window, {
+              type: 'info',
+              title: 'Scrolling Mode Changed',
+              message:
+                'Scrolling mode has been changed to GlassyFlow Scrolling. The app needs to restart to apply the change.',
+              buttons: ['Restart Now', 'Later'],
+              defaultId: 0,
+              cancelId: 1,
+            });
 
-              if (result.response === 0) {
-                restart();
-              }
-            },
+            if (result.response === 0) {
+              restart();
+            }
           },
-        ],
-      });
-    }
+        },
+        {
+          label: 'GlassyFlow Turbo',
+          sublabel: 'Same spring motion, GPU-composited (No main-thread cost)',
+          toolTip:
+            'The same GlassyFlow spring physics, solved ahead of time and handed to the compositor instead of being stepped every frame. Identical motion, but the main thread stays free — far smoother on heavy pages and high-refresh displays.',
+          type: 'radio',
+          checked: currentScrolling === 'glassyflow-turbo',
+          click: async () => {
+            if (currentScrolling === 'glassyflow-turbo') return;
+            await setConfig({ scrollingMode: 'glassyflow-turbo' });
+            await refresh?.();
+            const result = await dialog.showMessageBox(window, {
+              type: 'info',
+              title: 'Scrolling Mode Changed',
+              message:
+                'Scrolling mode has been changed to GlassyFlow Turbo. The app needs to restart to apply the change.',
+              buttons: ['Restart Now', 'Later'],
+              defaultId: 0,
+              cancelId: 1,
+            });
+
+            if (result.response === 0) {
+              restart();
+            }
+          },
+        },
+      ],
+    });
 
     return menuItems;
   },
@@ -1385,19 +1420,33 @@ export default createPlugin({
           }
         }
 
-        const isGlassyFlow =
-          !isNewEngine ||
-          (pluginConfig.scrollingMode ?? 'glassyflow') === 'glassyflow';
+        // Which scroll script to inject, for EITHER engine. 'smooth' means the
+        // engine handles its own scrolling, so nothing is injected.
+        const scrollScripts: Record<string, string | null> = {
+          'glassyflow': 'glassyflow.js',
+          'glassyflow-turbo': 'glassyflow-turbo.js',
+          'smooth': null,
+        };
+        const scrollMode = pluginConfig.scrollingMode ?? 'glassyflow-turbo';
+        // An unknown value (config written by a newer build, then downgraded)
+        // falls back to the original rAF engine rather than silently disabling
+        // scrolling altogether — for a corrupt/unrecognised value, the
+        // longest-serving path is the safer landing spot even though Turbo is
+        // now the default.
+        const scrollScript =
+          scrollMode in scrollScripts
+            ? scrollScripts[scrollMode]
+            : 'glassyflow.js';
 
-        if (pluginConfig.enableV4Scroll !== false && isGlassyFlow) {
+        if (pluginConfig.enableV4Scroll !== false && scrollScript) {
           try {
-            const jsPath = path.join(blExtRoot, 'glassyflow.js');
+            const jsPath = path.join(blExtRoot, scrollScript);
             if (fs.existsSync(jsPath)) {
               scriptsToInject.push(fs.readFileSync(jsPath, 'utf8'));
             }
           } catch (err) {
             console.error(
-              '[BetterLyrics Preload] Failed to read glassyflow.js:',
+              `[BetterLyrics Preload] Failed to read ${scrollScript}:`,
               err,
             );
           }
@@ -1426,7 +1475,9 @@ export default createPlugin({
     observer: null as MutationObserver | null,
     onPlayerApiReady() {
       const setupButton = () => {
-        const topRow = document.querySelector('.top-row-buttons.ytmusic-player');
+        const topRow = document.querySelector(
+          '.top-row-buttons.ytmusic-player',
+        );
         if (!topRow) return;
 
         if (topRow.querySelector('.fullscreen-lyrics-button')) return;
@@ -1502,9 +1553,8 @@ export default createPlugin({
           if (fsBtn) {
             clickFullscreen();
           } else {
-            const playerBar = document.querySelector<HTMLElement>(
-              'ytmusic-player-bar',
-            );
+            const playerBar =
+              document.querySelector<HTMLElement>('ytmusic-player-bar');
             if (playerBar) {
               playerBar.click();
               setTimeout(clickFullscreen, 500);
@@ -1528,7 +1578,9 @@ export default createPlugin({
         setupButton();
       });
 
-      const target = document.querySelector('.top-row-buttons.ytmusic-player') || document.body;
+      const target =
+        document.querySelector('.top-row-buttons.ytmusic-player') ||
+        document.body;
       this.observer.observe(target, { childList: true, subtree: true });
     },
     stop() {
@@ -1537,4 +1589,3 @@ export default createPlugin({
     },
   },
 });
-
