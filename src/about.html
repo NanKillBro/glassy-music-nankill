@@ -316,6 +316,61 @@
             box-shadow: 0 2px 10px rgba(255, 154, 158, 0.3);
         }
 
+        .log-tag.release {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: #082138;
+            box-shadow: 0 2px 12px rgba(0, 242, 254, 0.4);
+        }
+
+        .log-intro {
+            background: rgba(0, 242, 254, 0.08);
+            border-left: 3px solid #00f2fe;
+            border-radius: 0 10px 10px 0;
+            padding: 10px 14px;
+            margin-bottom: 16px;
+            font-size: 14.5px;
+            line-height: 1.55;
+            color: rgba(255, 255, 255, 0.92);
+        }
+
+        .log-section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #00f2fe;
+            margin-top: 14px;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .log-entry a {
+            color: #00f2fe;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .log-entry a:hover {
+            text-decoration: underline;
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
+        }
+
+        .log-footnotes {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.15);
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.65);
+            line-height: 1.5;
+        }
+
+        .log-footnotes p {
+            margin: 6px 0;
+        }
+
+        .log-footnotes strong {
+            color: #00f2fe;
+        }
+
+
         ul { padding-left: 20px; margin: 0; }
         
         li {
@@ -387,6 +442,59 @@
         <div class="changelog-label">What's New</div>
 
         <div class="scroll-area">
+        <div class="log-entry">
+            <div class="log-header">
+                <span class="log-version">Version 4.0.0</span>
+                <span class="log-tag release">RELEASE</span>
+            </div>
+
+            <div class="log-intro">
+                🎉 <strong>Thank you guys so much for 200 stars!</strong> This means a lot to me. No idea why my project has that many stars recently, but I decided to re-version the release so that future versions follow Semantic Versioning. So yeah, v4.0.0 is here guys! This update is bigger than normal.
+            </div>
+
+            <div class="log-section-title" style="margin-top: 0;">🔄 Updates</div>
+            <ul>
+                <li>Upstreamed to commit <code>1e2aac5</code></li>
+                <li>Updated BL (New Engine) to version <code>2.4.0.3</code></li>
+                <li>Updated YDP to version <code>v1.8.1</code></li>
+            </ul>
+
+            <div class="log-section-title">✨ New Features &amp; UI</div>
+            <ul>
+                <li>Added new plugin: Better Lyrics Tacet <sup style="color:#00f2fe;">(1)</sup>, Pitch Shift</li>
+                <li>Added new scroll type: GlassyFlow Turbo <sup style="color:#00f2fe;">(2)</sup></li>
+                <li>Player speed plugin now has an option to change pitch</li>
+                <li>New UI for the Play Together popup</li>
+                <li>New UI for the top bar icon row</li>
+                <li>Better Lyrics now has 2 engine options: New Engine (still in development) and Old Engine (default). Allows you to change the scroll animation.</li>
+                <li>Some performance improvements <sup style="color:#00f2fe;">(2)</sup></li>
+            </ul>
+
+            <div class="log-section-title">🐛 Bug Fixes</div>
+            <ul>
+                <li>Fixed nav bar have solid color. <a href="https://github.com/NanKillBro/glassy-music-nankill/issues/14" target="_blank">#14</a> <sup style="color:#00f2fe;">(3)</sup></li>
+                <li>Fixed invisible arrow in Better Lyrics settings.</li>
+                <li>Fixed Toggling the Navigation plugin multiple times will spawn multiple controls. <a href="https://github.com/NanKillBro/glassy-music-nankill/issues/12" target="_blank">#12</a></li>
+                <li>Fixed Song/Video misaligned to the right <sup style="color:#00f2fe;">(3)</sup></li>
+            </ul>
+
+            <div class="log-section-title">📜 Other Changes</div>
+            <ul>
+                <li>Merge Theme no longer has a version.</li>
+                <li>Hovering over lyrics no longer makes them brighter, but scrolling still works.</li>
+                <li>Hovering at the bottom in fullscreen no longer makes the control bar appear; you now need to hover over the Better Lyrics Dock. <sup style="color:#00f2fe;">(4)</sup></li>
+                <li>"Instrumental Only" lyrics will now be hidden.</li>
+                <li>Moved font settings into the Better Lyrics plugin menu.</li>
+                <li>"Fullscreen lyrics without fullscreen" button now also shows up in the top bar row.</li>
+            </ul>
+
+            <div class="log-footnotes">
+                <p><strong>(1)</strong> Tacet is still experimental. You can use it for crossfade only if you want, but for separating voices, it may or may not work and can cause performance issues or freeze the app. Currently, only Windows supports using the GPU to separate voices. On Linux, it may use the CPU since the GPU doesn't work for some reason.</p>
+                <p><strong>(2)</strong> YTM recently changed something that made the app really laggy. This is my best attempt to improve performance against it, though some performance issues remain.</p>
+                <p><strong>(3)</strong> YTM changed something that broke things, and this update fixes it.</p>
+                <p><strong>(4)</strong> YouTube broke something, so I decided to turn the bug into a feature, lol.</p>
+            </div>
+        </div>
         <div class="log-entry">
             <div class="log-header">
                 <span class="log-version">Version 3.12.10-beta</span>
