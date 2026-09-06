@@ -2,7 +2,16 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+#### [v4.0.0](https://github.com/NanKillBro/glassy-music-nankill/compare/v3.12.10-beta...v4.0.0)
+
+- fix Toggling the Navigation plugin multiple times will spawn multiple controls. Fixes #12 [`#12`](https://github.com/NanKillBro/glassy-music-nankill/issues/12)
+- move "Change Fonts..." button [`9ae528e`](https://github.com/NanKillBro/glassy-music-nankill/commit/9ae528ec8f753fb586e6d912859bef43853c3805)
+- pitch control [`6bd73fb`](https://github.com/NanKillBro/glassy-music-nankill/commit/6bd73fbafa9fd964f4f1afc69d43a20ba33a89b2)
+- glassyflow turbo [`0c6751e`](https://github.com/NanKillBro/glassy-music-nankill/commit/0c6751ed5ce407ba8a0c96582d0b1f29cdc9fb3d)
+
 #### [v3.12.10-beta](https://github.com/NanKillBro/glassy-music-nankill/compare/v3.12.9-beta...v3.12.10-beta)
+
+> 27 July 2026
 
 - fix(deps): update dependency pinyin-pro to v3.28.1 [`#4504`](https://github.com/NanKillBro/glassy-music-nankill/pull/4504)
 - Remove compact sidebar plugin [`#4123`](https://github.com/NanKillBro/glassy-music-nankill/pull/4123)
