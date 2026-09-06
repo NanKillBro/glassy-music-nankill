@@ -619,6 +619,14 @@ export const mainMenuTemplate = async (
               },
             },
             {
+              label: 'Disable Startup Splash Screen',
+              type: 'checkbox',
+              checked: config.get('options.disableSplash'),
+              click(item: MenuItem) {
+                config.setMenuOption('options.disableSplash', item.checked);
+              },
+            },
+            {
               label: t(
                 'main.menu.options.submenu.advanced-options.submenu.restart-on-config-changes',
               ),

@@ -48,6 +48,13 @@ import {
   setupProtocolHandler,
 } from '@/providers/protocol-handler';
 import { setupSongInfo } from '@/providers/song-info';
+import {
+  closeSplashWindow,
+  createSplashWindow,
+  isSplashOpen,
+  isSplashWindow,
+  setSplashStatus,
+} from '@/providers/splash';
 import { setUpTray } from '@/tray';
 import { LoggerPrefix } from '@/utils';
 import { isTesting } from '@/utils/testing';
@@ -63,6 +70,9 @@ unhandled({
 // Prevent window being garbage collected
 let mainWindow: Electron.BrowserWindow | null;
 electronUpdater.autoUpdater.autoDownload = false;
+
+// How long to wait for the main window's first paint before showing it anyway.
+const SPLASH_REVEAL_TIMEOUT = 20_000;
 
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
@@ -215,6 +225,10 @@ function onClosed() {
   // Dereference the window
   // For multiple Windows store them in an array
   mainWindow = null;
+  // A window that dies before 'ready-to-show' never reaches the handoff below,
+  // and a leftover splash would be the app's only window — so 'window-all-closed'
+  // would never fire and the process would never quit.
+  closeSplashWindow();
 }
 
 ipcMain.handle('peard:get-main-plugin-names', async () =>
@@ -416,6 +430,7 @@ async function createMainWindow() {
   await initHook(win);
   initTheme(win);
 
+  setSplashStatus('Loading plugins…');
   await loadAllMainPlugins(win);
 
   if (windowPosition) {
@@ -520,15 +535,42 @@ async function createMainWindow() {
     showUnresponsiveDialog(win, details);
   });
 
-  win.once('ready-to-show', () => {
+  // Nothing has been on screen since launch until this point: the window is
+  // created hidden and only becomes visible on its first paint, which for a
+  // remote URL is a whole navigation away. That gap is what the splash covers,
+  // so the two are handed over together here.
+  let splashFallbackTimeout: NodeJS.Timeout | undefined;
+
+  const revealMainWindow = () => {
+    clearTimeout(splashFallbackTimeout);
     if (config.get('options.appVisible')) {
       win.show();
     }
-  });
+
+    // After show(), so the taskbar entry never blinks out between the two.
+    closeSplashWindow();
+  };
+
+  win.once('ready-to-show', revealMainWindow);
+
+  // A navigation that stalls paints nothing, so 'ready-to-show' never arrives.
+  // Without the splash that has always meant "no window, indefinitely"; with it,
+  // it would mean a splash screen with no way into the app. Give up waiting
+  // instead — a later 'ready-to-show' is then a harmless no-op.
+  splashFallbackTimeout = setTimeout(() => {
+    if (!isSplashOpen()) return;
+    console.warn(
+      LoggerPrefix,
+      `The window has not painted within ${SPLASH_REVEAL_TIMEOUT / 1000}s, showing it anyway`,
+    );
+    revealMainWindow();
+  }, SPLASH_REVEAL_TIMEOUT);
 
   removeContentSecurityPolicy();
 
   win.webContents.on('dom-ready', () => {
+    setSplashStatus('Loading interface…');
+
     if (useInlineMenu && is.windows()) {
       win.setTitleBarOverlay({
         ...defaultTitleBarOverlayOptions,
@@ -556,12 +598,24 @@ async function createMainWindow() {
     }
   });
 
+  setSplashStatus('Connecting…');
   win.webContents.loadURL(urlToLoad);
 
   return win;
 }
 
-app.once('browser-window-created', (_event, win) => {
+// Everything below belongs to the main window, and used to be an
+// app.once() that relied on the main window being the first window ever created.
+// The splash window is created before it, so the filter is now explicit: skip the
+// splash, then run for the first real window only — which keeps plugin windows
+// (Tacet's offscreen and popup windows) out of it exactly as `once` did.
+let mainWindowInitialized = false;
+app.on('browser-window-created', (_event, win) => {
+  if (isSplashWindow(win) || mainWindowInitialized) {
+    return;
+  }
+  mainWindowInitialized = true;
+
   if (config.get('options.overrideUserAgent')) {
     // User agents are from https://developers.whatismybrowser.com/useragents/explore/
     const originalUserAgent = win.webContents.userAgent;
@@ -675,6 +729,23 @@ const getDefaultLocale = async (locale: string) =>
   Object.keys(await languageResources()).includes(locale) ? locale : null;
 
 app.whenReady().then(async () => {
+  // First, before anything else in here: the earliest moment a window can exist
+  // at all. Everything below — i18n, plugin startup, the navigation itself —
+  // happens with nothing on screen otherwise, which is why launching reads as
+  // slow even when it isn't.
+  //
+  // Skipped when starting hidden to the tray, since there is nothing to wait for
+  // then, and under Playwright, where tests take app.firstWindow().
+  if (
+    !isTesting() &&
+    !config.get('options.disableSplash') &&
+    config.get('options.appVisible')
+  ) {
+    createSplashWindow(icon);
+  }
+
+  app.on('before-quit', () => closeSplashWindow());
+
   // Nothing in this app has ever stated whether the GPU was actually being used,
   // which is how a run on Chromium's software renderer passed for a working GPU
   // path for a long time. Two lines close that gap.
@@ -719,6 +790,8 @@ app.whenReady().then(async () => {
     () => logGpuFeatureStatus('no gpu-info-update within 10s — GPU process may be absent'),
     10_000,
   );
+
+  setSplashStatus('Loading language…');
 
   if (!config.get('options.language')) {
     const locale = await getDefaultLocale(app.getLocale());

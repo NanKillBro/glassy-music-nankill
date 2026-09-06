@@ -1,0 +1,237 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Glassy Music</title>
+    <style>
+      :root {
+        --bg: #0b0b0f;
+        --fg: #ffffff;
+        --dim: rgba(255, 255, 255, 0.45);
+        --brand-a: #ff632f;
+        --brand-b: #dc148c;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--fg);
+        font-family:
+          system-ui,
+          -apple-system,
+          'Segoe UI',
+          Roboto,
+          Ubuntu,
+          Arial,
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        user-select: none;
+        cursor: default;
+      }
+
+      /* Frameless window, so the whole surface is the drag handle. */
+      .splash {
+        -webkit-app-region: drag;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+        height: 100%;
+        padding: 32px;
+        /* A hint of the icon's own gradient, so the window is not a black box
+           before the logo paints. */
+        background:
+          radial-gradient(
+            60% 50% at 50% 38%,
+            rgba(220, 20, 140, 0.18),
+            transparent 70%
+          ),
+          radial-gradient(
+            45% 40% at 50% 30%,
+            rgba(255, 99, 47, 0.16),
+            transparent 70%
+          );
+      }
+
+      .logo {
+        width: 132px;
+        height: 132px;
+        animation: breathe 2.8s ease-in-out infinite;
+      }
+
+      /* Transform-only, so this never touches layout or paint. */
+      @keyframes breathe {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.035);
+        }
+      }
+
+      .name {
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        margin: -4px 0 0;
+      }
+
+      .footer {
+        position: absolute;
+        left: 32px;
+        right: 32px;
+        bottom: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .track {
+        position: relative;
+        width: 100%;
+        max-width: 260px;
+        height: 3px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+      }
+
+      .track::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        width: 40%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--brand-a), var(--brand-b));
+        animation: slide 1.5s ease-in-out infinite;
+      }
+
+      @keyframes slide {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(250%);
+        }
+      }
+
+      .status {
+        max-width: 100%;
+        font-size: 12.5px;
+        color: var(--dim);
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="splash">
+      <svg
+        class="logo"
+        viewBox="0 0 1024 1024"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle cx="512" cy="512" r="410" fill="url(#splashRing)" />
+        <circle
+          cx="512"
+          cy="512"
+          r="402"
+          stroke="url(#splashEdge)"
+          stroke-opacity="0.5"
+          stroke-width="16"
+        />
+        <path
+          d="M675 505.072C680.333 508.152 680.333 515.849 675 518.928L436.5 656.626C431.167 659.705 424.5 655.857 424.5 649.698V374.302C424.5 368.24 430.96 364.415 436.249 367.234L436.5 367.374L675 505.072Z"
+          fill="url(#splashPlay)"
+          stroke="url(#splashPlayEdge)"
+          stroke-width="8"
+          stroke-linejoin="round"
+        />
+        <defs>
+          <linearGradient
+            id="splashRing"
+            x1="102"
+            y1="102"
+            x2="922"
+            y2="922"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stop-color="#FF632F" />
+            <stop offset="1" stop-color="#DC148C" />
+          </linearGradient>
+          <radialGradient
+            id="splashEdge"
+            cx="0"
+            cy="0"
+            r="1"
+            gradientUnits="userSpaceOnUse"
+            gradientTransform="translate(512 512) rotate(45) scale(579.828)"
+          >
+            <stop offset="0.68" stop-color="white" stop-opacity="0" />
+            <stop offset="0.72" stop-color="white" />
+          </radialGradient>
+          <linearGradient
+            id="splashPlay"
+            x1="512"
+            y1="329"
+            x2="512"
+            y2="695"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stop-color="white" />
+            <stop offset="1" stop-color="white" stop-opacity="0.4" />
+          </linearGradient>
+          <linearGradient
+            id="splashPlayEdge"
+            x1="512"
+            y1="329"
+            x2="512"
+            y2="695"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stop-color="white" stop-opacity="0" />
+            <stop offset="1" stop-color="white" stop-opacity="0.5" />
+          </linearGradient>
+        </defs>
+      </svg>
+
+      <p class="name">Glassy Music</p>
+
+      <div class="footer">
+        <div class="track"></div>
+        <!-- Shipped with the first stage already in place, so the very first
+             painted frame has text without waiting on the main process. -->
+        <p class="status" id="status">Starting&hellip;</p>
+      </div>
+    </div>
+
+    <script>
+      (() => {
+        const status = document.getElementById('status');
+        // Called from the main process via executeJavaScript. textContent, so a
+        // status string can never inject markup.
+        window.__splashStatus = (text) => {
+          if (typeof text === 'string' && text) status.textContent = text;
+        };
+      })();
+    </script>
+  </body>
+</html>

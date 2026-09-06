@@ -52,6 +52,7 @@ export interface DefaultConfig {
     customWindowTitle?: string;
     customFonts: CustomFontsConfig;
     disableMinSize?: boolean;
+    disableSplash?: boolean;
   };
   'plugins': Record<string, unknown>;
 }
@@ -93,6 +94,11 @@ export const defaultConfig: DefaultConfig = {
       lyrics: { enabled: false, useGoogleFont: false, family: 'Satoshi', size: 3, sizeUnit: 'rem', weight: 700 },
     },
     disableMinSize: false,
+    // Negative on purpose. conf merges `defaults` shallowly and get() never
+    // falls back to them, so a key added under `options` reads back as
+    // undefined for everyone who already has a config file — a `showSplash:
+    // true` default would mean "no splash" for every existing install.
+    disableSplash: false,
   },
   'plugins': {},
 };
