@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
 import { constants as fsConstants } from 'node:fs';
-import { access, cp, mkdir, rm, rename, stat } from 'node:fs/promises';
+import { access, cp, mkdir, rm, rename, stat, readFile } from 'node:fs/promises';
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -82,19 +82,78 @@ async function exists(path) {
   }
 }
 
+// Returns the version a package's own manifest reports, or null when it is not
+// installed. Used to compare what is on disk against what the lockfile asks for.
+async function installedVersion(packageDir, dependency) {
+  try {
+    const manifestPath = join(packageDir, 'node_modules', dependency, 'package.json');
+    return JSON.parse(await readFile(manifestPath, 'utf8')).version ?? null;
+  } catch {
+    return null;
+  }
+}
+
+// Returns the version the lockfile pins for a dependency, or null when the lockfile
+// is missing or does not mention it. npm and pnpm lockfiles are read differently;
+// only npm's is parsed here because that is the format the submodules use.
+async function lockedVersion(packageDir, dependency) {
+  try {
+    const lock = JSON.parse(await readFile(join(packageDir, 'package-lock.json'), 'utf8'));
+    return lock.packages?.[`node_modules/${dependency}`]?.version ?? null;
+  } catch {
+    return null;
+  }
+}
+
+// A submodule's node_modules is a build input, and an out-of-date one is silently
+// wrong rather than loudly broken: when better-lyrics-glassy-dev moved from
+// extension@2.1.3 to 4.1.5, the pre-existing tree from the older commit was kept and
+// every build afterwards ran the old bundler. 2.1.3 does not mount an Extension.js
+// default-export entrypoint, so `export default function initializeBetterLyrics()`
+// was left unreferenced and rspack tree-shook the whole initialisation path out of
+// the bundle — the extension loaded, evaluated, and did nothing at all, with no error
+// anywhere to point at the cause.
+//
+// So the presence of node_modules is not enough; we reinstall whenever the version on
+// disk disagrees with the lockfile. `npm ci` rather than `npm install` for the repair,
+// to land exactly what is pinned instead of re-resolving ranges.
+const VERSION_CRITICAL_DEPENDENCIES = ['extension'];
+
 async function installDependencies(packageDir) {
   const nodeModulesDir = join(packageDir, 'node_modules');
+  const isPnpm = await exists(join(packageDir, 'pnpm-lock.yaml'));
 
-  if (await exists(nodeModulesDir)) {
+  if (!(await exists(nodeModulesDir))) {
+    const args = ['install'];
+    if (isPnpm) {
+      args.push('--ignore-workspace');
+    }
+    runPackageManager(args, packageDir, isPnpm);
     return;
   }
 
-  const isPnpm = await exists(join(packageDir, 'pnpm-lock.yaml'));
-  const args = ['install'];
+  // pnpm submodules are left alone: the check below reads an npm lockfile, and pnpm's
+  // own install is already strict about matching its lockfile.
   if (isPnpm) {
-    args.push('--ignore-workspace');
+    return;
   }
-  runPackageManager(args, packageDir, isPnpm);
+
+  for (const dependency of VERSION_CRITICAL_DEPENDENCIES) {
+    const [onDisk, pinned] = await Promise.all([
+      installedVersion(packageDir, dependency),
+      lockedVersion(packageDir, dependency),
+    ]);
+
+    if (pinned === null || onDisk === pinned) {
+      continue;
+    }
+
+    console.log(
+      `[extensions] ${dependency}: installed ${onDisk ?? 'nothing'}, lockfile wants ${pinned} — reinstalling`,
+    );
+    runNpm(['ci', '--no-audit', '--no-fund'], packageDir);
+    return;
+  }
 }
 
 async function buildExtension(job) {
@@ -136,6 +195,7 @@ async function main() {
       await buildExtension(job);
       const stagedDir = join(stagingRoot, basename(job.targetDir));
       await stageDirectory(job.outputDir, stagedDir);
+
       stagedJobs.push({ stagedDir, targetDir: job.targetDir, name: job.name });
     }
 

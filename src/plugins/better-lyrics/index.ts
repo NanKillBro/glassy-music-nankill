@@ -20,6 +20,52 @@ import { createPlugin } from '@/utils';
 // Nếu build xong mở không lên thì check log xem ID thực tế là gì rồi thay vào đây
 const EXTENSION_ID = 'effdbpeggelllpfkjppbokhmmiinhlmg';
 
+// Where the settings UI lives inside the extension, if its manifest cannot be read.
+// The two engines disagree: the old one emits options_ui/page.html and
+// action/default_popup.html, while the new one's build tool names both index.html
+// under options/ and action/. Loading the wrong pair fails with ERR_FILE_NOT_FOUND.
+const FALLBACK_SETTINGS_PAGES = {
+  old: { optionsPage: 'options_ui/page.html', popupPage: 'action/default_popup.html' },
+  new: { optionsPage: 'options/index.html', popupPage: 'action/index.html' },
+} as const;
+
+function extensionDir(isNewEngine: boolean): string {
+  const basePath = app.isPackaged
+    ? process.resourcesPath
+    : path.join(__dirname, '../../');
+  return path.join(basePath, 'extensions', isNewEngine ? 'bl-dev' : 'bl');
+}
+
+// Reads the settings page paths out of the extension's own manifest so an upstream
+// rename cannot silently break the menu item again. Falls back to the known-good
+// pair for the engine when the manifest is missing, unreadable, or does not declare
+// the fields.
+function resolveSettingsPages(isNewEngine: boolean): {
+  optionsPage: string;
+  popupPage: string;
+} {
+  const fallback = FALLBACK_SETTINGS_PAGES[isNewEngine ? 'new' : 'old'];
+
+  try {
+    const manifestPath = path.join(extensionDir(isNewEngine), 'manifest.json');
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8')) as {
+      options_ui?: { page?: unknown };
+      action?: { default_popup?: unknown };
+    };
+
+    const page = manifest.options_ui?.page;
+    const popup = manifest.action?.default_popup;
+
+    return {
+      optionsPage: typeof page === 'string' && page ? page : fallback.optionsPage,
+      popupPage: typeof popup === 'string' && popup ? popup : fallback.popupPage,
+    };
+  } catch (err) {
+    console.error('[BetterLyrics] Could not read manifest for settings page:', err);
+    return fallback;
+  }
+}
+
 export default createPlugin({
   name: () => 'Better Lyrics',
   restartNeeded: false,
@@ -81,14 +127,16 @@ export default createPlugin({
           // Force canvas transparency for chrome-extension pages
           settingsWin.setBackgroundColor('#00000000');
 
-          const optionsUrl = `chrome-extension://${EXTENSION_ID}/options_ui/page.html`;
+          const { optionsPage, popupPage } = resolveSettingsPages(isNewEngine);
 
-          settingsWin.loadURL(optionsUrl).catch((err) => {
-            console.error('Cannot open settings page:', err);
-            settingsWin.loadURL(
-              `chrome-extension://${EXTENSION_ID}/action/default_popup.html`,
-            );
-          });
+          settingsWin
+            .loadURL(`chrome-extension://${EXTENSION_ID}/${optionsPage}`)
+            .catch((err) => {
+              console.error('Cannot open settings page:', err);
+              settingsWin.loadURL(
+                `chrome-extension://${EXTENSION_ID}/${popupPage}`,
+              );
+            });
 
           // Inject frameless window UI after the page loads
           settingsWin.webContents.on('dom-ready', () => {
@@ -1208,13 +1256,7 @@ export default createPlugin({
     async start({ getConfig, setConfig, window }) {
       const pluginConfig = await getConfig();
       const isNewEngine = pluginConfig.engine === 'new';
-      const engineFolder = isNewEngine ? 'bl-dev' : 'bl';
-
-      const basePath = app.isPackaged
-        ? process.resourcesPath
-        : path.join(__dirname, '../../');
-
-      const extensionPath = path.join(basePath, 'extensions', engineFolder);
+      const extensionPath = extensionDir(isNewEngine);
       const isGlassyTheme =
         pluginConfig.activeTheme === 'glassy-merge-theme' ||
         !pluginConfig.activeTheme;
