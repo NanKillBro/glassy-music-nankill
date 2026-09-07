@@ -1105,7 +1105,7 @@ export default createPlugin({
         submenu: [
           {
             label: 'Old engine (Stable)',
-            sublabel: 'Legacy CSS/JS engine (Rich visuals)',
+            sublabel: 'Legacy CSS/JS engine (Default)',
             toolTip:
               'Uses the legacy CSS & JS animation engine. Stable with rich visuals, but performance is heavier with known unfixable limitations. Only receives Glassy Music updates. Supports all three scrolling modes.',
             type: 'radio',
@@ -1131,7 +1131,7 @@ export default createPlugin({
           },
           {
             label: 'New engine (Beta)',
-            sublabel: 'New WAAPI engine (High performance)',
+            sublabel: 'New WAAPI engine',
             toolTip:
               'Uses the new WAAPI animation engine. Delivers higher performance, better sync/seek handling, and supports all three scrolling modes. Note: This engine is currently in Beta and under active development.',
             type: 'radio',
