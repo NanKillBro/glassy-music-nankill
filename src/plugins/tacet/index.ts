@@ -10,7 +10,14 @@ import { createPlugin } from '@/utils';
 export type TacetPluginConfig = {
   enabled: boolean;
   forceWasm: boolean;
+  /**
+   * The experimental warning was accepted for this run. It is asked once
+   * separation is actually switched on, not when the plugin is enabled — see
+   * SEPARATION_MODE_MARKER below.
+   */
   warningAccepted?: boolean;
+  /** The "restart to finish enabling" offer has already been made this run. */
+  restartOffered?: boolean;
   /** Conflicting plugins the listener chose to keep enabled anyway. */
   acceptedConflicts?: string[];
 };
@@ -18,6 +25,142 @@ export type TacetPluginConfig = {
 let tacetExtensionId: string | null = null;
 let popupWindow: BrowserWindow | null = null;
 let offscreenWindow: BrowserWindow | null = null;
+
+// -- Knowing which separation mode the listener picked -----------------------
+
+// The experimental warning is about separation: that is what loads a 163 MB model,
+// runs a neural network over every segment of the track and can take the app with
+// it. Everything else this plugin does — the crossfade, the fader dock — is cheap,
+// so enabling the plugin is not on its own worth a modal.
+//
+// The mode lives in the extension's own `chrome.storage.local` under `blk-settings`
+// ("off" | "on-demand" | "every-track", src/settings/separation-mode.ts), which the
+// main process has no api for: extension storage is a LevelDB inside the session and
+// Electron exposes no reader for it. What the main process does have is a window on
+// an extension page — the offscreen document — so the page is asked to read the mode
+// and to report every later change, and it reports over its console, which is
+// already forwarded here. That avoids a preload handing `ipcRenderer` to a page whose
+// contextIsolation is off, and avoids patching the extension (the tracked sources
+// there stay upstream-pristine; see extensions-src/tacet-glassy/CLAUDE.md).
+type TacetSeparationMode = 'off' | 'on-demand' | 'every-track';
+
+const SETTINGS_STORAGE_KEY = 'blk-settings';
+const SEPARATION_MODE_MARKER = '__TACET_SEPARATION_MODE__';
+
+function isSeparationMode(value: string): value is TacetSeparationMode {
+  return value === 'off' || value === 'on-demand' || value === 'every-track';
+}
+
+// Named after the row the listener just changed — "Sing-along" in the extension's
+// settings window — so the warning is recognisable as an answer to it.
+const SEPARATION_MODE_DETAIL: Record<Exclude<TacetSeparationMode, 'off'>, string> = {
+  'on-demand':
+    'Sing-along is set to "Only when I ask": tapping the button separates the track you are on.',
+  'every-track':
+    'Sing-along is set to "Every track": each one is separated as it plays, without being asked.',
+};
+
+// Assigned by backend.start and cleared by stop(). The reports arrive on a
+// module-scope listener, but everything they lead to needs the plugin's config, and
+// a module-scope reference to '@/config' would break the renderer bundle — see the
+// note above CONFLICTING_PLUGINS.
+let onSeparationModeReport: ((mode: TacetSeparationMode) => void) | null = null;
+
+const SEPARATION_MODE_WATCHER_SCRIPT = `
+(() => {
+  const KEY = ${JSON.stringify(SETTINGS_STORAGE_KEY)};
+  const MARKER = ${JSON.stringify(SEPARATION_MODE_MARKER)};
+  if (window.__tacetSeparationModeWatched) return 'already watching';
+  window.__tacetSeparationModeWatched = true;
+
+  const modeOf = (value) => {
+    const settings = value && typeof value === 'object' ? value : {};
+    const mode = settings.separationMode;
+    if (mode === 'off' || mode === 'on-demand' || mode === 'every-track') return mode;
+    // No mode stored yet: the extension falls back to the two booleans it used to
+    // keep (resolveSeparationMode in src/settings/settings.ts), and so must this,
+    // or a profile from before that migration reads as off while separation is on.
+    const sang = settings.singAlongEnabled;
+    const auto = settings.autoSeparateEnabled;
+    if (typeof sang !== 'boolean' && typeof auto !== 'boolean') return 'off';
+    if (sang === false) return 'off';
+    return auto === false ? 'on-demand' : 'every-track';
+  };
+
+  const report = (value) => {
+    console.log(MARKER + ' ' + modeOf(value));
+  };
+
+  chrome.storage.local
+    .get(KEY)
+    .then((stored) => report(stored[KEY]))
+    .catch((error) => {
+      console.error('failed to read the separation mode for the host', error);
+    });
+
+  chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName !== 'local' || !(KEY in changes)) return;
+    report(changes[KEY].newValue);
+  });
+
+  return 'watching';
+})();
+`;
+
+const TURN_SEPARATION_OFF_SCRIPT = `
+(async () => {
+  const KEY = ${JSON.stringify(SETTINGS_STORAGE_KEY)};
+  const stored = await chrome.storage.local.get(KEY);
+  const current = stored[KEY];
+  const base = current && typeof current === 'object' ? current : {};
+  await chrome.storage.local.set({ [KEY]: Object.assign({}, base, { separationMode: 'off' }) });
+  return 'off';
+})();
+`;
+
+function watchSeparationMode(window: BrowserWindow): void {
+  const { webContents } = window;
+
+  webContents.on('console-message', (details) => {
+    if (!details.message.startsWith(SEPARATION_MODE_MARKER)) return;
+    const reported = details.message.slice(SEPARATION_MODE_MARKER.length).trim();
+    if (!isSeparationMode(reported)) {
+      console.error(`[Tacet] Unknown separation mode reported: ${reported}`);
+      return;
+    }
+    console.log(`[Tacet] Separation mode is ${reported}`);
+    onSeparationModeReport?.(reported);
+  });
+
+  // On 'did-finish-load' rather than after the loadURL below, so that a reload —
+  // or a rebuild after a renderer crash — reinstalls the watcher with the page.
+  webContents.on('did-finish-load', () => {
+    webContents.executeJavaScript(SEPARATION_MODE_WATCHER_SCRIPT).catch((err) => {
+      console.error('[Tacet] Failed to watch the separation mode:', err);
+    });
+  });
+}
+
+// Writing the setting back is the same channel in reverse, and it is the honest
+// answer to "no" here: the listener turned separation on from the extension's own
+// settings window, so that is where the refusal has to land. Disabling the whole
+// plugin instead would take the crossfade and the fader with it — and close the
+// window they were just looking at.
+async function turnSeparationOff(): Promise<void> {
+  const target = offscreenWindow;
+  if (!target || target.isDestroyed()) {
+    console.error('[Tacet] Cannot turn separation off, there is no offscreen window');
+    return;
+  }
+
+  await target.webContents.executeJavaScript(TURN_SEPARATION_OFF_SCRIPT);
+  console.log('[Tacet] Separation turned back off, the warning was declined');
+
+  // The settings window reads the mode once, when it builds the row, and its own
+  // storage.onChanged handler only re-checks which panels are live (popup.tsx) — so
+  // the select would go on showing the mode that was just declined.
+  if (popupWindow && !popupWindow.isDestroyed()) popupWindow.reload();
+}
 
 // -- Keeping the process mortal ---------------------------------------------
 
@@ -104,6 +247,9 @@ function emitForwarded(level: 'error' | 'warn' | 'log', line: string): void {
 // this stays quiet unless that setting is on.
 function forwardConsole(window: BrowserWindow, label: string): void {
   window.webContents.on('console-message', (details) => {
+    // The separation-mode reports below travel over this console; they are a
+    // channel, not a diagnostic, and watchSeparationMode logs what they mean.
+    if (details.message.startsWith(SEPARATION_MODE_MARKER)) return;
     const line = `[Tacet][${label}] ${details.message}`;
     if (details.level === 'error') emitForwarded('error', line);
     else if (details.level === 'warning') emitForwarded('warn', line);
@@ -211,6 +357,7 @@ async function createOffscreenWindow(forceWasm: boolean): Promise<void> {
 
     created.webContents.session.setSpellCheckerEnabled(false);
     forwardConsole(created, 'offscreen');
+    watchSeparationMode(created);
 
     // The execution provider has to be settled before the page builds its first
     // inference session, so it travels in the url rather than through storage,
@@ -359,9 +506,10 @@ export default createPlugin({
   description: () => 'Vocal separation for karaoke and crossfade between tracks',
   restartNeeded: false,
   config: {
-    enabled: false,
+    enabled: true,
     forceWasm: false,
     warningAccepted: false,
+    restartOffered: false,
   } as TacetPluginConfig,
 
   menu: async ({ getConfig, setConfig }) => {
@@ -430,29 +578,24 @@ export default createPlugin({
       const targetWindow =
         window ?? BrowserWindow.getFocusedWindow() ?? BrowserWindow.getAllWindows()[0];
 
-      if (!config.warningAccepted) {
-        const dialogOptions: Electron.MessageBoxOptions = {
-          type: 'warning',
-          title: 'Better Lyrics Tacet — Experimental Plugin',
-          message: 'Better Lyrics Tacet is still in active development.',
-          detail:
-            'This plugin may not work properly and can cause the application to freeze and consume massive RAM usage.\n\nDo you want to proceed?',
-          buttons: ['Enable Anyway', 'Disable Plugin'],
-          defaultId: 0,
-          cancelId: 1,
-        };
+      // Enabling this plugin mid-session loads the extension into a session whose
+      // player page is already open, and content scripts only run at navigation — so
+      // the fader and the orchestrator are absent from the page until the app
+      // restarts. Hence the offer, made once per enable (stop() clears the flag on
+      // the way out) and never at boot, where start() runs before the page is loaded
+      // and the extension is therefore in place in time.
+      //
+      // The experimental warning used to be raised here as well. It is now raised
+      // when separation is switched on instead, which is the thing it warns about;
+      // see onSeparationModeReport below.
+      const restartAlreadyOffered =
+        // warningAccepted is what marked a completed enable flow before this flag
+        // existed, and that flow always ended in this offer. Without reading it, an
+        // existing profile would be asked to restart once more, for nothing.
+        config.restartOffered ?? config.warningAccepted ?? false;
 
-        const choice =
-          targetWindow && !targetWindow.isDestroyed()
-            ? await dialog.showMessageBox(targetWindow, dialogOptions)
-            : await dialog.showMessageBox(dialogOptions);
-
-        if (choice.response === 1) {
-          rootConfig.plugins.disable('tacet');
-          return;
-        }
-
-        await setConfig({ warningAccepted: true });
+      if (!restartAlreadyOffered) {
+        await setConfig({ restartOffered: true });
 
         const restartOptions: Electron.MessageBoxOptions = {
           type: 'info',
@@ -485,16 +628,19 @@ export default createPlugin({
       pluginRunning = true;
 
       // Local, not module scope — see the note above CONFLICTING_PLUGINS.
-      const conflictDialogParent = (): BrowserWindow | null => {
+      //
+      // Whichever window is focused first, so the separation warning lands on the
+      // settings window when that is where the mode was just changed. The offscreen
+      // window is the one that can never be it: 1×1 and never shown, a dialog
+      // parented to it would have nowhere to appear.
+      const dialogParent = (): BrowserWindow | null => {
         const candidates = [
-          targetWindow,
           BrowserWindow.getFocusedWindow(),
+          targetWindow,
           ...BrowserWindow.getAllWindows(),
         ];
         for (const candidate of candidates) {
-          // The offscreen window is 1×1 and never shown, so a dialog parented to
-          // it would have nowhere to appear.
-          if (candidate && !candidate.isDestroyed() && !isPluginWindow(candidate)) {
+          if (candidate && !candidate.isDestroyed() && candidate !== offscreenWindow) {
             return candidate;
           }
         }
@@ -533,7 +679,7 @@ export default createPlugin({
 
         conflictDialogOpen = true;
         try {
-          const parent = conflictDialogParent();
+          const parent = dialogParent();
           const choice = parent
             ? await dialog.showMessageBox(parent, dialogOptions)
             : await dialog.showMessageBox(dialogOptions);
@@ -560,26 +706,30 @@ export default createPlugin({
         }
       };
 
+      // The app awaits every plugin's start() before it loads the player page and
+      // installs the menu (loadAllMainPlugins, in src/index.ts), so a dialog opened
+      // from here would hold the whole boot behind a modal parented to a window that
+      // is not on screen yet. An empty url means loadURL has not been called, which
+      // is the case during that initial load and no other time.
+      const whenThePageIsUp = (ask: () => void): void => {
+        if (
+          targetWindow &&
+          !targetWindow.isDestroyed() &&
+          !targetWindow.webContents.getURL()
+        ) {
+          targetWindow.webContents.once('did-finish-load', ask);
+        } else {
+          ask();
+        }
+      };
+
       const askAboutConflicts = (): void => {
         warnAboutConflicts().catch((err) => {
           console.error('[Tacet] Failed to warn about a plugin conflict:', err);
         });
       };
 
-      // The app awaits every plugin's start() before it loads the player page and
-      // installs the menu (loadAllMainPlugins, in src/index.ts), so a dialog
-      // opened from here would hold the whole boot behind a modal parented to a
-      // window that is not on screen yet. An empty url means loadURL has not been
-      // called, which is the case during that initial load and no other time.
-      if (
-        targetWindow &&
-        !targetWindow.isDestroyed() &&
-        !targetWindow.webContents.getURL()
-      ) {
-        targetWindow.webContents.once('did-finish-load', askAboutConflicts);
-      } else {
-        askAboutConflicts();
-      }
+      whenThePageIsUp(askAboutConflicts);
 
       // A conflict can also be created after this plugin has started, by enabling
       // one of those plugins from the menu. rootConfig.watch has no unsubscribe,
@@ -599,6 +749,63 @@ export default createPlugin({
           if (turnedOn) askAboutConflicts();
         });
       }
+
+      // -- The experimental warning ------------------------------------------
+
+      // Raised the first time separation is switched on, and once per enable: the
+      // answer is remembered in warningAccepted, which stop() clears, so turning the
+      // plugin off and on again asks once more. The offscreen page reports the mode
+      // as soon as it loads too, which covers the case of a profile that already had
+      // separation on before this plugin was enabled.
+      let separationWarningOpen = false;
+
+      const warnAboutSeparation = async (
+        mode: Exclude<TacetSeparationMode, 'off'>,
+      ): Promise<void> => {
+        if (separationWarningOpen || !pluginRunning) return;
+        if ((await getConfig()).warningAccepted) return;
+
+        const dialogOptions: Electron.MessageBoxOptions = {
+          type: 'warning',
+          title: 'Better Lyrics Tacet — Experimental Feature',
+          message: 'Vocal separation in Better Lyrics Tacet is still in active development.',
+          detail:
+            `${SEPARATION_MODE_DETAIL[mode]}\n\n` +
+            'Separating a track runs a neural network on this machine. It may not work properly and can cause the application to freeze and consume massive RAM usage.\n\nDo you want to proceed?',
+          buttons: ['Turn It On Anyway', 'Keep Separation Off'],
+          defaultId: 0,
+          cancelId: 1,
+        };
+
+        separationWarningOpen = true;
+        try {
+          const parent = dialogParent();
+          const choice = parent
+            ? await dialog.showMessageBox(parent, dialogOptions)
+            : await dialog.showMessageBox(dialogOptions);
+
+          if (choice.response === 1) {
+            await turnSeparationOff();
+            return;
+          }
+
+          await setConfig({ warningAccepted: true });
+          console.log(`[Tacet] Separation accepted at the listener's request (${mode})`);
+        } finally {
+          separationWarningOpen = false;
+        }
+      };
+
+      onSeparationModeReport = (mode) => {
+        // "off" is the default and the state the refusal above writes back, so it is
+        // the one mode that has nothing to warn about.
+        if (mode === 'off') return;
+        whenThePageIsUp(() => {
+          warnAboutSeparation(mode).catch((err) => {
+            console.error('[Tacet] Failed to warn about separation:', err);
+          });
+        });
+      };
 
       const basePath = app.isPackaged
         ? process.resourcesPath
@@ -667,24 +874,25 @@ export default createPlugin({
       await createOffscreenWindow(config.forceWasm);
     },
     stop({ setConfig }) {
-      setConfig({ warningAccepted: false, acceptedConflicts: [] });
+      setConfig({ warningAccepted: false, restartOffered: false, acceptedConflicts: [] });
+      onSeparationModeReport = null;
 
       // The host offers a restart itself when a plugin declaring restartNeeded is
-      // toggled (the config watcher in src/index.ts), but it offers it on the way
-      // in as well — at the same moment start() raises the experimental warning,
-      // so the two dialogs land on top of each other. Hence restartNeeded: false,
-      // and the offer is made here instead, on the way out, which is the only
-      // path that reaches stop(): forceUnloadMainPlugin is called from the
-      // watcher when the plugin is disabled, and unloadAllMainPlugins — the one
-      // caller that would fire on the way to quitting — is never used.
+      // toggled (the config watcher in src/index.ts), but it offers it on the way in
+      // as well — where start() already makes that offer for itself, so the two
+      // dialogs would land on top of each other. Hence restartNeeded: false, and the
+      // offer is made here instead for the way out, which is the only path that
+      // reaches stop(): forceUnloadMainPlugin is called from the watcher when the
+      // plugin is disabled, and unloadAllMainPlugins — the one caller that would fire
+      // on the way to quitting — is never used.
       //
       // A restart genuinely is needed: the extension stays registered in the
       // session for the life of the process, and the separation worker's model
       // stays in the GPU's memory with it.
       //
-      // Skipped when the plugin never ran, which is the case when the listener
-      // answered the experimental warning with "Disable Plugin" — that answer
-      // disables the plugin and so arrives back here.
+      // Skipped when the plugin never ran — start() returns before this is set when
+      // the plugin is disabled, and when the listener answered its offer by
+      // restarting, in which case a second offer is noise.
       const wasRunning = pluginRunning;
       pluginRunning = false;
 
