@@ -3,7 +3,6 @@
 # 🕶️ Glassy Music
 
 [![GPLv3 License](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://github.com/NanKillBro/glassy-music-nankill/src/branch/master/LICENSE)
-[![eslint code style](https://img.shields.io/badge/code_style-eslint-5ed9c7.svg?style=for-the-badge)](https://github.com/NanKillBro/glassy-music-nankill/src/branch/master/eslint.config.mjs)
 [![Github Release](https://img.shields.io/github/v/release/NanKillBro/glassy-music-nankill?include_prereleases&label=version&color=orange&style=for-the-badge)](https://github.com/NanKillBro/glassy-music-nankill/releases)
 
 </div>
