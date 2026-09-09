@@ -10,7 +10,7 @@ import {
 } from 'electron';
 import is from 'electron-is';
 import { satisfies } from 'semver';
-import { languageResources } from 'virtual:i18n';
+import { availableLanguages, languageLabels } from 'virtual:i18n';
 import { allPlugins } from 'virtual:plugins';
 
 import { APPLICATION_NAME, setLanguage, t } from '@/i18n';
@@ -254,9 +254,6 @@ export const mainMenuTemplate = async (
         );
       }),
   );
-
-  const langResources = await languageResources();
-  const availableLanguages = Object.keys(langResources);
 
   return [
     {
@@ -526,13 +523,13 @@ export const mainMenuTemplate = async (
             availableLanguages
               .map(
                 (lang): Electron.MenuItemConstructorOptions => ({
-                  label: `${langResources[lang].translation.language?.name ?? 'Unknown'} (${langResources[lang].translation.language?.['local-name'] ?? 'Unknown'})`,
+                  label: `${languageLabels[lang].name} (${languageLabels[lang].localName})`,
                   type: 'checkbox',
                   checked: (config.get('options.language') ?? 'en') === lang,
-                  click() {
+                  async click() {
                     config.setMenuOption('options.language', lang);
-                    refreshMenu(win);
-                    setLanguage(lang);
+                    await setLanguage(lang);
+                    await refreshMenu(win);
                     dialog.showMessageBox(win, {
                       title: t(
                         'main.menu.options.submenu.language.dialog.title',
