@@ -506,7 +506,7 @@ export default createPlugin({
   description: () => 'Vocal separation for karaoke and crossfade between tracks',
   restartNeeded: false,
   config: {
-    enabled: true,
+    enabled: false,
     forceWasm: false,
     warningAccepted: false,
     restartOffered: false,
