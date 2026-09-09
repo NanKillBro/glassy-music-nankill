@@ -5,7 +5,13 @@ import {
   session,
   type MenuItemConstructorOptions,
 } from 'electron';
+import * as config from '@/config';
 import { createPlugin } from '@/utils';
+
+import {
+  isGlassyMergeTheme,
+  POPUP_LOCK_HASH,
+} from '../better-lyrics/theme';
 
 // 1. Định nghĩa kiểu dữ liệu cho Config (Chỉ giữ lại enabled)
 export type BetterLyricsShadersConfig = {
@@ -60,6 +66,15 @@ export default createPlugin({
   } as BetterLyricsShadersConfig,
 
   menu: async (): Promise<MenuItemConstructorOptions[]> => {
+    // Kept inside `menu` (which the plugin loader strips from the renderer and
+    // preload bundles) so the `@/config` import cannot leak into them.
+    const popupLockHash = (): string => {
+      const blConfig = config.plugins.getOptions<{ activeTheme?: string }>(
+        'better-lyrics',
+      );
+      return isGlassyMergeTheme(blConfig?.activeTheme) ? POPUP_LOCK_HASH : '';
+    };
+
     return [
       {
         label: 'Open Settings',
@@ -89,7 +104,9 @@ export default createPlugin({
             },
           });
 
-          popupWindow.loadURL(`chrome-extension://${extId}/popup.html`);
+          popupWindow.loadURL(
+            `chrome-extension://${extId}/popup.html${popupLockHash()}`,
+          );
 
           popupWindow.on('closed', () => {
             popupWindow = null;

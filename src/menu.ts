@@ -17,6 +17,7 @@ import { APPLICATION_NAME, setLanguage, t } from '@/i18n';
 
 import * as config from './config';
 import { getAllMenuTemplate, loadAllMenuPlugins } from './loader/menu';
+import { isGlassyMergeTheme } from './plugins/better-lyrics/theme';
 import { restart } from './providers/app-controls';
 import { startingPages } from './providers/extracted-data';
 import promptOptions from './providers/prompt-options';
@@ -38,7 +39,7 @@ const pluginEnabledMenu = async (
   refreshMenu: (() => void) | undefined = undefined,
 ): Promise<Electron.MenuItemConstructorOptions> => {
   const betterLyricsConfig = config.plugins.getOptions<{ activeTheme?: string }>('better-lyrics');
-  const isGlassyTheme = betterLyricsConfig?.activeTheme === 'glassy-merge-theme' || !betterLyricsConfig?.activeTheme;
+  const isGlassyTheme = isGlassyMergeTheme(betterLyricsConfig?.activeTheme);
 
   const lockedPlugins = ['better-lyrics'];
   if (isGlassyTheme) {

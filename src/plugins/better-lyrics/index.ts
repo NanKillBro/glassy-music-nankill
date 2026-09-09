@@ -16,6 +16,12 @@ import { restart } from '@/providers/app-controls';
 import { openFontSettingsWindow } from '@/providers/font-settings';
 import { createPlugin } from '@/utils';
 
+import {
+  GLASSY_THEME_LOCK_ATTRIBUTE,
+  GLASSY_THEME_LOCK_KEY,
+  isGlassyMergeTheme,
+} from './theme';
+
 // ID này lấy từ manifest key bạn cung cấp, hoặc bạn xem log cũ (mjfeakl...)
 // Nếu build xong mở không lên thì check log xem ID thực tế là gì rồi thay vào đây
 const EXTENSION_ID = 'effdbpeggelllpfkjppbokhmmiinhlmg';
@@ -1257,9 +1263,7 @@ export default createPlugin({
       const pluginConfig = await getConfig();
       const isNewEngine = pluginConfig.engine === 'new';
       const extensionPath = extensionDir(isNewEngine);
-      const isGlassyTheme =
-        pluginConfig.activeTheme === 'glassy-merge-theme' ||
-        !pluginConfig.activeTheme;
+      const isGlassyTheme = isGlassyMergeTheme(pluginConfig.activeTheme);
 
       console.log(
         '[BetterLyrics] Engine:',
@@ -1430,9 +1434,41 @@ export default createPlugin({
   preload: {
     async start({ getConfig }) {
       const pluginConfig = await getConfig();
-      const isGlassyTheme =
-        pluginConfig.activeTheme === 'glassy-merge-theme' ||
-        !pluginConfig.activeTheme;
+      const isGlassyTheme = isGlassyMergeTheme(pluginConfig.activeTheme);
+
+      // The shaders content script reads these to pin itself to default settings.
+      // Published on two channels because they fail in different ways: the DOM is
+      // shared by every world on the page but is not yet built this early, while
+      // localStorage is available immediately. Either one is enough.
+      // Both branches run so a flag left behind by a previous session on the
+      // glassy theme is cleared when the user switches away from it.
+      const publishThemeLock = () => {
+        try {
+          if (isGlassyTheme) {
+            localStorage.setItem(GLASSY_THEME_LOCK_KEY, '1');
+          } else {
+            localStorage.removeItem(GLASSY_THEME_LOCK_KEY);
+          }
+        } catch (err) {
+          console.error(
+            '[BetterLyrics Preload] Could not publish the theme lock flag:',
+            err,
+          );
+        }
+
+        const root = document.documentElement;
+        if (!root) return;
+        if (isGlassyTheme) {
+          root.setAttribute(GLASSY_THEME_LOCK_ATTRIBUTE, '1');
+        } else {
+          root.removeAttribute(GLASSY_THEME_LOCK_ATTRIBUTE);
+        }
+      };
+
+      publishThemeLock();
+      // YouTube Music replaces the document element during its own boot, which
+      // would drop the attribute set above.
+      window.addEventListener('DOMContentLoaded', publishThemeLock);
 
       if (isGlassyTheme) {
         const isNewEngine = pluginConfig.engine === 'new';
