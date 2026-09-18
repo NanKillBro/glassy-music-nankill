@@ -1111,7 +1111,7 @@ export default createPlugin({
         submenu: [
           {
             label: 'Old engine (Stable)',
-            sublabel: 'Legacy CSS/JS engine (Default)',
+            sublabel: 'Legacy CSS/JS engine',
             toolTip:
               'Uses the legacy CSS & JS animation engine. Stable with rich visuals, but performance is heavier with known unfixable limitations. Only receives Glassy Music updates. Supports all three scrolling modes.',
             type: 'radio',
