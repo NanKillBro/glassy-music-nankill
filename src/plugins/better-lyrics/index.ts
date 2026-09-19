@@ -1470,20 +1470,20 @@ export default createPlugin({
       // would drop the attribute set above.
       window.addEventListener('DOMContentLoaded', publishThemeLock);
 
+      const isNewEngine = pluginConfig.engine === 'new';
+      const engineFolder = isNewEngine ? 'bl-dev' : 'bl';
+
+      let basePath = path.join(__dirname, '../../');
+      if (!fs.existsSync(path.join(basePath, 'extensions', engineFolder))) {
+        basePath = process.resourcesPath;
+      }
+
+      const blExtRoot = path.join(basePath, 'extensions', engineFolder);
+      const scriptsToInject: string[] = [];
+
+      // 1. Eagerly read theme files only if Glassy Merge Theme is active
       if (isGlassyTheme) {
-        const isNewEngine = pluginConfig.engine === 'new';
-        const engineFolder = isNewEngine ? 'bl-dev' : 'bl';
-
-        let basePath = path.join(__dirname, '../../');
-        if (!fs.existsSync(path.join(basePath, 'extensions', engineFolder))) {
-          basePath = process.resourcesPath;
-        }
-
-        const blExtRoot = path.join(basePath, 'extensions', engineFolder);
         const mergeThemeFiles = ['mergetheme.js', 'fix.js'];
-        const scriptsToInject: string[] = [];
-
-        // 1. Eagerly read files from disk while the browser is still parsing the HTML
         for (const fileName of mergeThemeFiles) {
           try {
             const jsPath = path.join(blExtRoot, fileName);
@@ -1497,40 +1497,42 @@ export default createPlugin({
             );
           }
         }
+      }
 
-        // Which scroll script to inject, for EITHER engine. 'smooth' means the
-        // engine handles its own scrolling, so nothing is injected.
-        const scrollScripts: Record<string, string | null> = {
-          'glassyflow': 'glassyflow.js',
-          'glassyflow-turbo': 'glassyflow-turbo.js',
-          'smooth': null,
-        };
-        const scrollMode = pluginConfig.scrollingMode ?? 'glassyflow-turbo';
-        // An unknown value (config written by a newer build, then downgraded)
-        // falls back to the original rAF engine rather than silently disabling
-        // scrolling altogether — for a corrupt/unrecognised value, the
-        // longest-serving path is the safer landing spot even though Turbo is
-        // now the default.
-        const scrollScript =
-          scrollMode in scrollScripts
-            ? scrollScripts[scrollMode]
-            : 'glassyflow.js';
+      // 2. Which scroll script to inject, for EITHER engine and ANY theme. 'smooth'
+      // means the engine handles its own scrolling, so nothing is injected.
+      const scrollScripts: Record<string, string | null> = {
+        'glassyflow': 'glassyflow.js',
+        'glassyflow-turbo': 'glassyflow-turbo.js',
+        'smooth': null,
+      };
+      const scrollMode = pluginConfig.scrollingMode ?? 'glassyflow-turbo';
+      // An unknown value (config written by a newer build, then downgraded)
+      // falls back to the original rAF engine rather than silently disabling
+      // scrolling altogether — for a corrupt/unrecognised value, the
+      // longest-serving path is the safer landing spot even though Turbo is
+      // now the default.
+      const scrollScript =
+        scrollMode in scrollScripts
+          ? scrollScripts[scrollMode]
+          : 'glassyflow.js';
 
-        if (pluginConfig.enableV4Scroll !== false && scrollScript) {
-          try {
-            const jsPath = path.join(blExtRoot, scrollScript);
-            if (fs.existsSync(jsPath)) {
-              scriptsToInject.push(fs.readFileSync(jsPath, 'utf8'));
-            }
-          } catch (err) {
-            console.error(
-              `[BetterLyrics Preload] Failed to read ${scrollScript}:`,
-              err,
-            );
+      if (pluginConfig.enableV4Scroll !== false && scrollScript) {
+        try {
+          const jsPath = path.join(blExtRoot, scrollScript);
+          if (fs.existsSync(jsPath)) {
+            scriptsToInject.push(fs.readFileSync(jsPath, 'utf8'));
           }
+        } catch (err) {
+          console.error(
+            `[BetterLyrics Preload] Failed to read ${scrollScript}:`,
+            err,
+          );
         }
+      }
 
-        // 2. Inject natively via webFrame instantly upon DOMContentLoaded
+      // 3. Inject natively via webFrame instantly upon DOMContentLoaded
+      if (scriptsToInject.length > 0) {
         window.addEventListener('DOMContentLoaded', async () => {
           for (const scriptCode of scriptsToInject) {
             try {
@@ -1543,7 +1545,7 @@ export default createPlugin({
             }
           }
           console.log(
-            '[BetterLyrics Preload] Successfully injected theme scripts securely via webFrame.',
+            '[BetterLyrics Preload] Successfully injected scripts securely via webFrame.',
           );
         });
       }
