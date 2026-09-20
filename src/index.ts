@@ -157,12 +157,12 @@ if (is.linux()) {
 
   // Overrides WM_CLASS for X11 to correspond to icon filename
   app.setName(
-    'nankill.xyz.glassymusic.mod',
+    'glassymusic.nankill',
   );
   // for wayland
   app.commandLine.appendSwitch(
     'class',
-    'nankill.xyz.glassymusic.mod',
+    'glassymusic.nankill',
   );
 }
 
@@ -823,7 +823,7 @@ app.whenReady().then(async () => {
   // Register appID on windows
   if (is.windows()) {
     const appID =
-      'glassy-music-nankill-mod';
+      'glassy-music-nankill';
     app.setAppUserModelId(appID);
     const appLocation = process.execPath;
     const appData = app.getPath('appData');

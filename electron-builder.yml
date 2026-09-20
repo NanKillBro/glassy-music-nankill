@@ -1,4 +1,4 @@
-appId: "glassy-music-nankill-mod"
+appId: "glassy-music-nankill"
 productName: "Glassy Music"
 publish:
   provider: github
@@ -42,7 +42,7 @@ linux:
   syncDesktopName: true
   desktop:
     entry:
-      StartupWMClass: "nankill.xyz.glassymusic.mod"
+      StartupWMClass: "glassymusic.nankill"
   target:
     - target: AppImage
       arch:
