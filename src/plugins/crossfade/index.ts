@@ -785,6 +785,11 @@ export default createPlugin<
 
           video.volume = 0;
           log.info('[Transition] Advancing to next track in player...');
+          // Announce the automatic advance so that smooth-transitions (when
+          // both plugins are enabled) can tell it apart from a manual skip
+          // and let it through untouched — its skip fade would delay this
+          // call and dip the gain while the video is already silent.
+          document.dispatchEvent(new CustomEvent('crossfade:auto-advance'));
           if (typeof playerApi?.nextVideo === 'function') {
             playerApi.nextVideo();
           } else {

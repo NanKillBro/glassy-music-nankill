@@ -160,6 +160,34 @@ function createGainFader(
 type GainFader = ReturnType<typeof createGainFader>;
 
 /**
+ * The YTM player's own <video>, anchored on the player container so it can
+ * never grab an unrelated <video> injected by other content — most notably
+ * shaders-glassy's animated album art (#bls-video, plus the transient
+ * "bls-video-crossfade-dummy" it keeps during its artwork crossfade), which
+ * lives higher up inside ytmusic-player. Verified against the live DOM: the
+ * player video sits at #movie_player > .html5-video-container > video with
+ * classes "video-stream html5-main-video", and #movie_player contains exactly
+ * one <video> even while the decoy exists — whereas the bare
+ * document.querySelector('video') this replaces resolves to the decoy. The
+ * fallback matches the same element via the YouTube player's own classes for
+ * the window where #movie_player is transiently absent.
+ */
+const getPlayerVideo = (): HTMLVideoElement | null =>
+  document.querySelector<HTMLVideoElement>('#movie_player video') ??
+  document.querySelector<HTMLVideoElement>(
+    'video.video-stream.html5-main-video',
+  );
+
+/**
+ * How long after a 'crossfade:auto-advance' event a track change is still
+ * considered crossfade-driven. The advance call itself is intercepted
+ * synchronously, but the loadstart it causes lands asynchronously (usually
+ * well under a second) — the window covers both without staying open long
+ * enough to swallow an unrelated manual skip.
+ */
+const CROSSFADE_ADVANCE_BYPASS_MS = 2000;
+
+/**
  * Wraps video.pause()/play() directly (not the player API) since the
  * on-screen button and spacebar call the element methods, bypassing the
  * API. Skip buttons are intercepted, faded, then re-clicked with a bypass
@@ -171,6 +199,7 @@ function setupSmoothTransitions(
   getConfig: () => SmoothTransitionsPluginConfig | null,
   debug: DebugState,
   fader: GainFader,
+  crossfadeActive: boolean,
 ): Teardown {
   debug.video = video;
 
@@ -296,6 +325,34 @@ function setupSmoothTransitions(
     skipSafetyTimer = null;
   });
 
+  // --- Crossfade coordination ---
+  // When the crossfade plugin is enabled it owns the automatic end-of-track
+  // transition (video-volume handoff to its shadow audio, then the advance).
+  // It announces each advance ('crossfade:auto-advance') so this plugin can
+  // tell it apart from a user-initiated skip: an automated advance must not
+  // be wrapped in a skip fade — the video is already silent at that point
+  // (its volume was ramped to 0 for the handoff), so a fade would only
+  // delay the player's track change and dip the gain mid-choreography.
+  // Manual skips keep their fade: crossfade performs no fade of its own on
+  // manual track changes (it resets to IDLE), so the short dip remains the
+  // only fade there and is still wanted.
+  let lastCrossfadeAdvanceAt = Number.NEGATIVE_INFINITY;
+  const onCrossfadeAdvance = () => {
+    lastCrossfadeAdvanceAt = performance.now();
+  };
+  const isCrossfadeAdvance = () =>
+    crossfadeActive &&
+    performance.now() - lastCrossfadeAdvanceAt < CROSSFADE_ADVANCE_BYPASS_MS;
+  if (crossfadeActive) {
+    document.addEventListener('crossfade:auto-advance', onCrossfadeAdvance);
+    skipTeardowns.push(() =>
+      document.removeEventListener(
+        'crossfade:auto-advance',
+        onCrossfadeAdvance,
+      ),
+    );
+  }
+
   // A skip fades out and then relies on the new song's loadstart/play to
   // fade back in. When the action doesn't actually change track - previous
   // at the start of a queue, a media key the app ignores, a click that
@@ -326,7 +383,16 @@ function setupSmoothTransitions(
 
   const onLoadStart = () => {
     const config = getConfig();
-    if (config?.fadeOnSkip && fader.get() > 0 && !video.paused) {
+    // Skip the dip for a crossfade-driven load: the video is already silent
+    // (volume ramped down for the shadow-audio handoff), so the dip is
+    // inaudible and only adds a gain restore that depends on the new track
+    // firing 'play'.
+    if (
+      config?.fadeOnSkip &&
+      !isCrossfadeAdvance() &&
+      fader.get() > 0 &&
+      !video.paused
+    ) {
       fader.rampTo(0, 100);
     }
   };
@@ -338,7 +404,12 @@ function setupSmoothTransitions(
     if (!fn) return undefined;
     return (...args: A) => {
       const config = getConfig();
-      if (!config?.fadeOnSkip || video.paused || fader.get() <= 0) {
+      if (
+        isCrossfadeAdvance() ||
+        !config?.fadeOnSkip ||
+        video.paused ||
+        fader.get() <= 0
+      ) {
         return fn(...args);
       }
 
@@ -409,7 +480,13 @@ function setupSmoothTransitions(
     if (isBypassing) return;
 
     const config = getConfig();
-    if (!config?.fadeOnSkip || video.paused || fader.get() <= 0) return;
+    if (
+      !config?.fadeOnSkip ||
+      isCrossfadeAdvance() ||
+      video.paused ||
+      fader.get() <= 0
+    )
+      return;
 
     const target = event.target as HTMLElement | null;
     if (!target) return;
@@ -481,6 +558,7 @@ function setupSmoothTransitions(
           // the graph, fading here would only delay the skip for nothing.
           if (
             tornDown ||
+            isCrossfadeAdvance() ||
             !config?.fadeOnSkip ||
             video.paused ||
             fader.get() <= 0
@@ -520,7 +598,13 @@ function setupSmoothTransitions(
       event.code === 'MediaTrackPrevious'
     ) {
       const config = getConfig();
-      if (!config?.fadeOnSkip || video.paused || fader.get() <= 0) return;
+      if (
+        !config?.fadeOnSkip ||
+        isCrossfadeAdvance() ||
+        video.paused ||
+        fader.get() <= 0
+      )
+        return;
 
       const token = ++skipFadeToken;
       debug.skipFadeToken = skipFadeToken;
@@ -590,10 +674,16 @@ function setupSmoothTransitions(
  *
  * Also exposes window.__smoothTransitionsDebug for inspection from
  * DevTools if something goes wrong.
+ *
+ * When the crossfade plugin is co-enabled, `crossfadeActive` switches the
+ * attached setup into coordination mode: automatic crossfade advances
+ * bypass the skip fade, while pause/resume and manual-skip fades stay
+ * active (see the crossfade coordination block in setupSmoothTransitions).
  */
 function superviseSmoothTransitions(
   api: MusicPlayer,
   getConfig: () => SmoothTransitionsPluginConfig | null,
+  crossfadeActive: boolean,
 ): Teardown {
   let stopCurrent: Teardown | null = null;
   let fader: GainFader | null = null;
@@ -627,9 +717,16 @@ function superviseSmoothTransitions(
 
   const attachIfPossible = () => {
     if (disabled || !fader || stopCurrent) return;
-    const video = document.querySelector<HTMLVideoElement>('video');
+    const video = getPlayerVideo();
     if (!video) return;
-    stopCurrent = setupSmoothTransitions(video, api, getConfig, debug, fader);
+    stopCurrent = setupSmoothTransitions(
+      video,
+      api,
+      getConfig,
+      debug,
+      fader,
+      crossfadeActive,
+    );
   };
 
   // Inserts a GainNode between `video` and speakers and wraps it in a
@@ -675,7 +772,7 @@ function superviseSmoothTransitions(
       audioSource,
       video: sourceVideo,
     } = (event as CustomEvent<AudioCanPlayDetail>).detail;
-    const video = document.querySelector<HTMLVideoElement>('video');
+    const video = getPlayerVideo();
     sharedAudioContext = audioContext;
 
     // The event can arrive after its own element was already replaced -
@@ -726,16 +823,48 @@ function superviseSmoothTransitions(
   // ready, permanently disabling the plugin at startup.
   let lastSeenVideo: HTMLVideoElement | null = null;
 
+  // The observer is anchored on #movie_player — the closest id'd ancestor of
+  // the player's <video> (video > .html5-video-container > #movie_player) —
+  // instead of <body>. #movie_player holds exactly one <video> and only the
+  // player's own internals, so swap detection fires on a handful of batches
+  // per navigation instead of on every mutation batch of a page that churns
+  // constantly. Two escapes keep the edge cases covered: before the player
+  // container exists the fallback target is <body> (promoted on the first
+  // mutation after #movie_player appears), and if the container itself is
+  // torn down and rebuilt the observer bound to the dead node goes silent —
+  // the watchdog interval below notices within a couple of seconds and
+  // re-anchors.
+  let observer: MutationObserver | null = null;
+  let observedContainer: Element | null = null;
+
+  const anchorObserver = () => {
+    if (!observer) return;
+    const container = document.querySelector('#movie_player') ?? document.body;
+    if (container === observedContainer) return;
+    observer.disconnect();
+    observer.observe(container, { childList: true, subtree: true });
+    observedContainer = container;
+  };
+
   const onDomChange = () => {
     if (disabled) return;
-    // This runs for every mutation batch on the whole body subtree, and this
-    // page mutates constantly, so keep the common case down to one O(1)
-    // check. The only thing the observer has to catch is the <video> being
-    // swapped out; while the element we're attached to is still in the
-    // document, nothing here needs to change.
+    // Promote <body> → #movie_player as soon as the player container
+    // exists, and re-anchor when the previously observed container was torn
+    // down with the player rebuilt.
+    if (
+      observedContainer === null ||
+      observedContainer === document.body ||
+      !observedContainer.isConnected
+    ) {
+      anchorObserver();
+    }
+    // This still runs for every mutation batch while attached, so keep the
+    // common case down to one O(1) check. The only thing the observer has
+    // to catch is the <video> being swapped out; while the element we're
+    // attached to is still in the document, nothing here needs to change.
     if (stopCurrent && lastSeenVideo?.isConnected) return;
 
-    const video = document.querySelector<HTMLVideoElement>('video');
+    const video = getPlayerVideo();
     if (!video) return;
 
     if (video !== lastSeenVideo) {
@@ -789,10 +918,18 @@ function superviseSmoothTransitions(
     }
     attachIfPossible();
   };
-  const observer = new MutationObserver(onDomChange);
-  observer.observe(document.body, { childList: true, subtree: true });
-  lastSeenVideo = document.querySelector<HTMLVideoElement>('video');
+  observer = new MutationObserver(onDomChange);
+  anchorObserver();
+  lastSeenVideo = getPlayerVideo();
   attachIfPossible();
+
+  // Safety net for the one case the observer cannot see: #movie_player being
+  // torn down and rebuilt with a fresh <video> inside. The observer is bound
+  // to the dead old node and receives nothing, so this slow poll re-anchors
+  // and re-checks the video identity. Until it does, audio itself is fine —
+  // the new element simply plays uncaptured, outside the gain node — only
+  // fades go missing for the moment.
+  const watchdogTimer = window.setInterval(onDomChange, 2000);
 
   // Puts the audio graph back the way renderer.ts left it: source straight
   // to destination, with this plugin's gain node removed entirely.
@@ -812,7 +949,8 @@ function superviseSmoothTransitions(
   };
 
   return () => {
-    observer.disconnect();
+    window.clearInterval(watchdogTimer);
+    observer?.disconnect();
     document.removeEventListener('peard:audio-can-play', onAudioCanPlay);
     stopCurrent?.();
     fader?.dispose();
@@ -881,12 +1019,16 @@ export default createPlugin<
       const generation = ++this.setupGeneration;
       this.cleanup?.();
       // The crossfade plugin drives its own volume fades on the same
-      // <video> element and auto-clicks the next button near the end of
-      // a track. Fading here too would fight it for volume control and
-      // can leave playback stuck silent, so step aside entirely.
+      // <video> element, but its fades live on video.volume while ours live
+      // on a GainNode one layer below - the two compose multiplicatively
+      // without either owning the other's control. So instead of stepping
+      // aside entirely, crossfadeActive switches into coordination mode:
+      // pause/resume and manual-skip fades stay active, while crossfade's
+      // automatic end-of-track advances (announced via
+      // 'crossfade:auto-advance') bypass the skip fade so they are never
+      // delayed or double-faded.
       const crossfadeActive =
         await window.mainConfig.plugins.isEnabled('crossfade');
-      if (crossfadeActive) return;
       // The audio-compressor plugin also reroutes the shared Web Audio
       // graph (source -> compressor -> destination). Inserting a gain
       // node into the same graph independently could race it and produce
@@ -904,7 +1046,11 @@ export default createPlugin<
         await window.mainConfig.plugins.isEnabled('equalizer');
       if (equalizerActive) return;
       if (generation !== this.setupGeneration) return;
-      this.cleanup = superviseSmoothTransitions(api, () => this.config);
+      this.cleanup = superviseSmoothTransitions(
+        api,
+        () => this.config,
+        crossfadeActive,
+      );
     },
     stop() {
       this.setupGeneration++;

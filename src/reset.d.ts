@@ -36,6 +36,14 @@ declare global {
   interface DocumentEventMap {
     'peard:audio-can-play': CustomEvent<Compressor>;
     'videodatachange': CustomEvent<VideoDataChanged>;
+    /**
+     * Dispatched by the crossfade plugin immediately before it advances the
+     * player to the next track (playerApi.nextVideo() or the next-button
+     * click) as part of an automatic end-of-track transition. Payload-free
+     * on purpose: consumers such as smooth-transitions only need the
+     * timing, to tell this advance apart from a user-initiated skip.
+     */
+    'crossfade:auto-advance': CustomEvent<void>;
   }
 
   interface Window {
