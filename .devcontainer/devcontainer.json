@@ -6,7 +6,7 @@
 	"image": "mcr.microsoft.com/devcontainers/typescript-node:24",
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {},
-	"postCreateCommand": "pnpm install --frozen-lockfile"
+	"postCreateCommand": "pnpm install --frozen-lockfile && pnpm sync:extensions"
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 	// Configure tool-specific properties.
