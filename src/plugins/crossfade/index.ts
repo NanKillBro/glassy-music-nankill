@@ -190,7 +190,11 @@ export default createPlugin<
       }
 
       let fadeScaling: 'linear' | 'logarithmic' | 'equalPower' | number;
-      if (res[3] === 'linear' || res[3] === 'logarithmic' || res[3] === 'equalPower') {
+      if (
+        res[3] === 'linear' ||
+        res[3] === 'logarithmic' ||
+        res[3] === 'equalPower'
+      ) {
         fadeScaling = res[3];
       } else if (isFinite(Number(res[3]))) {
         fadeScaling = Number(res[3]);
@@ -239,7 +243,9 @@ export default createPlugin<
         return yt;
       };
 
-      ipc.handle('audio-url', async (videoID: string): Promise<string | null> => {
+      ipc.handle(
+        'audio-url',
+        async (videoID: string): Promise<string | null> => {
           try {
             console.log(
               `[Crossfade Backend] Fetching audio URL for video: ${videoID}`,
@@ -256,7 +262,10 @@ export default createPlugin<
               info = await ytInstance.getInfo(videoID);
             }
 
-          const format = info.chooseFormat({ type: 'audio', quality: 'best' });
+            const format = info.chooseFormat({
+              type: 'audio',
+              quality: 'best',
+            });
             if (!format) {
               console.warn(
                 `[Crossfade Backend] No suitable audio format found for ${videoID}`,
@@ -264,7 +273,9 @@ export default createPlugin<
               return null;
             }
 
-          const decipheredUrl = await format.decipher(ytInstance.session.player);
+            const decipheredUrl = await format.decipher(
+              ytInstance.session.player,
+            );
             console.log(
               `[Crossfade Backend] Successfully resolved stream URL for ${videoID} (itag: ${format.itag}, mime: ${format.mime_type})`,
             );
@@ -276,7 +287,8 @@ export default createPlugin<
             );
             return null;
           }
-      });
+        },
+      );
     },
     stop({ ipc }) {
       ipc.removeHandler('audio-url');
@@ -744,13 +756,14 @@ export default createPlugin<
           fadeInPollTimer = null;
           fadeInTimeoutTimer = null;
           if (!hasFadedIn) {
-            // The incoming video never started playing within 10s. There is no
-            // exit from TRANSITIONING other than fade-in completion, so
-            // crossfades stay dead until the next manual track change resets
-            // the state — a known "sometimes it just stops crossfading" cause.
             log.warn(
-              '[Transition] 10s fade-in window elapsed without the next video ever playing; state remains TRANSITIONING and crossfades stay disabled until the next manual track change resets it.',
+              '[Transition] 10s fade-in window elapsed without the next video ever playing; resetting state to IDLE.',
             );
+            state = 'IDLE';
+            const vid = getPlayerVideo();
+            if (vid && vid.volume === 0) {
+              vid.volume = targetVolume;
+            }
           }
         }, 10000);
 
@@ -846,7 +859,12 @@ export default createPlugin<
         // audio-only stream. If the two streams have different lengths, the
         // shadow audio clamps near its end (audio shorter) or lags the video
         // (audio longer) — see DURATION RESOLUTION below.
-        if (syncedAudio && syncedAudio.state() === 'loaded' && !video.paused && !video.seeking) {
+        if (
+          syncedAudio &&
+          syncedAudio.state() === 'loaded' &&
+          !video.paused &&
+          !video.seeking
+        ) {
           if (!syncedAudio.playing()) {
             syncedAudio.seek(video.currentTime);
             syncedAudio.play();

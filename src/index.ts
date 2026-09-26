@@ -410,6 +410,7 @@ async function createMainWindow() {
     backgroundColor: '#000',
     show: false,
     webPreferences: {
+      backgroundThrottling: false,
       contextIsolation: true,
       spellcheck: false,
       v8CacheOptions: 'bypassHeatCheck',

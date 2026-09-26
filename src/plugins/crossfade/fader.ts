@@ -76,6 +76,8 @@ export class VolumeFader {
   private fadeDuration: number = 1000;
   private active: boolean = false;
   private fade: VolumeFade | undefined;
+  private rafId: number | null = null;
+  private timerId: number | ReturnType<typeof setTimeout> | null = null;
 
   /**
    * VolumeFader Constructor
@@ -122,7 +124,7 @@ export class VolumeFader {
     else if (options.fadeScaling === 'equalPower') {
       this.scale = {
         // level 0..1 to volume 0..1 (cos/sin curve)
-        internalToVolume: (level: number) => Math.sin(level * Math.PI / 2),
+        internalToVolume: (level: number) => Math.sin((level * Math.PI) / 2),
         volumeToInternal: (level: number) => Math.asin(level) / (Math.PI / 2),
       };
       this.logger?.('Using equal power fading.');
@@ -168,8 +170,8 @@ export class VolumeFader {
       if (options.fadeScaling)
         this.logger?.(
           'Using logarithmic fading with ' +
-          String(10 * dynamicRange) +
-          ' dB dynamic range.',
+            String(10 * dynamicRange) +
+            ' dB dynamic range.',
         );
     }
 
@@ -201,6 +203,60 @@ export class VolumeFader {
     this.logger?.('Initialized for', this.media);
   }
 
+  private cancelScheduled() {
+    if (this.rafId !== null) {
+      window.cancelAnimationFrame(this.rafId);
+      this.rafId = null;
+    }
+    if (this.timerId !== null) {
+      window.clearTimeout(this.timerId);
+      this.timerId = null;
+    }
+  }
+
+  private scheduleNextUpdate() {
+    this.cancelScheduled();
+    if (!this.active || !this.fade) {
+      return;
+    }
+
+    const isHidden = typeof document !== 'undefined' && document.hidden;
+    const now = Date.now();
+    const remainingMs = Math.max(0, this.fade.time.end - now);
+    const stepMs = Math.min(20, Math.max(1, remainingMs));
+
+    if (isHidden) {
+      // In a background or hidden window, requestAnimationFrame is paused
+      // by Chromium. Drive updates via setTimeout instead.
+      this.timerId = window.setTimeout(() => {
+        this.timerId = null;
+        this.updateVolume();
+      }, stepMs);
+    } else {
+      // In a visible window, use requestAnimationFrame for display-synced updates.
+      this.rafId = window.requestAnimationFrame(() => {
+        this.rafId = null;
+        if (this.timerId !== null) {
+          window.clearTimeout(this.timerId);
+          this.timerId = null;
+        }
+        this.updateVolume();
+      });
+
+      // Fallback timer: if the window is hidden or minimized mid-fade,
+      // requestAnimationFrame halts immediately. The fallback timer catches
+      // this and resumes the fade via setTimeout without stalling.
+      this.timerId = window.setTimeout(() => {
+        this.timerId = null;
+        if (this.rafId !== null) {
+          window.cancelAnimationFrame(this.rafId);
+          this.rafId = null;
+        }
+        this.updateVolume();
+      }, stepMs + 20);
+    }
+  }
+
   /**
    * Re(start) the update cycle.
    * (this.active must be truthy for volume updates to take effect)
@@ -227,6 +283,7 @@ export class VolumeFader {
   stop() {
     // Set fader to be inactive
     this.active = false;
+    this.cancelScheduled();
 
     // Return instance for chaining
     return this;
@@ -269,6 +326,8 @@ export class VolumeFader {
     // Validate volume and throw if invalid
     validateVolumeLevel(targetVolume);
 
+    this.cancelScheduled();
+
     // Define new fade
     this.fade = {
       // Volume start and end point on internal fading scale
@@ -302,6 +361,7 @@ export class VolumeFader {
    */
   cancelFade() {
     this.active = false;
+    this.cancelScheduled();
     this.fade = undefined;
     this.logger?.('Fade canceled.');
     return this;
@@ -318,7 +378,7 @@ export class VolumeFader {
 
   /**
    * Internal: Update media volume.
-   * (calls itself through requestAnimationFrame)
+   * (drives fading across requestAnimationFrame and background timers)
    */
   updateVolume() {
     // Fader active and fade available to process?
@@ -335,13 +395,14 @@ export class VolumeFader {
 
         // Compute current level on internal scale
         const level =
-          (progress * (this.fade.volume.end - this.fade.volume.start)) + this.fade.volume.start;
+          (progress * (this.fade.volume.end - this.fade.volume.start)) +
+          this.fade.volume.start;
 
         // Map fade level to volume level and apply it to media element
         this.media.volume = this.scale.internalToVolume(level);
 
-        // Schedule next update
-        window.requestAnimationFrame(this.updateVolume.bind(this));
+        // Schedule next update (rAF when visible, setTimeout when hidden/minimized)
+        this.scheduleNextUpdate();
       } else {
         // Log end of fade
         this.logger?.('Fade to ' + String(this.fade.volume.end) + ' complete.');
@@ -351,12 +412,13 @@ export class VolumeFader {
 
         // Set fader to be inactive
         this.active = false;
+        this.cancelScheduled();
+
+        const cb = this.fade.callback;
+        this.fade = undefined;
 
         // Done, call back (if callable)
-        if (typeof this.fade.callback === 'function') this.fade.callback();
-
-        // Clear fade
-        this.fade = undefined;
+        if (typeof cb === 'function') cb();
       }
     }
   }
