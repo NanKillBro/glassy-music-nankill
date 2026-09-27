@@ -26,7 +26,7 @@ const validateVolumeLevel = (value: number) => {
   }
 };
 
-type VolumeLogger = <Params extends unknown[]>(
+export type VolumeLogger = <Params extends unknown[]>(
   message: string,
   ...args: Params
 ) => void;
@@ -65,14 +65,138 @@ export interface VolumeControllable {
   volume: number;
 }
 
+export type VolumeScale = {
+  internalToVolume: (level: number) => number;
+  volumeToInternal: (level: number) => number;
+};
+
+// Internal: Exponential scaler with dynamic range limit.
+//
+// @param {Number} input - logarithmic input level to be expanded (float, 0…1)
+// @param {Number} dynamicRange - expanded output range, in multiples of 10 dB (float, 0…∞)
+// @return {Number} - expanded level (float, 0…1)
+const exponentialScaler = (input: number, dynamicRange: number) => {
+  // Special case: make zero (or any falsy input) return zero
+  if (input === 0) {
+    // Since the dynamic range is limited,
+    // allow a zero to produce a plain zero instead of a small faction
+    // (audio would not be recognized as silent otherwise)
+    return 0;
+  }
+
+  // Scale 0…1 to minus something × 10 dB
+  input = (input - 1) * dynamicRange;
+
+  // Compute power of 10
+  return 10 ** input;
+};
+
+// Internal: Logarithmic scaler with dynamic range limit.
+//
+// @param {Number} input - exponential input level to be compressed (float, 0…1)
+// @param {Number} dynamicRange - coerced input range, in multiples of 10 dB (float, 0…∞)
+// @return {Number} - compressed level (float, 0…1)
+const logarithmicScaler = (input: number, dynamicRange: number) => {
+  // Special case: make zero (or any falsy input) return zero
+  if (input === 0) {
+    // Logarithm of zero would be -∞, which would map to zero anyway
+    return 0;
+  }
+
+  // Compute base-10 logarithm
+  input = Math.log10(input);
+
+  // Scale minus something × 10 dB to 0…1 (clipping at 0)
+  const scaled = input / dynamicRange;
+  return Math.max(1 + scaled, 0);
+};
+
+/**
+ * Builds the internal ↔ volume mapping that gives a fade its curve shape.
+ * Extracted from the VolumeFader constructor so non-element fades (e.g. a
+ * Web Audio GainNode ramp) can reproduce the exact same curve from the
+ * same fadeScaling setting.
+ *
+ * @param {String|Number} fadeScaling - 'linear', 'logarithmic',
+ * 'equalPower', or a positive number in dB
+ * @param {Function} logger - optional logging `function(stuff, …)`
+ * @returns {Object} scale with internalToVolume / volumeToInternal
+ * @throws {TypeError} if fadeScaling is none of the supported values
+ */
+export const createFadeScale = (
+  fadeScaling?: string | number,
+  logger?: VolumeLogger | null,
+): VolumeScale => {
+  // Linear volume fading?
+  if (fadeScaling === 'linear') {
+    const scale: VolumeScale = {
+      internalToVolume: (level) => level,
+      volumeToInternal: (level) => level,
+    };
+
+    // Log setting
+    logger?.('Using linear fading.');
+    return scale;
+  }
+  // Equal power fading?
+  if (fadeScaling === 'equalPower') {
+    const scale: VolumeScale = {
+      // level 0..1 to volume 0..1 (cos/sin curve)
+      internalToVolume: (level) => Math.sin((level * Math.PI) / 2),
+      volumeToInternal: (level) => Math.asin(level) / (Math.PI / 2),
+    };
+
+    // Log setting
+    logger?.('Using equal power fading.');
+    return scale;
+  }
+  // No linear, but logarithmic fading…
+  let dynamicRange: number;
+
+  // Default dynamic range?
+  if (fadeScaling === undefined || fadeScaling === 'logarithmic') {
+    // Set default of 60 dB
+    dynamicRange = 3;
+  }
+  // Custom dynamic range?
+  else if (
+    typeof fadeScaling === 'number' &&
+    !Number.isNaN(fadeScaling) &&
+    fadeScaling > 0
+  ) {
+    // Turn amplitude dB into a multiple of 10 power dB
+    dynamicRange = fadeScaling / 2 / 10;
+  }
+  // Unsupported value
+  else {
+    // Abort and throw exception
+    throw new TypeError(
+      "Expected 'linear', 'logarithmic', 'equalPower' or a positive number as fade scaling preference!",
+    );
+  }
+
+  // Use exponential/logarithmic scaler for expansion/compression
+  const scale: VolumeScale = {
+    internalToVolume: (level) => exponentialScaler(level, dynamicRange),
+    volumeToInternal: (level) => logarithmicScaler(level, dynamicRange),
+  };
+
+  // Log setting if not default
+  if (fadeScaling) {
+    logger?.(
+      'Using logarithmic fading with ' +
+        String(10 * dynamicRange) +
+        ' dB dynamic range.',
+    );
+  }
+  return scale;
+};
+
 // Main class
 export class VolumeFader {
   private readonly media: VolumeControllable;
   private readonly logger: VolumeLogger | null;
-  private scale: {
-    internalToVolume: (level: number) => number;
-    volumeToInternal: (level: number) => number;
-  };
+  private scale: VolumeScale;
   private fadeDuration: number = 1000;
   private active: boolean = false;
   private fade: VolumeFade | undefined;
@@ -109,71 +233,8 @@ export class VolumeFader {
       this.logger = null;
     }
 
-    // Linear volume fading?
-    if (options.fadeScaling === 'linear') {
-      // Pass levels unchanged
-      this.scale = {
-        internalToVolume: (level: number) => level,
-        volumeToInternal: (level: number) => level,
-      };
-
-      // Log setting
-      this.logger?.('Using linear fading.');
-    }
-    // Equal power fading?
-    else if (options.fadeScaling === 'equalPower') {
-      this.scale = {
-        // level 0..1 to volume 0..1 (cos/sin curve)
-        internalToVolume: (level: number) => Math.sin((level * Math.PI) / 2),
-        volumeToInternal: (level: number) => Math.asin(level) / (Math.PI / 2),
-      };
-      this.logger?.('Using equal power fading.');
-    }
-    // No linear, but logarithmic fading…
-    else {
-      let dynamicRange: number;
-
-      // Default dynamic range?
-      if (
-        options.fadeScaling === undefined ||
-        options.fadeScaling === 'logarithmic'
-      ) {
-        // Set default of 60 dB
-        dynamicRange = 3;
-      }
-      // Custom dynamic range?
-      else if (
-        typeof options.fadeScaling === 'number' &&
-        !Number.isNaN(options.fadeScaling) &&
-        options.fadeScaling > 0
-      ) {
-        // Turn amplitude dB into a multiple of 10 power dB
-        dynamicRange = options.fadeScaling / 2 / 10;
-      }
-      // Unsupported value
-      else {
-        // Abort and throw exception
-        throw new TypeError(
-          "Expected 'linear', 'logarithmic', 'equalPower' or a positive number as fade scaling preference!",
-        );
-      }
-
-      // Use exponential/logarithmic scaler for expansion/compression
-      this.scale = {
-        internalToVolume: (level: number) =>
-          this.exponentialScaler(level, dynamicRange),
-        volumeToInternal: (level: number) =>
-          this.logarithmicScaler(level, dynamicRange),
-      };
-
-      // Log setting if not default
-      if (options.fadeScaling)
-        this.logger?.(
-          'Using logarithmic fading with ' +
-            String(10 * dynamicRange) +
-            ' dB dynamic range.',
-        );
-    }
+    // Build the fade curve shape (throws on unsupported fadeScaling)
+    this.scale = createFadeScale(options.fadeScaling, this.logger);
 
     // Set initial volume?
     if (options.initialVolume !== undefined) {
@@ -394,9 +455,9 @@ export class VolumeFader {
           (this.fade.time.end - this.fade.time.start);
 
         // Compute current level on internal scale
-        const level =
-          (progress * (this.fade.volume.end - this.fade.volume.start)) +
-          this.fade.volume.start;
+        const levelDelta =
+          progress * (this.fade.volume.end - this.fade.volume.start);
+        const level = this.fade.volume.start + levelDelta;
 
         // Map fade level to volume level and apply it to media element
         this.media.volume = this.scale.internalToVolume(level);
@@ -421,50 +482,6 @@ export class VolumeFader {
         if (typeof cb === 'function') cb();
       }
     }
-  }
-
-  /**
-   * Internal: Exponential scaler with dynamic range limit.
-   *
-   * @param {Number} input - logarithmic input level to be expanded (float, 0…1)
-   * @param {Number} dynamicRange - expanded output range, in multiples of 10 dB (float, 0…∞)
-   * @return {Number} - expanded level (float, 0…1)
-   */
-  exponentialScaler(input: number, dynamicRange: number) {
-    // Special case: make zero (or any falsy input) return zero
-    if (input === 0) {
-      // Since the dynamic range is limited,
-      // allow a zero to produce a plain zero instead of a small faction
-      // (audio would not be recognized as silent otherwise)
-      return 0;
-    }
-
-    // Scale 0…1 to minus something × 10 dB
-    input = (input - 1) * dynamicRange;
-
-    // Compute power of 10
-    return 10 ** input;
-  }
-
-  /**
-   * Internal: Logarithmic scaler with dynamic range limit.
-   *
-   * @param {Number} input - exponential input level to be compressed (float, 0…1)
-   * @param {Number} dynamicRange - coerced input range, in multiples of 10 dB (float, 0…∞)
-   * @return {Number} - compressed level (float, 0…1)
-   */
-  logarithmicScaler(input: number, dynamicRange: number) {
-    // Special case: make zero (or any falsy input) return zero
-    if (input === 0) {
-      // Logarithm of zero would be -∞, which would map to zero anyway
-      return 0;
-    }
-
-    // Compute base-10 logarithm
-    input = Math.log10(input);
-
-    // Scale minus something × 10 dB to 0…1 (clipping at 0)
-    return Math.max(1 + (input / dynamicRange), 0);
   }
 }
 

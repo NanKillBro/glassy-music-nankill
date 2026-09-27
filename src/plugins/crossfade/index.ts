@@ -14,6 +14,7 @@ import { getNetFetchAsFetch } from '@/plugins/utils/main';
 import promptOptions from '@/providers/prompt-options';
 import { createPlugin } from '@/utils';
 
+import { CrossfadeAudioGraph, type CrossfadeRampHandle } from './audio-graph';
 import { VolumeFader } from './fader';
 
 import type { RendererContext } from '@/types/contexts';
@@ -83,6 +84,8 @@ export default createPlugin<
     config?: CrossfadePluginConfig;
     ipc?: RendererContext<CrossfadePluginConfig>['ipc'];
     cleanup?: () => void;
+    /** Guards the async graph init against a stop() landing mid-await. */
+    setupGeneration: number;
   },
   CrossfadePluginConfig
 >({
@@ -296,18 +299,43 @@ export default createPlugin<
   },
 
   renderer: {
+    setupGeneration: 0,
     async start({ ipc, getConfig }) {
       this.config = await getConfig();
       this.ipc = ipc;
     },
     stop() {
+      this.setupGeneration++;
       this.cleanup?.();
       this.cleanup = undefined;
     },
     onConfigChange(newConfig) {
       this.config = newConfig;
     },
-    onPlayerApiReady(playerApi: MusicPlayer) {
+    async onPlayerApiReady(playerApi: MusicPlayer) {
+      // The graph init awaits (step-aside checks + registry seeding) can
+      // resolve after a stop() cleared this.cleanup - it would then wire
+      // the graph with nothing left to remove it. The generation counter
+      // is bumped by every stop(), so a stale setup disposes its
+      // half-built graph and bails instead (same pattern as
+      // smooth-transitions).
+      const generation = ++this.setupGeneration;
+      const graph = new CrossfadeAudioGraph();
+      try {
+        await graph.init();
+      } catch (err) {
+        // Without a context the graph can never be claimed, so every
+        // transition simply uses element mode.
+        console.error(
+          '[CrossfadeGraph] init failed; element mode applies',
+          err,
+        );
+      }
+      if (generation !== this.setupGeneration) {
+        graph.dispose();
+        return;
+      }
+
       type CrossfadeState = 'IDLE' | 'TRANSITIONING' | 'COOLDOWN';
 
       let state: CrossfadeState = 'IDLE';
@@ -325,6 +353,16 @@ export default createPlugin<
       let transitionToken = 0;
       let loadToken = 0;
       let lastSeekTime = 0;
+      // Foreign-write guard: while a transition is in flight, these hold the
+      // volume/mute state crossfade last intended for the player <video>.
+      // YouTube's player re-applies its own stored volume to the element on
+      // track load and on every videodatachange (base.js g.uz.setVolume via
+      // its pub/sub, verified with a console tracer), so any window where
+      // crossfade is not actively rewriting the element leaks the incoming
+      // track at the user's full volume for tens of milliseconds. null means
+      // the guard is inactive and foreign writes pass through untouched.
+      let guardVolume: number | null = null;
+      let guardMuted: boolean | null = null;
 
       // --- Investigation state (2026-09-25 premature/missed crossfade bug) ---
       // Which of the three duration sources the trigger threshold came from.
@@ -445,6 +483,19 @@ export default createPlugin<
         }
         return getVideoIDFromURL(window.location.href);
       };
+
+      // VolumeFader target for the player <video> that records every volume
+      // write in the guard state before applying it, so the guard knows what
+      // the element should currently read.
+      const videoVolumeTarget = (video: HTMLVideoElement) => ({
+        get volume() {
+          return video.volume;
+        },
+        set volume(value: number) {
+          guardVolume = value;
+          video.volume = value;
+        },
+      });
 
       const setCooldown = (ms: number) => {
         state = 'COOLDOWN';
@@ -594,9 +645,34 @@ export default createPlugin<
         if (fadeInTimeoutTimer) clearTimeout(fadeInTimeoutTimer);
 
         state = 'TRANSITIONING';
+
+        // Claim the shared Web Audio line for this transition. In graph
+        // mode all video-side fade control happens on a crossfade-owned
+        // GainNode enforced by the audio rendering thread: YouTube's own
+        // element volume writes (g.uz.setVolume on track load and on every
+        // videodatachange) multiply into the gain and stay inaudible while
+        // it is held at 0, with no reactive guard left to race CPU
+        // throttling. When the line cannot be claimed (conflicting plugin,
+        // capture failure) the element-mode defenses below carry the
+        // transition instead.
+        let useGraph = graph.claim(video);
+        graph.setTransitionActive(useGraph);
+
         log.info(
-          `[Transition] Crossfade started! Track: ${currentTrackId}, Time: ${video.currentTime.toFixed(1)}s / ${trackDuration.toFixed(1)}s (video element: ${video.duration.toFixed(1)}s)`,
+          `[Transition] Crossfade started (${useGraph ? 'graph' : 'element'} mode)! Track: ${currentTrackId}, Time: ${video.currentTime.toFixed(1)}s / ${trackDuration.toFixed(1)}s (video element: ${video.duration.toFixed(1)}s)`,
         );
+
+        if (useGraph) {
+          log.info(
+            '[Graph] Video audio line claimed; element volume/mute guard stays disarmed for this transition.',
+          );
+        } else {
+          // Take ownership of the element's volume/mute state from here on:
+          // the guard reverts any foreign write back to what crossfade last
+          // intended, until the transition finishes or is aborted.
+          guardVolume = video.volume;
+          guardMuted = video.muted;
+        }
 
         const fadingAudio = syncedAudio;
         syncedAudio = null; // Detach so it cannot be re-triggered
@@ -657,7 +733,7 @@ export default createPlugin<
             fadeDuration: HANDOFF_CROSSFADE_MS,
           });
           log.info(
-            `[Transition] Handoff cross-ramp: shadow 0 → ${targetVolume}, video → 0, over ${HANDOFF_CROSSFADE_MS}ms...`,
+            `[Transition] Handoff cross-ramp: shadow 0 → ${targetVolume}, ${useGraph ? 'line gain' : 'video'} → 0, over ${HANDOFF_CROSSFADE_MS}ms...`,
           );
           handoffAudioFader.fadeTo(targetVolume, () => {
             handoffAudioFader = null;
@@ -691,6 +767,9 @@ export default createPlugin<
         const fadeInDuration = this.config?.fadeInDuration ?? 5000;
 
         let hasFadedIn = false;
+        // Graph-mode handoff ramp handle — the GainNode counterpart of
+        // handoffVideoFader.
+        let handoffGraphRamp: CrossfadeRampHandle | null = null;
         const doFadeIn = () => {
           if (
             hasFadedIn ||
@@ -722,9 +801,48 @@ export default createPlugin<
           handoffAudioFader = null;
           handoffVideoFader?.cancelFade();
           handoffVideoFader = null;
+          handoffGraphRamp?.cancel();
+          handoffGraphRamp = null;
           fadeInFader?.cancelFade();
-          activeVideo.volume = 0;
-          fadeInFader = new VolumeFader(activeVideo, {
+
+          if (useGraph && graph.isClaimed(activeVideo)) {
+            // Graph mode: fade the line gain 0 → 1. The audible level is
+            // the user's element volume × the gain curve — YouTube
+            // maintains the element volume itself, so no element writes
+            // and no unmute happen at all.
+            log.info(
+              `[Graph] Fading in next track on the audio line (gain → 1) over ${fadeInDuration}ms...`,
+            );
+            const ramp = graph.rampTo(
+              1,
+              fadeInDuration,
+              this.config?.fadeScaling,
+              () => {
+                log.info('[Graph] Next track fade-in completed.');
+                setCooldown(3000);
+                graph.setTransitionActive(false);
+              },
+            );
+            if (ramp) return;
+            // Scheduling failed: finish this transition in element mode.
+            log.warn(
+              '[Graph] Fade-in ramp could not be scheduled; falling back to element mode.',
+            );
+            useGraph = false;
+          } else if (useGraph) {
+            // The graph lost this element (replaced without the claim
+            // having been migrated yet): element mode takes over.
+            useGraph = false;
+          }
+
+          const videoTarget = videoVolumeTarget(activeVideo);
+          videoTarget.volume = 0;
+          // Unmute only now, with the element pinned at 0: the mute armed at
+          // the advance kept every foreign volume re-apply during the track
+          // load silent, and the fade-in brings the track up from zero.
+          guardMuted = false;
+          activeVideo.muted = false;
+          fadeInFader = new VolumeFader(videoTarget, {
             initialVolume: 0,
             fadeScaling: this.config?.fadeScaling,
             fadeDuration: fadeInDuration,
@@ -735,9 +853,52 @@ export default createPlugin<
           fadeInFader?.fadeTo(targetVolume, () => {
             log.info('[Transition] Next track fade-in completed.');
             fadeInFader = null;
+            guardVolume = null;
+            guardMuted = null;
             setCooldown(3000);
           });
         };
+
+        // The graph detected the player <video> being replaced mid-flight
+        // and hands us the old claim's current gain so the transition can
+        // continue exactly where it was (see CrossfadeAudioGraph.onSwap).
+        graph.onSwap((newVideo, previousGain) => {
+          if (!useGraph) {
+            // Already fell back to element mode; it owns the element.
+            return;
+          }
+          const wasRamping = graph.isRamping();
+          if (graph.claim(newVideo)) {
+            graph.snapTo(previousGain);
+            log.info(
+              `[Graph] Video element swapped mid-transition; claim migrated, line held at gain ${previousGain.toFixed(3)}.`,
+            );
+            if (wasRamping && hasFadedIn) {
+              // The fade-in was interrupted mid-ramp: reset the flag and
+              // re-arm the 100ms poll (doFadeIn clears it once started) so
+              // the remaining ramp resumes from the held value on the new
+              // claim.
+              hasFadedIn = false;
+              if (fadeInPollTimer) clearInterval(fadeInPollTimer);
+              fadeInPollTimer = setInterval(doFadeIn, 100);
+              log.info(
+                '[Graph] Fade-in was mid-ramp; re-armed the fade-in poll to resume it on the new claim.',
+              );
+            }
+          } else {
+            // Re-claim failed: finish this transition in element mode,
+            // with the new element muted and the guard armed — the same
+            // defensive state advanceToNextTrack would have set.
+            useGraph = false;
+            guardVolume = 0;
+            guardMuted = true;
+            newVideo.volume = 0;
+            newVideo.muted = true;
+            log.warn(
+              '[Graph] Re-claim after element swap failed; finishing this transition in element mode (element muted, guard armed).',
+            );
+          }
+        });
 
         const onVideoPlaying = () => {
           doFadeIn();
@@ -760,9 +921,21 @@ export default createPlugin<
               '[Transition] 10s fade-in window elapsed without the next video ever playing; resetting state to IDLE.',
             );
             state = 'IDLE';
+            guardVolume = null;
+            guardMuted = null;
+            if (useGraph) {
+              // Restore the line to rest (gain 1). The element itself was
+              // never muted or zeroed in graph mode, so there is nothing
+              // to restore on it.
+              graph.snapTo(1);
+              graph.setTransitionActive(false);
+            }
             const vid = getPlayerVideo();
-            if (vid && vid.volume === 0) {
-              vid.volume = targetVolume;
+            if (!useGraph && vid) {
+              vid.muted = false;
+              if (vid.volume === 0) {
+                vid.volume = targetVolume;
+              }
             }
           }
         }, 10000);
@@ -796,8 +969,33 @@ export default createPlugin<
             `[Handoff] Muting video at ${video.currentTime.toFixed(3)}s; shadow audio at ${shadowPos !== null ? shadowPos.toFixed(3) : '?'}s → offset ${offsetMs !== null ? `${offsetMs.toFixed(0)}ms ${offsetMs > 0 ? '(shadow behind: replays)' : '(shadow ahead: skips)'}` : '(no shadow audio)'}.`,
           );
 
-          video.volume = 0;
-          log.info('[Transition] Advancing to next track in player...');
+          if (useGraph) {
+            // Graph mode: the audio line replaces the element mute. The
+            // handoff ramp (or this snap, for the paths that advance
+            // without one — no shadow audio, shadow play error, bridge
+            // timeout) holds the line at gain 0, so every volume write
+            // YouTube applies to the element during the load window
+            // multiplies into 0 and stays silent; doFadeIn ramps the
+            // gain back up.
+            if (graph.currentValue() > 0.001) {
+              graph.snapTo(0);
+            }
+            log.info(
+              '[Graph] Advancing to next track in player (audio line held at gain 0 until fade-in starts)...',
+            );
+          } else {
+            // Mute in addition to zeroing: YouTube re-applies its stored
+            // volume to the element while the next track loads (observed
+            // before the incoming track even starts). A muted element is
+            // immune to those writes; doFadeIn unmutes it pinned at 0.
+            guardVolume = 0;
+            guardMuted = true;
+            video.volume = 0;
+            video.muted = true;
+            log.info(
+              '[Transition] Advancing to next track in player (video muted until fade-in starts)...',
+            );
+          }
           // Announce the automatic advance so that smooth-transitions (when
           // both plugins are enabled) can tell it apart from a manual skip
           // and let it through untouched — its skip fade would delay this
@@ -815,17 +1013,46 @@ export default createPlugin<
         // guarantees the old track never bleeds into the next one.
         const startVideoHandoffRamp = () => {
           if (hasAdvanced) return;
-          handoffVideoFader?.cancelFade();
-          handoffVideoFader = new VolumeFader(video, {
-            fadeScaling: this.config?.fadeScaling,
-            fadeDuration: HANDOFF_CROSSFADE_MS,
-          });
-          handoffVideoFader.fadeTo(0, () => {
-            handoffVideoFader = null;
-            advanceToNextTrack();
-          });
+          if (useGraph) {
+            handoffGraphRamp?.cancel();
+            handoffGraphRamp = graph.rampTo(
+              0,
+              HANDOFF_CROSSFADE_MS,
+              this.config?.fadeScaling,
+              () => {
+                handoffGraphRamp = null;
+                advanceToNextTrack();
+              },
+            );
+            if (handoffGraphRamp) {
+              log.info(
+                `[Graph] Handoff ramp on the audio line: gain → 0 over ${HANDOFF_CROSSFADE_MS}ms...`,
+              );
+            } else {
+              // The GainNode curve is the whole throttle-proof point of
+              // graph mode; without it this handoff has no protection
+              // left, so finish the transition via the element path.
+              log.warn(
+                '[Graph] Handoff ramp could not be scheduled; falling back to the element-mode handoff.',
+              );
+              useGraph = false;
+            }
+          }
+          if (!useGraph) {
+            handoffVideoFader?.cancelFade();
+            handoffVideoFader = new VolumeFader(videoVolumeTarget(video), {
+              fadeScaling: this.config?.fadeScaling,
+              fadeDuration: HANDOFF_CROSSFADE_MS,
+            });
+            handoffVideoFader.fadeTo(0, () => {
+              handoffVideoFader = null;
+              advanceToNextTrack();
+            });
+          }
           // Safety: if the fade callback never runs (e.g. rAF throttled in a
-          // hidden window), advance anyway.
+          // hidden window), advance anyway. In graph mode the gain curve
+          // itself is enforced by the audio thread and stays on schedule,
+          // but this advance call is still plain JS and needs the backup.
           bridgeStartTimer = setTimeout(
             advanceToNextTrack,
             HANDOFF_CROSSFADE_MS * 3,
@@ -1053,9 +1280,20 @@ export default createPlugin<
             syncedAudio = null;
           }
           const video = getPlayerVideo();
-          if (video && video.volume === 0) {
-            video.volume = getUserVolume();
+          guardVolume = null;
+          guardMuted = null;
+          if (video) {
+            video.muted = false;
+            if (video.volume === 0) {
+              video.volume = getUserVolume();
+            }
           }
+          // Graph abort: a manual skip can interrupt a transition whose
+          // gain is still down, so ease the line back to rest over ~150ms
+          // (audio resumes at full level, no silence) and close the
+          // transition window. A no-op when the graph is unclaimed.
+          graph.rampTo(1, 150);
+          graph.setTransitionActive(false);
           state = 'IDLE';
         }
 
@@ -1145,6 +1383,32 @@ export default createPlugin<
         );
       };
 
+      // Reverts foreign volume/muted writes on the player <video> while the
+      // guard is armed (guard state non-null). YouTube re-applies its stored
+      // volume on track load and on videodatachange, which would otherwise
+      // surface as a brief full-volume blast of the incoming track — both
+      // before the fade-in starts and mid-fade. Crossfade's own writes
+      // always match the guard (they update it first), so this only fires
+      // for foreign writes; user volume changes made during a transition
+      // are also treated as foreign and deferred, as the fade already does.
+      const onVolumeChange = () => {
+        if (guardVolume === null) return;
+        const video = getPlayerVideo();
+        if (!video) return;
+        if (Math.abs(video.volume - guardVolume) > 0.001) {
+          log.info(
+            `[Guard] Foreign video volume write reverted: ${video.volume.toFixed(3)} -> ${guardVolume.toFixed(3)} at t=${video.currentTime.toFixed(2)}s (hidden=${document.hidden}).`,
+          );
+          video.volume = guardVolume;
+        }
+        if (guardMuted !== null && video.muted !== guardMuted) {
+          log.info(
+            `[Guard] Foreign video mute write reverted: muted ${video.muted} -> ${guardMuted} at t=${video.currentTime.toFixed(2)}s (hidden=${document.hidden}).`,
+          );
+          video.muted = guardMuted;
+        }
+      };
+
       const bindVideoListeners = (v: HTMLVideoElement | null) => {
         if (!v || v === currentBoundVideo) return;
         if (currentBoundVideo) {
@@ -1153,6 +1417,7 @@ export default createPlugin<
           currentBoundVideo.removeEventListener('pause', onPause);
           currentBoundVideo.removeEventListener('play', onPlay);
           currentBoundVideo.removeEventListener('ended', onEnded);
+          currentBoundVideo.removeEventListener('volumechange', onVolumeChange);
         }
         currentBoundVideo = v;
         v.addEventListener('timeupdate', onTimeUpdate);
@@ -1160,6 +1425,7 @@ export default createPlugin<
         v.addEventListener('pause', onPause);
         v.addEventListener('play', onPlay);
         v.addEventListener('ended', onEnded);
+        v.addEventListener('volumechange', onVolumeChange);
       };
 
       bindVideoListeners(getPlayerVideo());
@@ -1173,6 +1439,14 @@ export default createPlugin<
 
       this.cleanup = () => {
         log.info('[Cleanup] Removing crossfade event listeners and audio.');
+        // Graph first: gain back to 1 and the line node removed before any
+        // listener teardown, so audio can never stay stuck silent.
+        graph.dispose();
+        // Whether the element is currently under element-mode control at
+        // this moment (guard armed) — only then do the element restores
+        // below have anything to undo. In graph mode the element was never
+        // muted or zeroed by crossfade.
+        const elementWasGuarded = guardVolume !== null || guardMuted !== null;
         clearInterval(intervalTimer);
         if (cooldownTimer) clearTimeout(cooldownTimer);
         transitionToken++;
@@ -1186,13 +1460,19 @@ export default createPlugin<
           syncedAudio.unload();
           syncedAudio = null;
         }
+        guardVolume = null;
+        guardMuted = null;
         if (currentBoundVideo) {
           currentBoundVideo.removeEventListener('timeupdate', onTimeUpdate);
           currentBoundVideo.removeEventListener('seeking', onSeeking);
           currentBoundVideo.removeEventListener('pause', onPause);
           currentBoundVideo.removeEventListener('play', onPlay);
           currentBoundVideo.removeEventListener('ended', onEnded);
-          if (currentBoundVideo.volume === 0) currentBoundVideo.volume = 1;
+          currentBoundVideo.removeEventListener('volumechange', onVolumeChange);
+          if (elementWasGuarded) {
+            currentBoundVideo.muted = false;
+            if (currentBoundVideo.volume === 0) currentBoundVideo.volume = 1;
+          }
           currentBoundVideo = null;
         }
         document.removeEventListener('videodatachange', onVideoDataChange);

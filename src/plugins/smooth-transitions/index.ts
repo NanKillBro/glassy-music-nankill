@@ -1,5 +1,11 @@
 import { t } from '@/i18n';
 import { createPlugin } from '@/utils';
+import {
+  getOrCreateMediaSource,
+  insertLineNode,
+  registerMediaSource,
+  removeLineNode,
+} from '@/utils/audio-line';
 
 import type { MusicPlayer } from '@/types/music-player';
 
@@ -132,7 +138,8 @@ function createGainFader(
     const curve = new Float32Array(CURVE_LENGTH);
     for (let i = 0; i < CURVE_LENGTH; i++) {
       const progress = (i / (CURVE_LENGTH - 1)) ** EASE_EXPONENT;
-      const value = startValue + ((target - startValue) * progress);
+      const delta = (target - startValue) * progress;
+      const value = startValue + delta;
       curve[i] = Math.min(Math.max(value, lowest), highest);
     }
     gainNode.gain.setValueCurveAtTime(curve, now, durationSec);
@@ -729,13 +736,15 @@ function superviseSmoothTransitions(
     );
   };
 
-  // Inserts a GainNode between `video` and speakers and wraps it in a
-  // fader. Used both for the very first video (via the audioSource
-  // renderer.ts already created for it) and to rebuild from scratch after
-  // a video-element swap, where nothing has claimed the new element's
-  // audio yet - a media element can only ever be captured by one
-  // MediaElementAudioSourceNode, so this only works while that's still true
-  // for `video`.
+  // Inserts a GainNode into the shared audio line (see
+  // src/utils/audio-line.ts) and wraps it in a fader. Used both for the
+  // very first video (via the audioSource renderer.ts already created for
+  // it) and to rebuild from scratch after a video-element swap, where
+  // nothing has claimed the new element's audio yet - a media element can
+  // only ever be captured by one MediaElementAudioSourceNode, so this only
+  // works while that's still true for `video`. A same-id re-insert
+  // replaces any node a previous wiring left in the line instead of
+  // letting stale gain nodes pile up in the graph.
   const wireGainNode = (
     audioContext: AudioContext,
     audioSource: MediaElementAudioSourceNode,
@@ -743,20 +752,19 @@ function superviseSmoothTransitions(
     try {
       const gainNode = audioContext.createGain();
       gainNode.gain.value = 0;
-      // Only the very first video's audioSource is pre-connected straight
-      // to destination (by renderer.ts, before this plugin ever sees it) -
-      // a source created here for a swapped-in video starts unconnected,
-      // so disconnecting a nonexistent edge would throw.
-      try {
-        audioSource.disconnect(audioContext.destination);
-      } catch {
-        // not connected to destination - nothing to undo
+      if (
+        !insertLineNode(
+          audioContext,
+          audioSource,
+          'smooth-transitions',
+          gainNode,
+        )
+      ) {
+        console.error(
+          '[smooth-transitions] could not insert the gain node into the shared audio line',
+        );
+        return null;
       }
-      audioSource.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-      // Drop the node from a previous wiring (a video swap makes a new one)
-      // so stale gain nodes don't pile up in the graph.
-      insertedGain?.gainNode.disconnect();
       insertedGain = { gainNode, audioSource, audioContext };
       return createGainFader(gainNode, audioContext, debug);
     } catch (err) {
@@ -775,6 +783,13 @@ function superviseSmoothTransitions(
     const video = getPlayerVideo();
     sharedAudioContext = audioContext;
 
+    // Seed the shared line registry with renderer.ts's capture of this
+    // element: a media element only ever gets one
+    // MediaElementAudioSourceNode, so every later claim - ours, crossfade's,
+    // or a re-capture after an element swap - must reuse this exact node
+    // instead of attempting a second createMediaElementSource.
+    registerMediaSource(sourceVideo, audioSource);
+
     // The event can arrive after its own element was already replaced -
     // detaching a media element doesn't remove its listeners, so the
     // dispatcher in renderer.ts can still fire from the old one. Fading a
@@ -784,7 +799,7 @@ function superviseSmoothTransitions(
     let source = audioSource;
     if (video && sourceVideo && sourceVideo !== video) {
       try {
-        source = audioContext.createMediaElementSource(video);
+        source = getOrCreateMediaSource(video, audioContext);
       } catch (err) {
         console.error(
           '[smooth-transitions] the video was replaced before setup and the replacement could not be captured, disabling fades for this session',
@@ -887,11 +902,15 @@ function superviseSmoothTransitions(
         debug.gainReady = false;
         if (sharedAudioContext) {
           try {
-            // Throws if something already captured this element's audio -
-            // there can only ever be one MediaElementAudioSourceNode per
-            // element, and it can't be undone once taken.
-            const audioSource =
-              sharedAudioContext.createMediaElementSource(video);
+            // Throws if something outside the shared line registry already
+            // captured this element's audio - there can only ever be one
+            // MediaElementAudioSourceNode per element, and it can't be
+            // undone once taken. Plugins that register with the line
+            // module share the node instead of conflicting with us.
+            const audioSource = getOrCreateMediaSource(
+              video,
+              sharedAudioContext,
+            );
             fader = wireGainNode(sharedAudioContext, audioSource);
           } catch (err) {
             console.error(
@@ -940,9 +959,7 @@ function superviseSmoothTransitions(
     try {
       gainNode.gain.cancelScheduledValues(audioContext.currentTime);
       gainNode.gain.value = 1;
-      audioSource.disconnect(gainNode);
-      gainNode.disconnect();
-      audioSource.connect(audioContext.destination);
+      removeLineNode(audioContext, audioSource, 'smooth-transitions');
     } catch (err) {
       console.error('[smooth-transitions] failed to restore audio graph', err);
     }
