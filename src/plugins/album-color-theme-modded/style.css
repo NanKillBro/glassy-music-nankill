@@ -46,7 +46,6 @@ ytmusic-fullbleed-thumbnail-renderer img {
   -webkit-mask: linear-gradient(to bottom, #000 0%, #000 50%, transparent 100%);
 }
 
-
 /* --- QUAN TRỌNG: STYLE THANH TUA NHẠC (SEEKBAR) --- 
    Giữ lại đoạn này để thanh tua nhạc có màu gradient đẹp theo bìa album 
    (Nó lấy biến --paper-progress-active-color-1/2 từ index.ts) --- */
@@ -60,6 +59,41 @@ ytmusic-fullbleed-thumbnail-renderer img {
   --paper-slider-knob-start-color: var(
     --paper-progress-active-color-2
   ) !important;
+}
+
+/* --- NEW (A/B TEST): Thanh tua trong miniplayer mới ---
+   Element mới là <input type="range" class="ytMusicMiniPlayerProgressBar">
+   với background gradient inline dùng các biến --yt-sys-color-baseline--*.
+   Ta chỉ cần remap các biến đó sang màu album, gradient inline sẽ tự dùng
+   và vẫn giữ đúng vị trí tiến trình (bao gồm cả element cũ ở trên). --- */
+.seekbar-theme .ytMusicMiniPlayerProgressBarWrapper {
+  --yt-sys-color-baseline--static-brand-red: var(
+    --paper-progress-active-color-1,
+    #f03
+  ) !important;
+  --yt-sys-color-baseline--static-magenta: var(
+    --paper-progress-active-color-2,
+    #ff2791
+  ) !important;
+}
+
+.seekbar-theme .ytMusicMiniPlayerProgressBar {
+  --yt-sys-color-baseline--static-brand-red: var(
+    --paper-progress-active-color-1,
+    #f03
+  ) !important;
+  --yt-sys-color-baseline--static-magenta: var(
+    --paper-progress-active-color-2,
+    #ff2791
+  ) !important;
+}
+
+.seekbar-theme .ytMusicMiniPlayerProgressBar::-webkit-slider-thumb {
+  background: var(--paper-progress-active-color-1, #f03) !important;
+}
+
+.seekbar-theme .ytMusicMiniPlayerProgressBar::-moz-range-thumb {
+  background: var(--paper-progress-active-color-1, #f03) !important;
 }
 
 tp-yt-paper-toast {
