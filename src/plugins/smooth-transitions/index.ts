@@ -80,6 +80,15 @@ function createGainFader(
   debug: DebugState,
 ) {
   let rampTimeout: number | null = null;
+  // Where the gain is heading, as opposed to where it has got to so far.
+  // gain.value only reports the latter, so a guard like "fade up unless we're
+  // already at full" reads below 1 for the whole length of a fade-in that is
+  // already on its way to 1 - and every call site carrying that guard
+  // schedules another ramp on top, each one cancelling and restarting the
+  // last. Measured on one track change: four redundant ramps to 1, audible as
+  // a fade-in that keeps restarting. Tracking the destination separately lets
+  // those guards ask the question they actually mean.
+  let targetValue = gainNode.gain.value;
 
   // Curve shape decides how "direct" a fade feels, independently of its
   // duration. An equal-power curve (cos/sin, the standard crossfade shape)
@@ -143,6 +152,7 @@ function createGainFader(
       curve[i] = Math.min(Math.max(value, lowest), highest);
     }
     gainNode.gain.setValueCurveAtTime(curve, now, durationSec);
+    targetValue = target;
     debug.isFading = true;
     rampTimeout = window.setTimeout(() => {
       rampTimeout = null;
@@ -153,6 +163,7 @@ function createGainFader(
 
   return {
     get: () => gainNode.gain.value,
+    target: () => targetValue,
     rampTo,
     dispose() {
       if (rampTimeout !== null) {
@@ -186,6 +197,17 @@ const getPlayerVideo = (): HTMLVideoElement | null =>
   );
 
 /**
+ * The element's *real* paused state. `video.paused` can't answer this: the
+ * instance property is shadowed below to report pause *intent* immediately
+ * (see the Object.defineProperty block in setupSmoothTransitions), so it says
+ * "paused" throughout a pause fade during which the element is still playing.
+ * Starting the lookup at the prototype reaches past that shadowing to the
+ * accessor the element itself implements, with `video` as the receiver.
+ */
+const isReallyPaused = (video: HTMLVideoElement): boolean =>
+  Reflect.get(HTMLMediaElement.prototype, 'paused', video);
+
+/**
  * How long after a 'crossfade:auto-advance' event a track change is still
  * considered crossfade-driven. The advance call itself is intercepted
  * synchronously, but the loadstart it causes lands asynchronously (usually
@@ -197,8 +219,9 @@ const CROSSFADE_ADVANCE_BYPASS_MS = 2000;
 /**
  * Wraps video.pause()/play() directly (not the player API) since the
  * on-screen button and spacebar call the element methods, bypassing the
- * API. Skip buttons are intercepted, faded, then re-clicked with a bypass
- * flag so the app's own navigation logic still runs.
+ * API. Manual song selections and skip buttons are observed, never
+ * intercepted: the gesture reaches the app untouched and the fade races the
+ * track change rather than gating it (see the comment on onSkipGesture).
  */
 function setupSmoothTransitions(
   video: HTMLVideoElement,
@@ -227,24 +250,11 @@ function setupSmoothTransitions(
     configurable: true,
     get: () => intendedPaused,
   });
-  // Tracks whether the video *really* paused (a genuine native 'pause'
-  // event fired), independent of `intendedPaused` above - needed because a
-  // pause fade can be cancelled by a follow-up play() before its deferred
-  // originalVideoPause() ever runs, leaving the element never actually
-  // paused even though intendedPaused briefly said otherwise.
-  //
-  // Seeded from the real state, not `false`: attaching to an
-  // already-paused element and then hitting play would otherwise look like
-  // that cancelled-fade case, and the synthetic play/playing events below
-  // would double up with the real ones originalVideoPlay() fires.
-  let realPauseFired = intendedPaused;
   const onNativePause = () => {
     intendedPaused = true;
-    realPauseFired = true;
   };
   const onNativePlay = () => {
     intendedPaused = false;
-    realPauseFired = false;
   };
   video.addEventListener('pause', onNativePause);
   video.addEventListener('play', onNativePlay);
@@ -281,20 +291,26 @@ function setupSmoothTransitions(
 
   video.play = () => {
     const wasIntendedPaused = intendedPaused;
-    const wasReallyPaused = realPauseFired;
     intendedPaused = false;
     pauseFadeToken++; // invalidates any in-flight pause fade
     debug.pauseFadeToken = pauseFadeToken;
-    // Resync to full whenever gain isn't already there: the pause fade
-    // above may have been left running (invalidating it only skips the
+    // Resync to full whenever gain isn't already heading there: the pause
+    // fade above may have been left running (invalidating it only skips the
     // final pause() call, not the gain animation), so gain could be
     // anywhere between 0 and 1 when play() is called for any reason -
     // but most play() calls (e.g. every normal song advance) don't need
     // this at all, so skip the no-op ramp when gain is already at rest.
-    if (fader.get() < 1) {
+    if (fader.target() < 1) {
       const config = getConfig();
       fader.rampTo(1, config?.pauseFadeDuration ?? 200);
     }
+    // Read the element's real state *before* play() flips it. A track change
+    // pauses and then plays within the same turn, and the native 'pause'
+    // event is queued as a task - so a flag set from that event still reads
+    // "not really paused" here even though the element genuinely did stop and
+    // originalVideoPlay() is about to fire its own play/playing. Asking the
+    // element directly is exact, and stops both sets firing at once.
+    const wasReallyPaused = isReallyPaused(video);
     const result = originalVideoPlay();
     // If a pause fade was in flight and got invalidated by this very call
     // before its deferred originalVideoPause() ever ran, the element was
@@ -360,6 +376,16 @@ function setupSmoothTransitions(
     );
   }
 
+  // One gesture fires both skip listeners below - a pointerdown, then the
+  // click it becomes - and only the first of the pair should fade. A fade
+  // already heading to silence means this is the second one, or that there is
+  // nothing left to fade. Deliberately *not* used by the paths that defer an
+  // action behind the fade (the wrapped player API, the media-session
+  // handler): this is true from the instant a fade starts, when the audio is
+  // still at full volume, so acting on it there would switch track before the
+  // fade had been heard at all.
+  const fadeToSilencePending = () => fader.target() <= 0;
+
   // A skip fades out and then relies on the new song's loadstart/play to
   // fade back in. When the action doesn't actually change track - previous
   // at the start of a queue, a media key the app ignores, a click that
@@ -369,7 +395,7 @@ function setupSmoothTransitions(
     if (skipSafetyTimer !== null) window.clearTimeout(skipSafetyTimer);
     skipSafetyTimer = window.setTimeout(() => {
       skipSafetyTimer = null;
-      if (token === skipFadeToken && fader.get() < 1 && !video.paused) {
+      if (token === skipFadeToken && fader.target() < 1 && !video.paused) {
         fader.rampTo(1, durationMs);
       }
     }, 300);
@@ -377,7 +403,7 @@ function setupSmoothTransitions(
 
   const onSongPlay = () => {
     intendedPaused = false;
-    if (fader.get() < 1) {
+    if (fader.target() < 1) {
       const config = getConfig();
       fader.rampTo(
         1,
@@ -397,7 +423,7 @@ function setupSmoothTransitions(
     if (
       config?.fadeOnSkip &&
       !isCrossfadeAdvance() &&
-      fader.get() > 0 &&
+      fader.target() > 0 &&
       !video.paused
     ) {
       fader.rampTo(0, 100);
@@ -482,23 +508,49 @@ function setupSmoothTransitions(
     ).loadPlaylist = wrapTrackChange(originalLoadPlaylist)!;
   }
 
-  let isBypassing = false;
-  const onDocumentClick = (event: MouseEvent) => {
-    if (isBypassing) return;
+  // Fading a manual song selection used to mean swallowing the gesture -
+  // preventDefault + stopImmediatePropagation at document capture phase -
+  // and re-dispatching playTrigger.click() once the fade had finished. That
+  // is what pinned the CPU. A fabricated activation gives YouTube Music's
+  // tp-yt-paper-ripple a ripple origin outside the element it belongs to, and
+  // paper-ripple only ever retires a ripple once its radius reaches
+  // min(maxRadius, 300), where maxRadius is the distance from that origin to
+  // the element's furthest corner. A ripple can only grow to
+  // 1.1 x min(diagonal, 300) + 5, so an origin far enough outside puts the
+  // retirement radius permanently out of reach: measured on a 180x180
+  // homepage carousel card, a ceiling of 285 against a threshold of 300. The
+  // ripple is never removed, paper-ripple's hand-rolled rAF loop never hits
+  // its exit condition, and it re-arms itself every frame for the rest of the
+  // session - rewriting inline styles on two live nodes inside the carousel,
+  // forever, at a layout recalc per frame.
+  //
+  // So the gesture is left completely alone and the fade races the track
+  // change instead of gating it. Nothing is prevented, nothing is
+  // re-dispatched, and no other component can be left holding state its own
+  // code never produces. pointerdown rather than click buys the fade the gap
+  // between press and release - usually 80-150ms of human reaction time -
+  // and onLoadStart's own dip covers the rest; click is listened to as well
+  // so keyboard activation, which fires no pointerdown, still fades.
+  // fadeToSilencePending() collapses the pair: the click that follows a
+  // pointerdown sees a fade already heading to 0 and does nothing.
+  const onSkipGesture = (event: MouseEvent) => {
+    // Secondary buttons open context menus rather than changing track.
+    if (event.button !== 0) return;
 
     const config = getConfig();
     if (
       !config?.fadeOnSkip ||
       isCrossfadeAdvance() ||
       video.paused ||
-      fader.get() <= 0
+      fadeToSilencePending()
     )
       return;
 
     const target = event.target as HTMLElement | null;
     if (!target) return;
 
-    // Do not intercept if clicking on menus, like buttons, sliders, channels, browse links, or controls
+    // Do not fade for menus, like buttons, sliders, channels, browse links,
+    // or controls - none of them change track.
     if (
       target.closest(
         'ytmusic-menu-renderer, ytmusic-like-button-renderer, tp-yt-paper-slider, #volume-slider, #progress-bar, ytmusic-toggle-menu-service-item-renderer, button[aria-label*="Menu"], button[aria-label*="More"], .dropdown-trigger, a[href*="/channel/"], a[href*="/browse/"]',
@@ -507,7 +559,7 @@ function setupSmoothTransitions(
       return;
     }
 
-    // Only intercept specific, verified play triggers (play buttons, thumbnails, song title links, queue items, skip buttons)
+    // Only fade for specific, verified play triggers (play buttons, thumbnails, song title links, queue items, skip buttons)
     const playTrigger = target.closest<HTMLElement>(
       'ytmusic-play-button-renderer, .next-button.ytmusic-player-bar, .previous-button.ytmusic-player-bar, ytmusic-player-queue-item .song-info, ytmusic-player-queue-item ytmusic-thumbnail-renderer, ytmusic-responsive-list-item-renderer .title a, ytmusic-responsive-list-item-renderer ytmusic-thumbnail-renderer, a[href*="watch?v="]',
     );
@@ -521,26 +573,14 @@ function setupSmoothTransitions(
       return;
     }
 
-    event.preventDefault();
-    event.stopImmediatePropagation();
-
     const token = ++skipFadeToken;
     debug.skipFadeToken = skipFadeToken;
 
+    // A press that never becomes a track change - dragged off the control,
+    // a click the app ignores - leaves the gain down with nothing to bring
+    // it back, so the safety net schedules itself from the fade's end.
     fader.rampTo(0, config.skipFadeDuration, () => {
       if (token !== skipFadeToken) return;
-      isBypassing = true;
-      try {
-        // Re-dispatch on the matched trigger, not on event.target: these
-        // controls are icon buttons, so the actual target is often an
-        // <svg>/<path>, and SVGElement has no click() - calling it there
-        // throws out of this callback and the skip never happens, leaving
-        // the fade stuck down.
-        playTrigger.click();
-      } finally {
-        isBypassing = false;
-      }
-
       scheduleFadeRestore(token, config.skipFadeDuration);
     });
   };
@@ -629,10 +669,16 @@ function setupSmoothTransitions(
     window.removeEventListener('keydown', onKeyDown, true),
   );
 
-  document.addEventListener('click', onDocumentClick, true);
-  skipTeardowns.push(() =>
-    document.removeEventListener('click', onDocumentClick, true),
-  );
+  // Capture phase so the fade still starts if something downstream stops
+  // propagation, and passive to state outright that neither listener ever
+  // calls preventDefault.
+  const skipGestureOptions = { capture: true, passive: true } as const;
+  document.addEventListener('pointerdown', onSkipGesture, skipGestureOptions);
+  document.addEventListener('click', onSkipGesture, skipGestureOptions);
+  skipTeardowns.push(() => {
+    document.removeEventListener('pointerdown', onSkipGesture, true);
+    document.removeEventListener('click', onSkipGesture, true);
+  });
 
   return () => {
     tornDown = true;
