@@ -560,8 +560,26 @@ function setupSmoothTransitions(
     }
 
     // Only fade for specific, verified play triggers (play buttons, thumbnails, song title links, queue items, skip buttons)
+    //
+    // The card shelf - search's "top result" card - is the one place that
+    // starts playback from a plain yt-button-renderer rather than a
+    // ytmusic-play-button-renderer, so its primary action needs naming
+    // separately or clicking Play there changes track with no fade at all.
+    // Its own thumbnail and title links are already covered by the
+    // watch?v= rule; only the button in .actions-container is not.
+    // It's matched two ways because neither signal alone is durable: the
+    // button carries no stable identity of its own, and its aria-label is
+    // localised ("Phát", "Play", ...), so matching that would work in one
+    // UI language and silently stop in every other. Position picks the
+    // first action, which is Play; the filled style picks the card's
+    // primary action, which is what distinguishes it from the outlined
+    // Save button beside it. Either one alone breaks on a reorder or a
+    // restyle, and breaking means the silent no-fade this is fixing.
+    // Over-matching is the cheap direction: a button that turns out not to
+    // change track just dips for ~180ms before scheduleFadeRestore's safety
+    // net brings the gain back.
     const playTrigger = target.closest<HTMLElement>(
-      'ytmusic-play-button-renderer, .next-button.ytmusic-player-bar, .previous-button.ytmusic-player-bar, ytmusic-player-queue-item .song-info, ytmusic-player-queue-item ytmusic-thumbnail-renderer, ytmusic-responsive-list-item-renderer .title a, ytmusic-responsive-list-item-renderer ytmusic-thumbnail-renderer, a[href*="watch?v="]',
+      'ytmusic-play-button-renderer, .next-button.ytmusic-player-bar, .previous-button.ytmusic-player-bar, ytmusic-player-queue-item .song-info, ytmusic-player-queue-item ytmusic-thumbnail-renderer, ytmusic-responsive-list-item-renderer .title a, ytmusic-responsive-list-item-renderer ytmusic-thumbnail-renderer, ytmusic-card-shelf-renderer .actions-container yt-button-renderer:first-of-type, ytmusic-card-shelf-renderer .actions-container button.ytSpecButtonShapeNextFilled, a[href*="watch?v="]',
     );
 
     if (!playTrigger) return;
