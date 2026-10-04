@@ -88,6 +88,18 @@
             "submenu": {
               "auto-reset-app-cache": "Stel Toep cachegeheue terug wanneer toep begin"
             }
+          },
+          "visual-tweaks": {
+            "submenu": {
+              "theme": {
+                "dialog": {
+                  "button": {
+                    "cancel": "Kanselleer",
+                    "remove": "Verwyder"
+                  }
+                }
+              }
+            }
           }
         }
       }
