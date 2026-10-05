@@ -545,6 +545,12 @@
           "trying-to-get-playlist-id": "Trying to get playlist ID: {{playlistId}}",
           "video-id-not-found": "Video not found",
           "writing-id3": "Writing ID3 tags…"
+        },
+        "notification": {
+          "done": {
+            "body": "{{name}}\n{{format}}",
+            "title": "Download complete"
+          }
         }
       },
       "description": "Downloads MP3 / source audio directly from the interface",
@@ -565,6 +571,7 @@
             "seconds": "Seconds"
           }
         },
+        "download-now-playing": "Download now playing (original quality)",
         "download-playlist": "Download playlist",
         "presets": "Presets",
         "skip-existing": "Skip existing files"

@@ -6,7 +6,7 @@ import { t } from '@/i18n';
 import promptOptions from '@/providers/prompt-options';
 
 import { type DownloaderPluginConfig, defaultConfig } from './index';
-import { downloadPlaylist } from './main';
+import { downloadNowPlaying, downloadPlaylist } from './main';
 import { getFolder } from './main/utils';
 import { DefaultPresetList } from './types';
 
@@ -177,6 +177,10 @@ export const onMenu = async ({
       ],
     },
 
+    {
+      label: t('plugins.downloader.menu.download-now-playing'),
+      click: () => downloadNowPlaying(),
+    },
     {
       label: t('plugins.downloader.menu.download-playlist'),
       click: () => downloadPlaylist(),

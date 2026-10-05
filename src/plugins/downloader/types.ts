@@ -908,3 +908,36 @@ export const VideoFormatList: VideoFormat[] = [
     vrOr3D: '',
   },
 ];
+
+/**
+ * Container to remux an audio-only format into when the audio is stream-copied.
+ *
+ * Keyed on the format's mime type rather than on {@link VideoFormatList}: that table is a
+ * fixed snapshot, so a newer audio itag either misses it entirely or maps to a container
+ * that cannot carry tags and artwork. The mime type comes from the format itself and stays
+ * correct as itags are added (itag 774 already postdates most of the table).
+ *
+ * - AAC in MP4 -> `m4a`, written by ffmpeg's `ipod` muxer, metadata in MP4 `ilst` atoms.
+ * - Opus in WebM -> `opus`, remuxed into Ogg. Still a stream copy, and unlike a bare
+ *   `.webm` it carries both Vorbis comments and cover art.
+ * - Vorbis in WebM -> `webm`, left in Matroska.
+ */
+export const getLosslessContainer = (format: {
+  itag?: number;
+  mime_type?: string;
+}): string => {
+  const mime = format.mime_type?.toLowerCase() ?? '';
+
+  if (mime.includes('audio/mp4') || mime.includes('mp4a')) {
+    return 'm4a';
+  }
+
+  if (mime.includes('audio/webm')) {
+    if (mime.includes('opus')) return 'opus';
+    if (mime.includes('vorbis')) return 'webm';
+  }
+
+  return (
+    VideoFormatList.find((it) => it.itag === format.itag)?.container ?? 'm4a'
+  );
+};

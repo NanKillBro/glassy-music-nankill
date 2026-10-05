@@ -11,6 +11,7 @@ import { getSongMenu } from '@/providers/dom-elements';
 import { getSongInfo } from '@/providers/song-info-front';
 
 import { DownloadButton } from './templates/download';
+import { DownloadToast } from './templates/toast';
 
 import type { DownloaderPluginConfig } from './index';
 import type { RendererContext } from '@/types/contexts';
@@ -18,8 +19,10 @@ import type { RendererContext } from '@/types/contexts';
 let download: () => void;
 
 const [downloadButtonText, setDownloadButtonText] = createSignal<string>('');
+const [toastText, setToastText] = createSignal<string>('');
 
 let buttonContainer: HTMLDivElement | null = null;
+let toastContainer: HTMLDivElement | null = null;
 
 const menuObserver = new MutationObserver(() => {
   const menu = getSongMenu();
@@ -83,11 +86,22 @@ export const onRendererLoad = ({
   ipc.on('downloader-feedback', (feedback: string) => {
     const targetHtml = feedback || t('plugins.downloader.templates.button');
     setDownloadButtonText(targetHtml);
+    // Same messages drive the toast. The backend clears feedback when a download
+    // finishes or fails, which is what hides it again.
+    setToastText(feedback || '');
   });
 };
 
 export const onPlayerApiReady = () => {
   setDownloadButtonText(t('plugins.downloader.templates.button'));
+
+  // Guarded rather than recreated: this runs again on later player-api readiness, and a
+  // second mount would stack another toast on top of the first.
+  if (!toastContainer) {
+    toastContainer = document.createElement('div');
+    render(() => <DownloadToast text={toastText()} />, toastContainer);
+    document.body.append(toastContainer);
+  }
 
   buttonContainer = document.createElement('div');
   buttonContainer.classList.add(

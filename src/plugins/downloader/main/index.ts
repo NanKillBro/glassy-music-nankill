@@ -4,7 +4,14 @@ import { join } from 'node:path';
 
 import { Mutex } from 'async-mutex';
 import { BG, type BgConfig } from 'bgutils-js';
-import { app, type BrowserWindow, dialog, ipcMain } from 'electron';
+import {
+  app,
+  type BrowserWindow,
+  dialog,
+  ipcMain,
+  Notification,
+  shell,
+} from 'electron';
 import is from 'electron-is';
 import filenamify from 'filenamify';
 import lazyVar from 'lazy-var';
@@ -38,7 +45,12 @@ import {
   setBadge,
 } from './utils';
 
-import { DefaultPresetList, type Preset, VideoFormatList } from '../types';
+import {
+  DefaultPresetList,
+  getLosslessContainer,
+  type Preset,
+  VideoFormatList,
+} from '../types';
 
 import type { DownloaderPluginConfig } from '../index';
 import type { BackendContext } from '@/types/contexts';
@@ -220,6 +232,7 @@ export const onMainLoad = async ({
   ipc.handle('download-playlist-request', async (url: string) =>
     downloadPlaylist(url),
   );
+  ipc.handle('download-now-playing', () => downloadNowPlaying());
 
   downloadSongOnFinishSetup({ ipc, getConfig });
 };
@@ -264,6 +277,40 @@ export async function downloadSongFromId(
       playlistFolder,
       trackId,
       increasePlaylistProgress,
+    );
+  } catch (error: unknown) {
+    sendError(error as Error, resolvedName || id);
+  }
+}
+
+/**
+ * Saves the track that is playing right now, always as a stream copy regardless of the
+ * configured preset: the encoded audio frames are passed through untouched and only the
+ * container changes, so the file keeps the exact bitstream the player was given.
+ */
+export async function downloadNowPlaying() {
+  // `playingUrl` is kept current by the `peard:video-src-changed` handler. The window's
+  // own URL covers the case where nothing has sent that event yet this session.
+  const id =
+    getVideoId(playingUrl ?? '') ?? getVideoId(win.webContents.getURL());
+
+  if (!id) {
+    sendError(
+      new Error(t('plugins.downloader.backend.feedback.video-id-not-found')),
+    );
+    return;
+  }
+
+  let resolvedName;
+  try {
+    await downloadSongUnsafe(
+      true,
+      id,
+      (name: string) => (resolvedName = name),
+      undefined,
+      undefined,
+      undefined,
+      true,
     );
   } catch (error: unknown) {
     sendError(error as Error, resolvedName || id);
@@ -325,6 +372,64 @@ function downloadSongOnFinishSetup({
   });
 }
 
+const CODEC_LABELS: [string, string][] = [
+  ['mp4a', 'AAC'],
+  ['opus', 'Opus'],
+  ['vorbis', 'Vorbis'],
+  ['mp3', 'MP3'],
+];
+
+/**
+ * Short description of what actually landed on disk. Which codec a download resolved to
+ * is not something the user can otherwise tell: the same action yields AAC on one track
+ * and Opus on another, depending on what the account is served.
+ */
+const describeFormat = (
+  format: { itag?: number; mime_type?: string; bitrate?: number },
+  extension: string,
+  streamCopy: boolean,
+) => {
+  // On a re-encode the source format describes the input, not the file - a preset that
+  // transcodes AAC to MP3 would otherwise be reported as AAC.
+  if (!streamCopy) return extension.toUpperCase();
+
+  const mime = format.mime_type?.toLowerCase() ?? '';
+  const codec =
+    CODEC_LABELS.find(([needle]) => mime.includes(needle))?.[1] ?? 'audio';
+  const kbps = format.bitrate
+    ? ` ${Math.round(format.bitrate / 1000)}kbps`
+    : '';
+  const itag = format.itag ? ` · itag ${format.itag}` : '';
+
+  return `${extension.toUpperCase()} · ${codec}${kbps}${itag}`;
+};
+
+/**
+ * The in-menu feedback text was the only status this plugin produced, and it is only on
+ * screen while the song menu is open - so a download started from the app menu finished
+ * with no visible sign at all. A notification is independent of any DOM state, and
+ * clicking it reveals the file.
+ */
+const notifyDownloadComplete = (
+  name: string,
+  formatLabel: string,
+  filePath: string,
+) => {
+  if (!Notification.isSupported()) return;
+
+  const notification = new Notification({
+    title: t('plugins.downloader.backend.notification.done.title'),
+    body: t('plugins.downloader.backend.notification.done.body', {
+      name,
+      format: formatLabel,
+    }),
+    silent: true,
+  });
+
+  notification.on('click', () => shell.showItemInFolder(filePath));
+  notification.show();
+};
+
 async function downloadSongUnsafe(
   isId: boolean,
   idOrUrl: string,
@@ -332,6 +437,7 @@ async function downloadSongUnsafe(
   playlistFolder?: string ,
   trackId?: string ,
   increasePlaylistProgress: (value: number) => void = () => {},
+  lossless = false,
 ) {
   const sendFeedback = (message: unknown, progress?: number) => {
     if (!playlistFolder) {
@@ -411,8 +517,17 @@ async function downloadSongUnsafe(
     presetSetting = DefaultPresetList['mp3 (256kbps)'];
   }
 
+  // The now-playing action and the `Source` preset both keep the original encode, so
+  // they share one path: container chosen from the format's mime type, audio frames
+  // copied through, tags and artwork written natively for that container.
+  const isStreamCopy = lossless || selectedPreset === 'Source';
+
   const downloadOptions: Types.FormatOptions = {
-    type: (await isPremium()) ? 'audio' : 'video+audio', // Audio, video or video+audio
+    // A stream copy always takes the adaptive audio-only format. The `video+audio`
+    // branch resolves a *progressive* stream (itag 18, ~96kbps AAC) - worse audio than
+    // the audio-only itag the player itself receives, which would defeat the point of
+    // copying it untouched.
+    type: isStreamCopy || (await isPremium()) ? 'audio' : 'video+audio', // Audio, video or video+audio
     quality: 'best', // Best, bestefficiency, 144p, 240p, 480p, 720p and so on.
     format: 'any', // Media container format
   };
@@ -420,7 +535,9 @@ async function downloadSongUnsafe(
   const format = info.chooseFormat(downloadOptions);
 
   let targetFileExtension: string;
-  if (!presetSetting?.extension) {
+  if (isStreamCopy) {
+    targetFileExtension = getLosslessContainer(format);
+  } else if (!presetSetting?.extension) {
     targetFileExtension =
       VideoFormatList.find((it) => it.itag === format.itag)?.container ?? 'mp3';
   } else {
@@ -461,13 +578,17 @@ async function downloadSongUnsafe(
     iterableStream,
     targetFileExtension,
     metadata,
-    presetSetting?.ffmpegArgs ?? [],
+    isStreamCopy ? [] : (presetSetting?.ffmpegArgs ?? []),
     format.content_length ?? 0,
     sendFeedback,
     increasePlaylistProgress,
+    isStreamCopy,
   );
 
-  if (fileBuffer && targetFileExtension === 'mp3') {
+  // ID3v2 is an MP3 construct, and NodeID3 prepends it: on an m4a that pushes the
+  // `ftyp` box off offset 0 and strict MP4 parsers reject the file. The stream-copy
+  // containers get their tags from the muxer instead (see the ffmpeg args above).
+  if (fileBuffer && !isStreamCopy && targetFileExtension === 'mp3') {
     fileBuffer = await writeID3(
       Buffer.from(fileBuffer),
       metadata,
@@ -480,11 +601,20 @@ async function downloadSongUnsafe(
   }
 
   sendFeedback(null, -1);
+
+  const formatLabel = describeFormat(format, targetFileExtension, isStreamCopy);
   console.info(
     t('plugins.downloader.backend.feedback.done', {
       filePath,
     }),
+    `(${formatLabel})`,
   );
+
+  // Suppressed for playlist items: downloadPlaylist reports its own progress, and one
+  // notification per track would be a flood.
+  if (!playlistFolder) {
+    notifyDownloadComplete(name, formatLabel, filePath);
+  }
 }
 
 async function downloadChunks(
@@ -521,12 +651,14 @@ async function iterableStreamToProcessedUint8Array(
   contentLength: number,
   sendFeedback: (str: string, value?: number) => void,
   increasePlaylistProgress: (value: number) => void = () => {},
+  streamCopy = false,
 ): Promise<Uint8Array | null> {
   sendFeedback(t('plugins.downloader.backend.feedback.loading'), 2); // Indefinite progress bar after download
 
   const safeVideoName = randomBytes(32).toString('hex');
 
   return await ffmpegMutex.runExclusive(async () => {
+    let coverName: string | null = null;
     try {
       const ffmpegInstance = await ffmpeg.get();
       if (!ffmpegInstance.isLoaded()) {
@@ -559,17 +691,62 @@ async function iterableStreamToProcessedUint8Array(
         increasePlaylistProgress(0.15 + (ratio * 0.85));
       });
 
+      // Copy mode passes the encoded audio through and only changes the container, so
+      // the artwork has to be embedded the way that container expects. MP4 takes a
+      // second input as an attached picture; Ogg takes no video stream at all (the
+      // muxer rejects it with "Unsupported codec id") and carries the picture as a
+      // base64 Vorbis comment instead. WebM supports neither, so those files get tags
+      // only.
+      const inputArgs: string[] = ['-i', safeVideoName];
+      const copyArgs: string[] = [];
+      const artworkArgs: string[] = [];
+
+      if (streamCopy) {
+        const cover =
+          extension === 'm4a' || extension === 'opus'
+            ? await getCoverArt(metadata.imageSrc ?? '')
+            : null;
+
+        if (cover && extension === 'm4a') {
+          coverName = `${safeVideoName}.jpg`;
+          ffmpegInstance.FS('writeFile', coverName, cover.buffer);
+          inputArgs.push('-i', coverName);
+          copyArgs.push(
+            '-map',
+            '0:a:0',
+            '-map',
+            '1:v:0',
+            '-c:a',
+            'copy',
+            '-c:v',
+            'copy',
+            '-disposition:v:0',
+            'attached_pic',
+          );
+        } else {
+          copyArgs.push('-map', '0:a:0', '-c:a', 'copy');
+          if (cover) {
+            artworkArgs.push(
+              '-metadata',
+              `metadata_block_picture=${buildMetadataBlockPicture(cover)}`,
+            );
+          }
+        }
+      }
+
       const safeVideoNameWithExtension = `${safeVideoName}.${extension}`;
       try {
         await ffmpegInstance.run(
-          '-i',
-          safeVideoName,
+          ...inputArgs,
+          ...copyArgs,
           ...presetFfmpegArgs,
           ...getFFmpegMetadataArgs(metadata),
+          ...artworkArgs,
           safeVideoNameWithExtension,
         );
       } finally {
         ffmpegInstance.FS('unlink', safeVideoName);
+        if (coverName) ffmpegInstance.FS('unlink', coverName);
       }
 
       sendFeedback(t('plugins.downloader.backend.feedback.saving'));
@@ -586,9 +763,58 @@ async function iterableStreamToProcessedUint8Array(
   });
 }
 
-const getCoverBuffer = async (url: string) => {
+type CoverArt = {
+  buffer: Buffer;
+  width: number;
+  height: number;
+  mime: string;
+};
+
+/**
+ * Cover art ready to embed. JPEG rather than PNG because the same bytes now have to fit
+ * inside a container - and, on the Ogg path, inside a single base64 ffmpeg argument -
+ * where a lossless screenshot-sized PNG is needlessly large.
+ */
+const getCoverArt = async (url: string): Promise<CoverArt | null> => {
   const nativeImage = cropMaxWidth(await getImage(url));
-  return nativeImage && !nativeImage.isEmpty() ? nativeImage.toPNG() : null;
+  if (!nativeImage || nativeImage.isEmpty()) return null;
+
+  const { width, height } = nativeImage.getSize();
+  return {
+    buffer: nativeImage.toJPEG(90),
+    width,
+    height,
+    mime: 'image/jpeg',
+  };
+};
+
+/**
+ * A base64 FLAC METADATA_BLOCK_PICTURE, which is how Vorbis comments carry cover art and
+ * therefore the only way to get artwork into an Ogg Opus file through ffmpeg: its Ogg
+ * muxer takes no video stream, so the `attached_pic` input that works for MP4 fails with
+ * "Unsupported codec id in stream 1". Every field is big-endian.
+ */
+const buildMetadataBlockPicture = (cover: CoverArt) => {
+  const u32 = (value: number) => {
+    const field = Buffer.alloc(4);
+    field.writeUInt32BE(value);
+    return field;
+  };
+
+  const mime = Buffer.from(cover.mime, 'ascii');
+
+  return Buffer.concat([
+    u32(3), // Picture type: front cover
+    u32(mime.length),
+    mime,
+    u32(0), // Description length, left empty
+    u32(cover.width),
+    u32(cover.height),
+    u32(24), // Bits per pixel
+    u32(0), // Palette size, 0 for non-indexed
+    u32(cover.buffer.length),
+    cover.buffer,
+  ]).toString('base64');
 };
 
 async function writeID3(
@@ -608,15 +834,15 @@ async function writeID3(
       tags.album = metadata.album;
     }
 
-    const coverBuffer = await getCoverBuffer(metadata.imageSrc ?? '');
-    if (coverBuffer) {
+    const cover = await getCoverArt(metadata.imageSrc ?? '');
+    if (cover) {
       tags.image = {
-        mime: 'image/png',
+        mime: cover.mime,
         type: {
           id: NodeID3.TagConstants.AttachedPicture.PictureType.FRONT_COVER,
         },
         description: 'thumbnail',
-        imageBuffer: coverBuffer,
+        imageBuffer: cover.buffer,
       };
     }
 

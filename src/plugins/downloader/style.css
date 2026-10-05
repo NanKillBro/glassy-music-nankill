@@ -19,3 +19,31 @@
   height: var(--iron-icon-height, 24px);
   animation: var(--iron-icon_-_animation);
 }
+
+/* Sits clear of the player bar, which is ~72px tall. */
+.ytmd-downloader-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 88px;
+  z-index: 9999;
+  max-width: 420px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: rgba(32, 32, 32, 0.95);
+  color: #fff;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+  /* Purely informational, so it must never swallow a click on the player bar. */
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.ytmd-downloader-toast--visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
