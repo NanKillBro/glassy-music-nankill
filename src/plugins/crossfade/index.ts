@@ -99,13 +99,13 @@ export default createPlugin<
      *
      * @default 5000ms
      */
-    fadeInDuration: 6000,
+    fadeInDuration: 8000,
     /**
      * The duration of the fade in and fade out in milliseconds.
      *
      * @default 5000ms
      */
-    fadeOutDuration: 6000,
+    fadeOutDuration: 8000,
     /**
      * The duration of the fade in and fade out in seconds.
      *
@@ -116,9 +116,9 @@ export default createPlugin<
      * The scaling algorithm to use for the fade.
      * (or a positive number in dB)
      *
-     * @default 'equalPower'
+     * @default 'linear'
      */
-    fadeScaling: 'equalPower',
+    fadeScaling: 'linear',
   },
   menu({ window, getConfig, setConfig }) {
     const promptCrossfadeValues = async (
