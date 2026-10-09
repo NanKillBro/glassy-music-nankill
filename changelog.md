@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
-#### [v4.0.0](https://github.com/NanKillBro/glassy-music-nankill/compare/v3.12.10-beta...v4.0.0)
+#### [v4.1.0](https://github.com/NanKillBro/glassy-music-nankill/compare/v4.0.0...v4.1.0)
+
+- feat(plugins): add Skip AI Music [`458e50c`](https://github.com/NanKillBro/glassy-music-nankill/commit/458e50c4f7598edb89c75fa32fbf742b6fad3cc3)
+- Refactor audio handling in crossfade and smooth transitions [`936e0dc`](https://github.com/NanKillBro/glassy-music-nankill/commit/936e0dcdd9e9f9e135473a31b066f78b02943ded)
+- crossfade fix [`16be74a`](https://github.com/NanKillBro/glassy-music-nankill/commit/16be74a6b909b9ee859ad0c7ff5c10127960a19a)
+
+### [v4.0.0](https://github.com/NanKillBro/glassy-music-nankill/compare/v3.12.10-beta...v4.0.0)
+
+> 30 August 2026
 
 - fix Toggling the Navigation plugin multiple times will spawn multiple controls. Fixes #12 [`#12`](https://github.com/NanKillBro/glassy-music-nankill/issues/12)
 - move "Change Fonts..." button [`9ae528e`](https://github.com/NanKillBro/glassy-music-nankill/commit/9ae528ec8f753fb586e6d912859bef43853c3805)
