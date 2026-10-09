@@ -2,7 +2,7 @@
   "name": "glassy-music-nankill",
   "desktopName": "glassymusic.nankill",
   "productName": "Glassy Music",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Glassy Music is extension for music player",
   "main": "./dist/main/index.js",
   "type": "module",

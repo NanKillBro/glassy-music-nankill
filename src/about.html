@@ -444,6 +444,61 @@
         <div class="scroll-area">
         <div class="log-entry">
             <div class="log-header">
+                <span class="log-version">Version 4.1.0</span>
+                <span class="log-tag release">RELEASE</span>
+            </div>
+
+            <div class="log-intro">
+                🎉 <strong>Thank you guys so much for 300 stars!</strong> This means a lot to me! GitHub says it's already been two months since my last release, so here's a new version!
+            </div>
+
+            <div class="log-section-title" style="margin-top: 0;">🔄 Updates</div>
+            <ul>
+                <li>Upstreamed to commit <code>a883022</code></li>
+                <li>Updated Better Lyrics (New Engine) to version <code>3.0.0.2</code> <sup style="color:#00f2fe;">(4)</sup></li>
+                <li>Backported some compatible fixes and features from the New Engine to Better Lyrics (Old Engine).</li>
+                <li>Updated Better Lyrics Shaders to version <code>1.5.0</code></li>
+            </ul>
+
+            <div class="log-section-title">✨ New Features &amp; UI</div>
+            <ul>
+                <li>Added the <code>smooth-transition</code> plugin (inspired by <a href="https://github.com/pear-devs/pear-desktop/pull/4662" target="_blank">pear-desktop PR #4462</a>).</li>
+                <li>Added the crossfade plugin, which now works properly.</li>
+                <li>Added the <code>skip-ai-music</code> plugin from <a href="https://github.com/pear-devs/pear-desktop/pull/4646" target="_blank">pear-desktop PR #4646</a>.</li>
+                <li>You can now change Better Lyrics Shaders settings while using the Better Lyrics theme.</li>
+                <li>Added a new splash screen when opening the app, kind of like Discord's.</li>
+                <li>Added a button to download the currently playing track in its original quality.</li>
+                <li>Improved performance in a few areas. <sup style="color:#00f2fe;">(1)</sup></li>
+                <li>Some features from Better Lyrics and Better Lyrics Shaders aren't listed here.</li>
+            </ul>
+
+            <div class="log-section-title">🐛 Bug Fixes</div>
+            <ul>
+                <li>Fixed solid colors in the new player, which may be part of an A/B test. <sup style="color:#00f2fe;">(3)</sup></li>
+                <li>Fixed an issue that prevented opening the Better Lyrics (New Engine) options.</li>
+                <li>Fixed some issues with the Better Lyrics theme editor.</li>
+                <li>Fixed the search tab being misaligned. <sup style="color:#00f2fe;">(3)</sup></li>
+                <li>Fixed song info shifting out of place after using fullscreen lyrics without fullscreen.</li>
+                <li>Fixed the fullscreen bottom-hover behavior: hovering at the bottom now shows the player bar as usual.</li>
+            </ul>
+
+            <div class="log-section-title">📜 Other Changes</div>
+            <ul>
+                <li>Changed the sublabels for the Better Lyrics (Old Engine) and Better Lyrics (New Engine) options.</li>
+                <li>Changed the app ID from <code>glassy-music-nankill-mod</code> to <code>glassy-music-nankill</code>. <sup style="color:#00f2fe;">(2)</sup></li>
+                <li>Changed the WMClass from <code>nankill.xyz.glassymusic.mod</code> to <code>glassymusic.nankill</code>.</li>
+                <li>Disabled background throttling.</li>
+            </ul>
+
+            <div class="log-footnotes">
+                <p><strong>(1)</strong> The smooth progress bar is disabled by default because it caused frequent layout recalculations. The in-app menu was also improved (<a href="https://github.com/pear-devs/pear-desktop/pull/4671" target="_blank">pear-desktop PR #4671</a>), and only the active language is now loaded at startup (<a href="https://github.com/pear-devs/pear-desktop/pull/4674" target="_blank">pear-desktop PR #4674</a>).</p>
+                <p><strong>(2)</strong> This change may break some existing installations, so you may need to uninstall the app before updating to this version.</p>
+                <p><strong>(3)</strong> YTM changed something that broke these things, and this update fixes them.</p>
+                <p><strong>(4)</strong> It still has some UI bugs. I'll fix them in the next release.</p>
+            </div>
+        </div>
+        <div class="log-entry">
+            <div class="log-header">
                 <span class="log-version">Version 4.0.0</span>
                 <span class="log-tag release">RELEASE</span>
             </div>
