@@ -204,3 +204,5 @@ I update the app in my free time or whenever necessary. Generally, expect about 
 ### Can I customize it?
 Yes, absolutely! You can already change fonts or add custom CSS directly in the Better Lyrics settings.
 
+### Why is the artwork low quality, or why does no media appear to be playing in MPRIS?
+You just need to enable the "Shortcuts (& MPRIS)" plugin. That should do the trick!
