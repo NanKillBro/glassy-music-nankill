@@ -416,7 +416,7 @@ async function createMainWindow() {
     backgroundColor: '#000',
     show: false,
     webPreferences: {
-      backgroundThrottling: false,
+      backgroundThrottling: config.get('options.backgroundThrottling') ?? false,
       contextIsolation: true,
       spellcheck: false,
       v8CacheOptions: 'bypassHeatCheck',

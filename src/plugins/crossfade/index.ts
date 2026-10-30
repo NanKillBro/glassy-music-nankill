@@ -1,4 +1,5 @@
 import prompt from 'custom-electron-prompt';
+import { dialog, type BrowserWindow } from 'electron';
 import { Howl } from 'howler';
 import {
   Innertube,
@@ -9,6 +10,10 @@ import {
   type YTMusic,
 } from '\u0079\u006f\u0075\u0074\u0075\u0062\u0065i.js';
 
+import {
+  get as getRootConfig,
+  setMenuOption as setRootMenuOption,
+} from '@/config';
 import { t } from '@/i18n';
 import { getNetFetchAsFetch } from '@/plugins/utils/main';
 import promptOptions from '@/providers/prompt-options';
@@ -20,7 +25,6 @@ import { Type2Engine, isQueueReadable, readNextTrack } from './handoff';
 
 import type { RendererContext } from '@/types/contexts';
 import type { MusicPlayer } from '@/types/music-player';
-import type { BrowserWindow } from 'electron';
 
 export type CrossfadePluginConfig = {
   enabled: boolean;
@@ -236,8 +240,49 @@ export default createPlugin<
         fadeScaling = options.fadeScaling;
       }
 
+      let type: 1 | 2 = Number(res[4]) === 2 ? 2 : 1;
+
+      // Type 1 drives its fade with JS timers, which Chromium throttles while
+      // the window is hidden/occluded when background throttling is enabled;
+      // type 2 schedules every audible event on the audio clock.
+      if (
+        type === 1 &&
+        (getRootConfig('options.backgroundThrottling') ?? false)
+      ) {
+        const { response } = await dialog.showMessageBox(win, {
+          type: 'warning',
+          title: t('plugins.crossfade.prompt.throttle-warning.title'),
+          message: t('plugins.crossfade.prompt.throttle-warning.message'),
+          buttons: [
+            t(
+              'plugins.crossfade.prompt.throttle-warning.buttons.disable-throttling',
+            ),
+            t(
+              'plugins.crossfade.prompt.throttle-warning.buttons.switch-to-type-2',
+            ),
+            t('plugins.crossfade.prompt.throttle-warning.buttons.use-anyway'),
+            t('plugins.crossfade.prompt.throttle-warning.buttons.cancel'),
+          ],
+          defaultId: 0,
+          cancelId: 3,
+        });
+        if (response === 0) {
+          setRootMenuOption('options.backgroundThrottling', false);
+          dialog.showMessageBox(win, {
+            type: 'info',
+            title: 'Restart Required',
+            message: 'A restart is required for this setting to apply.',
+          });
+        } else if (response === 1) {
+          type = 2;
+        } else if (response !== 2) {
+          // Esc / window close — abort without changing anything
+          return undefined;
+        }
+      }
+
       return {
-        type: Number(res[4]) === 2 ? 2 : 1,
+        type,
         fadeInDuration: Number(res[0]),
         fadeOutDuration: Number(res[1]),
         secondsBeforeEnd: Number(res[2]),

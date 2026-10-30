@@ -53,6 +53,7 @@ export interface DefaultConfig {
     customFonts: CustomFontsConfig;
     disableMinSize?: boolean;
     disableSplash?: boolean;
+    backgroundThrottling?: boolean;
   };
   'plugins': Record<string, unknown>;
 }
@@ -99,6 +100,10 @@ export const defaultConfig: DefaultConfig = {
     // undefined for everyone who already has a config file — a `showSplash:
     // true` default would mean "no splash" for every existing install.
     disableSplash: false,
+    // Mirrors the webPreferences flag: true = Chromium throttles timers when
+    // the window is hidden/occluded. Undefined/false preserves the historical
+    // hardcoded `backgroundThrottling: false` (see the disableSplash comment).
+    backgroundThrottling: false,
   },
   'plugins': {},
 };

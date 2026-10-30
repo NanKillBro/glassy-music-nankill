@@ -98,6 +98,13 @@
             "label": "Advanced options",
             "submenu": {
               "auto-reset-app-cache": "Reset app cache when app starts",
+              "background-throttling-warning": {
+                "title": "Enable Background Throttling",
+                "message": "Crossfade type 1 (shadow audio) drives its fade with JS timers, which Chromium throttles when the window is hidden or occluded. With background throttling enabled, type 1 crossfades may stutter or never trigger. Type 2 (gapless) is not affected.",
+                "cancel": "Cancel",
+                "enable-anyway": "Enable Anyway"
+              },
+              "disable-background-throttling": "Disable background throttling",
               "disable-hardware-acceleration": "Disable hardware acceleration",
               "edit-config-json": "Edit config.json",
               "override-user-agent": "Override User-Agent",
@@ -446,6 +453,16 @@
             }
           },
           "title": "Crossfade options"
+        },
+        "throttle-warning": {
+          "title": "Background throttling is enabled",
+          "message": "Crossfade type 1 fades with JS timers, which Chromium throttles when the window is hidden or occluded — the fade may stutter or never trigger. Disable background throttling (Options > Advanced Options), or use type 2, whose audio is scheduled on the audio clock and is unaffected.",
+          "buttons": {
+            "cancel": "Cancel",
+            "disable-throttling": "Disable throttling & use type 1",
+            "switch-to-type-2": "Switch to type 2",
+            "use-anyway": "Use type 1 anyway"
+          }
         }
       }
     },

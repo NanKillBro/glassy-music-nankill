@@ -669,6 +669,62 @@ export const mainMenuTemplate = async (
               },
             },
             {
+              label: t(
+                'main.menu.options.submenu.advanced-options.submenu.disable-background-throttling',
+              ),
+              type: 'checkbox',
+              checked: !(config.get('options.backgroundThrottling') ?? false),
+              async click(item: MenuItem) {
+                if (item.checked) {
+                  config.setMenuOption('options.backgroundThrottling', false);
+                  dialog.showMessageBox(win, {
+                    type: 'info',
+                    title: 'Restart Required',
+                    message: 'A restart is required for this setting to apply.',
+                  });
+                  return;
+                }
+                // Type-1 crossfade relies on unthrottled JS timers (see its
+                // config comment).
+                const crossfadeConfig =
+                  config.plugins.getOptions<{
+                    enabled?: boolean;
+                    type?: 1 | 2;
+                  }>('crossfade');
+                if (crossfadeConfig?.enabled && crossfadeConfig.type === 1) {
+                  const { response } = await dialog.showMessageBox(win, {
+                    type: 'warning',
+                    title: t(
+                      'main.menu.options.submenu.advanced-options.submenu.background-throttling-warning.title',
+                    ),
+                    message: t(
+                      'main.menu.options.submenu.advanced-options.submenu.background-throttling-warning.message',
+                    ),
+                    buttons: [
+                      t(
+                        'main.menu.options.submenu.advanced-options.submenu.background-throttling-warning.cancel',
+                      ),
+                      t(
+                        'main.menu.options.submenu.advanced-options.submenu.background-throttling-warning.enable-anyway',
+                      ),
+                    ],
+                    defaultId: 0,
+                    cancelId: 0,
+                  });
+                  if (response !== 1) {
+                    item.checked = true;
+                    return;
+                  }
+                }
+                config.setMenuOption('options.backgroundThrottling', true);
+                dialog.showMessageBox(win, {
+                  type: 'info',
+                  title: 'Restart Required',
+                  message: 'A restart is required for this setting to apply.',
+                });
+              },
+            },
+            {
               label: 'Disable Startup Splash Screen',
               type: 'checkbox',
               checked: config.get('options.disableSplash'),
