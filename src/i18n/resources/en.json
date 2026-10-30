@@ -438,7 +438,12 @@
               "linear": "Linear",
               "logarithmic": "Logarithmic"
             },
-            "seconds-before-end": "Crossfade N seconds before end"
+            "seconds-before-end": "Crossfade N seconds before end",
+            "type": {
+              "1": "Type 1 — shadow audio (legacy)",
+              "2": "Type 2 — gapless (preloads the next track)",
+              "label": "Crossfade type"
+            }
           },
           "title": "Crossfade options"
         }

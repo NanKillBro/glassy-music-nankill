@@ -16,6 +16,7 @@ import { createPlugin } from '@/utils';
 
 import { CrossfadeAudioGraph, type CrossfadeRampHandle } from './audio-graph';
 import { VolumeFader } from './fader';
+import { Type2Engine, isQueueReadable, readNextTrack } from './handoff';
 
 import type { RendererContext } from '@/types/contexts';
 import type { MusicPlayer } from '@/types/music-player';
@@ -23,11 +24,17 @@ import type { BrowserWindow } from 'electron';
 
 export type CrossfadePluginConfig = {
   enabled: boolean;
+  type: 1 | 2;
   fadeInDuration: number;
   fadeOutDuration: number;
   secondsBeforeEnd: number;
   fadeScaling: 'linear' | 'logarithmic' | 'equalPower' | number;
 };
+
+// Largest audio stream the type-2 preload downloads (long mixes/podcasts
+// are skipped rather than held in RAM).
+const MAX_AUDIO_BYTES = 40 * 1024 * 1024;
+const DOWNLOAD_TIMEOUT_MS = 60_000;
 
 // Duration of the handoff cross-ramp between the player's <video> and the
 // preloaded shadow audio at the moment one track hands off to the next:
@@ -94,6 +101,20 @@ export default createPlugin<
   restartNeeded: true,
   config: {
     enabled: false,
+    /**
+     * Which handoff implementation to use.
+     *
+     * Type 1 fades the player against a shadow copy of the current track
+     * (the original behaviour; JS-timed ramps, needs background throttling
+     * off). Type 2 downloads and decodes both songs and plays them from Web
+     * Audio at the exact switch point, swapping the player out
+     * phase-cancelled and back in sample-locked — the next song starts on
+     * time regardless of how long the player takes to load it, and every
+     * audible event runs on the audio clock (throttle-proof).
+     *
+     * @default 2
+     */
+    type: 2,
     /**
      * The duration of the fade in and fade out in milliseconds.
      *
@@ -180,9 +201,19 @@ export default createPlugin<
               },
               value: options.fadeScaling,
             },
+            {
+              label: t(
+                'plugins.crossfade.prompt.options.multi-input.type.label',
+              ),
+              selectOptions: {
+                1: t('plugins.crossfade.prompt.options.multi-input.type.1'),
+                2: t('plugins.crossfade.prompt.options.multi-input.type.2'),
+              },
+              value: options.type,
+            },
           ],
           resizable: true,
-          height: 360,
+          height: 430,
           ...promptOptions(),
         },
         win,
@@ -206,6 +237,7 @@ export default createPlugin<
       }
 
       return {
+        type: Number(res[4]) === 2 ? 2 : 1,
         fadeInDuration: Number(res[0]),
         fadeOutDuration: Number(res[1]),
         secondsBeforeEnd: Number(res[2]),
@@ -292,9 +324,63 @@ export default createPlugin<
           }
         },
       );
+
+      // Type 2: the whole deciphered stream, for decodeAudioData. Used for
+      // both the outgoing tail and the incoming head copies. Downloads are
+      // serialized so prefetching never starves playback.
+      let downloadQueue: Promise<unknown> = Promise.resolve();
+      const downloadAudioData = async (
+        videoID: string,
+      ): Promise<Uint8Array | null> => {
+        try {
+          const ytInstance = await getYt();
+          let info: YTMusic.TrackInfo | YT.VideoInfo;
+          try {
+            info = await ytInstance.music.getInfo(videoID);
+          } catch {
+            info = await ytInstance.getInfo(videoID);
+          }
+          const format = info.chooseFormat({
+            type: 'audio',
+            quality: 'best',
+          });
+          if (!format || (format.content_length ?? 0) > MAX_AUDIO_BYTES) {
+            console.warn(
+              `[Crossfade Backend] No usable audio stream for ${videoID} (itag ${format?.itag ?? '?'}).`,
+            );
+            return null;
+          }
+          const url = await format.decipher(ytInstance.session.player);
+          const response = await getNetFetchAsFetch()(url, {
+            signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT_MS),
+          });
+          if (!response.ok) {
+            console.warn(
+              `[Crossfade Backend] Stream fetch for ${videoID} failed: HTTP ${response.status}`,
+            );
+            return null;
+          }
+          return new Uint8Array(await response.arrayBuffer());
+        } catch (error) {
+          console.warn(
+            `[Crossfade Backend] audio-data download failed for ${videoID}:`,
+            error,
+          );
+          return null;
+        }
+      };
+      ipc.handle(
+        'audio-data',
+        (videoID: string): Promise<Uint8Array | null> => {
+          const result = downloadQueue.then(() => downloadAudioData(videoID));
+          downloadQueue = result.catch(() => null);
+          return result;
+        },
+      );
     },
     stop({ ipc }) {
       ipc.removeHandler('audio-url');
+      ipc.removeHandler('audio-data');
     },
   },
 
@@ -366,7 +452,12 @@ export default createPlugin<
 
       // --- Investigation state (2026-09-25 premature/missed crossfade bug) ---
       // Which of the three duration sources the trigger threshold came from.
-      type DurationSource = 'howl' | 'playerApi' | 'videoElement' | 'unknown';
+      type DurationSource =
+        | 'howl'
+        | 'type2'
+        | 'playerApi'
+        | 'videoElement'
+        | 'unknown';
       // Snapshot of the most recent armed trigger evaluation. Kept so that a
       // natural `ended` (missed crossfade) can be explained after the fact.
       type TriggerEval = {
@@ -426,6 +517,17 @@ export default createPlugin<
       // Formats a seconds value for log lines; '?' for unknown/invalid.
       const fmtSec = (v: number | null | undefined) =>
         typeof v === 'number' && Number.isFinite(v) ? `${v.toFixed(1)}s` : '?';
+
+      // Type 2: decodes both songs and plays them from the shared
+      // AudioContext (see handoff.ts). Falls back to type 1 whenever a
+      // precondition is missing.
+      const engine = new Type2Engine(
+        (channel, ...args) =>
+          this.ipc?.invoke(channel, ...args) as Promise<unknown>,
+        log,
+        graph,
+      );
+      const type2Enabled = () => (this.config?.type ?? 1) === 2;
 
       log.info('Renderer player API ready. Config:', this.config);
 
@@ -504,6 +606,45 @@ export default createPlugin<
           state = 'IDLE';
           log.info(`[State] Cooldown of ${ms}ms elapsed. State is now IDLE.`);
         }, ms);
+      };
+
+      // Aborts the current transition and restores plain playback. Used by
+      // the type-2 engine's abort paths (pause, user seek, wrong song, an
+      // element swap) — type 1's own paths keep their existing handling.
+      const flushTransition = (reason: string) => {
+        log.warn(`[Transition] Flushing crossfade: ${reason}.`);
+        transitionToken++;
+        if (fadeInPollTimer) {
+          clearInterval(fadeInPollTimer);
+          fadeInPollTimer = null;
+        }
+        if (fadeInTimeoutTimer) {
+          clearTimeout(fadeInTimeoutTimer);
+          fadeInTimeoutTimer = null;
+        }
+        fadeInFader?.cancelFade();
+        fadeInFader = null;
+        fadeOutFader?.cancelFade();
+        fadeOutFader = null;
+        handoffAudioFader?.cancelFade();
+        handoffAudioFader = null;
+        handoffVideoFader?.cancelFade();
+        handoffVideoFader = null;
+        if (engine.active) engine.abort();
+        if (syncedAudio) {
+          syncedAudio.unload();
+          syncedAudio = null;
+        }
+        guardVolume = null;
+        guardMuted = null;
+        graph.rampTo(1, 150);
+        graph.setTransitionActive(false);
+        const vid = getPlayerVideo();
+        if (vid) {
+          vid.muted = false;
+          if (vid.volume < 0.001) vid.volume = getUserVolume();
+        }
+        setCooldown(1500);
       };
 
       const loadTrackAudio = async (videoId: string) => {
@@ -636,6 +777,53 @@ export default createPlugin<
         });
       };
 
+      // --- Type 2 preloading -------------------------------------------------
+      // Downloads and decodes the next track's start ahead of the trigger,
+      // and measures the player offset from its audio while it is clearly
+      // audible (see handoff.ts).
+      const PRELOAD_LEAD_S = 45;
+      let preloadingId: string | null = null;
+      let preloadFailedId: string | null = null;
+      let preloadFailedAt = 0;
+      let queueEndSkipLogged = false;
+      const maybePreloadNext = (duration: number, currentTime: number) => {
+        if (!engine.available()) return;
+        const remaining = duration - currentTime;
+        const lead = Math.max(
+          PRELOAD_LEAD_S,
+          (this.config?.secondsBeforeEnd ?? 10) + 10,
+        );
+        if (remaining > lead || remaining <= 0) return;
+
+        const video = getPlayerVideo();
+        if (video && currentTrackId && !video.paused && !video.seeking) {
+          engine.maybeMeasure(currentTrackId, video);
+        }
+
+        const next = readNextTrack(currentTrackId);
+        const nextId =
+          next && next.videoId !== currentTrackId ? next.videoId : null;
+
+        if (preloadingId || !nextId) return;
+        if (engine.hasCopy(nextId)) return;
+        if (
+          preloadFailedId === nextId &&
+          Date.now() - preloadFailedAt < 30_000
+        ) {
+          return;
+        }
+        preloadingId = nextId;
+        log.info(`[Type2] Preloading next track ${nextId}...`);
+        engine.preloadNext(nextId).then((ok) => {
+          if (preloadingId === nextId) preloadingId = null;
+          if (!ok) {
+            preloadFailedId = nextId;
+            preloadFailedAt = Date.now();
+          }
+          log.info(`[Type2] Preload ${ok ? 'ready' : 'failed'} for ${nextId}.`);
+        });
+      };
+
       const startCrossfade = (trackDuration: number) => {
         const video = getPlayerVideo();
         if (!video) return;
@@ -698,8 +886,93 @@ export default createPlugin<
           `[Transition] Trigger context: chosen=${fmtSec(trackDuration)} (source: ${lastTriggerEval?.durationSource ?? 'unknown'}), video=${fmtSec(Number.isFinite(video.duration) ? video.duration : null)}, playerApi=${fmtSec(lastTriggerEval?.playerDuration ?? null)}, howl=${fmtSec(fadingDur)}@${fmtSec(fadingSeek)} (drift vs video: ${fadingSeek !== null ? fmtSec(video.currentTime - fadingSeek) : '?'}), threshold=${fmtSec(trackDuration - (this.config?.secondsBeforeEnd ?? 10))}`,
         );
 
+        const fadeInDuration = this.config?.fadeInDuration ?? 5000;
+
+        // --- Type 2: precise, decoded handoff ----------------------------
+        // Both songs play from the shared AudioContext; the player is
+        // swapped out phase-cancelled and back in sample-locked (see
+        // handoff.ts). Only engaged when the queue's next track and both
+        // decoded copies are actually available.
+        let type2Started = false;
+        if (type2Enabled() && engine.available()) {
+          const next = readNextTrack(currentTrackId);
+          const expectedNextId =
+            next && next.repeatMode !== 'ONE' && next.videoId !== currentTrackId
+              ? next.videoId
+              : null;
+          if (expectedNextId) {
+            type2Started = engine.begin({
+              currentTrackId: currentTrackId ?? '',
+              expectedNextId,
+              video,
+              duration: trackDuration,
+              peak: video.muted ? 0 : Math.min(Math.max(video.volume, 0), 1),
+              fadeInMs: fadeInDuration,
+              fadeOutMs: this.config?.fadeOutDuration ?? 5000,
+              fadeScaling: this.config?.fadeScaling ?? 'linear',
+              useGraph,
+              setPlayerVolume: (v: number) => {
+                const el = getPlayerVideo();
+                if (el) videoVolumeTarget(el).volume = v;
+              },
+              setPlayerVolumeTarget: () =>
+                videoVolumeTarget(getPlayerVideo() ?? video),
+              getPlayerVideo,
+              getCurrentVideoId,
+              onAdvance: () => {
+                // The engine already silenced the player; only the track
+                // change itself is left (same announcement as type 1, so
+                // smooth-transitions lets it through untouched).
+                document.dispatchEvent(
+                  new CustomEvent('crossfade:auto-advance'),
+                );
+                if (typeof playerApi?.nextVideo === 'function') {
+                  playerApi.nextVideo();
+                } else {
+                  document
+                    .querySelector<HTMLButtonElement>('.next-button')
+                    ?.click();
+                }
+              },
+              onHandoverDone: () => {
+                log.info('[Type2] Hand-over completed.');
+                if (fadeInPollTimer) {
+                  clearInterval(fadeInPollTimer);
+                  fadeInPollTimer = null;
+                }
+                if (fadeInTimeoutTimer) {
+                  clearTimeout(fadeInTimeoutTimer);
+                  fadeInTimeoutTimer = null;
+                }
+                fadeInFader?.cancelFade();
+                fadeInFader = null;
+                handoffAudioFader?.cancelFade();
+                handoffAudioFader = null;
+                handoffVideoFader?.cancelFade();
+                handoffVideoFader = null;
+                guardVolume = null;
+                guardMuted = null;
+                graph.setTransitionActive(false);
+                setCooldown(3000);
+              },
+            });
+            if (type2Started) {
+              // The decoded copies carry the audio; the Howl shadow is
+              // not needed for this transition.
+              fadingAudio?.unload();
+              log.info(
+                '[Type2] Precise handoff engaged; Howl shadow unloaded for this transition.',
+              );
+            } else {
+              log.info(
+                '[Type2] Engine refused the handoff (copies/correlation unavailable); using type 1.',
+              );
+            }
+          }
+        }
+
         // 1. Hand off to the shadow audio, then fade it out.
-        if (fadingAudio && fadingAudio.state() === 'loaded') {
+        if (!type2Started && fadingAudio && fadingAudio.state() === 'loaded') {
           const bridgePosition = fadingAudio.seek();
           if (
             typeof bridgePosition === 'number' &&
@@ -756,7 +1029,7 @@ export default createPlugin<
               fadeOutFader = null;
             });
           });
-        } else {
+        } else if (!type2Started) {
           log.warn(
             '[Transition] No preloaded Howl audio to fade out; proceeding with video transition.',
           );
@@ -764,8 +1037,6 @@ export default createPlugin<
         }
 
         // 2. Fade in the active incoming video once it has started playing
-        const fadeInDuration = this.config?.fadeInDuration ?? 5000;
-
         let hasFadedIn = false;
         // Graph-mode handoff ramp handle — the GainNode counterpart of
         // handoffVideoFader.
@@ -773,6 +1044,7 @@ export default createPlugin<
         const doFadeIn = () => {
           if (
             hasFadedIn ||
+            engine.active ||
             activeTransitionToken !== transitionToken ||
             state !== 'TRANSITIONING'
           ) {
@@ -863,6 +1135,12 @@ export default createPlugin<
         // and hands us the old claim's current gain so the transition can
         // continue exactly where it was (see CrossfadeAudioGraph.onSwap).
         graph.onSwap((newVideo, previousGain) => {
+          if (engine.active) {
+            // The decoded copies are aligned to the old element; a swap
+            // mid-handoff is not worth carrying across.
+            flushTransition('player <video> was replaced mid-handoff');
+            return;
+          }
           if (!useGraph) {
             // Already fell back to element mode; it owns the element.
             return;
@@ -900,23 +1178,34 @@ export default createPlugin<
           }
         });
 
-        const onVideoPlaying = () => {
+        // Runs the incoming phase: the type-2 engine (alignment + hand-over)
+        // when it owns the transition, the plain fade-in otherwise.
+        const advanceIncoming = () => {
+          if (engine.active) {
+            const owned = engine.onIncomingTick();
+            if (engine.handoverStarted) hasFadedIn = true;
+            if (!owned) doFadeIn();
+            return;
+          }
           doFadeIn();
         };
-        const checkPlaying = () => {
-          doFadeIn();
-        };
-        video.addEventListener('playing', onVideoPlaying);
-        video.addEventListener('timeupdate', checkPlaying);
+        video.addEventListener('playing', advanceIncoming);
+        video.addEventListener('timeupdate', advanceIncoming);
 
         // The player may replace the video element during navigation, so follow it.
-        fadeInPollTimer = setInterval(doFadeIn, 100);
+        fadeInPollTimer = setInterval(advanceIncoming, 100);
         fadeInTimeoutTimer = setTimeout(() => {
           doFadeIn();
           if (fadeInPollTimer) clearInterval(fadeInPollTimer);
           fadeInPollTimer = null;
           fadeInTimeoutTimer = null;
           if (!hasFadedIn) {
+            if (engine.active) {
+              log.warn(
+                '[Type2] Hand-over did not start within the fade-in window; aborting the decoded copies.',
+              );
+              engine.abort();
+            }
             log.warn(
               '[Transition] 10s fade-in window elapsed without the next video ever playing; resetting state to IDLE.',
             );
@@ -1059,7 +1348,11 @@ export default createPlugin<
           );
         };
 
-        if (fadingAudio && fadingAudio.state() === 'loaded') {
+        if (type2Started) {
+          log.info(
+            '[Type2] Outgoing copy scheduled; the engine advances the silent player.',
+          );
+        } else if (fadingAudio && fadingAudio.state() === 'loaded') {
           if (fadingAudio.playing()) {
             startVideoHandoffRamp();
           } else {
@@ -1163,9 +1456,18 @@ export default createPlugin<
           const pDur = playerApi.getDuration();
           if (Number.isFinite(pDur) && pDur > 0) playerDuration = pDur;
         }
+        const type2Duration = type2Enabled()
+          ? engine.cachedDuration(currentTrackId ?? '')
+          : null;
         if (howlDuration !== null) {
           duration = howlDuration;
           durationSource = 'howl';
+        } else if (type2Duration !== null) {
+          // Type 2 decoded the same audio-only stream family the Howl used;
+          // its own length is the honest end of the song (the video element
+          // can run tens of seconds longer on some tracks).
+          duration = type2Duration;
+          durationSource = 'type2';
         } else if (playerDuration !== null) {
           duration = playerDuration;
           durationSource = 'playerApi';
@@ -1246,8 +1548,32 @@ export default createPlugin<
 
         if (blockedBy) return;
 
+        // Type 2: arm the next-track decode and the position measurement
+        // ahead of the trigger.
+        if (type2Enabled()) maybePreloadNext(duration, currentTime);
+
         // Check if threshold is reached
         if (currentTime >= threshold) {
+          if (type2Enabled()) {
+            // With no next track (queue end, autoplay off) or repeat-one,
+            // advancing early would cut the song short — let it play out /
+            // restart naturally instead of crossfading into nothing.
+            const next = readNextTrack(currentTrackId);
+            if (
+              isQueueReadable() &&
+              (!next ||
+                next.repeatMode === 'ONE' ||
+                next.videoId === currentTrackId)
+            ) {
+              if (!queueEndSkipLogged) {
+                queueEndSkipLogged = true;
+                log.info(
+                  `[Type2] No next track to hand off to (${next ? 'repeat-one' : 'queue end'}); letting the song play out.`,
+                );
+              }
+              return;
+            }
+          }
           startCrossfade(duration);
         }
       };
@@ -1260,6 +1586,7 @@ export default createPlugin<
         );
         currentTrackId = newVideoId;
         lastSeekTime = 0;
+        queueEndSkipLogged = false;
         // Forensics state is per-track; start clean for the new track.
         lastTriggerEval = null;
         mismatchWarnedTrackId = null;
@@ -1269,6 +1596,7 @@ export default createPlugin<
           log.info(
             '[Track Change] Non-transition track change. Resetting state to IDLE.',
           );
+          if (engine.active) engine.abort();
           fadeInFader?.cancelFade();
           fadeOutFader?.cancelFade();
           handoffAudioFader?.cancelFade();
@@ -1295,12 +1623,30 @@ export default createPlugin<
           graph.rampTo(1, 150);
           graph.setTransitionActive(false);
           state = 'IDLE';
+        } else if (engine.active && newVideoId !== engine.expectedNextId) {
+          // The player brought in a different song than the decoded copy
+          // plays (queue changed under the advance): the precise handoff is
+          // impossible.
+          flushTransition(
+            `player brought ${newVideoId} instead of ${engine.expectedNextId ?? '?'}`,
+          );
         }
 
         bindVideoListeners(getPlayerVideo());
 
-        // Preload audio for this new track for its upcoming crossfade transition
-        loadTrackAudio(newVideoId);
+        // Type 2 owns the track: the decoded copy replaces the Howl shadow
+        // (no audio-url fetch, no shadow sync). The Howl only comes back as
+        // a lazy backup from maybePreloadNext when copies fall behind.
+        if (type2Enabled() && engine.available()) {
+          engine.ensureCurrent(newVideoId).then((ok) => {
+            log.info(
+              `[Type2] Copy ${ok ? 'ready' : 'unavailable'} for ${newVideoId}.`,
+            );
+          });
+        } else {
+          // Preload audio for this new track for its upcoming crossfade transition
+          loadTrackAudio(newVideoId);
+        }
       };
 
       const onVideoDataChange = (event: Event) => {
@@ -1326,6 +1672,16 @@ export default createPlugin<
       // Set up video listeners
       let currentBoundVideo: HTMLVideoElement | null = null;
       const onSeeking = () => {
+        if (engine.active) {
+          // NEVER flush on 'seeking': the engine's own alignment seeks can
+          // legally interleave seeked/seeking events, and YouTube re-scrubs
+          // the element after a track load. User intent is detected on the
+          // player bar (onUserSeekIntent below), not here.
+          if (engine.advanced && !engine.handoverStarted && !engine.ownsSeek) {
+            engine.realign();
+          }
+          return;
+        }
         if (syncedAudio && syncedAudio.state() === 'loaded') {
           const video = getPlayerVideo();
           if (video) {
@@ -1335,6 +1691,14 @@ export default createPlugin<
         }
       };
       const onPause = () => {
+        if (engine.active && !engine.advanced) {
+          // Paused before the player was swapped out: abandon the copies
+          // and let normal playback continue when it resumes. (After the
+          // advance, load-related pauses are tolerated and a persistent
+          // user pause is caught by the engine's own watchdog.)
+          flushTransition('player paused before the swap');
+          return;
+        }
         if (syncedAudio && syncedAudio.state() === 'loaded') {
           syncedAudio.pause();
         }
@@ -1434,12 +1798,28 @@ export default createPlugin<
         onTimeUpdate();
       }, 500);
 
+      // A pointerdown on the player bar is a user seek intent: while a
+      // type-2 transition is in flight the decoded copies cannot follow an
+      // arbitrary scrub, so the transition is flushed (same philosophy as
+      // automix's input-based cancel).
+      const onUserSeekIntent = (event: PointerEvent) => {
+        if (!engine.active) return;
+        const target = event.target as Element | null;
+        if (target?.closest?.('ytmusic-player-bar')) {
+          flushTransition('user seek (player bar)');
+        }
+      };
+      document.addEventListener('pointerdown', onUserSeekIntent, true);
+
       document.addEventListener('videodatachange', onVideoDataChange);
       window.navigation?.addEventListener('navigate', onNavigate);
 
       this.cleanup = () => {
         log.info('[Cleanup] Removing crossfade event listeners and audio.');
-        // Graph first: gain back to 1 and the line node removed before any
+        // Type-2 copies play outside the player's line, so nothing else
+        // here can silence them.
+        engine.dispose();
+        // Graph next: gain back to 1 and the line node removed before any
         // listener teardown, so audio can never stay stuck silent.
         graph.dispose();
         // Whether the element is currently under element-mode control at
@@ -1475,6 +1855,7 @@ export default createPlugin<
           }
           currentBoundVideo = null;
         }
+        document.removeEventListener('pointerdown', onUserSeekIntent, true);
         document.removeEventListener('videodatachange', onVideoDataChange);
         window.navigation?.removeEventListener('navigate', onNavigate);
       };

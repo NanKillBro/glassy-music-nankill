@@ -214,12 +214,14 @@ export class CrossfadeAudioGraph {
    * user's fadeScaling curve (the same scale constructors the VolumeFader
    * uses, so the ramp reproduces the element-mode fade shape exactly).
    *
-   * The curve is scheduled with setValueCurveAtTime, which the audio
-   * rendering thread enforces with sample accuracy — it runs on schedule
-   * even when JS tasks are throttled to a crawl. The returned handle's
-   * completion hook (`onDone`, delivered via a plain setTimeout) is the
-   * only part that can lag under throttling; callers must not rely on its
-   * timing for anything the audio itself already guarantees.
+   * `startAt` schedules the ramp at a future context time (default: now);
+   * the gain holds its current value until then. The curve is scheduled
+   * with setValueCurveAtTime, which the audio rendering thread enforces
+   * with sample accuracy — it runs on schedule even when JS tasks are
+   * throttled to a crawl. The returned handle's completion hook (`onDone`,
+   * delivered via a plain setTimeout) is the only part that can lag under
+   * throttling; callers must not rely on its timing for anything the audio
+   * itself already guarantees.
    *
    * Returns null when there is no claim or scheduling failed, in which
    * case the gain is left untouched and the caller should fall back.
@@ -229,12 +231,17 @@ export class CrossfadeAudioGraph {
     durationMs: number,
     fadeScaling?: string | number,
     onDone?: () => void,
+    startAt?: number,
   ): CrossfadeRampHandle | null {
     const current = this.claimState;
     const context = this.context;
     if (this.disposed || !current || !context) return null;
     try {
       const now = context.currentTime;
+      const beginAt = Math.max(
+        Number.isFinite(startAt) ? (startAt as number) : now,
+        now,
+      );
       // Read the value first, then cancel: a ramp is often re-triggered
       // while a previous curve is still running, and the new curve has to
       // pick up from wherever the old one had reached.
@@ -246,6 +253,9 @@ export class CrossfadeAudioGraph {
       // discipline as smooth-transitions).
       const startValue = Math.min(Math.max(current.gain.gain.value, 0), 1);
       current.gain.gain.cancelScheduledValues(now);
+      // Hold the current value until the scheduled start, when the curve
+      // begins there instead of now.
+      if (beginAt > now) current.gain.gain.setValueAtTime(startValue, now);
       const safeDurationMs =
         Number.isFinite(durationMs) && durationMs > 0 ? durationMs : 1;
       let scale: VolumeScale;
@@ -272,14 +282,21 @@ export class CrossfadeAudioGraph {
         const value = scale.internalToVolume(level);
         curve[i] = Math.min(Math.max(value, lowest), highest);
       }
-      current.gain.gain.setValueCurveAtTime(curve, now, safeDurationMs / 1000);
+      current.gain.gain.setValueCurveAtTime(
+        curve,
+        beginAt,
+        safeDurationMs / 1000,
+      );
 
       this.supersedeRamp();
       const token = this.rampToken;
-      this.rampTimer = window.setTimeout(() => {
-        this.rampTimer = null;
-        if (token === this.rampToken) onDone?.();
-      }, safeDurationMs);
+      this.rampTimer = window.setTimeout(
+        () => {
+          this.rampTimer = null;
+          if (token === this.rampToken) onDone?.();
+        },
+        safeDurationMs + Math.max(0, (beginAt - now) * 1000),
+      );
 
       return {
         cancel: () => {
@@ -297,10 +314,23 @@ export class CrossfadeAudioGraph {
   }
 
   /**
+   * Ramps the claimed gain starting at a future context time — the
+   * scheduled form of `rampTo` (see its `startAt` parameter).
+   */
+  rampToAt(
+    target: number,
+    startAt: number,
+    durationMs: number,
+    fadeScaling?: string | number,
+    onDone?: () => void,
+  ): CrossfadeRampHandle | null {
+    return this.rampTo(target, durationMs, fadeScaling, onDone, startAt);
+  }
+
+  /**
    * Snaps the claimed gain to `value` with no ramp, invalidating any
    * active ramp (its completion hook will not fire).
-   */
-  snapTo(value: number): void {
+   */ snapTo(value: number): void {
     const current = this.claimState;
     const context = this.context;
     if (!current || !context) return;
