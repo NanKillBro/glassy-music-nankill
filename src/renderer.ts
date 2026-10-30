@@ -69,14 +69,28 @@ async function onApiLoaded() {
     );
 
   window.ipcRenderer.on('peard:previous-video', () => {
-    document
-      .querySelector<HTMLElement>('.previous-button.ytmusic-player-bar')
-      ?.click();
+    const button =
+      document.querySelector<HTMLElement>('.previous-button.ytmusic-player-bar') ??
+      document.querySelector<HTMLElement>(
+        '.ytmusicPlayerControlsPreviousButton button',
+      );
+    if (button) {
+      button.click();
+    } else {
+      api?.previousVideo();
+    }
   });
   window.ipcRenderer.on('peard:next-video', () => {
-    document
-      .querySelector<HTMLElement>('.next-button.ytmusic-player-bar')
-      ?.click();
+    const button =
+      document.querySelector<HTMLElement>('.next-button.ytmusic-player-bar') ??
+      document.querySelector<HTMLElement>(
+        '.ytmusicPlayerControlsNextButton button',
+      );
+    if (button) {
+      button.click();
+    } else {
+      api?.nextVideo();
+    }
   });
   window.ipcRenderer.on('peard:play', (_) => {
     api?.playVideo();
@@ -90,21 +104,51 @@ async function onApiLoaded() {
   });
   window.ipcRenderer.on('peard:seek-to', (_, t: number) => api!.seekTo(t));
   window.ipcRenderer.on('peard:seek-by', (_, t: number) => api!.seekBy(t));
-  window.ipcRenderer.on('peard:shuffle', () => {
-    document
-      .querySelector<HTMLElement & { queue: { shuffle: () => void } }>(
-        'ytmusic-player-bar',
-      )
-      ?.queue.shuffle();
+  window.ipcRenderer.on('peard:shuffle', (_, target?: boolean) => {
+    const playerBar = document.querySelector<
+      HTMLElement & { queue: { shuffle: () => void } }
+    >('ytmusic-player-bar');
+    if (playerBar) {
+      if (typeof target !== 'boolean' || isShuffled() !== target) {
+        playerBar.queue.shuffle();
+      }
+      return;
+    }
+
+    const shuffleButton = document.querySelector<HTMLButtonElement>(
+      '.ytmusicPlayerControlsShuffleButton button',
+    );
+    if (
+      shuffleButton &&
+      (typeof target !== 'boolean' ||
+        (shuffleButton.getAttribute('aria-pressed') === 'true') !== target)
+    ) {
+      shuffleButton.click();
+    }
   });
 
+  const getQueueState = () =>
+    document.querySelector<QueueElement>('#queue')?.queue.store.store.getState();
+
   const isShuffled = () => {
+    const stored = getQueueState()?.queue.shuffleEnabled;
+    if (typeof stored === 'boolean') {
+      return stored;
+    }
+
     const isShuffled =
       document
         .querySelector<HTMLElement>('ytmusic-player-bar')
         ?.attributes.getNamedItem('shuffle-on') ?? null;
+    if (isShuffled !== null) {
+      return true;
+    }
 
-    return isShuffled !== null;
+    return (
+      document.querySelector<HTMLButtonElement>(
+        '.ytmusicPlayerControlsShuffleButton button',
+      )?.getAttribute('aria-pressed') === 'true'
+    );
   };
 
   window.ipcRenderer.on('peard:get-shuffle', () => {
@@ -123,19 +167,29 @@ async function onApiLoaded() {
   );
   window.ipcRenderer.on('peard:switch-repeat', (_, repeat = 1) => {
     for (let i = 0; i < repeat; i++) {
+      const playerBar = document.querySelector<
+        HTMLElement & { onRepeatButtonClick: () => void }
+      >('ytmusic-player-bar');
+      if (playerBar) {
+        playerBar.onRepeatButtonClick();
+        continue;
+      }
       document
-        .querySelector<HTMLElement & { onRepeatButtonClick: () => void }>(
-          'ytmusic-player-bar',
+        .querySelector<HTMLButtonElement>(
+          '.ytmusicPlayerControlsRepeatButton button',
         )
-        ?.onRepeatButtonClick();
+        ?.click();
     }
   });
   window.ipcRenderer.on('peard:update-volume', (_, volume: number) => {
-    document
-      .querySelector<HTMLElement & { updateVolume: (volume: number) => void }>(
-        'ytmusic-player-bar',
-      )
-      ?.updateVolume(volume);
+    const playerBar = document.querySelector<
+      HTMLElement & { updateVolume: (volume: number) => void }
+    >('ytmusic-player-bar');
+    if (playerBar) {
+      playerBar.updateVolume(volume);
+    } else {
+      api?.setVolume(volume);
+    }
   });
 
   const isFullscreen = () => {

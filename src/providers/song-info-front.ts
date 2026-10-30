@@ -1,4 +1,4 @@
-import { LikeType, type GetState } from '@/types/datahost-get-state';
+import { LikeType } from '@/types/datahost-get-state';
 
 import { singleton } from './decorators';
 
@@ -9,6 +9,7 @@ import type {
   PlayerOverlays,
   VideoDataChangeValue,
 } from '@/types/player-api-events';
+import type { QueueElement } from '@/types/queue';
 import type { VideoDataChanged } from '@/types/video-data-changed';
 
 const DATAUPDATED_FALLBACK_TIMEOUT_MS = 1500;
@@ -67,36 +68,41 @@ export const setupTimeChangedListener = singleton(() => {
   }
 });
 
+const getQueueState = () =>
+  document.querySelector<QueueElement>('#queue')?.queue.store.store.getState();
+
 export const setupRepeatChangedListener = singleton(() => {
-  const repeatObserver = new MutationObserver((mutations) => {
+  const sendRepeatMode = () => {
     // provided by App
-    window.ipcRenderer.send(
-      'peard:repeat-changed',
-      (
-        mutations[0].target as Node & {
-          __dataHost: {
-            getState: () => GetState;
-          };
-        }
-      ).__dataHost.getState().queue.repeatMode,
-    );
-  });
-  repeatObserver.observe(document.querySelector('#right-controls .repeat')!, {
-    attributeFilter: ['title'],
-  });
+    const repeatMode = getQueueState()?.queue.repeatMode;
+    if (repeatMode !== undefined) {
+      window.ipcRenderer.send('peard:repeat-changed', repeatMode);
+    }
+  };
+
+  const repeatObserver = new MutationObserver(sendRepeatMode);
+
+  // Old player bar: the repeat icon button's title changes with the mode.
+  const oldRepeatButton = document.querySelector('#right-controls .repeat');
+  if (oldRepeatButton) {
+    repeatObserver.observe(oldRepeatButton, { attributeFilter: ['title'] });
+  }
+
+  // New mini player bar: the repeat button toggles title/aria-pressed.
+  const newRepeatButton = document.querySelector(
+    '.ytmusicPlayerControlsRepeatButton',
+  );
+  if (newRepeatButton) {
+    repeatObserver.observe(newRepeatButton, {
+      attributes: true,
+      attributeFilter: ['title', 'aria-pressed'],
+      childList: true,
+      subtree: true,
+    });
+  }
 
   // Emit the initial value as well; as it's persistent between launches.
-  // provided by App
-  window.ipcRenderer.send(
-    'peard:repeat-changed',
-    document
-      .querySelector<
-        HTMLElement & {
-          getState: () => GetState;
-        }
-      >('ytmusic-player-bar')
-      ?.getState().queue.repeatMode,
-  );
+  sendRepeatMode();
 });
 
 const mapLikeStatus = (status: string | null): LikeType =>
@@ -149,25 +155,49 @@ export const setupVolumeChangedListener = singleton((api: MusicPlayer) => {
 
 export const setupShuffleChangedListener = singleton(() => {
   const playerBar = document.querySelector('ytmusic-player-bar');
+  const shuffleButton = document.querySelector(
+    '.ytmusicPlayerControlsShuffleButton',
+  );
 
-  if (!playerBar) {
+  if (!playerBar && !shuffleButton) {
     window.ipcRenderer.send('peard:shuffle-changed-supported', false);
     return;
   }
 
-  const observer = new MutationObserver(() => {
-    window.ipcRenderer.send(
-      'peard:shuffle-changed',
-      (playerBar?.attributes.getNamedItem('shuffle-on') ?? null) !== null,
+  const isShuffled = () => {
+    const stored = getQueueState()?.queue.shuffleEnabled;
+    if (typeof stored === 'boolean') {
+      return stored;
+    }
+
+    return (
+      (playerBar?.attributes.getNamedItem('shuffle-on') ?? null) !== null ||
+      document.querySelector<HTMLButtonElement>(
+        '.ytmusicPlayerControlsShuffleButton button',
+      )?.getAttribute('aria-pressed') === 'true'
     );
+  };
+
+  const observer = new MutationObserver(() => {
+    window.ipcRenderer.send('peard:shuffle-changed', isShuffled());
   });
 
-  observer.observe(playerBar, {
-    attributes: true,
-    attributeFilter: ['shuffle-on'],
-    childList: false,
-    subtree: false,
-  });
+  if (playerBar) {
+    observer.observe(playerBar, {
+      attributes: true,
+      attributeFilter: ['shuffle-on'],
+      childList: false,
+      subtree: false,
+    });
+  }
+  if (shuffleButton) {
+    observer.observe(shuffleButton, {
+      attributes: true,
+      attributeFilter: ['aria-pressed'],
+      childList: true,
+      subtree: true,
+    });
+  }
 });
 
 export const setupFullScreenChangedListener = singleton(() => {

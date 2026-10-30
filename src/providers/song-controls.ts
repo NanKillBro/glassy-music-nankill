@@ -67,7 +67,8 @@ export const getSongControls = (win: BrowserWindow) => {
     requestShuffleInformation: () => {
       win.webContents.send('peard:get-shuffle');
     },
-    shuffle: () => win.webContents.send('peard:shuffle'),
+    shuffle: (enableShuffle?: boolean) =>
+      win.webContents.send('peard:shuffle', enableShuffle),
     switchRepeat: (n: ArgsType<number> = 1) => {
       const repeat = parseNumberFromArgsType(n);
       if (repeat !== null) {

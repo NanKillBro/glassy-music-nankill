@@ -155,7 +155,7 @@ export function registerMPRIS(win: BrowserWindow) {
     });
 
     ipcMain.on('peard:shuffle-changed', (_, shuffleEnabled: boolean) => {
-      if (player.shuffle === undefined || !player.canUsePlayerControls) {
+      if (player.shuffle === undefined) {
         return;
       }
 
@@ -280,16 +280,13 @@ export function registerMPRIS(win: BrowserWindow) {
     player.on('position', seekTo);
 
     player.on('shuffle', (enableShuffle) => {
-      if (!player.canUsePlayerControls || enableShuffle === undefined) {
+      if (enableShuffle === undefined) {
         return;
       }
 
       player.shuffle = enableShuffle;
-
-      if (enableShuffle) {
-        shuffle();
-        requestQueueInformation();
-      }
+      shuffle(enableShuffle);
+      requestQueueInformation();
     });
     player.on('open', (args: { uri: string }) => {
       win.loadURL(args.uri).then(() => {
