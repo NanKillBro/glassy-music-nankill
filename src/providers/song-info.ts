@@ -59,6 +59,14 @@ export const getImage = async (src: string): Promise<Electron.NativeImage> => {
   return output;
 };
 
+export type ArtworkResolution = 'low' | 'medium' | 'high';
+
+const ARTWORK_RESOLUTIONS = {
+  low: { param: '=w320-h320$1', jpg: '/hqdefault.jpg' },
+  medium: { param: '=w544-h544$1', jpg: '/sddefault.jpg' },
+  high: { param: '=w1024-h1024$1', jpg: '/maxresdefault.jpg' },
+} as const;
+
 const handleData = async (
   data: GetPlayerResponse,
   win: Electron.BrowserWindow,
@@ -154,9 +162,12 @@ const handleData = async (
     const thumbnails = videoDetails.thumbnail?.thumbnails;
     let imageSrc = thumbnails?.at(-1)?.url?.split('?')?.at(0);
     if (imageSrc) {
+      const resolution =
+        config.get('options.artworkResolution') ?? 'medium';
+      const target = ARTWORK_RESOLUTIONS[resolution];
       imageSrc = imageSrc
-        .replace(/=w\d+-h\d+(-\w+)?/, '=w1024-h1024$1')
-        .replace(/\/(hqdefault|sddefault|default)\.jpg/, '/maxresdefault.jpg');
+        .replace(/=w\d+-h\d+(-\w+)?/, target.param)
+        .replace(/\/(hq720|maxresdefault|hqdefault|sddefault|default)\.jpg/, target.jpg);
     }
     songInfo.imageSrc = imageSrc;
 

@@ -42,6 +42,7 @@ export interface DefaultConfig {
     trayClickPlayPause: boolean;
     autoResetAppCache: boolean;
     resumeOnStart: boolean;
+    artworkResolution?: 'low' | 'medium' | 'high';
     likeButtons: string;
     swapLikeButtonsOrder: boolean;
     proxy: string;
@@ -83,6 +84,10 @@ export const defaultConfig: DefaultConfig = {
     trayClickPlayPause: false,
     autoResetAppCache: false,
     resumeOnStart: true,
+    // Optional, not just defaulted: get() never falls back to defaults for
+    // existing config files (see disableSplash note), so read sites must
+    // treat undefined as 'medium'.
+    artworkResolution: 'medium',
     likeButtons: '',
     swapLikeButtonsOrder: false,
     proxy: '',

@@ -155,6 +155,13 @@
               "play-pause-on-click": "Play/Pause on click"
             }
           },
+          "artwork-resolution": {
+            "label": "External artwork resolution",
+            "low": "Low (480p)",
+            "medium": "Medium (544p, default)",
+            "high": "High (1024p)",
+            "hint": "Used by system media controls, Discord, and notifications — not the in-app player."
+          },
           "visual-tweaks": {
             "label": "Visual Tweaks",
             "submenu": {

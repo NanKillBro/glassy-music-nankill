@@ -348,6 +348,28 @@ export const mainMenuTemplate = async (
           })(),
         },
         {
+          label: t('main.menu.options.submenu.artwork-resolution.label'),
+          submenu: [
+            {
+              label: t('main.menu.options.submenu.artwork-resolution.hint'),
+              enabled: false,
+            },
+            { type: 'separator' },
+            ...(['low', 'medium', 'high'] as const).map((resolution) => ({
+              label: t(
+                `main.menu.options.submenu.artwork-resolution.${resolution}`,
+              ),
+              type: 'radio' as const,
+              checked:
+                (config.get('options.artworkResolution') ?? 'medium') ===
+                resolution,
+              click() {
+                config.set('options.artworkResolution', resolution);
+              },
+            })),
+          ],
+        },
+        {
           label: t('main.menu.options.submenu.visual-tweaks.label'),
           submenu: [
             {
