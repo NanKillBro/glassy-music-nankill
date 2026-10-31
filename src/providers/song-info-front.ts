@@ -273,21 +273,57 @@ export const setupSongInfo = (api: MusicPlayer) => {
     setupSeekedListener();
   });
 
+  let reportedPaused: boolean | undefined;
+
+  const reportPlaybackState = (isPaused: boolean, elapsedSeconds: number) => {
+    reportedPaused = isPaused;
+    window.ipcRenderer.send('peard:play-or-paused', {
+      isPaused,
+      elapsedSeconds,
+    });
+  };
+
   const playPausedHandler = (e: Event, status: string) => {
-    if (
-      e.target instanceof HTMLVideoElement &&
-      Math.round(e.target.currentTime) > 0
-    ) {
-      window.ipcRenderer.send('peard:play-or-paused', {
-        isPaused: status === 'pause',
-        elapsedSeconds: Math.floor(e.target.currentTime),
-      });
-    }
+    if (!(e.target instanceof HTMLVideoElement)) return;
+
+    // A 'pause' within the first half-second of an element is load noise;
+    // 'playing' is always authoritative (a track can start while a stale
+    // 'pause' from the previous track is still in flight).
+    if (status === 'pause' && Math.round(e.target.currentTime) <= 0) return;
+
+    reportPlaybackState(
+      status === 'pause',
+      Math.floor(e.target.currentTime),
+    );
   };
 
   const playPausedHandlers = {
     playing: (e: Event) => playPausedHandler(e, 'playing'),
     pause: (e: Event) => playPausedHandler(e, 'pause'),
+  };
+
+  // 'pause' can legitimately fire after the next track's data already reset
+  // the status (e.g. an early crossfade advance lets the outgoing element run
+  // to its end), leaving tray/MPRIS/Discord stuck on "paused". Re-sync to the
+  // element's real state on the next timeupdate (~250 ms while playing).
+  const playbackReconciler = (e: Event) => {
+    if (
+      e.target instanceof HTMLVideoElement &&
+      e.target.paused !== reportedPaused
+    ) {
+      reportPlaybackState(
+        e.target.paused,
+        Math.floor(e.target.currentTime),
+      );
+    }
+  };
+
+  const attachPlaybackWatchers = (video: HTMLVideoElement) => {
+    for (const status of ['playing', 'pause'] as const) {
+      // for fix issue that pause event not fired
+      video.addEventListener(status, playPausedHandlers[status]);
+    }
+    video.addEventListener('timeupdate', playbackReconciler);
   };
 
   const videoEventDispatcher = async (
@@ -326,11 +362,7 @@ export const setupSongInfo = (api: MusicPlayer) => {
       const video = document.querySelector<HTMLVideoElement>('video');
       video?.dispatchEvent(srcChangedEvent);
 
-      for (const status of ['playing', 'pause'] as const) {
-        // for fix issue that pause event not fired
-        video?.addEventListener(status, playPausedHandlers[status]);
-      }
-
+      if (video) attachPlaybackWatchers(video);
       clearVideoTimeout(videoData.videoId);
       waitingEvent.add(videoData.videoId);
 
@@ -349,9 +381,7 @@ export const setupSongInfo = (api: MusicPlayer) => {
   const video = document.querySelector('video');
 
   if (video) {
-    for (const status of ['playing', 'pause'] as const) {
-      video.addEventListener(status, playPausedHandlers[status]);
-    }
+    attachPlaybackWatchers(video);
 
     if (!isNaN(video.duration)) {
       const {
@@ -399,6 +429,7 @@ export const setupSongInfo = (api: MusicPlayer) => {
       )?.text;
     data.videoDetails.elapsedSeconds = 0;
     data.videoDetails.isPaused = false;
+    reportedPaused = false;
 
     window.ipcRenderer.send('peard:video-src-changed', data);
   }
