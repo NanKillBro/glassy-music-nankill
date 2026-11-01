@@ -88,5 +88,7 @@ snap:
 directories:
   output: ./pack/
 extraResources:
+  - from: "desktop-lyrics"
+    to: "desktop-lyrics"
   - from: "extensions"
     to: "extensions"
