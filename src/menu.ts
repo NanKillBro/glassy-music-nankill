@@ -5,8 +5,8 @@ import {
   clipboard,
   dialog,
   Menu,
-  type MenuItem,
   shell,
+  type MenuItem,
 } from 'electron';
 import is from 'electron-is';
 import { satisfies } from 'semver';
@@ -752,6 +752,24 @@ export const mainMenuTemplate = async (
               checked: config.get('options.disableSplash'),
               click(item: MenuItem) {
                 config.setMenuOption('options.disableSplash', item.checked);
+              },
+            },
+            {
+              label:
+                'Block YouTube Music WAAPI polyfill',
+              type: 'checkbox',
+              checked:
+                config.get('options.disableWebAnimationsPolyfill') ?? true,
+              click(item: MenuItem) {
+                config.setMenuOption(
+                  'options.disableWebAnimationsPolyfill',
+                  item.checked,
+                );
+                dialog.showMessageBox(win, {
+                  type: 'info',
+                  title: 'Restart Required',
+                  message: 'A restart is required for this setting to apply.',
+                });
               },
             },
             {

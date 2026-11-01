@@ -55,6 +55,7 @@ export interface DefaultConfig {
     disableMinSize?: boolean;
     disableSplash?: boolean;
     backgroundThrottling?: boolean;
+    disableWebAnimationsPolyfill?: boolean;
   };
   'plugins': Record<string, unknown>;
 }
@@ -109,6 +110,8 @@ export const defaultConfig: DefaultConfig = {
     // the window is hidden/occluded. Undefined/false preserves the historical
     // hardcoded `backgroundThrottling: false` (see the disableSplash comment).
     backgroundThrottling: false,
+    // Absent in existing config files; read sites treat undefined as true.
+    disableWebAnimationsPolyfill: false,
   },
   'plugins': {},
 };

@@ -93,6 +93,56 @@ contextBridge.exposeInMainWorld(
   process.env.ELECTRON_RENDERER_URL,
 );
 
+// Fallback for the main-process request block: freeze the native WAAPI globals
+// in the main world at document-start so the legacy polyfill cannot replace
+// them, including copies served from the service-worker cache.
+const waapiLockScript = `(() => {
+  const findDescriptor = (object, key) => {
+    for (let target = object; target; target = Object.getPrototypeOf(target)) {
+      const descriptor = Object.getOwnPropertyDescriptor(target, key);
+      if (descriptor) return descriptor;
+    }
+  };
+  const lock = (object, key) => {
+    const descriptor = findDescriptor(object, key);
+    if (!descriptor) return;
+    try {
+      Object.defineProperty(
+        object,
+        key,
+        'get' in descriptor || 'set' in descriptor
+          ? { get: descriptor.get, set: descriptor.set, enumerable: descriptor.enumerable, configurable: false }
+          : { value: descriptor.value, writable: false, enumerable: descriptor.enumerable, configurable: false },
+      );
+    } catch {}
+  };
+  for (const key of [
+    'requestAnimationFrame',
+    'cancelAnimationFrame',
+    'getComputedStyle',
+    'Animation',
+    'KeyframeEffect',
+    'AnimationEffect',
+    'AnimationTimeline',
+  ]) {
+    lock(window, key);
+  }
+  for (const key of ['animate', 'getAnimations']) {
+    lock(Element.prototype, key);
+  }
+  lock(Document.prototype, 'timeline');
+  lock(document, 'timeline');
+})();`;
+
+if (config.get('options.disableWebAnimationsPolyfill') ?? true) {
+  let lockPending = true;
+  webFrame.executeJavaScript(waapiLockScript, true, () => {
+    lockPending = false;
+  });
+  // HACK: Wait for the script to be executed
+  while (lockPending);
+}
+
 const [path, script] = ipcRenderer.sendSync('get-renderer-script') as [
   string | null,
   string,

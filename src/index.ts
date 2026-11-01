@@ -379,7 +379,23 @@ function initTheme(win: BrowserWindow) {
   });
 }
 
+// YTM loads a legacy Web Animations polyfill from a static subdomain
+// (sic.youtube.com, not music.youtube.com) that monkey-patches rAF,
+// getComputedStyle and Element.animate. Chromium implements WAAPI natively, so
+// the polyfill is pure overhead; cancel the request before navigation starts.
+// The preload script freezes the natives as a fallback for cached copies.
+function blockWebAnimationsPolyfill() {
+  if (!(config.get('options.disableWebAnimationsPolyfill') ?? true)) return;
+
+  session.defaultSession.webRequest.onBeforeRequest(
+    { urls: ['*://*.youtube.com/*web-animations*'] },
+    (_details, callback) => callback({ cancel: true }),
+  );
+}
+
 async function createMainWindow() {
+  blockWebAnimationsPolyfill();
+
   const windowSize = config.get('window-size');
   const windowMaximized = config.get('window-maximized');
   const windowPosition: Electron.Point = config.get('window-position');
@@ -738,6 +754,8 @@ const getDefaultLocale = (locale: string) =>
   availableLanguages.includes(locale) ? locale : null;
 
 app.whenReady().then(async () => {
+  blockWebAnimationsPolyfill();
+
   // First, before anything else in here: the earliest moment a window can exist
   // at all. Everything below — i18n, plugin startup, the navigation itself —
   // happens with nothing on screen otherwise, which is why launching reads as
