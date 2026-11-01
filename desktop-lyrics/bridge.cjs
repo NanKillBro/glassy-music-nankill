@@ -14,20 +14,38 @@ function installBridge(readLyrics) {
   let cachedData = null;
   let lastStyleRead = 0;
   const style = document.createElement('style');
-  style.textContent = 'html[data-glassy-desktop-only] [id^="better-lyrics-kawarp-"],html[data-glassy-desktop-only] .blyrics-background {display:none!important}';
+  style.textContent =
+    'html[data-glassy-desktop-only] [id^="better-lyrics-kawarp-"],html[data-glassy-desktop-only] .blyrics-background {display:none!important}';
   document.head.appendChild(style);
-  const visibility = () => document.documentElement.toggleAttribute('data-glassy-desktop-only', document.hidden);
+  const visibility = () =>
+    document.documentElement.toggleAttribute(
+      'data-glassy-desktop-only',
+      document.hidden,
+    );
   visibility();
   function emit() {
     clearTimeout(timeout);
     timeout = null;
     if (disposed) return;
-    let lines = document.querySelectorAll('.blyrics-container .blyrics--line.blyrics--active');
-    if (!lines.length) lines = document.querySelectorAll('.blyrics-container .blyrics--line.blyrics--animating');
-    if (!lines.length) lines = document.querySelectorAll('.blyrics-container .blyrics-current-lyric');
+    let lines = document.querySelectorAll(
+      '.blyrics-container .blyrics--line.blyrics--active',
+    );
+    if (!lines.length)
+      lines = document.querySelectorAll(
+        '.blyrics-container .blyrics--line.blyrics--animating',
+      );
+    if (!lines.length)
+      lines = document.querySelectorAll(
+        '.blyrics-container .blyrics-current-lyric',
+      );
     const line = lines[lines.length - 1] || null;
     const text = (line?.textContent || '').slice(0, 3000);
-    if (!cachedData || cachedLine !== line || text !== cachedText || Date.now() - lastStyleRead >= 2000) {
+    if (
+      !cachedData ||
+      cachedLine !== line ||
+      text !== cachedText ||
+      Date.now() - lastStyleRead >= 2000
+    ) {
       cachedData = readLyrics();
       cachedLine = line;
       cachedText = text;
@@ -35,13 +53,19 @@ function installBridge(readLyrics) {
     }
     const data = cachedData;
     const playing = timing?.playing ?? !document.querySelector('video')?.paused;
-    const signature = JSON.stringify({...data, playing, seekVersion});
+    const signature = JSON.stringify({ ...data, playing, seekVersion });
     if (signature === previous) return;
     previous = signature;
-    const elapsed = playing && lastClock !== null ? Math.max(0, (Date.now() - lastClock) / 1000) : 0;
+    const elapsed =
+      playing && lastClock !== null
+        ? Math.max(0, (Date.now() - lastClock) / 1000)
+        : 0;
     window.ipcRenderer.send('glassy-desktop-lyrics-data', {
-      ...data, playing,
-      currentTime: timing ? timing.currentTime + elapsed : document.querySelector('video')?.currentTime || 0,
+      ...data,
+      playing,
+      currentTime: timing
+        ? timing.currentTime + elapsed
+        : document.querySelector('video')?.currentTime || 0,
       sentAt: Date.now(),
     });
   }
@@ -49,9 +73,12 @@ function installBridge(readLyrics) {
     const detail = event.detail;
     if (!detail || !Number.isFinite(detail.currentTime)) return;
     const clock = Date.now();
-    const expected = lastTime === null ? detail.currentTime : lastTime + (lastPlaying ? (clock - lastClock) / 1000 : 0);
-    if (Math.abs(detail.currentTime - expected) > .5) seekVersion++;
-    timing = {currentTime: detail.currentTime, playing: !!detail.playing};
+    const expected =
+      lastTime === null
+        ? detail.currentTime
+        : lastTime + (lastPlaying ? (clock - lastClock) / 1000 : 0);
+    if (Math.abs(detail.currentTime - expected) > 0.5) seekVersion++;
+    timing = { currentTime: detail.currentTime, playing: !!detail.playing };
     lastTime = detail.currentTime;
     lastClock = clock;
     lastPlaying = !!detail.playing;
@@ -60,7 +87,9 @@ function installBridge(readLyrics) {
   }
   document.addEventListener('blyrics-send-player-time', onTime);
   document.addEventListener('visibilitychange', visibility);
-  const fallback = setInterval(() => {if (Date.now() - lastEvent > 1000) emit();}, 500);
+  const fallback = setInterval(() => {
+    if (Date.now() - lastEvent > 1000) emit();
+  }, 500);
   function dispose() {
     if (disposed) return;
     disposed = true;
@@ -78,9 +107,9 @@ function installBridge(readLyrics) {
     previous = '';
     delete window.__glassyDesktopBridge;
   }
-  window.addEventListener('pagehide', dispose, {once: true});
-  window.__glassyDesktopBridge = {dispose};
+  window.addEventListener('pagehide', dispose, { once: true });
+  window.__glassyDesktopBridge = { dispose };
   emit();
   return true;
 }
-module.exports = {installBridge};
+module.exports = { installBridge };

@@ -10,15 +10,18 @@ function cancelAnimations() {
   for (const animation of animations) animation.cancel();
   animations = [];
 }
-document.getElementById('toolbar').addEventListener('click', event => {
+document.getElementById('toolbar').addEventListener('click', (event) => {
   const action = event.target.closest('button')?.dataset.action;
   if (!action) return;
   if (action === 'smaller' || action === 'larger') {
-    fontSize = Math.max(16, Math.min(76, fontSize + (action === 'larger' ? 2 : -2)));
+    fontSize = Math.max(
+      16,
+      Math.min(76, fontSize + (action === 'larger' ? 2 : -2)),
+    );
     document.documentElement.style.setProperty('--font-size', `${fontSize}px`);
   } else window.desktopLyrics.action(action);
 });
-const unsubscribe = window.desktopLyrics.onUpdate(data => {
+const unsubscribe = window.desktopLyrics.onUpdate((data) => {
   const typography = data.typography;
   const styleKey = JSON.stringify(typography);
   if (typography && previousStyle !== styleKey) {
@@ -32,7 +35,8 @@ const unsubscribe = window.desktopLyrics.onUpdate(data => {
     previousStyle = styleKey;
   }
   const words = Array.isArray(data.words) ? data.words : [];
-  const text = data.current || (data.connected ? '♪' : 'Abrí Glassy Music y sus letras');
+  const text =
+    data.current || (data.connected ? '♪' : 'Abrí Glassy Music y sus letras');
   const lineKey = JSON.stringify([text, words]);
   if (lineKey !== previousLine) {
     cancelAnimations();
@@ -51,24 +55,50 @@ const unsubscribe = window.desktopLyrics.onUpdate(data => {
     current.replaceChildren(fragment);
     previousLine = lineKey;
   }
-  const timingKey = JSON.stringify([data.currentTime, data.playing, data.sentAt, lineKey]);
+  const timingKey = JSON.stringify([
+    data.currentTime,
+    data.playing,
+    data.sentAt,
+    lineKey,
+  ]);
   if (previousTiming !== timingKey) {
     cancelAnimations();
-    const elapsed = data.playing ? Math.max(0, (Date.now() - data.sentAt) / 1000) : 0;
+    const elapsed = data.playing
+      ? Math.max(0, (Date.now() - data.sentAt) / 1000)
+      : 0;
     const time = Number(data.currentTime) + elapsed;
     for (let index = 0; index < spans.length; index++) {
       const word = words[index];
       const span = spans[index];
-      const duration = Math.max(.08, Number(word.duration) || 0);
-      if (!Number.isFinite(word.time) || word.time + duration <= time) { span.style.opacity = '1'; continue; }
-      span.style.opacity = String(Math.max(.4, Math.min(1, .4 + .6 * (time - word.time) / duration)));
+      const duration = Math.max(0.08, Number(word.duration) || 0);
+      if (!Number.isFinite(word.time) || word.time + duration <= time) {
+        span.style.opacity = '1';
+        continue;
+      }
+      span.style.opacity = String(
+        Math.max(0.4, Math.min(1, 0.4 + (0.6 * (time - word.time)) / duration)),
+      );
       if (!data.playing) continue;
-      const animation = span.animate([{opacity: .4}, {opacity: 1}], {duration: duration * 1000, delay: (word.time - time) * 1000, fill: 'both'});
+      const animation = span.animate([{ opacity: 0.4 }, { opacity: 1 }], {
+        duration: duration * 1000,
+        delay: (word.time - time) * 1000,
+        fill: 'both',
+      });
       animations.push(animation);
     }
     previousTiming = timingKey;
   }
   if (next.textContent !== data.next) next.textContent = data.next || '';
-  document.getElementById('pin').setAttribute('aria-pressed', String(data.pinned));
+  document
+    .getElementById('pin')
+    .setAttribute('aria-pressed', String(data.pinned));
 });
-window.addEventListener('pagehide', () => { cancelAnimations(); unsubscribe(); spans = []; }, {once: true});
+window.addEventListener(
+  'pagehide',
+  () => {
+    cancelAnimations();
+    unsubscribe();
+    spans = [];
+  },
+  { once: true },
+);

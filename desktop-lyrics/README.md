@@ -28,6 +28,6 @@ The main process validates message senders and bounds text and word data. The lo
 
 Run `pnpm test:desktop-lyrics`, or `node --test tests/desktop-lyrics*.test.cjs` directly. These dependency-free tests cover the controller lifecycle, reopening after closing, disabled state, repeated enable/disable, bridge disposal, renderer animation disposal and typography inheritance. Tests use simulated Electron/DOM objects; they do not replace a packaged Windows smoke test.
 
-Before merging, install the project's dependencies, run its normal type checking and formatting checks, build a Windows package, and verify the native plugin menu with Better Lyrics enabled. This contribution has not undergone a complete project build in the preparation environment.
+The application core now builds successfully, and an unpacked Windows package was exercised with the native plugin menu and actual Better Lyrics playback. Project-wide checks were also run and exposed existing failures outside this contribution. See [VALIDATION.md](VALIDATION.md) for the commands, results and packaging limitations.
 
 Word highlighting approximates the original renderer; its full shader, blur and spring-animation pipeline is not duplicated. RAM savings and a fix for any separate Codex memory issue are not claimed.

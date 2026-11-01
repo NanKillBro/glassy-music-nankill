@@ -18,7 +18,8 @@ let generation = 0;
 
 export default createPlugin({
   name: () => 'Desktop Lyrics',
-  description: () => 'Optional transparent desktop lyrics powered by Better Lyrics',
+  description: () =>
+    'Optional transparent desktop lyrics powered by Better Lyrics',
   platform: Platform.Windows,
   restartNeeded: false,
   config: {
@@ -53,7 +54,10 @@ export default createPlugin({
         : path.resolve(import.meta.dirname, '../../desktop-lyrics');
       const require = createRequire(import.meta.url);
       const runtime = require(path.join(directory, 'runtime.cjs')) as {
-        createDesktopLyrics(options: { window: typeof window; directory: string }): DesktopLyricsController;
+        createDesktopLyrics(options: {
+          window: typeof window;
+          directory: string;
+        }): DesktopLyricsController;
       };
       controller = runtime.createDesktopLyrics({ window, directory });
       controller.start();
