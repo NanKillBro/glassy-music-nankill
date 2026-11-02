@@ -15,7 +15,7 @@ import {
 import is from 'electron-is';
 import filenamify from 'filenamify';
 import lazyVar from 'lazy-var';
-import NodeID3 from 'node-id3';
+import { updateBuffer, type TagPatch } from 'music-metadata-editor';
 import {
   Innertube,
   UniversalCache,
@@ -243,8 +243,8 @@ export const onConfigChange = (newConfig: DownloaderPluginConfig) => {
 
 export async function downloadSong(
   url: string,
-  playlistFolder?: string ,
-  trackId?: string ,
+  playlistFolder?: string,
+  trackId?: string,
   increasePlaylistProgress: (value: number) => void = () => {},
 ) {
   let resolvedName;
@@ -264,8 +264,8 @@ export async function downloadSong(
 
 export async function downloadSongFromId(
   id: string,
-  playlistFolder?: string ,
-  trackId?: string ,
+  playlistFolder?: string,
+  trackId?: string,
   increasePlaylistProgress: (value: number) => void = () => {},
 ) {
   let resolvedName;
@@ -434,8 +434,8 @@ async function downloadSongUnsafe(
   isId: boolean,
   idOrUrl: string,
   setName: (name: string) => void,
-  playlistFolder?: string ,
-  trackId?: string ,
+  playlistFolder?: string,
+  trackId?: string,
   increasePlaylistProgress: (value: number) => void = () => {},
   lossless = false,
 ) {
@@ -585,7 +585,7 @@ async function downloadSongUnsafe(
     isStreamCopy,
   );
 
-  // ID3v2 is an MP3 construct, and NodeID3 prepends it: on an m4a that pushes the
+  // ID3v2 is an MP3 construct. Prepending it to an m4a pushes the
   // `ftyp` box off offset 0 and strict MP4 parsers reject the file. The stream-copy
   // containers get their tags from the muxer instead (see the ffmpeg args above).
   if (fileBuffer && !isStreamCopy && targetFileExtension === 'mp3') {
@@ -824,7 +824,7 @@ async function writeID3(
 ) {
   try {
     sendFeedback(t('plugins.downloader.backend.feedback.writing-id3'));
-    const tags: NodeID3.Tags = {};
+    const tags: TagPatch = {};
 
     // Create the metadata tags
     tags.title = metadata.title;
@@ -836,21 +836,21 @@ async function writeID3(
 
     const cover = await getCoverArt(metadata.imageSrc ?? '');
     if (cover) {
-      tags.image = {
-        mime: cover.mime,
-        type: {
-          id: NodeID3.TagConstants.AttachedPicture.PictureType.FRONT_COVER,
+      tags.picture = [
+        {
+          format: cover.mime,
+          type: 'Cover (front)',
+          description: 'thumbnail',
+          data: cover.buffer,
         },
-        description: 'thumbnail',
-        imageBuffer: cover.buffer,
-      };
+      ];
     }
 
     if (metadata.trackId) {
-      tags.trackNumber = metadata.trackId;
+      tags.native = { TRCK: String(metadata.trackId) };
     }
 
-    return NodeID3.write(tags, buffer);
+    return Buffer.from(await updateBuffer(buffer, tags, { replaceId3: true }));
   } catch (error: unknown) {
     sendError(error as Error, `${metadata.artist} - ${metadata.title}`);
     return null;
