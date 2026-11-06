@@ -32,6 +32,11 @@ declare module '*.js?raw' {
 
   export default source;
 }
+declare module '*.cjs?raw' {
+  const source: string;
+
+  export default source;
+}
 declare module '*.png' {
   const element: HTMLImageElement;
 

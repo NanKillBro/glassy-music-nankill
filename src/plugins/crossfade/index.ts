@@ -23,6 +23,7 @@ import { CrossfadeAudioGraph, type CrossfadeRampHandle } from './audio-graph';
 import { VolumeFader } from './fader';
 import { Type2Engine, isQueueReadable, readNextTrack } from './handoff';
 
+import type { PoTokenMinter } from './po-token';
 import type { RendererContext } from '@/types/contexts';
 import type { MusicPlayer } from '@/types/music-player';
 
@@ -33,6 +34,7 @@ export type CrossfadePluginConfig = {
   fadeOutDuration: number;
   secondsBeforeEnd: number;
   fadeScaling: 'linear' | 'logarithmic' | 'equalPower' | number;
+  usePoToken: boolean;
 };
 
 // Largest audio stream the type-2 preload downloads (long mixes/podcasts
@@ -87,6 +89,22 @@ const getCookieFromWindow = async (win?: BrowserWindow) => {
     return undefined;
   }
 };
+
+const AUTH_COOKIE_NAMES = new Set([
+  'SID',
+  'SAPISID',
+  '__Secure-1PSID',
+  '__Secure-3PSID',
+  'LOGIN_INFO',
+]);
+
+const hasAuthCookie = (cookie?: string) =>
+  (cookie ?? '').split(';').some((part) => {
+    const name = part.split('=')[0]?.trim();
+    return name !== undefined && AUTH_COOKIE_NAMES.has(name);
+  });
+
+let minterPromise: Promise<PoTokenMinter | null> | null = null;
 
 export default createPlugin<
   unknown,
@@ -144,12 +162,24 @@ export default createPlugin<
      * @default 'linear'
      */
     fadeScaling: 'linear',
+    /**
+     * Opt-in stream path: mint a content-bound BotGuard PoToken for each
+     * video and fetch with a bounded range. Needed on profiles that are not
+     * signed in to Google; off keeps the original path.
+     *
+     * @default false
+     */
+    usePoToken: false,
   },
-  menu({ window, getConfig, setConfig }) {
+  async menu({ window, getConfig, refresh, setConfig }) {
+    const config = await getConfig();
+
     const promptCrossfadeValues = async (
       win: BrowserWindow,
       options: CrossfadePluginConfig,
-    ): Promise<Omit<CrossfadePluginConfig, 'enabled'> | undefined> => {
+    ): Promise<
+      Omit<CrossfadePluginConfig, 'enabled' | 'usePoToken'> | undefined
+    > => {
       const res = await prompt(
         {
           title: t('plugins.crossfade.prompt.options'),
@@ -292,6 +322,15 @@ export default createPlugin<
 
     return [
       {
+        label: t('plugins.crossfade.menu.use-po-token'),
+        type: 'checkbox',
+        checked: config.usePoToken ?? false,
+        async click(item) {
+          await setConfig({ usePoToken: item.checked });
+          await refresh();
+        },
+      },
+      {
         label: t('plugins.crossfade.menu.advanced'),
         async click() {
           const newOptions = await promptCrossfadeValues(
@@ -307,20 +346,116 @@ export default createPlugin<
   },
 
   backend: {
-    start({ ipc, window }) {
+    start({ getConfig, ipc, window }) {
       setupPlatformShimEval();
 
-      let yt: Innertube | null = null;
-      const getYt = async () => {
-        if (!yt) {
-          const cookie = await getCookieFromWindow(window);
-          yt = await Innertube.create({
-            cache: new UniversalCache(false),
-            cookie,
-            fetch: getNetFetchAsFetch(),
+      let sessionAuthenticated = false;
+      let warnedAboutPoTokenOff = false;
+      let ytPromise: Promise<Innertube> | null = null;
+      const getYt = async (): Promise<Innertube> => {
+        if (!ytPromise) {
+          const creation = (async () => {
+            const cookie = await getCookieFromWindow(window);
+            sessionAuthenticated = hasAuthCookie(cookie);
+            const instance = await Innertube.create({
+              cache: new UniversalCache(false),
+              cookie,
+              generate_session_locally: true,
+              fetch: getNetFetchAsFetch(),
+            });
+            console.log(
+              `[Crossfade Backend] Innertube ready (auth: ${sessionAuthenticated ? 'yes' : 'no'}, visitorData: ${instance.session.context.client.visitorData ? 'yes' : 'no'}).`,
+            );
+            return instance;
+          })();
+          ytPromise = creation;
+          creation.catch(() => {
+            if (ytPromise === creation) ytPromise = null;
           });
         }
-        return yt;
+        return ytPromise;
+      };
+
+      minterPromise = null;
+      const getMinter = (): Promise<PoTokenMinter | null> => {
+        if (!minterPromise) {
+          minterPromise = import('./po-token')
+            .then(({ createPoTokenMinter }) => createPoTokenMinter(window))
+            .catch((error) => {
+              console.warn(
+                '[Crossfade Backend] PoToken minter unavailable:',
+                error,
+              );
+              return null;
+            });
+        }
+        return minterPromise;
+      };
+
+      // A content-bound PoToken only authorizes the video it was minted for,
+      // so token setup + getInfo + decipher must not interleave between tracks.
+      let resolveQueue: Promise<unknown> = Promise.resolve();
+      const enqueueResolve = <T>(task: () => Promise<T>): Promise<T> => {
+        const run = resolveQueue.then(task, task);
+        resolveQueue = run.catch(() => undefined);
+        return run;
+      };
+
+      const resolveAudio = async (videoID: string) => {
+        const ytInstance = await getYt();
+        const config = await getConfig();
+        const usePoToken = config.usePoToken ?? false;
+        const minter = usePoToken ? await getMinter() : null;
+
+        return enqueueResolve(async () => {
+          const poToken = usePoToken
+            ? ((await minter?.mint(videoID)) ?? null)
+            : null;
+
+          if (!usePoToken && !sessionAuthenticated && !warnedAboutPoTokenOff) {
+            warnedAboutPoTokenOff = true;
+            console.warn(
+              '[Crossfade Backend] Logged-out profile: the original stream path can fail with HTTP 403. Enable "Use PoToken" in Crossfade settings to use the new path.',
+            );
+          }
+          if (usePoToken && !poToken && !sessionAuthenticated) {
+            console.warn(
+              `[Crossfade Backend] No content-bound PoToken for ${videoID} and no Google auth cookie; googlevideo will reject the stream with HTTP 403.`,
+            );
+          }
+
+          if (ytInstance.session.player) {
+            ytInstance.session.player.po_token = poToken ?? undefined;
+          }
+
+          let info: YTMusic.TrackInfo | YT.VideoInfo;
+          try {
+            info = await ytInstance.music.getInfo(
+              videoID,
+              poToken ? { po_token: poToken } : undefined,
+            );
+          } catch (error) {
+            console.warn(
+              `[Crossfade Backend] yt.music.getInfo failed for ${videoID}, falling back to yt.getInfo:`,
+              error,
+            );
+            info = await ytInstance.getInfo(
+              videoID,
+              poToken ? { po_token: poToken } : undefined,
+            );
+          }
+
+          const format = info.chooseFormat({
+            type: 'audio',
+            quality: 'best',
+          });
+          if (!format) {
+            return { format: null, url: null, poToken, usePoToken };
+          }
+
+          const url = await format.decipher(ytInstance.session.player);
+          return { format, url, poToken, usePoToken };
+        });
       };
 
       ipc.handle(
@@ -330,36 +465,17 @@ export default createPlugin<
             console.log(
               `[Crossfade Backend] Fetching audio URL for video: ${videoID}`,
             );
-            const ytInstance = await getYt();
-            let info: YTMusic.TrackInfo | YT.VideoInfo;
-            try {
-              info = await ytInstance.music.getInfo(videoID);
-            } catch (e) {
-              console.warn(
-                `[Crossfade Backend] yt.music.getInfo failed for ${videoID}, falling back to yt.getInfo:`,
-                e,
-              );
-              info = await ytInstance.getInfo(videoID);
-            }
-
-            const format = info.chooseFormat({
-              type: 'audio',
-              quality: 'best',
-            });
-            if (!format) {
+            const { format, url, poToken } = await resolveAudio(videoID);
+            if (!format || !url) {
               console.warn(
                 `[Crossfade Backend] No suitable audio format found for ${videoID}`,
               );
               return null;
             }
-
-            const decipheredUrl = await format.decipher(
-              ytInstance.session.player,
-            );
             console.log(
-              `[Crossfade Backend] Successfully resolved stream URL for ${videoID} (itag: ${format.itag}, mime: ${format.mime_type})`,
+              `[Crossfade Backend] Successfully resolved stream URL for ${videoID} (itag: ${format.itag}, mime: ${format.mime_type}, poToken: ${poToken ? 'yes' : 'no'})`,
             );
-            return decipheredUrl;
+            return url;
           } catch (error) {
             console.error(
               `[Crossfade Backend] Failed to get audio URL for ${videoID}:`,
@@ -378,34 +494,64 @@ export default createPlugin<
         videoID: string,
       ): Promise<Uint8Array | null> => {
         try {
-          const ytInstance = await getYt();
-          let info: YTMusic.TrackInfo | YT.VideoInfo;
-          try {
-            info = await ytInstance.music.getInfo(videoID);
-          } catch {
-            info = await ytInstance.getInfo(videoID);
-          }
-          const format = info.chooseFormat({
-            type: 'audio',
-            quality: 'best',
-          });
-          if (!format || (format.content_length ?? 0) > MAX_AUDIO_BYTES) {
+          let { format, url, usePoToken } = await resolveAudio(videoID);
+          if (
+            !format ||
+            !url ||
+            (format.content_length ?? 0) > MAX_AUDIO_BYTES
+          ) {
             console.warn(
               `[Crossfade Backend] No usable audio stream for ${videoID} (itag ${format?.itag ?? '?'}).`,
             );
             return null;
           }
-          const url = await format.decipher(ytInstance.session.player);
-          const response = await getNetFetchAsFetch()(url, {
-            signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT_MS),
-          });
+
+          const fetchStream = async (
+            streamUrl: string,
+            contentLength: number | undefined,
+            ranged: boolean,
+          ) =>
+            getNetFetchAsFetch()(streamUrl, {
+              // With the new path, a plain full GET is throttled
+              // (~30-50 KB/s); a bounded range returns the same bytes fast.
+              headers:
+                ranged && contentLength && contentLength > 0
+                  ? { Range: `bytes=0-${contentLength - 1}` }
+                  : undefined,
+              signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT_MS),
+            });
+
+          let response = await fetchStream(
+            url,
+            format?.content_length,
+            usePoToken,
+          );
+          if (response.status === 403 && usePoToken) {
+            console.warn(
+              `[Crossfade Backend] Stream fetch for ${videoID} returned 403; refreshing PoToken and retrying once.`,
+            );
+            const minter = await getMinter();
+            await minter?.reset();
+            ({ format, url, usePoToken } = await resolveAudio(videoID));
+            if (!url) return null;
+            response = await fetchStream(
+              url,
+              format?.content_length,
+              usePoToken,
+            );
+          }
+
           if (!response.ok) {
             console.warn(
               `[Crossfade Backend] Stream fetch for ${videoID} failed: HTTP ${response.status}`,
             );
             return null;
           }
-          return new Uint8Array(await response.arrayBuffer());
+          const bytes = new Uint8Array(await response.arrayBuffer());
+          console.log(
+            `[Crossfade Backend] Downloaded ${videoID}: ${bytes.byteLength} bytes (HTTP ${response.status}).`,
+          );
+          return bytes;
         } catch (error) {
           console.warn(
             `[Crossfade Backend] audio-data download failed for ${videoID}:`,
@@ -423,9 +569,21 @@ export default createPlugin<
         },
       );
     },
-    stop({ ipc }) {
+    async stop({ ipc }) {
       ipc.removeHandler('audio-url');
       ipc.removeHandler('audio-data');
+      const minter = minterPromise ? await minterPromise : null;
+      minterPromise = null;
+      await minter?.dispose();
+    },
+    async onConfigChange(newConfig) {
+      if (newConfig.usePoToken) return;
+
+      // The setting applies from the next resolve; drop the hidden window
+      // right away so disabling the option also frees its renderer process.
+      const minter = minterPromise ? await minterPromise : null;
+      minterPromise = null;
+      await minter?.dispose();
     },
   },
 
