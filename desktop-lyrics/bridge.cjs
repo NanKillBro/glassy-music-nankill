@@ -13,6 +13,8 @@ function installBridge(readLyrics) {
   let cachedText = '';
   let cachedData = null;
   let lastStyleRead = 0;
+  let readerState = {};
+  let videoId = null;
   const style = document.createElement('style');
   style.textContent =
     'html[data-glassy-desktop-only] [id^="better-lyrics-kawarp-"],html[data-glassy-desktop-only] .blyrics-background {display:none!important}';
@@ -38,7 +40,8 @@ function installBridge(readLyrics) {
       lines = document.querySelectorAll(
         '.blyrics-container .blyrics-current-lyric',
       );
-    const line = lines[lines.length - 1] || null;
+    const line =
+      lines[0] || (readerState.line?.isConnected ? readerState.line : null);
     const text = (line?.textContent || '').slice(0, 3000);
     if (
       !cachedData ||
@@ -46,8 +49,11 @@ function installBridge(readLyrics) {
       text !== cachedText ||
       Date.now() - lastStyleRead >= 2000
     ) {
-      cachedData = readLyrics();
-      cachedLine = line;
+      cachedData = readLyrics(
+        timing?.currentTime ?? document.querySelector('video')?.currentTime,
+        readerState,
+      );
+      cachedLine = readerState.line || line;
       cachedText = text;
       lastStyleRead = Date.now();
     }
@@ -77,7 +83,15 @@ function installBridge(readLyrics) {
       lastTime === null
         ? detail.currentTime
         : lastTime + (lastPlaying ? (clock - lastClock) / 1000 : 0);
-    if (Math.abs(detail.currentTime - expected) > 0.5) seekVersion++;
+    if (
+      (detail.videoId && detail.videoId !== videoId) ||
+      Math.abs(detail.currentTime - expected) > 0.5
+    ) {
+      seekVersion++;
+      readerState = {};
+      cachedData = null;
+      if (detail.videoId) videoId = detail.videoId;
+    }
     timing = { currentTime: detail.currentTime, playing: !!detail.playing };
     lastTime = detail.currentTime;
     lastClock = clock;
@@ -104,6 +118,7 @@ function installBridge(readLyrics) {
     cachedLine = null;
     cachedData = null;
     cachedText = '';
+    readerState = {};
     previous = '';
     delete window.__glassyDesktopBridge;
   }

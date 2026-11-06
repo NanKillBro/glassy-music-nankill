@@ -1,5 +1,7 @@
 const current = document.getElementById('current');
 const next = document.getElementById('next');
+const lyrics = document.getElementById('lyrics');
+let lineAnimation = null;
 let fontSize = 34;
 let animations = [];
 let previousLine = '';
@@ -53,6 +55,27 @@ const unsubscribe = window.desktopLyrics.onUpdate((data) => {
       }
     } else fragment.appendChild(document.createTextNode(text));
     current.replaceChildren(fragment);
+    lineAnimation?.cancel();
+    lineAnimation = null;
+    if (
+      previousLine &&
+      data.current &&
+      !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    ) {
+      const animation = lyrics.animate(
+        [
+          { opacity: 0.6, transform: 'translateY(8px)' },
+          { opacity: 1, transform: 'translateY(0)' },
+        ],
+        { duration: 200, easing: 'ease-out' },
+      );
+      lineAnimation = animation;
+      animation.onfinish = () => {
+        if (lineAnimation !== animation) return;
+        lineAnimation = null;
+        animation.cancel();
+      };
+    }
     previousLine = lineKey;
   }
   const timingKey = JSON.stringify([
@@ -98,6 +121,8 @@ window.addEventListener(
   () => {
     cancelAnimations();
     unsubscribe();
+    lineAnimation?.cancel();
+    lineAnimation = null;
     spans = [];
   },
   { once: true },

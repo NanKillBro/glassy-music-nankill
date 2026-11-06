@@ -1,4 +1,4 @@
-function readLyrics() {
+function readLyrics(currentTime = NaN, state = {}) {
   function lineText(line) {
     if (!line) return '';
     const words = line.querySelectorAll(
@@ -18,16 +18,35 @@ function readLyrics() {
   const containers = document.querySelectorAll('.blyrics-container');
   for (const container of containers) {
     let active = container.querySelectorAll('.blyrics--line.blyrics--active');
+    // BL may mark the incoming line active for scrolling before it is sung.
+    // Prefer the outgoing active line instead of jumping to the last match.
+    let line = active[0];
+    const retained =
+      state.container === container && state.line?.isConnected
+        ? state.line
+        : null;
+    if (!line && retained) line = retained;
     if (!active.length)
       active = container.querySelectorAll('.blyrics--line.blyrics--animating');
     if (!active.length)
       active = container.querySelectorAll('.blyrics-current-lyric');
-    if (!active.length) continue;
-    const text = lineText(active[active.length - 1]);
-    let next = active[active.length - 1].nextElementSibling;
+    line ||= active[0];
+    if (!line) continue;
+    const start = Number(line.dataset?.time);
+    if (
+      retained &&
+      line !== retained &&
+      Number.isFinite(currentTime) &&
+      Number.isFinite(start) &&
+      start > currentTime
+    )
+      line = retained;
+    state.container = container;
+    state.line = line;
+    const text = lineText(line);
+    let next = line.nextElementSibling;
     while (next && !next.classList.contains('blyrics--line'))
       next = next.nextElementSibling;
-    const line = active[active.length - 1];
     const words = Array.from(
       line.querySelectorAll(
         '.blyrics--word[data-content]:not(.blyrics--romanized .blyrics--word)',
@@ -63,6 +82,8 @@ function readLyrics() {
       },
     };
   }
+  state.container = null;
+  state.line = null;
   return { current: '', next: '' };
 }
 module.exports = { readLyrics };

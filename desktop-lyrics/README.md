@@ -1,6 +1,6 @@
 # Desktop Lyrics
 
-Optional Windows plugin for Glassy Music. It displays Better Lyrics in a separate transparent window, using the original computed font family, weight and spacing, plus lightweight word-timed opacity animations.
+Optional Windows and Linux plugin for Glassy Music. It displays Better Lyrics in a separate transparent window, using the original computed font family, weight and spacing, plus lightweight word-timed opacity animations.
 
 ## User behavior
 
@@ -15,6 +15,10 @@ Optional Windows plugin for Glassy Music. It displays Better Lyrics in a separat
 Better Lyrics must be enabled and its lyrics view loaded. The overlay reuses that view's lyrics; it does not fetch or log songs, start another music player, or communicate with Codex. It is a floating window, not a Windows desktop-shell extension.
 
 The overlay toolbar supports window size presets, font sizing, pinning and returning to the player. Native drag-resizing of transparent windows is deliberately avoided. Window position and font size currently reset when the overlay is closed.
+
+Line changes prefer the outgoing active line over an incoming line selected early for scrolling. A connected outgoing line remains visible through a gap and is not replaced by a future-timestamped line. Seeking or changing tracks resets that retained reference. Transitions use a single 200 ms opacity/translation animation, cancelled on replacement, completion and unload; reduced-motion preferences disable it.
+
+Linux support follows the maintainer's successful CachyOS/Hyprland test in [PR feedback](https://github.com/NanKillBro/glassy-music-nankill/pull/27#issuecomment-6685432131). It has not been independently exercised on Linux in this Windows workspace.
 
 ## Integration
 

@@ -1,5 +1,9 @@
 # Validation — November 1, 2026
 
+## November 6 follow-up
+
+The four desktop test files now pass, including regression coverage for early scrolling/gaps, a bounded line-switch animation, completion and reduced motion. The main/preload/renderer build and unpacked Windows packaging were rerun successfully after those changes. See [REVIEW-FOLLOWUP.md](REVIEW-FOLLOWUP.md). The plugin now enables Windows and Linux; the Linux runtime result is the maintainer's CachyOS/Hyprland report, not a local test. The historical checks and limitations below describe the original November 1 run.
+
 Tested against base commit `cf935d1f6ef91004e2ec3ec135a7a02a6ef99a24`, on Windows 11, with Node 26.2.0 and Electron 44.9.1.
 
 ## Passed

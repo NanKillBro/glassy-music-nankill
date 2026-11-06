@@ -7,6 +7,8 @@ let onHide;
 let unsubscribed = false;
 let liveAnimations = 0;
 let replacements = 0;
+let reducedMotion = false;
+let latestTransition;
 function element() {
   return {
     style: {},
@@ -21,10 +23,10 @@ function element() {
     },
     addEventListener() {},
     setAttribute() {},
-    animate() {
+    animate(frames) {
       liveAnimations++;
       let cancelled = false;
-      return {
+      const animation = {
         cancel() {
           if (!cancelled) {
             cancelled = true;
@@ -32,6 +34,8 @@ function element() {
           }
         },
       };
+      if (frames[0].transform) latestTransition = animation;
+      return animation;
     },
   };
 }
@@ -40,6 +44,7 @@ const elements = {
   next: element(),
   toolbar: element(),
   pin: element(),
+  lyrics: element(),
 };
 vm.runInNewContext(
   fs.readFileSync(path.join(__dirname, '../desktop-lyrics/overlay.js'), 'utf8'),
@@ -53,6 +58,7 @@ vm.runInNewContext(
       documentElement: { style: { setProperty() {} } },
     },
     window: {
+      matchMedia: () => ({ matches: reducedMotion }),
       desktopLyrics: {
         onUpdate: (handler) => {
           callback = handler;
@@ -94,11 +100,16 @@ assert.equal(elements.current.style.fontFamily, 'Verdana');
 assert.equal(elements.current.style.fontWeight, '700');
 for (let index = 0; index < 1000; index++) {
   callback({ ...payload, current: String(index) });
-  assert.equal(liveAnimations, 2);
+  assert.equal(liveAnimations, 3);
 }
+latestTransition.onfinish();
+assert.equal(liveAnimations, 2);
+reducedMotion = true;
+callback({ ...payload, current: 'reduced motion' });
+assert.equal(liveAnimations, 2);
 onHide();
 assert.equal(liveAnimations, 0);
 assert.equal(unsubscribed, true);
 console.log(
-  'Passed: Verdana/700 inherited; 1000 identical updates -> one DOM replacement; 1000 line changes keep two animations; unload cancels all and unsubscribes.',
+  'Passed: Verdana/700 inherited; 1000 identical updates -> one DOM replacement; 1000 line changes keep two word animations and one transition; unload cancels all and unsubscribes.',
 );

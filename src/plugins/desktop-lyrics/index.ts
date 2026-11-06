@@ -20,7 +20,7 @@ export default createPlugin({
   name: () => 'Desktop Lyrics',
   description: () =>
     'Optional transparent desktop lyrics powered by Better Lyrics',
-  platform: Platform.Windows,
+  platform: Platform.Windows | Platform.Linux,
   restartNeeded: false,
   config: {
     enabled: false,
