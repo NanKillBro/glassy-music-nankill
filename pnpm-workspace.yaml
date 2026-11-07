@@ -27,3 +27,4 @@ patchedDependencies:
 engineStrict: true
 minimumReleaseAgeExclude:
   - vite@8.1.0
+  - music-metadata-editor@0.3.0
