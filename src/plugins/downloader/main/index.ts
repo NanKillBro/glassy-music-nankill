@@ -15,7 +15,7 @@ import {
 import is from 'electron-is';
 import filenamify from 'filenamify';
 import lazyVar from 'lazy-var';
-import { updateBuffer, type TagPatch } from 'music-metadata-editor';
+import { updateBuffer, type TagPatch } from 'music-metadata';
 import {
   Innertube,
   UniversalCache,

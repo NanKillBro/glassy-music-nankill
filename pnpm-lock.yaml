@@ -187,9 +187,9 @@ importers:
       mdui:
         specifier: 2.1.4
         version: 2.1.4(patch_hash=e6f91e8e974b4ccc0903ec27b2c840fa3a84048144098e96671fc9915df47ef1)
-      music-metadata-editor:
-        specifier: ^0.3.0
-        version: 0.3.0(supports-color@7.2.0)
+      music-metadata:
+        specifier: ^12.4.0
+        version: 12.4.0(supports-color@7.2.0)
       node-html-parser:
         specifier: 8.0.3
         version: 8.0.3
@@ -3293,12 +3293,8 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  music-metadata-editor@0.3.0:
-    resolution: {integrity: sha512-Gy1VeVlus7ifOkIZtlt/cOmbJqSccISLBP9VhQU0DUDe8GZmlD04wNdhzP/EARttGtJAPCl9az0SrK29JjwwQA==}
-    engines: {node: '>=22'}
-
-  music-metadata@12.3.4:
-    resolution: {integrity: sha512-M0t4TlnpaNMd1XBb1rW3BmSIosxTXmXtdOVYsx1wb56l1Jbij08JV9bKEAIn68f19+xO7s7sm/7IzdnfR8BJwQ==}
+  music-metadata@12.4.0:
+    resolution: {integrity: sha512-3WRqWfgXLnYhYQULy89I2g/SWgAv5aBL2jmsvf7A+FyOuuOoKF352wnl0QmcnFhosjC+GlqyDOIiY0eLIgXOGg==}
     engines: {node: '>=22'}
 
   nanoid@3.3.15:
@@ -7210,17 +7206,7 @@ snapshots:
 
   ms@2.1.3: {}
 
-  music-metadata-editor@0.3.0(supports-color@7.2.0):
-    dependencies:
-      '@borewit/text-codec': 0.2.3
-      file-type: 22.3.0(supports-color@7.2.0)
-      music-metadata: 12.3.4(supports-color@7.2.0)
-      strtok3: 10.7.0
-      token-types: 6.2.0
-    transitivePeerDependencies:
-      - supports-color
-
-  music-metadata@12.3.4(supports-color@7.2.0):
+  music-metadata@12.4.0(supports-color@7.2.0):
     dependencies:
       '@borewit/text-codec': 0.2.3
       '@tokenizer/token': 0.3.0
