@@ -12,7 +12,7 @@ Optional Windows and Linux plugin for Glassy Music. It displays Better Lyrics in
 - **Alt+Shift+K** toggles click-through mode. Click-through is unavailable if its recovery shortcut cannot be registered.
 - The plugin does not change the main player's minimum size or global preferences.
 
-Better Lyrics must be enabled and its lyrics view loaded. The overlay reuses that view's lyrics; it does not fetch or log songs, start another music player, or communicate with Codex. It is a floating window, not a Windows desktop-shell extension.
+Better Lyrics must be enabled and its lyrics view loaded. The overlay reuses that view's lyrics; it does not fetch or log songs or start another music player. It is a floating window, not a Windows desktop-shell extension.
 
 The overlay toolbar supports window size presets, font sizing, pinning and returning to the player. Native drag-resizing of transparent windows is deliberately avoided. Window position and font size currently reset when the overlay is closed.
 
@@ -30,4 +30,4 @@ The main process validates message senders and bounds text and word data. The ov
 
 Run `node --test src/plugins/desktop-lyrics/tests/*.test.cjs`. Tests cover lifecycle cleanup, reopening, line timing, bounded animations, typography, reduced motion and the bundled document's CSP. Electron/DOM lifecycle tests use simulated objects.
 
-Word highlighting approximates the original renderer; its full shader, blur and spring-animation pipeline is not duplicated. RAM savings and a fix for any separate Codex memory issue are not claimed.
+Word highlighting approximates the original renderer; its full shader, blur and spring-animation pipeline is not duplicated. Sustained playback profiling is needed to measure RAM savings.
