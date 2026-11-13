@@ -46,7 +46,11 @@ const titleStyle = cacheNoArgs(
     color: #f1f1f1;
     font-size: 12px;
     padding: 4px 4px 4px var(--offset-left, 4px);
-    background-color: color-mix(in srgb, var(--titlebar-background-color, #030303) 60%, transparent);
+    background-color: color-mix(
+      in srgb,
+      var(--titlebar-background-color, #030303) 60%,
+      transparent
+    );
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -62,8 +66,7 @@ const titleStyle = cacheNoArgs(
       padding: 4px 4px 4px 74px;
     }
 
-    ytmusic-app:has(ytmusic-player[player-ui-state='FULLSCREEN'])
-      ~ &:not([data-show='true']) {
+    &[data-fullscreen='true']:not([data-show='true']) {
       transform: translateY(calc(-1 * (var(--menu-bar-height, 32px) + 8px)));
     }
   `,
@@ -99,7 +102,11 @@ const windowControlContainerStyle = cacheNoArgs(
 
     color: #f1f1f1;
     padding: 4px;
-    background-color: color-mix(in srgb, var(--titlebar-background-color, #030303) 60%, transparent);
+    background-color: color-mix(
+      in srgb,
+      var(--titlebar-background-color, #030303) 60%,
+      transparent
+    );
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -109,8 +116,7 @@ const windowControlContainerStyle = cacheNoArgs(
       transform 300ms cubic-bezier(0.2, 0, 0.6, 1) 0s,
       background-color 300ms cubic-bezier(0.2, 0, 0.6, 1) 0s;
 
-    ytmusic-app:has(ytmusic-player[player-ui-state='FULLSCREEN'])
-      ~ &:not([data-show='true']) {
+    &[data-fullscreen='true']:not([data-show='true']) {
       transform: translateY(calc(-1 * (var(--menu-bar-height, 32px) + 8px)));
     }
   `,
@@ -243,9 +249,12 @@ export const TitleBar = (props: TitleBarProps) => {
   const [openTarget, setOpenTarget] = createSignal<HTMLElement | null>(null);
   const [menu, setMenu] = createSignal<Menu | null>(null);
   const [mouseY, setMouseY] = createSignal(0);
+  const [isPlayerFullscreen, setIsPlayerFullscreen] = createSignal(false);
   let scrollRafHandle: number | null = null;
   let scrollListener: (() => void) | undefined;
   let ytmusicAppLayout: HTMLElement | null = null;
+  let fullscreenObserver: MutationObserver | null = null;
+  let navigateFinishListener: (() => void) | undefined;
 
   const [data, { refetch }] = createResource(
     async () => (await props.ipc.invoke('get-menu')) as Promise<Menu | null>,
@@ -360,29 +369,60 @@ export const TitleBar = (props: TitleBarProps) => {
     window.addEventListener('mousemove', listener);
     ytmusicAppLayout = document.querySelector<HTMLElement>('#layout');
 
-      // rAF-throttled: raw 'scroll' events can fire far more often than
-      // once per animation frame, and each tick here previously read
-      // scrollTop (forcing a synchronous layout) and wrote a class
-      // (invalidating style) unconditionally. On a long playlist, with
-      // thousands of heavy native rows sharing this same scroll
-      // container, that unthrottled read/write pair is layout-thrashing
-      // on every scroll tick — this is the actual source of "laggy list
-      // scrolling in large playlists" that backface-visibility: hidden
-      // (see titlebar.css) only partially papered over.
-      let wasScrolled = false;
-      scrollListener = () => {
-        if (scrollRafHandle !== null) return; // already scheduled this frame
-        scrollRafHandle = requestAnimationFrame(() => {
-          scrollRafHandle = null;
-          if (!ytmusicAppLayout) return;
-          const isScrolled = ytmusicAppLayout.scrollTop > 20;
-          if (isScrolled === wasScrolled) return; // no class change needed
-          wasScrolled = isScrolled;
-          ytmusicAppLayout.classList.toggle('content-scrolled', isScrolled);
+    let observedPlayer: HTMLElement | null = null;
+    const syncFullscreenState = () => {
+      const player = observedPlayer?.isConnected
+        ? observedPlayer
+        : document.querySelector<HTMLElement>('ytmusic-player');
+      if (player && player !== observedPlayer && fullscreenObserver) {
+        observedPlayer = player;
+        fullscreenObserver.observe(player, {
+          attributes: true,
+          attributeFilter: ['player-ui-state'],
         });
-      };
-      ytmusicAppLayout?.addEventListener('scroll', scrollListener, { passive: true });
+      }
+      const isFs =
+        player?.getAttribute('player-ui-state') === 'FULLSCREEN' ||
+        Boolean(ytmusicAppLayout?.hasAttribute('player-fullscreened'));
+      setIsPlayerFullscreen(isFs);
+    };
+
+    fullscreenObserver = new MutationObserver(syncFullscreenState);
+    if (ytmusicAppLayout) {
+      fullscreenObserver.observe(ytmusicAppLayout, {
+        attributes: true,
+        attributeFilter: ['player-fullscreened'],
+      });
+    }
+    syncFullscreenState();
+    navigateFinishListener = syncFullscreenState;
+    window.addEventListener('yt-navigate-finish', navigateFinishListener);
+
+    // rAF-throttled: raw 'scroll' events can fire far more often than
+    // once per animation frame, and each tick here previously read
+    // scrollTop (forcing a synchronous layout) and wrote a class
+    // (invalidating style) unconditionally. On a long playlist, with
+    // thousands of heavy native rows sharing this same scroll
+    // container, that unthrottled read/write pair is layout-thrashing
+    // on every scroll tick — this is the actual source of "laggy list
+    // scrolling in large playlists" that backface-visibility: hidden
+    // (see titlebar.css) only partially papered over.
+    let wasScrolled = false;
+    scrollListener = () => {
+      if (scrollRafHandle !== null) return; // already scheduled this frame
+      scrollRafHandle = requestAnimationFrame(() => {
+        scrollRafHandle = null;
+        if (!ytmusicAppLayout) return;
+        const isScrolled = ytmusicAppLayout.scrollTop > 20;
+        if (isScrolled === wasScrolled) return; // no class change needed
+        wasScrolled = isScrolled;
+        ytmusicAppLayout.classList.toggle('content-scrolled', isScrolled);
+      });
+    };
+    ytmusicAppLayout?.addEventListener('scroll', scrollListener, {
+      passive: true,
     });
+  });
 
   createEffect(() => {
     if (!menu() && data()) {
@@ -392,6 +432,11 @@ export const TitleBar = (props: TitleBarProps) => {
 
   onCleanup(() => {
     window.removeEventListener('mousemove', listener);
+    if (navigateFinishListener) {
+      window.removeEventListener('yt-navigate-finish', navigateFinishListener);
+    }
+    fullscreenObserver?.disconnect();
+    fullscreenObserver = null;
     if (scrollRafHandle !== null) cancelAnimationFrame(scrollRafHandle);
     if (scrollListener) {
       ytmusicAppLayout?.removeEventListener('scroll', scrollListener);
@@ -403,6 +448,7 @@ export const TitleBar = (props: TitleBarProps) => {
       <div class={topDragAreaStyle()} />
       <nav
         class={titleStyle()}
+        data-fullscreen={isPlayerFullscreen()}
         data-macos={props.isMacOS}
         data-show={mouseY() < 32}
         data-ytmd-main-panel={true}
@@ -459,18 +505,18 @@ export const TitleBar = (props: TitleBarProps) => {
             const index = Number(element.getAttribute('data-index') ?? 0);
             const length = Number(element.getAttribute('data-length') ?? 1);
 
-          (element as HTMLElement).style.setProperty(
-            'transition-delay',
-            `${(length * 0.025) - (index * 0.025)}s`,
-          );
-        }}
-      >
-        <Show when={!collapsed()}>
-          <Index each={menu()?.items}>
-            {(item, index) => {
-              const [anchor, setAnchor] = createSignal<HTMLElement | null>(
-                null,
-              );
+            (element as HTMLElement).style.setProperty(
+              'transition-delay',
+              `${(length - index) * 0.025}s`,
+            );
+          }}
+        >
+          <Show when={!collapsed()}>
+            <Index each={menu()?.items}>
+              {(item, index) => {
+                const [anchor, setAnchor] = createSignal<HTMLElement | null>(
+                  null,
+                );
 
                 const handleClick = () => {
                   if (openTarget() === anchor()) {
@@ -509,7 +555,11 @@ export const TitleBar = (props: TitleBarProps) => {
         </TransitionGroup>
       </nav>
       <Show when={props.enableController}>
-        <div class={windowControlContainerStyle()} data-show={mouseY() < 32}>
+        <div
+          class={windowControlContainerStyle()}
+          data-fullscreen={isPlayerFullscreen()}
+          data-show={mouseY() < 32}
+        >
           <WindowController
             isMaximize={isMaximized()}
             onClose={handleClose}
@@ -521,4 +571,3 @@ export const TitleBar = (props: TitleBarProps) => {
     </>
   );
 };
-
