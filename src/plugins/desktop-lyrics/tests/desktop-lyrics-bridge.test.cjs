@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const vm = require('node:vm');
 const { EventEmitter } = require('node:events');
-const { installBridge } = require('../desktop-lyrics/bridge.cjs');
+const { installBridge } = require('../bridge.cjs');
 const docEvents = new EventEmitter();
 const winEvents = new EventEmitter();
 const timeouts = new Map();

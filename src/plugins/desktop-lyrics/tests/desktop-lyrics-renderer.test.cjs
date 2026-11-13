@@ -47,7 +47,7 @@ const elements = {
   lyrics: element(),
 };
 vm.runInNewContext(
-  fs.readFileSync(path.join(__dirname, '../desktop-lyrics/overlay.js'), 'utf8'),
+  fs.readFileSync(path.join(__dirname, '../overlay.js'), 'utf8'),
   {
     Date: { now: () => 1000 },
     document: {

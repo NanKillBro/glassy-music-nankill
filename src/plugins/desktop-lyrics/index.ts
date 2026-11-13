@@ -1,8 +1,3 @@
-import { createRequire } from 'node:module';
-import path from 'node:path';
-
-import { app } from 'electron';
-
 import { Platform } from '@/types/plugins';
 import { createPlugin } from '@/utils';
 
@@ -48,18 +43,10 @@ export default createPlugin({
       const request = ++generation;
       const settings = await getConfig();
       if (request !== generation || !settings.enabled) return;
+      const { createDesktopLyrics } = await import('./backend');
+      if (request !== generation) return;
       controller?.stop();
-      const directory = app.isPackaged
-        ? path.join(process.resourcesPath, 'desktop-lyrics')
-        : path.resolve(import.meta.dirname, '../../desktop-lyrics');
-      const require = createRequire(import.meta.url);
-      const runtime = require(path.join(directory, 'runtime.cjs')) as {
-        createDesktopLyrics(options: {
-          window: typeof window;
-          directory: string;
-        }): DesktopLyricsController;
-      };
-      controller = runtime.createDesktopLyrics({ window, directory });
+      controller = createDesktopLyrics(window);
       controller.start();
       if (settings.openAtStartup) controller.open();
     },

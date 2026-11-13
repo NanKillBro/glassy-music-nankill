@@ -16,7 +16,6 @@
   "scripts": {
     "postinstall": "pnpm install-electron",
     "test": "pnpm playwright test",
-    "test:desktop-lyrics": "node --test tests/desktop-lyrics*.test.cjs",
     "test:debug": "pnpm cross-env DEBUG=pw:*,-pw:test:protocol playwright test",
     "sync:extensions": "node tooling/sync-extensions.mjs",
     "prebuild": "pnpm sync:extensions",

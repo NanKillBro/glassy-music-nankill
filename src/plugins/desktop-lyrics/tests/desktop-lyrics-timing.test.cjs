@@ -1,7 +1,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const vm = require('node:vm');
-const { readLyrics } = require('../desktop-lyrics/reader.cjs');
+const { readLyrics } = require('../reader.cjs');
 
 test('outgoing line survives early scroll, end of word and gap until next start', () => {
   const createLine = (text, time) => ({

@@ -2,8 +2,8 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const { EventEmitter } = require('node:events');
-const { readLyrics } = require('../desktop-lyrics/reader.cjs');
-const { installBridge } = require('../desktop-lyrics/bridge.cjs');
+const { readLyrics } = require('../reader.cjs');
+const { installBridge } = require('../bridge.cjs');
 const path = require('node:path');
 const readCode = `(${readLyrics.toString()})()`;
 function read(containers) {
@@ -101,7 +101,8 @@ class Window extends EventEmitter {
   setMinimumSize(width, height) {
     this.minimum = [width, height];
   }
-  loadFile() {
+  loadURL(url) {
+    this.loadedURL = url;
     this.webContents.emit('did-finish-load');
     this.emit('ready-to-show');
     return Promise.resolve();
@@ -156,10 +157,7 @@ const electron = {
 };
 const runtime = { exports: {} };
 vm.runInNewContext(
-  fs.readFileSync(
-    path.join(__dirname, '../desktop-lyrics/runtime.cjs'),
-    'utf8',
-  ),
+  fs.readFileSync(path.join(__dirname, '../runtime.cjs'), 'utf8'),
   {
     module: runtime,
     require: (name) =>
@@ -184,7 +182,11 @@ async function run() {
   await Promise.resolve();
   const player = new Window();
   player.url = 'https://music.youtube.com/watch?v=test';
-  const controller = runtime.exports.createDesktopLyrics({ window: player });
+  const controller = runtime.exports.createDesktopLyrics({
+    window: player,
+    html: '<!doctype html><title>Desktop Lyrics</title>',
+    preload: '/bundled/preload.cjs',
+  });
   assert.equal(shortcuts.size, 0);
   assert.equal(ipc.eventNames().length, 0);
   controller.open();
@@ -201,6 +203,8 @@ async function run() {
   assert.equal(overlay.options.frame, false);
   assert.equal(overlay.options.webPreferences.nodeIntegration, false);
   assert.equal(overlay.options.webPreferences.sandbox, true);
+  assert.equal(overlay.options.webPreferences.preload, '/bundled/preload.cjs');
+  assert.ok(overlay.loadedURL.startsWith('data:text/html;charset=utf-8,'));
   assert.equal(overlay.shown, true);
   assert.equal(player.minimized, true);
   assert.equal(player.minimum, undefined);

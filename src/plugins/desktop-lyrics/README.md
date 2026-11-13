@@ -18,20 +18,16 @@ The overlay toolbar supports window size presets, font sizing, pinning and retur
 
 Line changes prefer the outgoing active line over an incoming line selected early for scrolling. A connected outgoing line remains visible through a gap and is not replaced by a future-timestamped line. Seeking or changing tracks resets that retained reference. Transitions use a single 200 ms opacity/translation animation, cancelled on replacement, completion and unload; reduced-motion preferences disable it.
 
-Linux support follows the maintainer's successful CachyOS/Hyprland test in [PR feedback](https://github.com/NanKillBro/glassy-music-nankill/pull/27#issuecomment-6685432131). It has not been independently exercised on Linux in this Windows workspace.
-
 ## Integration
 
-`src/plugins/desktop-lyrics/index.ts` uses the existing `createPlugin` backend lifecycle and configuration store. `electron-builder.yml` packages this directory as an extra resource. Development resolves the resources from the project root. No application entry-point patch or dependency additions are required for this source integration.
+All plugin code, assets and tests live in `src/plugins/desktop-lyrics/`, following `dev.md`. `index.ts` uses the existing `createPlugin` lifecycle and configuration store. The backend is loaded only when enabled. Vite imports embed the overlay HTML, CSS and JavaScript into the backend bundle and emit its sandboxed preload with `?asset`. No package scripts, builder configuration, extra resources or dependency additions are required.
 
 `runtime.cjs` exports a controller with explicit `start`, `stop`, `open`, `close`, `toggle` and `isOpen` methods. Importing it does not install listeners or start timers. Backend enable/disable calls `start`/`stop`. Opening a window installs the bridge in the player; closing the window removes it. Both operations are idempotent.
 
-The main process validates message senders and bounds text and word data. The local overlay uses a sandboxed preload with context isolation, no Node integration, and a restrictive CSP. It inserts lyrics as text, never as HTML.
+The main process validates message senders and bounds text and word data. The overlay uses a sandboxed preload with context isolation and no Node integration. Its CSP allows only the exact bundled CSS/JavaScript hashes, with no network access or `unsafe-inline`. It inserts lyrics as text, never as HTML. Controls and diagnostic messages are in English.
 
-## Validation
+## Tests
 
-Run `pnpm test:desktop-lyrics`, or `node --test tests/desktop-lyrics*.test.cjs` directly. These dependency-free tests cover the controller lifecycle, reopening after closing, disabled state, repeated enable/disable, bridge disposal, renderer animation disposal and typography inheritance. Tests use simulated Electron/DOM objects; they do not replace a packaged Windows smoke test.
-
-The application core now builds successfully, and an unpacked Windows package was exercised with the native plugin menu and actual Better Lyrics playback. Project-wide checks were also run and exposed existing failures outside this contribution. See [VALIDATION.md](VALIDATION.md) for the commands, results and packaging limitations.
+Run `node --test src/plugins/desktop-lyrics/tests/*.test.cjs`. Tests cover lifecycle cleanup, reopening, line timing, bounded animations, typography, reduced motion and the bundled document's CSP. Electron/DOM lifecycle tests use simulated objects.
 
 Word highlighting approximates the original renderer; its full shader, blur and spring-animation pipeline is not duplicated. RAM savings and a fix for any separate Codex memory issue are not claimed.

@@ -5,10 +5,9 @@ const {
   globalShortcut,
   screen,
 } = require('electron');
-const path = require('node:path');
 const { readLyrics } = require('./reader.cjs');
 const { installBridge } = require('./bridge.cjs');
-function createDesktopLyrics({ window: mainWindow, directory = __dirname }) {
+function createDesktopLyrics({ window: mainWindow, html, preload }) {
   const channel = 'glassy-desktop-lyrics-action';
   const toggleKey = 'Alt+Shift+L';
   const lockKey = 'Alt+Shift+K';
@@ -153,7 +152,7 @@ function createDesktopLyrics({ window: mainWindow, directory = __dirname }) {
     const area = screen.getPrimaryDisplay().workArea;
     const [width, height] = sizes[sizeIndex];
     overlay = new BrowserWindow({
-      title: 'Letras en el escritorio',
+      title: 'Desktop Lyrics',
       width,
       height,
       x: Math.round(area.x + (area.width - width) / 2),
@@ -168,7 +167,7 @@ function createDesktopLyrics({ window: mainWindow, directory = __dirname }) {
       show: false,
       autoHideMenuBar: true,
       webPreferences: {
-        preload: path.join(directory, 'preload.cjs'),
+        preload,
         nodeIntegration: false,
         contextIsolation: true,
         sandbox: true,
@@ -197,7 +196,7 @@ function createDesktopLyrics({ window: mainWindow, directory = __dirname }) {
       lastPayload = '';
     });
     void target
-      .loadFile(path.join(directory, 'overlay.html'))
+      .loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`)
       .catch((error) => {
         console.error('[DesktopLyrics] Could not open overlay:', error);
         if (!target.isDestroyed()) target.close();
@@ -256,7 +255,9 @@ function createDesktopLyrics({ window: mainWindow, directory = __dirname }) {
     registeredToggle = globalShortcut.register(toggleKey, toggle);
     lockAvailable = globalShortcut.register(lockKey, unlock);
     if (!registeredToggle)
-      console.warn('[DesktopLyrics] Alt+Shift+L ocupado; usar el menú.');
+      console.warn(
+        '[DesktopLyrics] Alt+Shift+L is already in use; use the menu.',
+      );
   }
   function stop() {
     if (!started) return;

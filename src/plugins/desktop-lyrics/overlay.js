@@ -38,7 +38,7 @@ const unsubscribe = window.desktopLyrics.onUpdate((data) => {
   }
   const words = Array.isArray(data.words) ? data.words : [];
   const text =
-    data.current || (data.connected ? '♪' : 'Abrí Glassy Music y sus letras');
+    data.current || (data.connected ? '♪' : 'Open Glassy Music and its lyrics');
   const lineKey = JSON.stringify([text, words]);
   if (lineKey !== previousLine) {
     cancelAnimations();
