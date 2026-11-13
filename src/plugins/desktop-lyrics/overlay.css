@@ -1,0 +1,16 @@
+:root { color-scheme: dark; --font-size: 34px; }
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 100%; height: 100%; background: transparent !important; overflow: hidden; }
+body { font-family: Verdana, sans-serif; color: white; user-select: none; }
+header { position: absolute; top: 2px; left: 50%; transform: translateX(-50%); display: flex; gap: 2px; align-items: center; height: 32px; padding: 2px 6px; border-radius: 10px; background: #171722eb; opacity: 0; transition: opacity 150ms; z-index: 2; }
+body:hover header, header:focus-within { opacity: 1; }
+#handle { -webkit-app-region: drag; cursor: move; min-width: 58px; font-size: 12px; padding: 5px; }
+button { -webkit-app-region: no-drag; border: 0; border-radius: 5px; background: transparent; color: #fff; font-size: 14px; min-width: 27px; height: 27px; cursor: pointer; }
+button:hover, button:focus-visible { background: #ffffff30; }
+button[aria-pressed="true"] { color: #b7abff; }
+main { width: 100%; height: 100%; padding: 35px 16px 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; -webkit-app-region: drag; }
+#current { width: 100%; text-align: center; font-size: min(var(--font-size), 6vw); font-weight: 700; line-height: 1.4; white-space: pre-wrap; overflow-wrap: anywhere; text-shadow: 0 0 5px #ffffff80, 0 2px 4px #000b; }
+.word { display: inline; }
+#lyrics { width: 100%; display: flex; flex-direction: column; align-items: center; gap: inherit; }
+#next { max-width: 95%; text-align: center; font-size: min(calc(var(--font-size) * .58), 3.5vw); font-weight: 500; line-height: 1.2; color: #ffffff9c; text-shadow: 0 2px 5px #000; max-height: 2.4em; overflow: hidden; }
+@media (max-height: 170px) { main { gap: 4px; padding-top: 28px; } #next { display: none; } }

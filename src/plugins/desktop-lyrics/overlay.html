@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'none'">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Desktop Lyrics</title>
+  <link rel="stylesheet" href="overlay.css">
+</head>
+<body>
+  <header id="toolbar">
+    <span id="handle" title="Drag to move">⠿ Lyrics</span>
+    <button data-action="size" title="Change window size">↔</button>
+    <button data-action="smaller" title="Smaller text">A−</button>
+    <button data-action="larger" title="Larger text">A+</button>
+    <button data-action="pin" id="pin" title="Keep above other windows" aria-pressed="true">◇</button>
+    <button data-action="lock" title="Let clicks pass through. Alt+Shift+K to unlock">☝</button>
+    <button data-action="player" title="Show player">♫</button>
+    <button data-action="close" title="Close lyrics. Alt+Shift+L to reopen">×</button>
+  </header>
+  <main>
+    <div id="lyrics">
+    <div id="current" aria-live="off">Waiting for lyrics…</div>
+    <div id="next"></div>
+    </div>
+  </main>
+  <script src="overlay.js"></script>
+</body>
+</html>
