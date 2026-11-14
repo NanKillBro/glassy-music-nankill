@@ -87,12 +87,12 @@ export default createPlugin({
       | 'glassyflow-turbo'
       | 'smooth',
     activeTheme: 'glassy-merge-theme' as string,
-    engine: 'old' as 'old' | 'new',
+    engine: 'new' as 'old' | 'new',
   },
   // THÊM PHẦN NÀY: Tạo menu để mở cài đặt
   menu: async ({ getConfig, setConfig, window, refresh }) => {
     const pluginConfig = await getConfig();
-    const currentEngine = pluginConfig.engine || 'old';
+    const currentEngine = pluginConfig.engine || 'new';
     const isNewEngine = currentEngine === 'new';
 
     const menuItems: MenuItemConstructorOptions[] = [
@@ -455,7 +455,7 @@ export default createPlugin({
   backend: {
     async start({ getConfig, setConfig, window }) {
       const pluginConfig = await getConfig();
-      const isNewEngine = pluginConfig.engine === 'new';
+      const isNewEngine = pluginConfig.engine !== 'old';
       const extensionPath = extensionDir(isNewEngine);
       const isGlassyTheme = isGlassyMergeTheme(pluginConfig.activeTheme);
 
@@ -593,7 +593,7 @@ export default createPlugin({
       // --- IPC handler for engine changes ---
       ipcMain.removeHandler('bl-set-engine');
       ipcMain.handle('bl-set-engine', async (_event, engine: 'old' | 'new') => {
-        const currentEngine = (await getConfig()).engine || 'old';
+        const currentEngine = (await getConfig()).engine || 'new';
         if (currentEngine === engine) return { changed: false };
 
         await setConfig({ engine });
@@ -621,7 +621,7 @@ export default createPlugin({
       ipcMain.removeHandler('bl-get-engine');
       ipcMain.handle('bl-get-engine', async () => {
         const cfg = await getConfig();
-        return cfg.engine || 'old';
+        return cfg.engine || 'new';
       });
     },
   },
@@ -664,7 +664,7 @@ export default createPlugin({
       // would drop the attribute set above.
       window.addEventListener('DOMContentLoaded', publishThemeLock);
 
-      const isNewEngine = pluginConfig.engine === 'new';
+      const isNewEngine = pluginConfig.engine !== 'old';
       const engineFolder = isNewEngine ? 'bl-dev' : 'bl';
 
       let basePath = path.join(__dirname, '../../');
