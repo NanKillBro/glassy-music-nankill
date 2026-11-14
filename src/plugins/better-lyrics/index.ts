@@ -507,8 +507,8 @@ export default createPlugin({
 
       // (The merge theme and glassyflow scripts have been moved to the preload script for instant execution without IPC delay)
 
-      // --- Fix 2: Block BL custom styles in Glassy mode ---
-      if (isGlassyTheme) {
+      // --- Fix 2: Block BL custom styles in Glassy mode (old engine only; new engine uses #blyrics-custom-style for @braccato/core theme settings) ---
+      if (isGlassyTheme && !isNewEngine) {
         const blockBLStylesScript = `
           (function() {
             // Remove any existing BL custom style tag
