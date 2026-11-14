@@ -32,7 +32,10 @@ const EXTENSION_ID = 'effdbpeggelllpfkjppbokhmmiinhlmg';
 // action/default_popup.html, while the new one's build tool names both index.html
 // under options/ and action/. Loading the wrong pair fails with ERR_FILE_NOT_FOUND.
 const FALLBACK_SETTINGS_PAGES = {
-  old: { optionsPage: 'options_ui/page.html', popupPage: 'action/default_popup.html' },
+  old: {
+    optionsPage: 'options_ui/page.html',
+    popupPage: 'action/default_popup.html',
+  },
   new: { optionsPage: 'options/index.html', popupPage: 'action/index.html' },
 } as const;
 
@@ -64,11 +67,16 @@ function resolveSettingsPages(isNewEngine: boolean): {
     const popup = manifest.action?.default_popup;
 
     return {
-      optionsPage: typeof page === 'string' && page ? page : fallback.optionsPage,
-      popupPage: typeof popup === 'string' && popup ? popup : fallback.popupPage,
+      optionsPage:
+        typeof page === 'string' && page ? page : fallback.optionsPage,
+      popupPage:
+        typeof popup === 'string' && popup ? popup : fallback.popupPage,
     };
   } catch (err) {
-    console.error('[BetterLyrics] Could not read manifest for settings page:', err);
+    console.error(
+      '[BetterLyrics] Could not read manifest for settings page:',
+      err,
+    );
     return fallback;
   }
 }
@@ -85,6 +93,7 @@ export default createPlugin({
     scrollingMode: 'glassyflow-turbo' as
       | 'glassyflow'
       | 'glassyflow-turbo'
+      | 'glassyflow-super'
       | 'smooth',
     activeTheme: 'glassy-merge-theme' as string,
     engine: 'new' as 'old' | 'new',
@@ -447,6 +456,33 @@ export default createPlugin({
             }
           },
         },
+        {
+          label: 'GlassyFlow Super',
+          sublabel:
+            'Overlapping spring waves, GPU-composited (No busy-gate or lag)',
+          toolTip:
+            'Superposes overlapping spring scroll waves analytically into a single GPU-composited WAAPI animation per line. New lyric lines can join mid-scroll at any time without deferring, freezing, or artificial speedup.',
+          type: 'radio',
+          checked: currentScrolling === 'glassyflow-super',
+          click: async () => {
+            if (currentScrolling === 'glassyflow-super') return;
+            await setConfig({ scrollingMode: 'glassyflow-super' });
+            await refresh?.();
+            const result = await dialog.showMessageBox(window, {
+              type: 'info',
+              title: 'Scrolling Mode Changed',
+              message:
+                'Scrolling mode has been changed to GlassyFlow Super. The app needs to restart to apply the change.',
+              buttons: ['Restart Now', 'Later'],
+              defaultId: 0,
+              cancelId: 1,
+            });
+
+            if (result.response === 0) {
+              restart();
+            }
+          },
+        },
       ],
     });
 
@@ -698,6 +734,7 @@ export default createPlugin({
       const scrollScripts: Record<string, string | null> = {
         'glassyflow': 'glassyflow.js',
         'glassyflow-turbo': 'glassyflow-turbo.js',
+        'glassyflow-super': 'glassyflow-super.js',
         'smooth': null,
       };
       const scrollMode = pluginConfig.scrollingMode ?? 'glassyflow-turbo';
