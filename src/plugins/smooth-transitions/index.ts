@@ -1053,7 +1053,7 @@ export default createPlugin<
   description: () => t('plugins.smooth-transitions.description'),
   restartNeeded: true,
   config: {
-    enabled: false,
+    enabled: true,
     fadeOnPause: true,
     pauseFadeDuration: 200,
     fadeOnSkip: true,
