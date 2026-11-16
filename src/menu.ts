@@ -760,7 +760,47 @@ export const mainMenuTemplate = async (
               type: 'checkbox',
               checked:
                 config.get('options.disableWebAnimationsPolyfill') ?? true,
-              click(item: MenuItem) {
+              async click(item: MenuItem) {
+                if (!item.checked) {
+                  const scrollingMode =
+                    config.plugins.getOptions<{ scrollingMode?: string }>(
+                      'better-lyrics',
+                    )?.scrollingMode ?? 'glassyflow-super';
+                  const isSuper = scrollingMode === 'glassyflow-super';
+
+                  const warning = await dialog.showMessageBox(win, {
+                    type: 'warning',
+                    title: 'Allow WAAPI polyfill?',
+                    message: isSuper
+                      ? 'GlassyFlow Super needs the native Web Animations API. YouTube Music\'s polyfill replaces document.timeline and will break Super scrolling; it also adds main-thread overhead.'
+                      : 'YouTube Music\'s WAAPI polyfill is a compatibility shim that adds main-thread overhead on Chromium. Blocking it is recommended.',
+                    detail: isSuper
+                      ? 'Keep it blocked, or allow it and switch to GlassyFlow Turbo.'
+                      : 'Turbo keeps working with the polyfill, but native WAAPI is faster.',
+                    buttons: isSuper
+                      ? [
+                          'Keep blocked',
+                          'Allow + switch to Turbo',
+                          'Allow anyway',
+                        ]
+                      : ['Keep blocked', 'Allow anyway'],
+                    defaultId: 0,
+                    cancelId: 0,
+                    noLink: true,
+                  });
+
+                  if (warning.response === 0) {
+                    await refreshMenu(win);
+                    return;
+                  }
+
+                  if (isSuper && warning.response === 1) {
+                    config.plugins.setOptions('better-lyrics', {
+                      scrollingMode: 'glassyflow-turbo',
+                    });
+                  }
+                }
+
                 config.setMenuOption(
                   'options.disableWebAnimationsPolyfill',
                   item.checked,

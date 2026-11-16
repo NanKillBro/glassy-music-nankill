@@ -1,8 +1,9 @@
 import Store from 'electron-store';
 
-import { defaultConfig as defaults } from './defaults';
 import { blockers } from '@/plugins/do-not-track/types';
 import { DefaultPresetList, type Preset } from '@/plugins/downloader/types';
+
+import { defaultConfig as defaults } from './defaults';
 
 import type { TrackerBlockerConfig } from '@/plugins/do-not-track';
 
@@ -11,6 +12,35 @@ export type IStore = InstanceType<
 >;
 
 const migrations = {
+  '>=4.2.0'(store: IStore) {
+    // Plugin defaults only reach profiles that never persisted them. Locked
+    // plugins are force-enabled through setPartial(), which writes the full
+    // default object, so nearly every pre-4.2.0 profile has engine 'old' and
+    // scrollingMode 'glassyflow-turbo'.
+    const betterLyricsConfig = store.get('plugins.better-lyrics') as
+      | { engine?: 'old' | 'new'; scrollingMode?: string }
+      | undefined;
+    if (betterLyricsConfig?.engine === 'old') {
+      store.set('plugins.better-lyrics.engine', 'new');
+    }
+    if (betterLyricsConfig?.scrollingMode === 'glassyflow-turbo') {
+      store.set('plugins.better-lyrics.scrollingMode', 'glassyflow-super');
+    }
+
+    const smoothTransitionsConfig = store.get('plugins.smooth-transitions') as
+      | { enabled?: boolean }
+      | undefined;
+    if (smoothTransitionsConfig?.enabled === false) {
+      store.set('plugins.smooth-transitions.enabled', true);
+    }
+
+    const shortcutsConfig = store.get('plugins.shortcuts') as
+      | { enabled?: boolean }
+      | undefined;
+    if (shortcutsConfig?.enabled === false) {
+      store.set('plugins.shortcuts.enabled', true);
+    }
+  },
   '>=3.12.0'(store: IStore) {
     const blockerConfig = store.get('plugins.adblocker') as TrackerBlockerConfig;
     if (blockerConfig) {

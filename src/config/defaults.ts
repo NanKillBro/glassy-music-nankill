@@ -110,8 +110,11 @@ export const defaultConfig: DefaultConfig = {
     // the window is hidden/occluded. Undefined/false preserves the historical
     // hardcoded `backgroundThrottling: false` (see the disableSplash comment).
     backgroundThrottling: false,
-    // Absent in existing config files; read sites treat undefined as true.
-    disableWebAnimationsPolyfill: false,
+    // On by default: GlassyFlow Super relies on native WAAPI, and YouTube's
+    // polyfill replaces document.timeline with a synthetic clock that breaks
+    // Super's startTime handling. Existing profiles already read undefined as
+    // true (see the read-site fallbacks).
+    disableWebAnimationsPolyfill: true,
   },
   'plugins': {},
 };

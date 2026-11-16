@@ -87,10 +87,10 @@ export default createPlugin({
   config: {
     enabled: true,
     enableV4Scroll: true,
-    // Turbo is the default: same spring motion as 'glassyflow', but baked into
-    // WAAPI keyframes so it runs on the compositor instead of writing style
-    // every frame. 'glassyflow' stays available as a fallback.
-    scrollingMode: 'glassyflow-turbo' as
+    // Super is the default: it folds overlapping spring waves into one
+    // compositor animation per line, so new lines can join mid-scroll without
+    // the old busy gate. Turbo and the original rAF engine stay selectable.
+    scrollingMode: 'glassyflow-super' as
       | 'glassyflow'
       | 'glassyflow-turbo'
       | 'glassyflow-super'
@@ -368,7 +368,7 @@ export default createPlugin({
       },
     ];
 
-    const currentScrolling = pluginConfig.scrollingMode || 'glassyflow-turbo';
+    const currentScrolling = pluginConfig.scrollingMode || 'glassyflow-super';
 
     // Both engines can pick any of the three modes. 'smooth' means "let the
     // engine do its own scrolling" — the new engine's built-in WAAPI scroll, or
@@ -459,7 +459,7 @@ export default createPlugin({
         {
           label: 'GlassyFlow Super',
           sublabel:
-            'Overlapping spring waves, GPU-composited (No busy-gate or lag)',
+            'Overlapping spring waves, GPU-composited (Default)',
           toolTip:
             'Superposes overlapping spring scroll waves analytically into a single GPU-composited WAAPI animation per line. New lyric lines can join mid-scroll at any time without deferring, freezing, or artificial speedup.',
           type: 'radio',
@@ -737,11 +737,11 @@ export default createPlugin({
         'glassyflow-super': 'glassyflow-super.js',
         'smooth': null,
       };
-      const scrollMode = pluginConfig.scrollingMode ?? 'glassyflow-turbo';
+      const scrollMode = pluginConfig.scrollingMode ?? 'glassyflow-super';
       // An unknown value (config written by a newer build, then downgraded)
       // falls back to the original rAF engine rather than silently disabling
       // scrolling altogether — for a corrupt/unrecognised value, the
-      // longest-serving path is the safer landing spot even though Turbo is
+      // longest-serving path is the safer landing spot even though Super is
       // now the default.
       const scrollScript =
         scrollMode in scrollScripts
