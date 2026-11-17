@@ -2,6 +2,8 @@
 
 Optional Windows and Linux plugin for Glassy Music. It displays Better Lyrics in a separate transparent window, using the original computed font family, weight and spacing, plus lightweight word-timed opacity animations.
 
+Supports the original and composite Better Lyrics renderers. The overlay reads the primary text layer once, preserves spaces between word groups and keeps timed syllables joined.
+
 ## User behavior
 
 - Disabled by default. Enabling the plugin does not open a window.

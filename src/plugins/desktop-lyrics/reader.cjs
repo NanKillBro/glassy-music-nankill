@@ -1,19 +1,46 @@
 function readLyrics(currentTime = NaN, state = {}) {
-  function lineText(line) {
-    if (!line) return '';
-    const words = line.querySelectorAll(
-      '.blyrics--word[data-content]:not(.blyrics--romanized .blyrics--word)',
-    );
-    if (!words.length) return (line.textContent || '').trim();
-    return Array.from(
+  function lineContent(line) {
+    if (!line) return { text: '', words: [] };
+    // The composite engine mirrors the text in a highlight run. Read only the
+    // main base run so highlights, backing vocals and decorations are excluded.
+    const main = line.querySelector?.('.blyrics-line-main');
+    const content =
+      main?.querySelector('.blyrics-bidi-run:not(.blyrics-highlight-run)') ||
+      main ||
+      line;
+    const elements = Array.from(
+      content.querySelectorAll(
+        '.blyrics--word[data-content]:not(.blyrics-word-highlight):not(.blyrics-highlight-run .blyrics--word):not(.blyrics--romanized .blyrics--word)',
+      ),
+    ).slice(0, 160);
+    const range = content.ownerDocument?.createRange();
+    const words = elements.map((word, index) => {
+      let space = word.classList.contains('blyrics--has-trailing-space');
+      // Composite words carry no trailing-space class; their gaps are DOM text
+      // nodes between groups. Adjacent syllables must remain joined.
+      if (!space && range && elements[index + 1]) {
+        range.setStartAfter(word);
+        range.setEndBefore(elements[index + 1]);
+        space = /\s/.test(range.toString());
+      }
+      return {
+        text: (word.dataset.content || '').slice(0, 200),
+        space,
+        time: Number(word.dataset.time),
+        duration: Number(word.dataset.duration),
+      };
+    });
+    return {
+      text: words.length
+        ? words
+            .map((word) => word.text + (word.space ? ' ' : ''))
+            .join('')
+            .replace(/\s+/g, ' ')
+            .trim()
+        : (content.textContent || '').trim(),
       words,
-      (word) =>
-        (word.dataset.content || '') +
-        (word.classList.contains('blyrics--has-trailing-space') ? ' ' : ''),
-    )
-      .join('')
-      .replace(/\s+/g, ' ')
-      .trim();
+      element: elements[0] || content,
+    };
   }
   const containers = document.querySelectorAll('.blyrics-container');
   for (const container of containers) {
@@ -43,29 +70,16 @@ function readLyrics(currentTime = NaN, state = {}) {
       line = retained;
     state.container = container;
     state.line = line;
-    const text = lineText(line);
+    const current = lineContent(line);
     let next = line.nextElementSibling;
     while (next && !next.classList.contains('blyrics--line'))
       next = next.nextElementSibling;
-    const words = Array.from(
-      line.querySelectorAll(
-        '.blyrics--word[data-content]:not(.blyrics--romanized .blyrics--word)',
-      ),
-    )
-      .slice(0, 160)
-      .map((word) => ({
-        text: (word.dataset.content || '').slice(0, 200),
-        space: word.classList.contains('blyrics--has-trailing-space'),
-        time: Number(word.dataset.time),
-        duration: Number(word.dataset.duration),
-      }));
-    const element = line.querySelector('.blyrics--word') || line;
-    const style = getComputedStyle(element);
+    const style = getComputedStyle(current.element);
     const lineStyle = getComputedStyle(line);
     return {
-      current: text.slice(0, 1500),
-      next: lineText(next).slice(0, 1000),
-      words,
+      current: current.text.slice(0, 1500),
+      next: lineContent(next).text.slice(0, 1000),
+      words: current.words,
       typography: {
         family: style.fontFamily.slice(0, 300),
         weight: style.fontWeight,
