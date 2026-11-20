@@ -1,8 +1,57 @@
 {
   "$schema": "./changelog.schema.json",
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23",
+  "updatedAt": "2026-11-16",
   "entries": [
+    {
+      "version": "4.2.0",
+      "tag": "release",
+      "intro": "This update focuses mostly on bug fixes and performance improvements! Since this update changes the main lyrics engine and scrolling, let me know if you run into any issues.",
+      "sections": [
+        {
+          "title": "🔄 Updates",
+          "items": [
+            "Upstreamed to commit `f823400`",
+            "Updated Better Lyrics (New Engine) to commit `cfe9b06`",
+            "Backported some compatible fixes and features from the New Engine to Better Lyrics (Old Engine)."
+          ]
+        },
+        {
+          "title": "✨ New Features & UI",
+          "items": [
+            "Better Lyrics (New Engine) will be the default starting with this version. It gives you more performance, a smoother experience, and more features in this update. (The old engine is still here, but I'm planning to remove it in an upcoming update.)",
+            "Added a Performance tab in Better Lyrics (old & new engine) and Shaders. ^(1)",
+            "GlassyFlow Super is now the default scrolling mode: it's basically the Turbo one, but it fixes the main issue that has been here for a long time. Lyrics no longer drift when they move too fast. (I'm also planning to remove the old one in an upcoming update.)",
+            "Crossfade now uses the new Type 2 by default: a more seamless crossfade with no gaps. If it doesn't work well for you, try enabling PoToken.",
+            "Overall optimization for some app components."
+          ]
+        },
+        {
+          "title": "🐛 Bug Fixes",
+          "items": [
+            "Fixed playback status randomly jumping between playing and paused. (This should also fix Discord Rich Presence.)",
+            "Fixed MPRIS not working with the new player bar.",
+            "Lyrics now blur correctly when switching lines too quickly.",
+            "Fixed the search tab being offset to the top for users with the old player bar."
+          ]
+        },
+        {
+          "title": "📜 Other Changes",
+          "items": [
+            "The `smooth-transition` plugin will be enabled by default.",
+            "MPRIS will be enabled by default.",
+            "Added an option to change the artwork resolution (for plugins that use it). ^(2)",
+            "YouTube Music's WAAPI polyfill is now blocked by default. ^(2) ^(3)"
+          ]
+        }
+      ],
+      "footnotes": [
+        "**(1)** Experimental optimization. It may or may not improve your performance. You can try it and see if it works for you. In my testing, it does improve performance on paper.",
+        "**(2)** You can access these options via Options → Advanced Options.",
+        "**(3)** It's not needed on Electron, costs performance for nothing, and breaks compatibility with GlassyFlow.",
+        "**Note:** It seems that users with the new player bar will have a more laggy experience."
+      ]
+    },
     {
       "version": "4.1.1",
       "tag": "release",
