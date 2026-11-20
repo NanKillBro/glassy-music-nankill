@@ -2,7 +2,24 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+#### [v4.2.0](https://github.com/NanKillBro/glassy-music-nankill/compare/v4.1.1...v4.2.0)
+
+- Replace node-id3 with music-metadata [`#28`](https://github.com/NanKillBro/glassy-music-nankill/pull/28)
+- feat(crossfade): gapless sample-locked handoff (type 2), default on [`98d6923`](https://github.com/NanKillBro/glassy-music-nankill/commit/98d69231da1d1b219b294ca870fb5de82a726480)
+- Implement opt-in usePoToken crossfade fix for logged-out profiles [`a873c71`](https://github.com/NanKillBro/glassy-music-nankill/commit/a873c7122cb7e7f3e6549a5034659eb39370cdbb)
+- fix(mpris): support old and new player bars for skip, shuffle, repeat [`3510d6c`](https://github.com/NanKillBro/glassy-music-nankill/commit/3510d6c24001cc93d9b87fae95a54f33dbb8c4f5)
+
+#### [v4.1.1](https://github.com/NanKillBro/glassy-music-nankill/compare/v4.1.0...v4.1.1)
+
+> 23 October 2026
+
+- chore(deps): upgrade Electron to 44 and apply safe dependency updates [`21e9591`](https://github.com/NanKillBro/glassy-music-nankill/commit/21e95914107f2d60f73c70622dbb4dd92969e060)
+- Add glassmorphism theme styles for settings window [`5fb9860`](https://github.com/NanKillBro/glassy-music-nankill/commit/5fb9860d51dd3279003c56f0aa795634e316e414)
+- feat(about): load changelog from remote json with offline cache [`b264a9b`](https://github.com/NanKillBro/glassy-music-nankill/commit/b264a9b5c66e33c10463d1c770c838e185cffd09)
+
 #### [v4.1.0](https://github.com/NanKillBro/glassy-music-nankill/compare/v4.0.0...v4.1.0)
+
+> 9 October 2026
 
 - feat(plugins): add Skip AI Music [`458e50c`](https://github.com/NanKillBro/glassy-music-nankill/commit/458e50c4f7598edb89c75fa32fbf742b6fad3cc3)
 - Refactor audio handling in crossfade and smooth transitions [`936e0dc`](https://github.com/NanKillBro/glassy-music-nankill/commit/936e0dcdd9e9f9e135473a31b066f78b02943ded)
